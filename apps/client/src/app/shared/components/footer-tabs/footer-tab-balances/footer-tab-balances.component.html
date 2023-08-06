@@ -1,0 +1,45 @@
+<ng-container>
+  <ul class="row">
+    <li class="col-12 col-md-3">
+      <img class="asset-icon" [src]="'assets/icons/crypto/usdt.svg'">Available:
+      <span>&nbsp;{{availableUSDT | currency }}<sup>*</sup></span>
+    </li>
+  </ul>
+
+  <hr>
+
+  <ul class="row base-symbols">
+    <ng-container *ngFor="let balance of profileService.account.balances">
+      <li *ngIf="balance.value >= 5" class="col-12 col-md-3" (click)="onClickAsset(balance.asset)">
+        <img class="asset-icon" [src]="'assets/icons/crypto/' + balance.asset.toLowerCase() + '.svg'">
+        <span>{{balance.asset}}:&nbsp;</span>
+        <span
+          style="color: #afafaf">{{balance.free.toFixed(candleService.getSymbolByAsset(balance.asset)?.baseAssetPrecision)}}</span>
+        <span>&nbsp;({{profileService.getAssetValue(balance.asset) | currency }})</span>
+      </li>
+    </ng-container>
+  </ul>
+
+  <hr>
+
+  <ul class="row base-symbols">
+    <ng-container *ngFor="let balance of profileService.account.balances">
+      <li *ngIf="balance.value > 0 && balance.value < 5" class="col-12 col-md-3" (click)="onClickAsset(balance.asset)">
+        <img class="asset-icon" [src]="'assets/icons/crypto/' + balance.asset.toLowerCase() + '.svg'">
+        <span>{{balance.asset}}:&nbsp;</span>
+        <span
+          style="color: #afafaf">{{balance.free.toFixed(candleService.getSymbolByAsset(balance.asset)?.baseAssetPrecision)}}</span>
+        <span>&nbsp;({{profileService.getAssetValue(balance.asset) | currency }})</span>
+      </li>
+    </ng-container>
+  </ul>
+
+  <hr>
+  <button mat-raised-button color="warn" (click)="cleanUpUnusedCoins()" style="margin-top: 20px;">Clean up <i>unused</i>
+    coins</button>
+
+</ng-container>
+
+<ng-container *ngIf="!userService.user">
+
+</ng-container>

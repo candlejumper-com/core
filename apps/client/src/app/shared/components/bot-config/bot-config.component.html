@@ -1,0 +1,22 @@
+  <!-- bot config -->
+  <div #symbolConfigContainer class="symbol-config-container" mwlResizable [enableGhostResize]="true" (resizeEnd)="symbolConfigContainer.style.width = $event.rectangle.width + 'px'">
+    <div class="resize-handle-left" mwlResizeHandle [resizeEdges]="{ left: true }"></div>
+
+    <select class="form-select-custom" style="width: 100%">
+      <option disabled selected>Select bot</option>
+      <option value="Bollinger">Bollinger</option>
+      <option value="RSI">RSI</option>
+    </select>
+
+    <div class="symbol-config-content">
+      <h4>Config</h4>
+      <hr>
+      <div class="bot-config">
+        <input class="form-input-custom" type="text" placeholder="Period">
+        <input class="form-input-custom" type="text" placeholder="Weight">
+      </div>
+      <hr>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="backtestSymbol()">Backtest</button>
+  </div>

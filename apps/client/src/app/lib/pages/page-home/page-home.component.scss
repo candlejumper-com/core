@@ -1,0 +1,44 @@
+@use '../../../../styles/tabs-custom';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.wrapper {
+  display: flex;
+  height: 100%;
+  overflow: auto;
+}
+
+.chart-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.tabs-custom {
+  a span {
+    visibility: hidden;
+  }
+
+  a:hover span {
+    visibility: visible
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 20;
+}
+
+.toggle-rotate {
+  transform: rotate(180deg);
+}

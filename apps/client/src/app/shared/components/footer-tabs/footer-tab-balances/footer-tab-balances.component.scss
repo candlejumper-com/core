@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  padding: 0 20px;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.base-symbols {
+  li:hover {
+    background: gray;
+    cursor: pointer;
+  }
+}

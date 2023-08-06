@@ -1,0 +1,19 @@
+:host {
+  padding: 20px;
+  display: block;
+  overflow: auto;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+
+  button {
+    margin-left: 10px;
+  }
+}

@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>Registrate</h1>
+<hr>
+<div mat-dialog-content>
+
+  <form [formGroup]="form" class="row" autocomplete="off">
+    <mat-form-field appearance="fill">
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username" autocomplete="false">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" autocomplete="off">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Broker</mat-label>
+      <mat-select formControlName="broker">
+        <mat-option value="binance">Binance</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Broker Key</mat-label>
+      <input matInput formControlName="brokerAPIKey" autocomplete="false">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Broker Secret</mat-label>
+      <input matInput formControlName="brokerAPISecret" autocomplete="off">
+    </mat-form-field>
+  </form>
+
+  <mat-error *ngIf="error$ | async as error">{{error}}</mat-error>
+</div>
+
+<div class="footer" mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button mat-raised-button (click)="onClickRegistrate()" color="primary" cdkFocusInitial [disabled]="form.invalid || form.disabled">Registrate</button>
+</div>

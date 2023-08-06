@@ -1,0 +1,77 @@
+<div class="center-container">
+  <!-- <mat-spinner *ngIf="busy$ | async"></mat-spinner> -->
+  <mat-error *ngIf="error$ | async as error">Error: <p>{{error}}</p></mat-error>
+</div>
+
+<!-- <div class="container-fluid" *ngIf="type === 'MAIN'" style="margin-top: 10px;">
+
+  <form [formGroup]="form" class="row">
+    <div class=" col-12 col-md-10 mb-2 mb-lg-0 g-0">
+      <select class="form-select-custom" (change)="interval = $event.target['value']; load()" style="margin-right: 10px; width: 70px;">
+        <option *ngFor="let configInterval of configService.config.intervals" [value]="configInterval" [selected]="configInterval === interval">{{configInterval}}</option>
+      </select>
+      <select class="form-select-custom" (change)="viewType = $event.target['value']; load()" style="margin-right: 10px;">
+        <option value="candlesticks">Candles</option>
+        <option value="ohlc">OHLC</option>
+      </select>
+      <select class="form-select-custom" (change)="viewType = $event.target['value']; load()">
+        <option disabled selected>Overlay</option>
+        <option value="candlesticks">No active bots</option>
+      </select>
+    </div>
+  </form>
+</div> -->
+
+<!-- <mat-expansion-panel [expanded]="false" *ngIf="botConfigString" style="margin-bottom: 20px; margin-top: 20px;">
+  <mat-expansion-panel-header>
+    <mat-panel-title style="display: block;">
+      Configuration
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <p style="white-space: break-spaces;" [innerText]="botConfigString"></p>
+
+</mat-expansion-panel> -->
+
+<div class="action-overlay">
+  <div class="menu-wrapper">
+    <mat-menu #menuInterval="matMenu">
+      <button [attr.disabled]="type === 'MAIN' ? null : true" mat-menu-item *ngFor="let configInterval of configService.config.intervals" (click)="setInterval(configInterval)">{{configInterval}}</button>
+    </mat-menu>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item [matMenuTriggerFor]="chartTypeMenu">Type</button>
+      <button mat-menu-item [matMenuTriggerFor]="activeBotMenu">Bots</button>
+    </mat-menu>
+
+    <mat-menu #intervalMenu="matMenu">
+
+    </mat-menu>
+
+    <mat-menu #chartTypeMenu="matMenu">
+      <button mat-menu-item (click)="viewType = 'candlesticks'; load()">Candlesticks</button>
+      <button mat-menu-item (click)="viewType = 'ohlc'; load()">OHLC</button>
+    </mat-menu>
+
+    <mat-menu #activeBotMenu="matMenu">
+      <button mat-menu-item (click)="viewType = 'candlesticks'; load()">Candlesticks</button>
+      <button mat-menu-item (click)="viewType = 'ohlc'; load()">OHLC</button>
+    </mat-menu>
+  </div>
+
+  <ng-container *ngIf="type === 'MAIN'">
+    <button mat-raised-button color="primary" style="margin-right: 10px;" (click)="onClickBuy()">BUY</button>
+    <button mat-raised-button color="warn" style="margin-right: 10px;" (click)="onClickSell()">SELL</button>
+  </ng-container>
+  <span class="interval-button" [matMenuTriggerFor]="menuInterval">{{interval$.value}}</span>
+  <mat-icon [matMenuTriggerFor]="menu" *ngIf="type === 'MAIN'">settings</mat-icon>
+</div>
+
+<div class="status-overlay" *ngIf="type === 'MAIN'">
+  <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 10px;" (click)="onClickBuy()">CUSTOM</button>
+  <button mat-raised-button color="warn" style="margin-right: 10px;" (click)="onClickSell()">TREND</button>
+  <button mat-raised-button color="primary" style="margin-right: 10px;" (click)="onClickSell()">RSI</button>
+  <button mat-raised-button color="primary" style="margin-right: 10px;" (click)="onClickSell()">SMA</button>
+  <button mat-raised-button color="warn" style="margin-right: 10px;" (click)="onClickSell()">VOLUME</button>
+</div>
+
+<div #chart class="chart-wrapper"></div>

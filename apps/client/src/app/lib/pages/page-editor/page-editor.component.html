@@ -1,0 +1,40 @@
+<div class="top-nav">
+  <a (click)="saveAll()"><mat-icon>save</mat-icon></a>
+  <a><mat-icon>lock_reset</mat-icon></a>
+  <a><mat-icon style="color: green" (click)="doBacktest()">play_arrow</mat-icon></a>
+  <a><mat-icon style="color: red;">stop</mat-icon></a>
+</div>
+
+<div class="wrapper">
+
+  <app-editor-file-tree></app-editor-file-tree>
+
+  <div class="editor-container">
+
+    <!-- tabs -->
+    <div class="tabs-custom">
+
+      <!-- mobile menu toggle -->
+      <!-- <a (click)="symbolOverview.toggleVisibility()" class="tabs-custom-first-special">
+        <mat-icon class="mobile-toggle" fontIcon="arrow_back"
+          [ngClass]="{'toggle-rotate': !symbolOverview.isVisible}"></mat-icon>
+      </a> -->
+
+      <div class="tabs-scroll-container">
+        <a *ngFor="let tab of editorService.tabs$ | async" (click)="toggleTab(tab, $event)"
+          [ngClass]="{active: editorService.activeFile$?.value.path === tab?.path}">
+          {{tab.name}}
+          {{tab.changed ? '*' : ''}}
+          <span (click)="closeTab(tab, $event)" style="padding: 0 0 0 15px">X</span>
+        </a>
+      </div>
+    </div>
+
+    <app-editor-code></app-editor-code>
+  </div>
+</div>
+
+<app-editor-footer #footer></app-editor-footer>
+<!-- <div #terminal class="terminal-wrapper">
+  <div id="terminal"></div>
+</div> -->

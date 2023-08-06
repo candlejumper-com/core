@@ -1,0 +1,55 @@
+<div class="wrapper">
+
+  <!-- symbol overview-->
+  <app-symbol-overview #symbolOverview></app-symbol-overview>
+
+  <div class="overlay d-lg-none" (click)="symbolOverview.toggleVisibility(false)" *ngIf="symbolOverview.isVisible"></div>
+
+  <!-- charts-->
+  <div class="chart-container">
+
+    <!-- tabs -->
+    <div class="tabs-custom">
+
+      <!-- mobile menu toggle -->
+      <a (click)="symbolOverview.toggleVisibility()" class="tabs-custom-first-special">
+        <mat-icon class="mobile-toggle" fontIcon="arrow_back" [ngClass]="{'toggle-rotate': !symbolOverview.isVisible}"></mat-icon>
+      </a>
+
+      <div class="tabs-scroll-container">
+        <a *ngFor="let chart of chartTabs$ | async; trackBy: trackChartTabs" (click)="toggleChartTab(chart.id)"
+          [ngClass]="{active: (chartService.activeChart$ | async)?.id === chart?.id}">
+          <img class="asset-icon" [src]="'assets/icons/crypto/' + chart.symbol.baseAsset.toLowerCase() + '.svg'">
+          {{chart.symbol.name}}
+          <ng-container *ngIf="chart.type === 'BACKTEST'">(BT)</ng-container>
+          <ng-container *ngIf="chart.type === 'SNAPSHOT'">(SS)</ng-container>
+          <span (click)="closeChartTab(chart.id)" style="padding: 0 0 0 15px">X</span>
+        </a>
+      </div>
+    </div>
+
+    <ng-container *ngIf="chart$ | async as chart">
+      <app-chart 
+        *ngIf="chart.symbol"
+        [symbol]="chart.symbol"
+        [candles]="chart.candles"
+        [type]="chart.type"
+        [orders]="chart.orders"
+        [indicators]="chart.indicators"
+        [interval$]="activeInterval$"
+      >
+      </app-chart>
+    </ng-container>
+  </div>
+
+  <!-- <app-bot-config></app-bot-config> -->
+</div>
+
+<app-footer-tabs></app-footer-tabs>
+
+<!-- PWA install banner -->
+<div *ngIf="(deviceService.showPWABanner$ | async)" class="d-flex justify-content-center position-relative pb-2 pt-2" style="background: #212121 !important; display: none !important;">
+  <button mat-raised-button color="primary" (click)="deviceService.installPWA();">&hearts;&hearts; Install App &hearts;&hearts;</button>
+  <!-- <button class="btn btn-primary" (click)="deviceService.installPWA();">Install App</button> -->
+  <span class="closePwaInstall" (click)="deviceService.setPWABannerClosed()" aria-hidden="true">&times;</span>
+</div>

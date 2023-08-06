@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>{{data.type}} {{data.symbol.baseAsset }}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="fill">
+      <mat-label>Amount</mat-label>
+      <input matInput cdkFocusInitial formControlName="amount" type="number">
+    </mat-form-field>
+  </form>
+  <button mat-button mat-raised-button color="primary" (click)="onClickAll()">All</button>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="" >Close</button>
+  <button mat-button mat-raised-button (click)="onClickAccept()" [disabled]="form.invalid" color="primary">Accept</button>
+</div>

@@ -1,0 +1,146 @@
+<mat-card>
+  <mat-card-content>
+    <div
+      fxLayout="row"
+      fxLayout.md="row"
+      fxLayout.sm="column"
+      fxLayout.xs="column"
+      fxLayoutAlign="center"
+      fxLayoutGap="20px">
+      <form [formGroup]="form" fxLayout="row wrap" fxLayoutWrap="wrap" fxFlex="100">
+        <div fxLayout="column" fxFlex="50" style="padding: 0 20px">
+          <h2>Data</h2>
+          <div fxFlex="100" fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field appearance="outline">
+              <mat-label>Symbol</mat-label>
+              <mat-select placeholder="Data Temporal Resolutions" formControlName="symbols" multiple>
+                <mat-option [value]="symbol.name" *ngFor="let symbol of candleService.symbols">{{ symbol.name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Interval</mat-label>
+              <mat-select placeholder="Data Temporal Resolutions" formControlName="timeframe">
+                <mat-option value="Weekly">Weekly</mat-option>
+                <mat-option value="1d">Daily</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Count</mat-label>
+              <input type="number" matInput placeholder="Total candles" formControlName="count" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Prediction length</mat-label>
+              <input type="number" matInput placeholder="Candles future" formControlName="predictionSize" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Data</mat-label>
+              <mat-select placeholder="Data Temporal Resolutions" formControlName="dataOrigin">
+                <mat-option value="static">Static</mat-option>
+                <mat-option value="live">Live</mat-option>
+              </mat-select>
+              <mat-hint>Live flatlines:(</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex="50" style="padding: 0 20px">
+          <h2>Model</h2>
+
+          <div fxLayout="row wrap" fxLayoutGap="10px" fxLayoutWrap="wrap">
+            <mat-form-field appearance="outline">
+              <mat-label>Model</mat-label>
+              <mat-select placeholder="Model" formControlName="model">
+                <mat-option value="custom1" selected>Custom 1</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxLayout="column" fxFlex="50" style="padding: 0 20px">
+          <h2>Setup</h2>
+          <div fxFlex="100" fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field appearance="outline">
+              <mat-label>Epochs</mat-label>
+              <input type="number" matInput placeholder="a number" formControlName="epochs" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Learning Rate</mat-label>
+              <input
+                type="number"
+                matInput
+                placeholder="typically range between 0.01 and 0.1"
+                formControlName="learningRate" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Hidden LSTM Layers</mat-label>
+              <input type="number" matInput placeholder="number of LSTM layers" formControlName="hiddenLayers" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Hardware</mat-label>
+              <mat-select placeholder="Data Temporal Resolutions" formControlName="hardware">
+                <mat-option value="wasm">WASM <sup>(multi-cpu)</sup></mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex="50" style="padding: 0 20px">
+          <h2>Inputs <mat-icon class="add-feature-icon">add</mat-icon></h2>
+
+          <div fxLayout="row wrap" fxLayoutGap="10px" fxLayoutWrap="wrap">
+            <mat-form-field appearance="outline" fxFlex="19">
+              <mat-label>SMA Size</mat-label>
+              <input type="number" matInput placeholder="a number" formControlName="SMALength" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex="19">
+              <mat-label>RSI Size</mat-label>
+              <input type="number" matInput placeholder="a number" formControlName="RSILength" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex="19">
+              <mat-label>BB Size</mat-label>
+              <input type="number" matInput placeholder="a number" formControlName="BBLength" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex="100">
+          <button fxFlex="100" mat-raised-button color="primary" (click)="run()">Run</button>
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-content>
+    <mat-tab-group
+      *ngIf="aiService.instances$ | async as instances"
+      style="margin-top: 20px"
+      [(selectedIndex)]="activeTab"
+      [@.disabled]="true">
+
+      <mat-tab *ngFor="let instance of instances" style="display: flex; align-items: center;">
+        <ng-template mat-tab-label>
+          <mat-spinner diameter="20" *ngIf="!(instance.result$ | async)" style="margin-right: 10px"></mat-spinner>
+          <span
+            >{{ instance.options.symbol }}
+            <sup>{{ (instance.progres$ | async)?.epoch || 0 }}/{{ instance.options.epochs }}</sup></span
+          >
+        </ng-template>
+
+        <ng-template matTabContent>
+          <app-training-view [instance]="instance" #trainingViewChild></app-training-view>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

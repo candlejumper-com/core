@@ -1,0 +1,29 @@
+<div #footerContainer class="file-tree-container" mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event)"
+  (resizing)="onResize($event)">
+  <div class="resize-handle-right" mwlResizeHandle [resizeEdges]="{ right: true }"></div>
+
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <!-- This is the tree node template for leaf nodes -->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding (click)="onClickNode(node)" matTreeNodePaddingIndent="40" class="file-node" [ngClass]="{active: node.path === editorService.activeFile$.value?.path}">
+      <!-- use a disabled button to provide padding for tree leaf -->
+      <button mat-icon-button disabled>
+        <mat-icon>insert_drive_file</mat-icon>
+      </button>
+
+      {{node.name}}
+    </mat-tree-node>
+
+    <!-- This is the tree node template for expandable nodes -->
+    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="20" [ngClass]="{active: node === editorService.activeFile$.value}">
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+      <mat-icon>folder</mat-icon>
+      {{node.name}}
+    </mat-tree-node>
+  </mat-tree>
+
+</div>
+

@@ -1,0 +1,27 @@
+<table class="table-custom table-custom-striped table-custom-row-clickable">
+  <thead>
+    <tr>
+      <th class="col-symbol">Symbol</th>
+      <th class="col-profit">Profit <span style="font-size: 10px;">(USDT)</span></th>
+      <th class="col-profit">hits</th>
+      <th class="col-profit">Trades</th>
+      <th class="col-profit">Type</th>
+      <th class="col-profit">interval</th>
+      <th class="col-profit"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let bot of bots" (click)="onClickBot(bot)">
+      <td><img class="asset-icon" [src]="'assets/icons/crypto/' + bot.symbol.baseAsset.toLowerCase() + '.svg'">{{bot.symbol.name}}</td>
+      <td  [ngClass]="{'text-success': bot.profit > 0, 'text-error': bot.profit < 0}">{{bot.profit}}</td>
+      <td [ngClass]="{'text-success': bot.hits > 50, 'text-error': bot.hits > 0 && bot.hits < 50}">{{bot.hits}}</td>
+      <td>{{bot.trades}}</td>
+      <td>{{bot.name}}</td>
+      <td>{{bot.interval}}</td>
+      <td><mat-icon fontIcon="arrow_back"></mat-icon></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<!-- <app-page-bots></app-page-bots> -->

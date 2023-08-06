@@ -1,0 +1,40 @@
+<div #footerContainer class="footer-container" mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event)"
+  (resizeStart)="onResizeStart()">
+  <div class="resize-handle-top" mwlResizeHandle [resizeEdges]="{ top: true }"></div>
+  <div class="tabs-custom" (dblclick)="toggleVisibility()">
+
+    <!-- mobile menu toggle -->
+    <a (click)="toggleVisibility()" class="tabs-custom-first-special">
+      <mat-icon class="mobile-toggle" fontIcon="arrow_downwards"
+        [ngClass]="{'toggle-rotate': toggleIcon === 'arrow_upwards'}"></mat-icon>
+    </a>
+
+    <a *ngFor="let tab of tabs" [ngClass]="{active: activeTab === tab[0]}" (click)="toggleTab(tab[0])"
+      [ngStyle]="{'margin-left': tab[0] === 'settings' ? 'auto' : 0}">
+      <mat-icon [inline]="true" [fontIcon]="tab[1]" *ngIf="tab[1]"></mat-icon>
+      <mat-icon [inline]="true" *ngIf="tab[0] === 'status' && statusService.status.status === 'ok'" style="color: #00ff00;">check</mat-icon>
+      <mat-icon [inline]="true" *ngIf="tab[0] === 'status' && statusService.status.status === 'error'" style="color: red;" class="animate-scale">error</mat-icon>
+      <mat-icon [inline]="true" *ngIf="tab[0] === 'status' && statusService.status.status === 'warn'" style="color: orange"  class="animate-scale">warning</mat-icon>
+      {{tab[0]}}
+      <span *ngIf="tab[0] === 'balances'" style="font-weight: bold;">
+        &nbsp;({{profileService.balanceTotalUSDT |currency}})
+      </span>
+      <span class="notification-bubble"
+        *ngIf="tab[0] === 'trades' && (orderService.newOrders$ | async) as newOrders">{{newOrders}}</span>
+      <span *ngIf="tab[0] === 'bots'" style="font-weight: bold;">
+        &nbsp;<sup>({{stateService.main.tickers.length}})</sup>
+      </span>
+    </a>
+  </div>
+
+  <div class="tab-custom-content">
+    <app-footer-tab-orders *ngIf="activeTab === 'trades'"></app-footer-tab-orders>
+    <app-footer-tab-balances *ngIf="activeTab === 'balances'"></app-footer-tab-balances>
+    <app-footer-tab-bots *ngIf="activeTab === 'bots'"></app-footer-tab-bots>
+    <app-footer-tab-backtest *ngIf="activeTab === 'backtest'"></app-footer-tab-backtest>
+    <app-footer-tab-logs *ngIf="activeTab === 'logs'"></app-footer-tab-logs>
+    <app-footer-tab-settings *ngIf="activeTab === 'settings'"></app-footer-tab-settings>
+    <app-footer-tab-editor *ngIf="activeTab === 'editor'"></app-footer-tab-editor>
+    <app-footer-tab-status *ngIf="activeTab === 'status'"></app-footer-tab-status>
+  </div>
+</div>

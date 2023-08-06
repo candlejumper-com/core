@@ -1,1 +1,13 @@
-<core-nx-welcome></core-nx-welcome> <router-outlet></router-outlet>
+<nav mat-tab-nav-bar backgroundColor="primary" color="warn" [tabPanel]="tabPanel">
+  <a mat-tab-link href="#">Home</a>
+  <a mat-tab-link href="/#/ai">AI</a>
+  <a mat-tab-link href="/#/dennis">Dennis</a>
+  <a mat-tab-link href="/#/kewin"> Kewin</a>
+</nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<div class="overlay" *ngIf="wsService.error$ | async"></div>

@@ -1,0 +1,32 @@
+// @use '../../../../../styles/table-custom';
+
+:host {
+  height: 100%;
+  display: flex;
+  width: 100%;
+}
+
+.col-symbol {
+  width: 140px;
+  min-width: 140px;
+}
+
+.col-side {
+  width: 80px;
+}
+
+.col-type,
+.col-amount,
+.col-profit,
+.col-price {
+  width: 140px;
+}
+
+.col-id {
+  width: 140px;
+}
+
+tbody tr:hover {
+  background: gray;
+  cursor: pointer;
+}

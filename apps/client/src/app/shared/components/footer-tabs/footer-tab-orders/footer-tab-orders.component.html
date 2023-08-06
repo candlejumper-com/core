@@ -1,0 +1,34 @@
+<table class="table-custom table-custom-striped table-custom-row-clickable">
+  <thead>
+    <tr>
+      <th class="col-symbol">Symbol</th>
+      <th class="col-side">Side</th>
+      <th class="col-type">Type</th>
+      <th class="col-amount">Quantity</th>
+      <th class="col-price">Price <span style="font-size: 10px;">(USDT)</span></th>
+      <th class="col-price">Total <span style="font-size: 10px;">(USDT)</span></th>
+      <th class="col-profit">Profit <span style="font-size: 10px;">(USDT)</span></th>
+      <th class="col-profit">Commison</th>
+      <th class="col-profit">CommisonAsset</th>
+      <th class="col-profit">CommisonTotal <span style="font-size: 10px;">(USDT)</span></th>
+      <th class="col-id">ID</th>
+      <th class="col-date">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let order of orderService.orders$ | async; trackBy: trackOrder" [ngClass]="{even: order.side === 'SELL'}" (click)="onClickRow(order)">
+      <td><img class="asset-icon" [src]="'assets/icons/crypto/' + order.baseAsset.toLowerCase() + '.svg'">{{order.symbol}}</td>
+      <td>{{order.side}}</td>
+      <td>{{order.type}}</td>
+      <td>{{order.quantity}}</td>
+      <td>{{order.price}}</td>
+      <td>{{(order.price * order.quantity) | currency}}</td>
+      <td [ngClass]="{'text-success': order.profit > 0, 'text-error': order.profit < 0}">{{order.side === 'SELL' ? order.profitString : ''}}</td>
+      <td>{{order.commission}}</td>
+      <td><img class="asset-icon" [src]="'assets/icons/crypto/' + (order.commissionAsset || 'bnb').toLowerCase() + '.svg'">{{order.commissionAsset}}</td>
+      <td>{{order.commissionUSDT | currency}}</td>
+      <td>{{order.id}}</td>
+      <td>{{order.date}}</td>
+    </tr>
+  </tbody>
+</table>

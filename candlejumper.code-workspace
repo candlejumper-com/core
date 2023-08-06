@@ -1,0 +1,32 @@
+{
+    "folders": [
+        {
+            "name": "core",
+            "path": "."
+        },
+        {
+            "name": "public-nginx",
+            "path": "../public-nginx"
+        },
+    ],
+    "settings": {
+        "jest.disabledWorkspaceFolders": [
+            "tradebot",
+            "candle-sync",
+            "public-nginx"
+        ],
+        "typescript.suggest.completeJSDocs": false,
+        "javascript.suggest.completeJSDocs": false,
+        "angular.enable-strict-mode-prompt": false
+    },
+    "extensions": {
+        "recommendations": [
+            "angular.ng-template",
+            "visualstudioexptteam.vscodeintellicode",
+            "k--kato.intellij-idea-keybindings",
+            "cyrilletuzi.angular-schematics",
+            "orta.vscode-jest",
+            "firsttris.vscode-jest-runner"
+        ]
+    }
+}

@@ -1,0 +1,44 @@
+::ng-deep app-page-ai {
+  .mdc-tab {
+    max-width: 130px;
+    border: 1px solid gray !important;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .mdc-tab--active {
+    background: #b2c172;
+
+    .mdc-tab__text-label * {
+      color: black !important;
+    }
+  }
+
+  .mat-mdc-tab-body-wrapper {
+    border: 1px solid gray;
+  }
+
+  mat-tab-header {
+    border-bottom: 1px solid grey;
+  }
+}
+
+mat-form-field {
+  margin-top: 20px;
+  width: 100%;
+}
+
+h2 {
+  margin: 0;
+  border-bottom: 1px solid #c0c0c0;
+}
+
+.add-feature-icon {
+  color: green;
+  font-weight: bold;
+  &:hover {
+    cursor: pointer;
+    transform: scale(2);
+  }
+}

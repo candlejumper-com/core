@@ -1,0 +1,231 @@
+<mat-card>
+  <mat-card-content>
+    <div class="container-fluid">
+
+      <form [formGroup]="form" class="row">
+
+        <div class=" col-12 col-lg-2 mb-2 mb-lg-0 g-0 g-lg-2">
+          <mat-form-field appearance="fill" class="field-label-ellipsis">
+            <mat-label>MARKETS</mat-label>
+            <mat-select formControlName="symbols" multiple #select>
+              <div class="select-all">
+                <mat-checkbox (change)="toggleAllSelection()">Select All</mat-checkbox>
+              </div>
+              <mat-option *ngFor="let symbol of candleService.symbols" [value]="symbol.name">
+                <img class="asset-icon"
+                  [src]="'assets/icons/crypto/' + symbol.name.replace('USDT', '').toLowerCase() + '.svg'">{{symbol.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class=" col-12 col-lg-1 mb-2 mb-lg-0 g-0 g-lg-2">
+          <mat-form-field appearance="fill">
+            <mat-label>INTERVAL</mat-label>
+            <mat-select formControlName="intervals" multiple>
+              <mat-option *ngFor="let interval of configService.config.intervals"
+                [value]="interval">{{interval}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class=" col-12 col-lg-2 mb-2 mb-lg-0 g-0 g-lg-2">
+          <mat-form-field appearance="fill">
+            <mat-label>BOTS</mat-label>
+            <!-- <mat-radio-group aria-label="Select an option">
+              <mat-radio-button *ngFor="let bot of configService.config.bots" [value]="bot">{{bot}}</mat-radio-button>
+            </mat-radio-group> -->
+            <mat-select formControlName="bots" multiple>
+              <mat-option *ngFor="let bot of configService.config.bots" [value]="bot">{{bot}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class=" col-12 col-lg-1 mb-2 mb-lg-0 g-0 g-lg-2">
+          <mat-form-field appearance="fill">
+            <mat-label>USDT</mat-label>
+            <input matInput formControlName="USDT">
+          </mat-form-field>
+        </div>
+
+        <div class=" col-12 col-lg-1 mb-2 mb-lg-0 g-0 g-lg-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Length</mat-label>
+            <input matInput formControlName="candleCount">
+          </mat-form-field>
+        </div>
+
+        <div class=" col-12 col-lg-1 mb-2 mb-lg-0 g-0 g-lg-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Tick type</mat-label>
+            <mat-select formControlName="type">
+              <mat-option value="OHLC">OHLC</mat-option>
+              <mat-option value="OHLC_TICKS">OHLC + ticks</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class=" col-12 col-lg-2 mb-2 mb-lg-0 g-0 g-lg-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Optimize</mat-label>
+            <mat-select formControlName="optimize">
+              <mat-option [value]="0">0 (fast)</mat-option>
+              <mat-option [value]="10">10</mat-option>
+              <mat-option [value]="20">20 (slow)</mat-option>
+              <mat-option [value]="30">30 (recommended)</mat-option>
+              <mat-option [value]="40">40</mat-option>
+              <mat-option [value]="50">50 (very slow)</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class=" col-12 g-0 g-lg-2 mt-3">
+          <button mat-raised-button color="primary" (click)="start()"
+            [disabled]="(backtestService.busy$ | async) || form.invalid">Backtest</button>
+        </div>
+      </form>
+
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div class="center-container">
+  <ng-container *ngIf="backtestService.busy$ | async">
+    <div class="progress-bar">
+      <div class="progress-bar-value"></div>
+    </div>
+  </ng-container>
+
+  <mat-error *ngIf="error$ | async as error">Error: <p>{{error}}</p> </mat-error>
+</div>
+
+<mat-expansion-panel [expanded]="false" *ngIf="tableData?.length" style="margin-bottom: 20px; margin-top: 20px;">
+  <mat-expansion-panel-header>
+    <mat-panel-title style="display: block;">
+      Result
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <ul>
+    <li>
+      Average daily: <span>{{averageDaily}}</span>
+    </li>
+    <li>
+      Average profit: <span></span>
+    </li>
+    <li>
+      Average hits: <span></span>
+    </li>
+  </ul>
+
+</mat-expansion-panel>
+
+<div style="margin-top: 20px;" *ngIf="tableData?.length">
+  <div style="overflow-x: auto">
+    <table mat-table matSort [dataSource]="tableData" multiTemplateDataRows class="mat-elevation-z8">
+      <ng-container matColumnDef="symbol">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="symbol">Symbol</th>
+        <td mat-cell *matCellDef="let element" style="white-space: nowrap;"><img class="asset-icon"
+            [src]="'assets/icons/crypto/' + element.symbol.baseAsset.toLowerCase() + '.svg'">{{element.symbol.name}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="profitIndex">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="profitIndex">Daily %</th>
+        <td mat-cell *matCellDef="let element"
+          [ngClass]="{'text-success': element.profit > 0, 'text-error': element.profit < 0}">
+          {{element.profitIndex?.toFixed(4)}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="profit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="profit">Profit</th>
+        <td mat-cell *matCellDef="let element"
+          [ngClass]="{'text-success': element.profit > 0, 'text-error': element.profit < 0}">{{element.profit |
+          currency}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="hits">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="hits">Hits %</th>
+        <td mat-cell *matCellDef="let element"
+          [ngClass]="{'text-success': element.hits > 50, 'text-error': element.hits && element.hits < 50}">
+          {{element.hits.toFixed(2)}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="interval">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="interval">Int.</th>
+        <td mat-cell *matCellDef="let element">{{element.interval}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="ticks">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="ticks">Ticks*</th>
+        <td mat-cell *matCellDef="let element">{{element.ticks}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="candles">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="candles">Candles*</th>
+        <td mat-cell *matCellDef="let element">{{element.candles}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="trades">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="trades">Tr.</th>
+        <td mat-cell *matCellDef="let element">{{element.trades}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length" class="test">
+          <div class="table-row-detail" [class.expanded]="element == expandedElement" #chart>
+            <!-- <app-chart [bot]="element.bot" [candleCount]="form.value.candleCount" *ngIf="element == expandedElement"
+              [timeRange$]="timeRange$"
+              [symbol]="candleService.getSymbolByName(element.bot.symbol)" type="BACKTEST"></app-chart> -->
+              <ng-container *ngIf="orders$ | async as orders">
+                <table mat-table [dataSource]="orders" multiTemplateDataRows class="mat-elevation-z8" *ngIf="orders.length">
+                  <ng-container matColumnDef="side">
+                    <th mat-header-cell *matHeaderCellDef>Side</th>
+                    <td mat-cell *matCellDef="let element">{{element.side}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef>Price</th>
+                    <td mat-cell *matCellDef="let element">{{element.price | currency}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="profit">
+                    <th mat-header-cell *matHeaderCellDef>Profit</th>
+                    <td mat-cell *matCellDef="let element"><ng-container *ngIf="element.side === 'SELL'">{{ element.profit | currency }}</ng-container></td>
+                  </ng-container>
+                  <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef>Quantity</th>
+                    <td mat-cell *matCellDef="let element">{{ element.quantity }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="time">
+                    <th mat-header-cell *matHeaderCellDef>Time</th>
+                    <td mat-cell *matCellDef="let element">{{element.time | date: 'dd/MM/yy HH:mm:ss' : 'UTC'}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="reason">
+                    <th mat-header-cell *matHeaderCellDef>Reason</th>
+                    <td mat-cell *matCellDef="let element">{{element.data?.reason}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="text">
+                    <th mat-header-cell *matHeaderCellDef>Text</th>
+                    <td mat-cell *matCellDef="let element">{{element.data?.text}}</td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="orderColumns"></tr>
+                  <tr
+                      class="order-row"
+                      (click)="openSnapshot(row)"
+                      mat-row
+                      *matRowDef="let row; columns: orderColumns;"
+                  ></tr>
+                </table>
+              </ng-container>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="(expandedElement = (expandedElement === element) ? toggleOrders(null) : toggleOrders(element)); openBacktest(element)">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+  </div>
+</div>
