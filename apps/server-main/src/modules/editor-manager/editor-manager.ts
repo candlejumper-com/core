@@ -31,9 +31,10 @@ export class EditorManager {
     constructor(public system: System) { }
 
     async init(): Promise<void> {
-        console.log(url.toString())
+        console.log('EDUR EDUR', url)
         this.pool = pool(url.toString(), { maxWorkers: 1 })
 
+        console.log(23434, url.toString())
         await this.readAndUpdate()
         await this.compile()
 

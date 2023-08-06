@@ -6,6 +6,8 @@ export interface IEditorCompileOptions {
     root: string
 }
 
+console.log('WOERKDSLFKDF')
+
 export const PATH_ROOT = join(__dirname, '../../../../../../../')
 export const PATH_CUSTOM = join(PATH_ROOT, 'custom')
 export const PATH_CUSTOM_SRC = join(PATH_CUSTOM, 'src')

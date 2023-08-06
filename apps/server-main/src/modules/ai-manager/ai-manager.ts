@@ -3,9 +3,11 @@ import { join } from "path"
 import { System } from "../../system/system"
 import { logger } from "../../util/log"
 import { WorkerPool, pool } from "workerpool"
+import "./ai-worker"
 
 const PATH_WORKER = join(__dirname, "ai.worker.js")
 
+console.log(222, PATH_WORKER)
 export class AIManager {
 
   private workerPool: WorkerPool
@@ -63,7 +65,8 @@ export class AIManager {
     if (this.maxWorkers) {
       options.maxWorkers = this.maxWorkers
     }
-
-    this.workerPool = pool(PATH_WORKER, options)
+    const url = new URL('./ai-worker', import.meta.url)
+    console.log(23434, url.toString())
+    this.workerPool = pool('./dist/apps/server-main/ai-worker.js', {maxWorkers: 1})
   }
 }
