@@ -9,11 +9,9 @@ import {
 import { BehaviorSubject } from 'rxjs'
 
 export class TensorflowInstance {
-  worker: Worker
-
   events$ = new EventEmitter<ITensorFlowWorkerMessage<ITensorflowRunResult | ITensorFlowWorkerMessageError>>()
   progres$ = new BehaviorSubject<ITensorFlowWorkerMessageProgress>(null)
   result$ = new BehaviorSubject<ITensorflowRunResult>(null)
 
-  constructor(public options: ITensorflowOptions) {}
+  constructor(public symbol: string, public options: ITensorflowOptions, public id: number) {}
 }

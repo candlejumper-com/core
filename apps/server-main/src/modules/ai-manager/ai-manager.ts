@@ -1,72 +1,47 @@
-import { ITensorFlowWorkerData, ITensorflowOptions, ITensorflowRunResult } from "./ai.interfaces"
-import { join } from "path"
-import { System } from "../../system/system"
-import { logger } from "../../util/log"
-import { WorkerPool, pool } from "workerpool"
-import "./ai-worker"
+import {
+  ITensorFlowWorkerData,
+  ITensorFlowWorkerMessage,
+  ITensorFlowWorkerMessageProgress,
+  ITensorflowOptions,
+  ITensorflowRunResult,
+} from './ai.interfaces';
+import { join } from 'path';
+import { System } from '../../system/system';
+import { logger } from '../../util/log';
+import { WorkerPool, pool } from 'workerpool';
+import { TENSORFLOW_WORKER_ACTION } from './ai.util';
+import { AIContainer } from './ai-container';
 
-const PATH_WORKER = join(__dirname, "ai.worker.js")
-
-console.log(222, PATH_WORKER)
 export class AIManager {
 
-  private workerPool: WorkerPool
+  private workerPool: WorkerPool;
+  private containers: AIContainer[] = []
 
   constructor(public system: System, public maxWorkers?: number) {}
 
-  async run(options: ITensorflowOptions): Promise<ITensorflowRunResult[]> {
-    const now = Date.now()
-    const promiseList = []
-
+  run(options: ITensorflowOptions): AIContainer {
     if (!this.workerPool) {
-      this.createWorkerPool()
+      this.createWorkerPool();
     }
 
-    // loop over all symbols
-    for (let i = 0, len = options.symbols.length; i < len; ++i) {
-      const symbolName = options.symbols[i]
-      const brokerSymbol = this.system.broker.getExchangeInfoBySymbol(symbolName)
-      const symbol = this.system.candleManager.getSymbolByPair(symbolName)
+    const container = new AIContainer(this.system, this.workerPool, options)
 
-      // check if symbol is recognized (currently in use / cached)
-      if (!brokerSymbol || !symbol) {
-        logger.error(`BACKTEST - Symbol ${symbolName} is not valid`)
-        continue
-      }
+    // options.symbols.forEach((symbolName) => container.add(symbolName));
+    this.containers.push(container)
 
-      // loop over all intervals
-      const workerData: ITensorFlowWorkerData = {
-        options: options,
-        candles: await this.system.candleManager.getCandles(symbolName, "1d", options.count),
-      }
+    container.run()
 
-      console.log(222, workerData.candles.length)
-
-      const workerJob = this.workerPool.exec("run", [workerData])
-
-      promiseList.push(workerJob)
-    }
-    
-    return Promise.all(promiseList)
-    // console.log(results)
-    // const systems = this.getData(results.filter(Boolean), options)
-    // const totalTime = Date.now() - now
-
-    // this.latest = {
-    //     config: options,
-    //     totalTime,
-    //     systems
-    // }
+    return container
   }
 
   private createWorkerPool(): void {
-    const options: any = {}
+    const options: any = {};
 
     if (this.maxWorkers) {
-      options.maxWorkers = this.maxWorkers
+      options.maxWorkers = this.maxWorkers;
     }
-    const url = new URL('./ai-worker', import.meta.url)
-    console.log(23434, url.toString())
-    this.workerPool = pool('./dist/apps/server-main/ai-worker.js', {maxWorkers: 1})
+    // TODO clean up, fucking strange
+    const url = new URL('./ai-worker', import.meta.url);
+    this.workerPool = pool('./dist/apps/server-main/ai-worker.js', { maxWorkers: 1 });
   }
 }

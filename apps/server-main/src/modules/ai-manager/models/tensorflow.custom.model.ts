@@ -12,6 +12,7 @@ import {
 } from "../ai.interfaces"
 import { computeSMA, TENSORFLOW_WORKER_ACTION } from "../ai.util"
 import { ICandle, isForwardCandleArray } from "@candlejumper/shared"
+import { worker, workerEmit, WorkerPool } from "workerpool"
 
 export class TensorflowCustomModel {
   dataSmaVec: DataSMAvec[] = []
@@ -65,11 +66,11 @@ export class TensorflowCustomModel {
     const output_layer_neurons = 1
 
     // 1. Create the model
-    let X = options.inputs
+    const X = options.inputs
     // let X = options.inputs.slice(0, Math.floor((options.trainingSize / 100) * options.inputs.length))
 
     // 2. Create the output data
-    let Y = options.outputs
+    const Y = options.outputs
     // let Y = options.outputs.slice(0, Math.floor((options.trainingSize / 100) * options.outputs.length))
 
     // 3. Normalize the data
@@ -93,7 +94,7 @@ export class TensorflowCustomModel {
     model.add(tf.layers.reshape({ targetShape: rnn_input_shape }))
 
     // 8. Add the LSTM layer
-    let lstm_cells = []
+    const lstm_cells = []
     for (let index = 0; index < options.hiddenLayers; index++) {
       lstm_cells.push(tf.layers.lstmCell({ units: rnn_output_neurons }))
     }
@@ -194,7 +195,7 @@ export class TensorflowCustomModel {
         loss,
       },
     }
-
+    workerEmit(message)
     // TODO - post to parent process
     // postMessage(message)
   }

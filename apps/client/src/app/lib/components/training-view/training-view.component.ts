@@ -13,7 +13,7 @@ import { TrainingViewService } from "./training-view.service"
 PlotlyModule.plotlyjs = window['Plotly']
 
 @Component({
-  selector: 'app-training-view',
+  selector: 'core-training-view',
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
   standalone: true,
@@ -75,7 +75,7 @@ export class TrainingViewComponent {
 
   async renderChart() {
     const candles = await this.candleService
-      .loadBySymbol(this.instance.options.symbol, this.instance.options.timeframe, this.instance.options.count, false)
+      .loadBySymbol(this.instance.symbol, this.instance.options.timeframe, this.instance.options.count, false)
       .toPromise()
 
     const data = this.trainingViewService.getGraphData(

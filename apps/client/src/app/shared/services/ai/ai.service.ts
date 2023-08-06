@@ -1,32 +1,51 @@
 import { Injectable } from '@angular/core'
-import { ITensorflowOptions, ITensorflowRunResult } from '../tensorflow/tensorflow.interfaces'
+import { ITensorflowOptions, ITensorflowTaskResponse } from '../tensorflow/tensorflow.interfaces'
 import { TensorflowInstance } from '../tensorflow/instance/tensorflow.instance'
-import { CandleService } from '../candle/candle.service'
 import { BehaviorSubject } from 'rxjs'
 import { WSService } from '../ws/ws.service'
+import { AIGroup } from './ai-group'
 
 @Injectable({
   providedIn: 'root',
 })
 export class AIService {
-  instances$ = new BehaviorSubject<TensorflowInstance[]>([])
+  containers$ = new BehaviorSubject<AIGroup[]>([])
 
-  constructor(private wsService: WSService) {}
+  constructor(private wsService: WSService) {
+    this.wsService.socket.on('AI_JOB_PROGRESS', data => {
 
-  run(options: ITensorflowOptions): void {
-    const instances = options.symbols.map((symbol) => {
-      const singleRunOptions = { ...options, symbol }
+      const container = this.containers$.value.find(container => container.id === data.container)
 
-      const instance = new TensorflowInstance(singleRunOptions)
-
-      this.wsService.socket.emit('post:/api/ai', singleRunOptions, (result: ITensorflowRunResult[]) => {
-        result[0].data.inputs.predY = new Float32Array(result[0].data.inputs.predY)
-        instance.result$.next(result[0])
-      })
-
-      return instance
+      if (!container) {
+        return
+      }
+      const instance = container.instances.find(instance => instance.id === data.id)
+      console.log('instance', data.data)
+      instance.progres$.next(data.data)
     })
 
-    this.instances$.next(this.instances$.value.concat(instances))
+    this.wsService.socket.on('AI_JOB_FINISHED', data => {
+      console.log('AI_JOB_FINISHED', data)
+
+      const container = this.containers$.value.find(container => container.id === data.container)
+      const instance = container.instances.find(instance => instance.id === data.id)
+      instance.result$.next(data.data)
+      console.log(3434,instance)
+    })
+  }
+
+  run(options: ITensorflowOptions): void {
+    this.wsService.socket.emit('post:/api/ai', options, (result: ITensorflowTaskResponse) => {
+      const container = new AIGroup()
+      container.id = result.id
+      container.options = options
+      console.log(result)
+      container.instances = result.instances.map(instance => new TensorflowInstance(instance.symbol, options, instance.id))
+
+      this.containers$.next(this.containers$.value.concat([container]))
+      console.log(container)
+      // result[0].data.inputs.predY = new Float32Array(result[0].data.inputs.predY)
+      // instance.result$.next(result[0])
+    })
   }
 }

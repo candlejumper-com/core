@@ -7,12 +7,4 @@ import { ITensorflowOptions, ITensorflowRunResult } from './tensorflow.interface
 })
 export class TensorflowService {
 
-  instances: TensorflowInstance[] = []
-
-  async run(options: ITensorflowOptions): Promise<TensorflowInstance> {
-    const instance = new TensorflowInstance(options)
-    this.instances.push(instance)
-
-    return instance
-  }
 }

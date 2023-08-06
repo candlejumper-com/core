@@ -19,7 +19,7 @@
         "4h",
         "1d"
     ],
-    "preloadAmount": 5000,
+    "preloadAmount": 15000,
     "server": {
         "api": {
             "host": "0.0.0.0",
@@ -31,7 +31,9 @@
     },
     "symbols": [
         "AAPL",
-        "OIL"
+        "OIL",
+        "EUR/GBP",
+        "TSLA"
     ],
     "sfdas": [
         "CS.D.EURCHF.CFD.IP",

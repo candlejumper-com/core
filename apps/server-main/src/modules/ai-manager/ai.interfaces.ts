@@ -65,6 +65,7 @@ export interface ITensorFlowWorkerMessage<T> {
 }
 
 export interface ITensorFlowWorkerData {
+  id: number
   options: ITensorflowOptions
   candles: ICandle[]
 }
@@ -76,5 +77,5 @@ export interface ITensorFlowWorkerMessageProgress {
 }
 
 export interface ITensorFlowWorkerMessageError {
-
+  message: string
 }

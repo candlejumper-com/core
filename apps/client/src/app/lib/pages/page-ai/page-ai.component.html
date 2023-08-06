@@ -123,24 +123,44 @@
 <mat-card>
   <mat-card-content>
     <mat-tab-group
-      *ngIf="aiService.instances$ | async as instances"
-      style="margin-top: 20px"
-      [(selectedIndex)]="activeTab"
-      [@.disabled]="true">
+    *ngIf="aiService.containers$ | async as containers"
+    style="margin-top: 20px"
+    [(selectedIndex)]="activeContainerTab"
+    [@.disabled]="true">
 
-      <mat-tab *ngFor="let instance of instances" style="display: flex; align-items: center;">
+      <mat-tab *ngFor="let container of aiService.containers$ | async" style="display: flex; align-items: center;">
         <ng-template mat-tab-label>
-          <mat-spinner diameter="20" *ngIf="!(instance.result$ | async)" style="margin-right: 10px"></mat-spinner>
           <span
-            >{{ instance.options.symbol }}
-            <sup>{{ (instance.progres$ | async)?.epoch || 0 }}/{{ instance.options.epochs }}</sup></span
+            >{{ container.id }}</span
           >
         </ng-template>
 
         <ng-template matTabContent>
-          <app-training-view [instance]="instance" #trainingViewChild></app-training-view>
+          <mat-tab-group
+          *ngIf="aiService.containers$ | async as containers"
+          style="margin-top: 20px"
+          [(selectedIndex)]="activeTab"
+          [@.disabled]="true">
+    
+            <mat-tab *ngFor="let instance of container.instances" style="display: flex; align-items: center;">
+              <ng-template mat-tab-label>
+                <mat-spinner diameter="20" *ngIf="(instance.result$ | async) === null" style="margin-right: 10px"></mat-spinner>
+                <span
+                  >{{ instance.symbol }}
+                  <sup>{{ (instance.progres$ | async)?.epoch || 0 }}/{{ instance.options.epochs }}</sup></span
+                >
+              </ng-template>
+      
+              <ng-template matTabContent>
+                <core-training-view [instance]="instance"></core-training-view>
+              </ng-template>
+            </mat-tab>
+        
+        </mat-tab-group>
         </ng-template>
       </mat-tab>
-    </mat-tab-group>
+  
+  </mat-tab-group>
+
   </mat-card-content>
 </mat-card>

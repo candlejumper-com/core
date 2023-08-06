@@ -11,13 +11,13 @@
 
     <p>
       epoch {{ progress?.epoch }} / {{ progress?.totalEpoch }}
-      <span style="float: right">| loss: {{ progress?.loss }}</span>
+      <span style="float: right">| loss: {{ instance.progres$.value?.loss }}</span>
     </p>
     <mat-progress-bar
       style="margin-bottom: 20px"
       *ngIf="isBusy"
       mode="determinate"
-      [value]="(progress?.epoch / progress?.totalEpoch) * 100"
+      [value]="(instance.progres$.value?.epoch / progress?.totalEpoch) * 100"
     ></mat-progress-bar>
 
     <div id="container"></div>

@@ -8,13 +8,14 @@ import { TrainingViewComponent } from '../../components/training-view/training-v
 import { CANDLE_DATA_ORIGIN } from '@candlejumper/shared';
 
 @Component({
-  selector: 'app-page-ai',
+  selector: 'core-page-ai',
   templateUrl: './page-ai.component.html',
   styleUrls: ['./page-ai.component.scss'],
   standalone: true,
   imports: [SharedModule, TrainingViewComponent],
 })
 export class PageAIComponent {
+  activeContainerTab = 0
   activeTab = 0
 
   form = new FormGroup({
@@ -38,6 +39,6 @@ export class PageAIComponent {
   run() {
     this.aiService.run(this.form.value)
 
-    this.activeTab = this.aiService.instances$.value.length - 1
+    this.activeTab = this.aiService.containers$.value.length - 1
   }
 }

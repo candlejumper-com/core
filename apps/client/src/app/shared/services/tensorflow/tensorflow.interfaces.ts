@@ -31,6 +31,14 @@ export interface ITensorflowRunResult {
   }
 }
 
+export interface ITensorflowTaskResponse {
+  id: number,
+  instances: {
+    id: number,
+    symbol: string
+  }[]
+}
+
 export interface TensorFlowOutput {
   dataSmaVec: DataSMAvec[];
   sma: number[];
@@ -65,5 +73,5 @@ export interface ITensorFlowWorkerMessageProgress {
 }
 
 export interface ITensorFlowWorkerMessageError {
-
+  message: string
 }
