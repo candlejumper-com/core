@@ -1,0 +1,39 @@
+@use "./variables";
+
+.table-custom {
+  width: 100%;
+
+  tbody tr {
+    border-top: 1px solid gray;
+    width: 100%;
+
+    &.even {
+      background-color: #13253e;
+    }
+
+    &.active {
+      background: #292988 !important;
+    }
+  }
+
+  th,
+  td {
+    padding: 0px 0px 0px 10px;
+    border-right: 1px solid #626262;
+    white-space: nowrap;
+  }
+
+  th {
+    font-style: italic;
+    color: #656565;
+  }
+}
+
+.table-custom-striped tbody tr:nth-child(even) {
+  background-color: variables.$row-even-background;
+}
+
+.table-custom-row-clickable tbody tr:hover {
+  cursor: pointer;
+  background-color: gray;
+}

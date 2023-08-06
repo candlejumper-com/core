@@ -5,44 +5,22 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "platform": "node",
+        "target": "node",
+        "compiler": "tsc",
         "outputPath": "dist/apps/server-candles",
-        "format": ["cjs"],
-        "bundle": false,
         "main": "apps/server-candles/src/main.ts",
         "tsConfig": "apps/server-candles/tsconfig.app.json",
-        "assets": [
-          "apps/server-candles/src/assets",
-          {
-            "glob": "**/*.json",
-            "input": "./apps/server-candles/src/brokers/yahoo",
-            "output": "./dsdfd"
-          }
-        ],
-        "generatePackageJson": true,
-        "esbuildOptions": {
-          "sourcemap": true,
-          "outExtension": {
-            ".js": ".js",
-            ".json": ".json"
-          }
-        }
+        "assets": ["apps/server-candles/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/server-candles/webpack.config.js"
       },
       "configurations": {
         "development": {},
-        "production": {
-          "esbuildOptions": {
-            "sourcemap": false,
-            "outExtension": {
-              ".js": ".js",
-              ".json": ".json"
-            }
-          }
-        }
+        "production": {}
       }
     },
     "serve": {

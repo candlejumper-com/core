@@ -15,8 +15,14 @@
         "main": "apps/client/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/client/tsconfig.app.json",
-        "assets": ["apps/client/src/favicon.ico", "apps/client/src/assets"],
-        "styles": ["apps/client/src/styles.scss"],
+        "assets": [
+          "apps/client/src/favicon.ico",
+          "apps/client/src/assets",
+          "apps/client/src/manifest.webmanifest"
+        ],
+        "styles": [
+          "apps/client/src/styles/main.scss"
+        ],
         "scripts": [],
         "allowedCommonJsDependencies": [
           "xterm",
@@ -25,7 +31,7 @@
           "plotly.js-dist-min",
           "seedrandom",
           "earcut"
-       ]
+        ]
       },
       "configurations": {
         "production": {
@@ -64,7 +70,10 @@
           "browserTarget": "client:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "proxyConfig": "apps/client/src/proxy.conf.json"
+      }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",

@@ -1,0 +1,83 @@
+{
+    "brokers": {
+        "binance": {
+            "API_KEY": "",
+            "API_SECRET": ""
+        }
+    },
+    "production": {
+        "enabled": false,
+        "maxTradingAmount": 100,
+        "bots": [
+            {
+                "class": "Bollinger",
+                "interval": "15m",
+                "symbol": "BTCUSDT"
+            },
+            {
+                "class": "Bollinger",
+                "interval": "15m",
+                "symbol": "SHIBUSDT"
+            },
+            {
+                "class": "Bollinger",
+                "interval": "15m",
+                "symbol": "SOLUSDT"
+            }
+        ]
+    },
+    "data": {
+        "path": "./_data"
+    },
+    "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "BNBUSDT",
+        "LTCUSDT",
+        "ADAUSDT",
+        "XRPUSDT",
+        "TRXUSDT",
+        "LINKUSDT",
+        "FETUSDT",
+        "MATICUSDT",
+        "ATOMUSDT",
+        "FTMUSDT",
+        "DOGEUSDT",
+        "DUSKUSDT",
+        "BUSDUSDT",
+        "EURUSDT",
+        "DREPUSDT",
+        "SOLUSDT",
+        "LRCUSDT",
+        "CRVUSDT",
+        "SANDUSDT",
+        "DOTUSDT",
+        "EGLDUSDT",
+        "AVAXUSDT",
+        "NEARUSDT",
+        "FILUSDT",
+        "INJUSDT",
+        "AXSUSDT",
+        "ROSEUSDT",
+        "GRTUSDT",
+        "CFXUSDT",
+        "SHIBUSDT",
+        "MASKUSDT",
+        "MINAUSDT",
+        "DYDXUSDT",
+        "GALAUSDT",
+        "VGXUSDT",
+        "RNDRUSDT",
+        "HIGHUSDT",
+        "ACHUSDT",
+        "ASTRUSDT",
+        "GMTUSDT",
+        "LDOUSDT",
+        "OPUSDT",
+        "STGUSDT",
+        "APTUSDT",
+        "HFTUSDT",
+        "HOOKUSDT",
+        "MAGICUSDT"
+    ]
+}

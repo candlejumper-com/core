@@ -1,0 +1,28 @@
+import { ICandle, ISymbol } from '@candlejumper/shared'
+import { BOT_INDICATOR_TYPE } from './bot/bot.interfaces'
+import { TICKER_EVENT_TYPE } from "./ticker"
+
+export interface ITickerParams<T> {
+    class?: any
+    // class?: typeof Ticker<T>
+    id: string | number
+    // class?: typeof Ticker
+    path?: string
+    symbol?: ISymbol
+    interval?: string
+    params?: any
+}
+
+export interface ITickerEvent {
+    time: Date,
+    id: number,
+    type: TICKER_EVENT_TYPE
+    data?: any
+}
+
+export interface ITickerSnapshot {
+    candles: ICandle[],
+    output: any, // depends on indicator
+    type: BOT_INDICATOR_TYPE,
+    params: any,
+}

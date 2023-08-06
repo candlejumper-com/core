@@ -1,0 +1,91 @@
+{
+    "security": {
+        "jwtSecret": "98345jksdfnklsv kl8329rosdnvkjdv"
+    },
+    "intervals": [
+        "1m",
+        "5m",
+        "15m",
+        "1h",
+        "4h",
+        "1d"
+    ],
+    "bots": [
+        "Bollinger",
+        "RSI"
+    ],
+    "quantityPercentage": 40,
+    "spread": 0.002,
+    "syncInterval": 600000,
+    "maxOpenOrders": 1,
+    "preloadAmount": 5000,
+    "warmupAmount": 100,
+    "minTimeBetweenOrders": 30000,
+    "brokers": [],
+    "automize": {
+        "enabled": true
+    },
+    "server": {
+        "api": {
+            "host": "localhost",
+            "port": 3000
+        },
+        "candles": {
+            "url": "https://api.templatejump.com"
+        }
+    },
+    "data": {
+        "path": "./_data"
+    },
+    "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "BNBUSDT",
+        "LTCUSDT",
+        "ADAUSDT",
+        "XRPUSDT",
+        "TRXUSDT",
+        "LINKUSDT",
+        "FETUSDT",
+        "MATICUSDT",
+        "ATOMUSDT",
+        "FTMUSDT",
+        "DOGEUSDT",
+        "DUSKUSDT",
+        "BUSDUSDT",
+        "EURUSDT",
+        "DREPUSDT",
+        "SOLUSDT",
+        "LRCUSDT",
+        "CRVUSDT",
+        "SANDUSDT",
+        "DOTUSDT",
+        "EGLDUSDT",
+        "AVAXUSDT",
+        "NEARUSDT",
+        "FILUSDT",
+        "INJUSDT",
+        "AXSUSDT",
+        "ROSEUSDT",
+        "GRTUSDT",
+        "CFXUSDT",
+        "SHIBUSDT",
+        "MASKUSDT",
+        "MINAUSDT",
+        "DYDXUSDT",
+        "GALAUSDT",
+        "VGXUSDT",
+        "RNDRUSDT",
+        "HIGHUSDT",
+        "ACHUSDT",
+        "ASTRUSDT",
+        "GMTUSDT",
+        "LDOUSDT",
+        "OPUSDT",
+        "STGUSDT",
+        "APTUSDT",
+        "HFTUSDT",
+        "HOOKUSDT",
+        "MAGICUSDT"
+    ]
+}

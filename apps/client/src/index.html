@@ -1,13 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>client</title>
-    <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  </head>
-  <body>
-    <core-root></core-root>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <title>Tradebot</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta name="theme-color" content="#1976d2">
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body class="mat-typography darkMode">
+  <core-root>
+    <div class="height: 100%; text-align: center"></div>
+  </core-root>
+
+  <!-- <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-base.min.js" defer></script> -->
+  <!-- <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-stock.min.js" async></script> -->
+  <!-- <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-annotations.min.js" async></script> -->
+  <script src="assets/anychart/_anychart-combined-custom.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.9.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.24.3.min.js" crossorigin="anonymous" charset="utf-8"></script>
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  
+  <script>
+
+    window.app = {
+      pwa: {
+        promptEvent: null
+      },
+      report: Promise.resolve()
+    };
+
+    window.addEventListener('beforeinstallprompt', event => {
+      window.app.pwa.promptEvent = event;
+      event.preventDefault();
+    }, { once: true });
+  </script>
+</body>
 </html>

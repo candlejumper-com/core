@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, EntitySchema, EntitySchemaOptions, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
 export interface IWallet {
     id?: number
@@ -20,15 +20,15 @@ export class BrokerEntity {
     @PrimaryGeneratedColumn()
     id!: number
 
-    @Column('text', { nullable: false })
+    @Column({ nullable: false })
     name: string
 
-    @Column('text', { nullable: false })
+    @Column({ nullable: false })
     data: string
 
-    @CreateDateColumn({nullable:true})
+    @CreateDateColumn()
     createdAt: Date;
   
-    @UpdateDateColumn({nullable:true})
+    @UpdateDateColumn()
     updatedAt: Date;
 }

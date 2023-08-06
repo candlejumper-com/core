@@ -1,0 +1,34 @@
+{
+    "extends": "../tsconfig.base.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "noImplicitAny": false,
+        "strictNullChecks": false,
+        "inlineSources": true,
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "target": "ES2022",
+        "allowJs": false,
+        "lib": [
+            "es2023"
+        ],
+        "types": [
+            "node",
+            "jest"
+        ],
+        "paths": {
+            "@candlejumper/core": ["../apps/server-main/src/index.ts"],
+            "@candlejumper/shared": ["../libs/shared/src/index.ts"]
+        }
+    },
+    "include": ["./src/**/*.ts"],
+    "exclude": [
+        "**/lib/**/*",
+        "**/modules/**/*",
+        "dist",
+        "node_modules"
+    ]
+}

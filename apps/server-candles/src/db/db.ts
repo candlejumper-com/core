@@ -6,7 +6,7 @@ import { createCandleEntity, getCandleEntityName } from '../candle-manager/candl
 import { rm } from 'fs/promises';
 import { BrokerEntity } from '../broker/binance/broker-binance.entity'
 
-const PATH_DATA = join(__dirname, '../../../../../../../_data/candles')
+const PATH_DATA = join(__dirname, '../../../../_data/candles')
 
 export class DB {
 

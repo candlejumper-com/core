@@ -5,7 +5,7 @@ import { getCandleEntityName } from "./candle.entity"
 import { ICandleObject } from "./candle.interfaces"
 import { showProgressBar } from "../util/util"
 import { writeFileSync } from "fs"
-import { CANDLE_FIELD, ICandle, isForwardCandleArray } from "@candlejumper/shared"
+import { CANDLE_FIELD, isForwardCandleArray, ICandle } from "@candlejumper/shared"
 
 export class CandleManager {
   candles: { [key: string]: { [key: string]: ICandle[] } } = {}

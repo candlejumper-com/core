@@ -1,4 +1,3 @@
-import 'reflect-metadata'
 import { System } from './system/system';
 
 process.stdin.resume()

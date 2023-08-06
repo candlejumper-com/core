@@ -1,0 +1,84 @@
+@use '../styles/shared';
+
+mwlResizable {
+  box-sizing: border-box; // required for the enableGhostResize option to work
+}
+
+.resize-handle-top,
+.resize-handle-bottom,
+.resize-handle-left,
+.resize-handle-right {
+  position: absolute;
+  z-index: 11;
+  cursor: row-resize;
+
+  @include shared.media-breakpoint-up(lg) {
+    &:hover {
+      background: linear-gradient(90deg, white 50%, transparent 50%), linear-gradient(90deg, white 50%, transparent 50%), linear-gradient(0deg, white 50%, transparent 50%), linear-gradient(0deg, blue 50%, transparent 50%);
+      background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+      background-size: 15px 4px, 15px 4px, 4px 15px, 4px 15px;
+      background-position: 0px 0px, 200px 100px, 0px 100px, 200px 0px;
+      animation: border-dance 4s infinite linear;
+    }
+  }
+
+  &:after {
+    content: '☰';
+    position: relative;
+    font-size: 16px;
+    transform: rotate(90deg);
+  }
+}
+
+.resize-handle-top,
+.resize-handle-bottom {
+  height: 6px;
+  width: 100%;
+}
+
+.resize-handle-left,
+.resize-handle-right {
+  height: 100%;
+  width: 6px;
+}
+
+.resize-handle-top {
+  top: -3px;
+
+  &::after {
+    left: 50%;
+    top: -10px;
+  }
+}
+
+.resize-handle-bottom {
+  bottom: 0;
+}
+
+.resize-handle-left {
+  left: -3px;
+
+  &:after {
+    top: 50%;
+    left: -4px;
+  }
+}
+
+.resize-handle-right {
+  right: 0;
+
+  &::after {
+    top: 50%;
+    left: -2px;
+  }
+}
+
+@keyframes border-dance {
+  0% {
+    background-position: 0px 0px, 300px 116px, 0px 150px, 216px 0px;
+  }
+
+  100% {
+    background-position: 300px 0px, 0px 116px, 0px 0px, 216px 150px;
+  }
+}

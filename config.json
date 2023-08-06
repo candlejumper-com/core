@@ -1,0 +1,80 @@
+{
+  "security": {
+    "jwtSecret": "98345jksdfnklsv kl8329rosdnvkjdv"
+  },
+  "intervals": ["1m", "5m", "15m", "1h", "4h", "1d"],
+  "data": {
+    "path": "./_data"
+  },
+  "server": {
+    "api": {
+      "host": "localhost",
+      "port": 3000
+    },
+    "candles": {
+      "url": "http://localhost:3001",
+      "url2": "https://api.templatejump.com"
+    }
+  },
+  "brokers": {
+    "binance": {
+      "apiKey": "AegUy9dWnbC72zWZcIzpOZBYiT4smpcELpEsmt7fGeEhj956SMSIFLkyE2LYLdS4",
+      "apiSecret": "MEwiL3OWwWzEZSiDkyckeCq6oge7xGacU9dtpcqUCnt2gd235laXduY5ujBo6Ht5"
+    },
+    "ig": {
+      "apiKey2": "106cfa08730e47385c477a08a58d80d56e75c8c7",
+      "apiKey": "2f5d00d82c41e7a92be4d1f478b1187c2afde56d",
+      "username": "dutchkevv5",
+      "password": "Bettie123!!!"
+    }
+  },
+  "automize": {
+    "maxBots": 10,
+    "enabled": false
+  },
+  "tickers": {
+    "default": ["@bot/bollinger", "@indicator/trend"]
+  },
+  "production": {
+    "enabled": false,
+    "maxTradingAmount": 60,
+    "bots": [
+      {
+        "class": "Bollinger",
+        "interval": "5m",
+        "symbol": "SHIBUSDT",
+        "optimize": 30,
+        "id": "SHIB_BOLLINGER"
+      },
+      {
+        "class": "Bollinger",
+        "interval": "15m",
+        "symbol": "APTUSDT",
+        "optimize": 30,
+        "id": "APTUSDT_BOLLINGER"
+      },
+      {
+        "class": "Bollinger",
+        "interval": "15m",
+        "symbol": "SOLUSDT",
+        "optimize": 30,
+        "id": "SOLUSDT_BOLLINGER"
+      },
+      {
+        "class": "Bollinger",
+        "interval": "15m",
+        "symbol": "LDOUSDT",
+        "optimize": 30,
+        "id": "LDOUSDT_BOLLINGER"
+      },
+      {
+        "class": "Bollinger",
+        "interval": "15m",
+        "symbol": "MATICUSDT",
+        "optimize": 30,
+        "id": "MATICUSDT_BOLLINGER"
+      }
+    ]
+  },
+  "symbols": []
+}
