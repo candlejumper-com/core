@@ -5,8 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class LocalStorageService {
 
-  constructor() { }
-
   get(key: string): any {
     const item = localStorage.getItem(key)
 

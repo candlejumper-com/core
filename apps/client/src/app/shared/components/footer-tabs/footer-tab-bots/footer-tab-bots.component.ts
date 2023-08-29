@@ -7,7 +7,7 @@ import { StateService } from '../../../services/state/state.service';
 import { SharedModule } from '../../../shared.module';
 
 @Component({
-  selector: 'app-footer-tab-bots',
+  selector: 'core-footer-tab-bots',
   templateUrl: './footer-tab-bots.component.html',
   styleUrls: ['./footer-tab-bots.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,31 +29,19 @@ export class FooterTabBotsComponent {
   ) {}
 
   ngOnInit() {
-    this.bots  = this.stateService.main.tickers.map(bot => {
-      return {
-        name: bot.name,
-        baseAsset: bot.baseAsset,
-        symbol: bot.symbol,
-        interval: bot.interval,
-        hits: bot.hits,
-        bot: bot,
-        trades: this.stateService.main.symbols[bot.symbol.name].totalOrders
-      }
-    })
+    // this.bots  = this.stateService.main.tickers.map(bot => {
+    //   return {
+    //     name: bot.name,
+    //     baseAsset: bot.baseAsset,
+    //     symbol: bot.symbol,
+    //     interval: bot.interval,
+    //     hits: bot.hits,
+    //     bot: bot,
+    //     trades: this.stateService.main.symbols[bot.symbol.name].totalOrders
+    //   }
+    // })
 
     console.log(this.bots[0])
-  }
-
-  automize() {
-    const confirmed = confirm('This will drop all running bots and auto select the best performing bots, based on a (heavy) serie of backtests.\n\nDo you want to continue?')
-
-    if (confirmed) {
-      this.httpClient.post('/api/automize', {}).subscribe({
-        next: () => {
-
-        }
-      })
-    }
   }
 
   onClickBot(bot: any) {

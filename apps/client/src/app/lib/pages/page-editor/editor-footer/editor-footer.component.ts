@@ -22,7 +22,7 @@ export const enum EDITOR_FOOTER_TAB {
 }
 
 @Component({
-  selector: 'app-editor-footer',
+  selector: 'core-editor-footer',
   templateUrl: './editor-footer.component.html',
   styleUrls: ['./editor-footer.component.scss'],
   standalone: true,
@@ -91,7 +91,7 @@ export class EditorFooterComponent {
   onResizeEnd(event: ResizeEvent) {
     this.elementRef.nativeElement.style.height = event.rectangle.height + 'px'
     this.profileService.profile.settings.client.footer.size = event.rectangle.height
-    this.profileService.store()
+    this.profileService.save()
 
     requestAnimationFrame(() => this.setToggleIcon())
   }
@@ -105,7 +105,7 @@ export class EditorFooterComponent {
       this.activeTab = tab
     })
     // this.profileService.profile.settings.client.footer.activeTab = tab
-    // this.profileService.store()
+    // this.profileService.save()
 
     // this.orderService.newOrders$.next(0)
   }

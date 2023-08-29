@@ -6,7 +6,7 @@ import { Socket } from 'socket.io';
 
 const PATH_SNAPSHOT_BACKTEST = path.join(
   __dirname,
-  '../../../../../_data/snapshots/backtest'
+  '../../../_data/snapshots/backtest'
 );
 
 export default function (system: System, app: Application, socket?: Socket) {

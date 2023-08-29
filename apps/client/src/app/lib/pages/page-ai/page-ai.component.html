@@ -14,7 +14,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Symbol</mat-label>
               <mat-select placeholder="Data Temporal Resolutions" formControlName="symbols" multiple>
-                <mat-option [value]="symbol.name" *ngFor="let symbol of candleService.symbols">{{ symbol.name }}</mat-option>
+                <mat-option [value]="item.value.name" *ngFor="let item of $any(symbols$ | async | keyvalue)">{{ item.value.name }}</mat-option>
               </mat-select>
             </mat-form-field>
 

@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ISystemState, State, StateService } from '../state/state.service';
 import { WSService } from '../ws/ws.service';
+import { Select, Store } from '@ngxs/store';
+import { BacktestState } from '../../state/backtest/backtest.state';
+import { BACKTEST_RESET, BACKTEST_SET } from '../../state/backtest/backtest.actions';
 
 export interface IBacktestResult {
   totalTime: number
@@ -23,11 +26,14 @@ export interface IBacktestOptions {
 })
 export class BacktestService {
 
+  @Select(BacktestState.getAll) backtests$: Observable<State[]>
+
   readonly busy$ = new BehaviorSubject<boolean>(false)
 
   constructor(
     private stateService: StateService,
-    private wsService: WSService
+    private wsService: WSService,
+    private store: Store
   ) {
     this.init()
   }
@@ -40,7 +46,7 @@ export class BacktestService {
     this.busy$.next(true)
 
     // reset backtest state
-    this.stateService.backtest$.next(null)
+    this.store.dispatch(new BACKTEST_RESET()).subscribe()
 
     // remove old snapshots
     this.wsService.socket.emit('delete:/api/snapshots', () => {
@@ -66,6 +72,6 @@ export class BacktestService {
       return state
     })
 
-    this.stateService.backtest$.next(states)
+    this.store.dispatch(new BACKTEST_SET(states))
   }
 }

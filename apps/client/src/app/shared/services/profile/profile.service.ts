@@ -4,6 +4,7 @@ import { LocalStorageService } from '../local-storage/local-storage.service';
 import merge from 'deepmerge';
 import { ChartId } from '../chart/chart.service';
 import { FOOTER_TAB } from '../../components/footer-tabs/footer-tabs.component';
+import { Store } from '@ngxs/store';
 
 export interface IProfile {
   version?: number
@@ -71,7 +72,8 @@ export class ProfileService {
 
   constructor(
     private localStorageService: LocalStorageService,
-    private candleService: CandleService
+    private candleService: CandleService,
+    private store: Store
   ) { }
 
   init() {
@@ -91,7 +93,7 @@ export class ProfileService {
     setInterval(() => this.updateBalances(), 1000)
   }
 
-  store() {
+  save() {
     this.localStorageService.set('profile', this.profile)
   }
 
@@ -127,7 +129,8 @@ export class ProfileService {
     let currentPrice = 1
 
     if (asset !== 'USDT') {
-      currentPrice = this.candleService.symbols.find(symbol => symbol.name === asset + 'USDT')?.price || 0
+      const symbol = this.store.selectSnapshot(symbols => symbols.find(symbol => symbol.name === asset + 'USDT'))
+      currentPrice = symbol?.price || 0
     }
 
     return currentPrice * balance

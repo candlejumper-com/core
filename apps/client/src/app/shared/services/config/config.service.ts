@@ -16,10 +16,4 @@ export interface IConfigResponse {
 })
 export class ConfigService {
 
-  config: IConfigSystem
-
-  setConfig(data: IConfigResponse): void {
-    this.config = data.system
-    this.config.bots = data.availableBots.map(bot => bot.name)
-  }
 }

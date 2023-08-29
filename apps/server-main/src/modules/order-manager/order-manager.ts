@@ -6,7 +6,7 @@ import { join } from 'path';
 import * as fs from 'fs';
 import { ISymbol } from "@candlejumper/shared";
 
-const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../../../_data/snapshots/backtest')
+const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../_data/snapshots/backtest')
 
 export enum ORDER_TYPE {
     STOP_LOSS_LIMIT = 'STOP_LOSS_LIMIT',

@@ -29,7 +29,7 @@ export const enum FOOTER_TAB {
 
 @Component({
   standalone: true,
-  selector: 'app-footer-tabs',
+  selector: 'core-footer-tabs',
   templateUrl: './footer-tabs.component.html',
   styleUrls: ['./footer-tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -115,7 +115,7 @@ export class FooterTabsComponent {
     this.elementRef.nativeElement.parentNode.classList.remove('resizing')
     this.elementRef.nativeElement.style.height = event.rectangle.height + 'px'
     this.profileService.profile.settings.client.footer.size = event.rectangle.height
-    this.profileService.store()
+    this.profileService.save()
 
     requestAnimationFrame(() => this.setToggleIcon())
   }
@@ -124,7 +124,7 @@ export class FooterTabsComponent {
     this.ensureMinimumHeight()
     this.activeTab = tab
     this.profileService.profile.settings.client.footer.activeTab = tab
-    this.profileService.store()
+    this.profileService.save()
 
     this.orderService.newOrders$.next(0)
   }

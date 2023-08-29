@@ -4,11 +4,14 @@ import { ChartService } from '../../../services/chart/chart.service';
 import { ConfigService } from '../../../services/config/config.service';
 import { OrderService } from '../../../services/order/order.service';
 import { ProfileService } from '../../../services/profile/profile.service';
-import { UserService } from '../../../services/user/user.service';
+import { IUser, UserService } from '../../../services/user/user.service';
 import { SharedModule } from '../../../shared.module';
+import { UserState } from '../../../state/user/user.state';
+import { Observable } from 'rxjs';
+import { Select } from '@ngxs/store';
 
 @Component({
-  selector: 'app-footer-tab-balances',
+  selector: 'core-footer-tab-balances',
   templateUrl: './footer-tab-balances.component.html',
   styleUrls: ['./footer-tab-balances.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,6 +22,8 @@ import { SharedModule } from '../../../shared.module';
 })
 export class FooterTabBalancesComponent implements OnInit, OnDestroy {
 
+  @Select(UserState.get) user$: Observable<IUser>
+
   availableUSDT: number
 
   private updateInterval
@@ -26,15 +31,14 @@ export class FooterTabBalancesComponent implements OnInit, OnDestroy {
   constructor(
     public configService: ConfigService,
     public candleService: CandleService,
-    public profileService: ProfileService,
-    public userService: UserService,
     private orderService: OrderService,
     private changeDetectorRef: ChangeDetectorRef,
-    private chartService: ChartService
+    private chartService: ChartService,
+    public userService: UserService
   ) {}
 
   ngOnInit() {
-    this.availableUSDT = this.profileService.getBalance('USDT')
+    // this.availableUSDT = this.user$.getBalance('USDT')
     this.startUpdateInterval()
   }
 
@@ -57,7 +61,7 @@ export class FooterTabBalancesComponent implements OnInit, OnDestroy {
 
   private startUpdateInterval() {
     this.updateInterval = setInterval(() => {
-      this.availableUSDT = this.profileService.getBalance('USDT')
+      this.availableUSDT = this.userService.getAssetValue('USDT')
       this.changeDetectorRef.detectChanges()
     }, 500)
   }

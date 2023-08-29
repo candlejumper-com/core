@@ -8,24 +8,28 @@ import { DialogOrderComponent, IOrderDialogData } from '../dialog-order/dialog-o
 import { ChartType, ChartViewType } from '../../services/chart/chart.service';
 import { IPricesWebsocketResponse } from '../../services/candle/candle.interfaces';
 import { CandleService } from '../../services/candle/candle.service';
-import { Subject, BehaviorSubject, Subscription, tap, takeUntil } from 'rxjs';
-import { ConfigService } from '../../services/config/config.service';
+import { Subject, BehaviorSubject, Subscription, tap, takeUntil, Observable } from 'rxjs';
+import { ConfigService, IConfigSystem } from '../../services/config/config.service';
 import { IOrder, ORDER_SIDE } from '../../services/order/order.service';
 import { ITicker, BOT_INDICATOR_TYPE, BOT_EVENT_TYPE } from '../../services/state/state.service';
 import { ISymbol } from '@candlejumper/shared';
+import { ConfigState } from '../../state/config/config.state';
+import { Select } from '@ngxs/store';
 
 declare let anychart: any
 
 anychart.theme(anychart.themes.darkCustom);
 
 @Component({
-  selector: 'app-chart',
+  selector: 'core-chart',
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss'],
   standalone: true,
   imports: [SharedModule, DialogOrderComponent]
 })
 export class ChartComponent implements OnDestroy {
+
+  @Select(ConfigState.getAll) config$: Observable<IConfigSystem>
 
   @Input()
   symbol: ISymbol
@@ -256,14 +260,16 @@ export class ChartComponent implements OnDestroy {
       switch (indicator.type) {
 
         // SMA
-        case BOT_INDICATOR_TYPE.SMA:
+        case BOT_INDICATOR_TYPE.SMA: {
           // create SMA indicators with period 20
           const SMA = plot.sma(this.dataMapping, indicator.params.period.value).series();
           SMA.stroke('#bf360c');
           break
+        }
+
 
         // Bollinger
-        case BOT_INDICATOR_TYPE.BB:
+        case BOT_INDICATOR_TYPE.BB: {
           // create Bollinger Bands indicator
           const bbMapping = this.dataTable.mapAs({ 'value': 4 });
           const bbands = plot.bbands(bbMapping, indicator.params.period.value, indicator.params.weight.value);
@@ -273,18 +279,19 @@ export class ChartComponent implements OnDestroy {
           bbands.upperSeries().stroke('#fff 0.5');
           bbands.rangeSeries().fill('#ccc 0.1');
           break
-
+        }
         // RSI
-        case BOT_INDICATOR_TYPE.RSI:
+        case BOT_INDICATOR_TYPE.RSI: {
           const rsiPlot = this.chart.plot(2);
           rsiPlot.height('20%')
           rsiPlot.maxHeight('100px');
           const rsiMapping = this.dataTable.mapAs({ 'value': 4 });
-          var rsi14 = rsiPlot.rsi(rsiMapping, indicator.params.period.value).series();
+          const rsi14 = rsiPlot.rsi(rsiMapping, indicator.params.period.value).series();
           rsi14.stroke('#bf360c')
           break
+        }
 
-        case BOT_INDICATOR_TYPE.FIBONACCI:
+        case BOT_INDICATOR_TYPE.FIBONACCI: {
           // const candles = this.candles.slice(0, 20).map(candle => ({ h: candle[2], l: candle[3]}))
           // var resists = tw.fibonacciRetrs(candles, 'UPTREND');
 
@@ -293,8 +300,8 @@ export class ChartComponent implements OnDestroy {
           const period = indicator.params.period.value
           // create a Fibonacci Retracement annotation
           const candles = this.candles.slice(this.candles.length - period, this.candles.length - 1).map(candle => candle[4])
-          const highestPrice = Math.max.apply(Math, candles)
-          const lowestPrice = Math.min.apply(Math, candles)
+          const highestPrice = Math.max(...candles)
+          const lowestPrice = Math.min(...candles)
 
           controller.fibonacciRetracement({
             xAnchor: this.candles[this.candles.length - period][0],
@@ -303,7 +310,7 @@ export class ChartComponent implements OnDestroy {
             secondValueAnchor: highestPrice
           });
           break
-
+        }
         default:
           console.error('Unknown indicator: ' + indicator.type)
       }
@@ -381,7 +388,7 @@ export class ChartComponent implements OnDestroy {
           });
           break
 
-        case BOT_EVENT_TYPE.WATCHER_START:
+        case BOT_EVENT_TYPE.WATCHER_START: {
           const color = event.data.dir === 'up' ? 'green' : 'red'
           controller.verticalLine({
             xAnchor: event.time,
@@ -390,7 +397,7 @@ export class ChartComponent implements OnDestroy {
             selected: { stroke: "4 #ff0000" }
           });
           break
-
+        }
         case BOT_EVENT_TYPE.WATCHER_STOP:
           controller.verticalLine({
             xAnchor: event.time,

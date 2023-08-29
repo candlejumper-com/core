@@ -56,7 +56,7 @@ export class FileTreeComponent {
   onResizeEnd(event: ResizeEvent) {
     this.elementRef.nativeElement.style.width = event.rectangle.width + 'px'
     // this.profileService.profile.settings.client.footer.size = event.rectangle.height
-    // this.profileService.store()
+    // this.profileService.save()
   }
 
   private _transformer = (node: IFileTreeResponse, level: number) => {

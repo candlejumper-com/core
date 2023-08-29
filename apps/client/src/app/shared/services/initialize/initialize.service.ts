@@ -1,17 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CandleService } from '../candle/candle.service';
-import { ConfigService, IConfigResponse } from '../config/config.service';
-import { ProfileService } from '../profile/profile.service';
-import { State, StateService } from '../state/state.service';
-import { UserService } from '../user/user.service';
+import { IConfigResponse } from '../config/config.service';
+import { State } from '../state/state.service';
 import { WSService } from '../ws/ws.service';
+import { Store } from '@ngxs/store';
+import { CONFIG_SET } from '../../state/config/config.actions';
+import { SYMBOL_SET } from '../../state/symbol/symbol.actions';
+import { USER_SET } from '../../state/user/user.actions';
+import { IUser } from '../user/user.service';
+import { ISymbol } from '@candlejumper/shared';
 
 interface IAppInitResponse {
   config: IConfigResponse
-  symbols: any[]
+  symbols: ISymbol[]
   state: State
-  user: any
+  user: IUser
 }
 
 @Injectable()
@@ -19,30 +22,25 @@ export class InitializeService {
 
   constructor(
     public wsService: WSService,
-    private configService: ConfigService,
-    private candleService: CandleService,
-    private profileService: ProfileService,
-    private stateService: StateService,
-    private userService: UserService,
     private httpClient: HttpClient,
+    private store: Store
   ) { }
 
   async Init(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.wsService.init()
 
       this.httpClient.get<IAppInitResponse>('/api/app-init').subscribe({
         next: result => {
-          this.userService.setUser(result.user)
-          this.configService.setConfig(result.config)
-          this.candleService.setSymbols(result.state.symbols)
-          this.profileService.setAccount(result.state.account)
-          this.stateService.loadMain(result.state)
+          const user = Object.assign({}, result.user, result.state.account)
+
+          this.store.dispatch(new USER_SET(user))
+          this.store.dispatch(new CONFIG_SET(result.config))
+          this.store.dispatch(new SYMBOL_SET(result.state.symbols))
+
+          this.wsService.init()
 
           // load firebase and PWA
           // this.deviceService.init();
-          this.profileService.init()
-
           resolve()
         },
         error: error => {

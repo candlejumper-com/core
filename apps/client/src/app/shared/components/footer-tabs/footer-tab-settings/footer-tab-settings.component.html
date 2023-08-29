@@ -1,4 +1,4 @@
-<ng-container *ngIf="userService.user as user">
+<ng-container *ngIf="user$ | async as user">
 
   <ul>
     <li>username: {{user.username}}</li>
@@ -10,9 +10,9 @@
     <hr>
 
     <ul>
-      <li style="margin-bottom: 20px;">Mode : <span  class="text-{{userService.user.production ? 'success' : 'error'}}">{{userService.user?.production ? 'LIVE' : 'OFFLINE'}}</span></li>
-      <li><button mat-raised-button color="primary" (click)="toggleProductionMode(true)" *ngIf="!userService.user?.production">Run as production</button></li>
-      <li><button mat-raised-button color="warn" (click)="toggleProductionMode(false)"  *ngIf="userService.user?.production === true">Stop</button></li>
+      <li style="margin-bottom: 20px;">Mode : <span  class="text-{{user.production ? 'success' : 'error'}}">{{user.production ? 'LIVE' : 'OFFLINE'}}</span></li>
+      <li><button mat-raised-button color="primary" (click)="toggleProductionMode(true)" *ngIf="user?.production">Run as production</button></li>
+      <li><button mat-raised-button color="warn" (click)="toggleProductionMode(false)"  *ngIf="user?.production === true">Stop</button></li>
     </ul>
   </div>
 

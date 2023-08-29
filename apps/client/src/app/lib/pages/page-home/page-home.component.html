@@ -1,7 +1,7 @@
 <div class="wrapper">
 
   <!-- symbol overview-->
-  <app-symbol-overview #symbolOverview></app-symbol-overview>
+  <core-symbol-overview #symbolOverview></core-symbol-overview>
 
   <div class="overlay d-lg-none" (click)="symbolOverview.toggleVisibility(false)" *ngIf="symbolOverview.isVisible"></div>
 
@@ -29,7 +29,7 @@
     </div>
 
     <ng-container *ngIf="chart$ | async as chart">
-      <app-chart 
+      <core-chart 
         *ngIf="chart.symbol"
         [symbol]="chart.symbol"
         [candles]="chart.candles"
@@ -38,14 +38,14 @@
         [indicators]="chart.indicators"
         [interval$]="activeInterval$"
       >
-      </app-chart>
+      </core-chart>
     </ng-container>
   </div>
 
   <!-- <app-bot-config></app-bot-config> -->
 </div>
 
-<app-footer-tabs></app-footer-tabs>
+<core-footer-tabs></core-footer-tabs>
 
 <!-- PWA install banner -->
 <div *ngIf="(deviceService.showPWABanner$ | async)" class="d-flex justify-content-center position-relative pb-2 pt-2" style="background: #212121 !important; display: none !important;">

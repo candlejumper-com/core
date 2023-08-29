@@ -22,19 +22,19 @@
       <span class="notification-bubble"
         *ngIf="tab[0] === 'trades' && (orderService.newOrders$ | async) as newOrders">{{newOrders}}</span>
       <span *ngIf="tab[0] === 'bots'" style="font-weight: bold;">
-        &nbsp;<sup>({{stateService.main.tickers.length}})</sup>
+        <!-- &nbsp;<sup>({{stateService.main.tickers.length}})</sup> -->
       </span>
     </a>
   </div>
 
   <div class="tab-custom-content">
     <app-footer-tab-orders *ngIf="activeTab === 'trades'"></app-footer-tab-orders>
-    <app-footer-tab-balances *ngIf="activeTab === 'balances'"></app-footer-tab-balances>
-    <app-footer-tab-bots *ngIf="activeTab === 'bots'"></app-footer-tab-bots>
-    <app-footer-tab-backtest *ngIf="activeTab === 'backtest'"></app-footer-tab-backtest>
+    <core-footer-tab-balances *ngIf="activeTab === 'balances'"></core-footer-tab-balances>
+    <core-footer-tab-bots *ngIf="activeTab === 'bots'"></core-footer-tab-bots>
+    <core-footer-tab-backtest *ngIf="activeTab === 'backtest'"></core-footer-tab-backtest>
     <app-footer-tab-logs *ngIf="activeTab === 'logs'"></app-footer-tab-logs>
-    <app-footer-tab-settings *ngIf="activeTab === 'settings'"></app-footer-tab-settings>
+    <core-footer-tab-settings *ngIf="activeTab === 'settings'"></core-footer-tab-settings>
     <app-footer-tab-editor *ngIf="activeTab === 'editor'"></app-footer-tab-editor>
-    <app-footer-tab-status *ngIf="activeTab === 'status'"></app-footer-tab-status>
+    <core-footer-tab-status *ngIf="activeTab === 'status'"></core-footer-tab-status>
   </div>
 </div>

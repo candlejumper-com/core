@@ -2,10 +2,12 @@
   <h1>Account</h1>
   <hr>
   <ul>
-    <li>Status: <span class="text-{{userService.user ? 'success' : 'error'}}">&nbsp; {{userService.user ? 'Logged in' : 'Logged out' }}</span></li>
-    <li *ngIf="!userService.user" style="margin-top: 20px"><button mat-raised-button color="primary" (click)="openAuthDialog()"><mat-icon>login</mat-icon>Login</button></li>
-    <li *ngIf="!userService.user" style="margin-top: 20px"><button mat-raised-button color="primary" (click)="openRegistrateDialog()"><mat-icon>add</mat-icon>Registrate</button></li>
-    <li *ngIf="userService.user" style="margin-top: 20px"><button mat-raised-button color="warn" (click)="userService.logout()">Logout</button></li>
+    <li>Status: <span class="text-{{(user$ | async) ? 'success' : 'error'}}">&nbsp; {{(user$ | async) ? 'Logged in' : 'Logged out' }}</span></li>
+    <ng-container *ngIf="(user$ | async) === null">
+      <li style="margin-top: 20px"><button mat-raised-button color="primary" (click)="openAuthDialog()"><mat-icon>login</mat-icon>Login</button></li>
+      <li style="margin-top: 20px"><button mat-raised-button color="primary" (click)="openRegistrateDialog()"><mat-icon>add</mat-icon>Registrate</button></li>
+      <li style="margin-top: 20px"><button mat-raised-button color="warn" (click)="userService.logout()">Logout</button></li>
+    </ng-container>
   </ul>
 </div>
 
@@ -13,7 +15,7 @@
   <h1>Bot server</h1>
   <hr>
   <ul>
-    <li>Logged in: <span class="status-{{userService.user ? 'ok' : 'error'}}">&nbsp;</span></li>
+    <li>Logged in: <span class="status-{{(user$ | async) ? 'ok' : 'error'}}">&nbsp;</span></li>
     <li>Status: <span class="status-{{statusService.status.botServer.status}}">&nbsp;</span></li>
     <li>last tick: {{statusService.status.botServer.lastTickTime}}</li>
   </ul>

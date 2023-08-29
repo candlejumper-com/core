@@ -12,6 +12,16 @@ import { MatTabsModule } from '@angular/material/tabs'
 import { MatCardModule } from '@angular/material/card'
 import { FlexLayoutModule } from '@angular/flex-layout'
 import { routes } from './app.routes'
+import { NgxsReduxDevtoolsPluginModule } from "@ngxs/devtools-plugin";
+import { environment } from './environments/environment'
+import { NgxsModule } from '@ngxs/store'
+import { UserState } from './shared/state/user/user.state'
+import { ConfigState } from './shared/state/config/config.state'
+import { SymbolStateModule } from './shared/state/symbol/symbol.state.module'
+import { UserStateModule } from './shared/state/user/user.state.module'
+import { UserService } from './shared/services/user/user.service'
+import { BacktestState } from './shared/state/backtest/backtest.state'
+import { ChartViewState } from './shared/state/chart-view/chart-view.state'
 
 export function initializeApp(appInitService: InitializeService) {
   return () => appInitService.Init()
@@ -38,6 +48,10 @@ export function initializeApp(appInitService: InitializeService) {
     MatSnackBarModule,
     MatTabsModule,
     MatCardModule,
+    NgxsReduxDevtoolsPluginModule.forRoot(),
+    NgxsModule.forRoot([ConfigState, BacktestState, ChartViewState]),
+    SymbolStateModule,
+    UserStateModule
   ],
   providers: [
     InitializeService,

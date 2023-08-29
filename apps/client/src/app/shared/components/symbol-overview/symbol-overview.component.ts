@@ -1,21 +1,26 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { SharedModule } from '../../shared.module';
 import { IndicatorService } from '../../services/indicator/indicator.service'
 import { CandleService } from '../../services/candle/candle.service';
 import { ChartService } from '../../services/chart/chart.service';
 import { WindowService } from '../../services/window/window.service';
 import { ISymbol } from '@candlejumper/shared';
+import { Select, Store } from '@ngxs/store';
+import { SymbolState } from '../../state/symbol/symbol.state';
+import { SymbolStateModule } from '../../state/symbol/symbol.state.module';
 
 @Component({
-  selector: 'app-symbol-overview',
+  selector: 'core-symbol-overview',
   templateUrl: './symbol-overview.component.html',
   styleUrls: ['./symbol-overview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [SharedModule]
+  imports: [SharedModule, SymbolStateModule]
 })
 export class SymbolOverviewComponent implements OnInit, OnDestroy {
+
+  @Select(SymbolState.getAll) symbols$: Observable<ISymbol[]>
 
   symbols: ISymbol[] = []
   isVisible = window.document.body.clientWidth >= this.windowService.breakpoints.lg
@@ -29,7 +34,8 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
     public indicatorService: IndicatorService,
     private changeDectorRef: ChangeDetectorRef,
     private candleService: CandleService,
-    private windowService: WindowService
+    private windowService: WindowService,
+    private store: Store
   ) { }
 
   ngOnInit(): void {
@@ -37,7 +43,8 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
     this.toggleVisibility(this.isVisible)
 
     // sort by name
-    this.symbols = this.candleService.symbols.sort((p1, p2) => (p1.symbol < p2.symbol) ? -11 : (p1.symbol > p2.symbol) ? 0 : -1)
+    // this.symbols = this.candleService.symbols.sort((p1, p2) => (p1.symbol < p2.symbol) ? -11 : (p1.symbol > p2.symbol) ? 0 : -1)
+    // this.symbols = this.candleService.symbols.sort((p1, p2) => (p1.symbol < p2.symbol) ? -11 : (p1.symbol > p2.symbol) ? 0 : -1)
 
     // start listening to price changes
     this.tickSubscription = this.candleService.tick$.subscribe(() => this.onPriceTick())
@@ -86,6 +93,6 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
 
   onSearchInputChange(event): void {
     const value = event.target.value.toLowerCase()
-    this.symbols = this.candleService.symbols.filter(symbol => symbol.name.toLowerCase().includes(value))
+    // this.symbols = this.candleService.symbols.filter(symbol => symbol.name.toLowerCase().includes(value))
   }
 }

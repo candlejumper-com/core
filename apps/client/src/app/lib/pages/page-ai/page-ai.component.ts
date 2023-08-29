@@ -5,16 +5,23 @@ import { CandleService } from '../../../shared/services/candle/candle.service';
 import { TENSORFLOW_HARDWARE } from '../../../shared/services/tensorflow/tensorflow.util';
 import { SharedModule } from '../../../shared/shared.module';
 import { TrainingViewComponent } from '../../components/training-view/training-view.component';
-import { CANDLE_DATA_ORIGIN } from '@candlejumper/shared';
+import { CANDLE_DATA_ORIGIN, ISymbol } from '@candlejumper/shared';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { SymbolState } from '../../../shared/state/symbol/symbol.state';
+import { SymbolStateModule } from '../../../shared/state/symbol/symbol.state.module';
 
 @Component({
   selector: 'core-page-ai',
   templateUrl: './page-ai.component.html',
   styleUrls: ['./page-ai.component.scss'],
   standalone: true,
-  imports: [SharedModule, TrainingViewComponent],
+  imports: [SharedModule, TrainingViewComponent, SymbolStateModule],
 })
 export class PageAIComponent {
+
+  @Select(SymbolState.getAll) symbols$: Observable<ISymbol[]>
+  
   activeContainerTab = 0
   activeTab = 0
 

@@ -8,7 +8,6 @@ import { UserService } from '../../services/user/user.service';
 import { SharedModule } from '../../shared.module';
 
 @Component({
-  selector: 'app-dialog-auth',
   templateUrl: './dialog-auth.component.html',
   styleUrls: ['./dialog-auth.component.scss'],
   standalone: true,

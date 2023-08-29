@@ -83,7 +83,7 @@ export class ChartService {
     this.requireOneChart();
   }
 
-  createChart(type: ChartType, symbol: ISymbol, interval: string, time: number = 0, snapshot?: any): ViewedChart {
+  createChart(type: ChartType, symbol: ISymbol, interval: string, time = 0, snapshot?: any): ViewedChart {
     const chartId = this.buildChartId(type, symbol, interval, time);
     const existingChart = this.chartsInTabs$.value.find(chart => chart.id === chartId);
     // this.activeInterval$.next(interval);
@@ -131,7 +131,7 @@ export class ChartService {
   rememberActiveChart() {
     if (this.activeChart$.value.type === 'MAIN') {
       this.profileService.profile.settings.client.main.activeChart = this.activeChart$.value.id;
-      this.profileService.store();
+      this.profileService.save();
     }
   }
 
@@ -166,7 +166,7 @@ export class ChartService {
     this.rememberActiveChart();
   }
 
-  buildChartId(type: ChartType, symbol: ISymbol, interval: string, time: number = 0): ChartId {
+  buildChartId(type: ChartType, symbol: ISymbol, interval: string, time = 0): ChartId {
     if (type === 'MAIN') {
       return `${type}-${symbol.name}-${time}` 
     }
@@ -183,7 +183,7 @@ export class ChartService {
   requireOneChart() {
     if (!this.chartsInTabs$?.value.length) {
       this.showChart(
-        this.createChart('MAIN', this.candleService.getSymbolByName('AUD/USD'), '15m')
+        this.createChart('MAIN', this.candleService.getSymbolByName('OIL'), '15m')
           .id
       );
     }

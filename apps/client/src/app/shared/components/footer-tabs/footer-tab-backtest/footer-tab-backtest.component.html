@@ -11,9 +11,9 @@
               <div class="select-all">
                 <mat-checkbox (change)="toggleAllSelection()">Select All</mat-checkbox>
               </div>
-              <mat-option *ngFor="let symbol of candleService.symbols" [value]="symbol.name">
+              <mat-option *ngFor="let item of $any(symbols$ | async | keyvalue)" [value]="item.value.name">
                 <img class="asset-icon"
-                  [src]="'assets/icons/crypto/' + symbol.name.replace('USDT', '').toLowerCase() + '.svg'">{{symbol.name}}
+                  [src]="'assets/icons/crypto/' + item.value.name.replace('USDT', '').toLowerCase() + '.svg'">{{item.value.name}}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -23,7 +23,7 @@
           <mat-form-field appearance="fill">
             <mat-label>INTERVAL</mat-label>
             <mat-select formControlName="intervals" multiple>
-              <mat-option *ngFor="let interval of configService.config.intervals"
+              <mat-option *ngFor="let interval of (config$ | async)['system']['intervals']"
                 [value]="interval">{{interval}}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -36,7 +36,7 @@
               <mat-radio-button *ngFor="let bot of configService.config.bots" [value]="bot">{{bot}}</mat-radio-button>
             </mat-radio-group> -->
             <mat-select formControlName="bots" multiple>
-              <mat-option *ngFor="let bot of configService.config.bots" [value]="bot">{{bot}}</mat-option>
+              <mat-option *ngFor="let bot of (config$ | async)['availableBots']" [value]="bot">{{bot.name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -173,7 +173,7 @@
 
       <ng-container matColumnDef="expandedDetail">
         <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length" class="test">
-          <div class="table-row-detail" [class.expanded]="element == expandedElement" #chart>
+          <div class="table-row-detail" [class.expanded]="element === expandedElement" #chart>
             <!-- <app-chart [bot]="element.bot" [candleCount]="form.value.candleCount" *ngIf="element == expandedElement"
               [timeRange$]="timeRange$"
               [symbol]="candleService.getSymbolByName(element.bot.symbol)" type="BACKTEST"></app-chart> -->

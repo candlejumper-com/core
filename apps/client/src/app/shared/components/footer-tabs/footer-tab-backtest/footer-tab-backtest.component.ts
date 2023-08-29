@@ -12,17 +12,22 @@ import {
 } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
-import { BehaviorSubject, Subject, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map, tap } from 'rxjs';
 import millify from 'millify';
-import { BacktestService } from '../../../services/backtest/backtest.service';
+import { BacktestService, IBacktestResult } from '../../../services/backtest/backtest.service';
 import { CandleService } from '../../../services/candle/candle.service';
 import { ChartService } from '../../../services/chart/chart.service';
-import { ConfigService } from '../../../services/config/config.service';
+import { ConfigService, IConfigSystem } from '../../../services/config/config.service';
 import { ProfileService } from '../../../services/profile/profile.service';
 import { SnapshotService } from '../../../services/snapshot/snapshot.service';
-import { StateService } from '../../../services/state/state.service';
+import { State, StateService } from '../../../services/state/state.service';
 import { SharedModule } from '../../../shared.module';
 import { ChartComponent } from '../../chart/chart.component';
+import { ISymbol } from '@candlejumper/shared';
+import { Select } from '@ngxs/store';
+import { SymbolState } from '../../../state/symbol/symbol.state';
+import { ConfigState } from '../../../state/config/config.state';
+import { BacktestState } from '../../../state/backtest/backtest.state';
 
 
 export interface PeriodicElement {
@@ -36,7 +41,7 @@ export interface IFooterTabBacktestOptions {
 }
 
 @Component({
-  selector: 'app-footer-tab-backtest',
+  selector: 'core-footer-tab-backtest',
   templateUrl: './footer-tab-backtest.component.html',
   styleUrls: ['./footer-tab-backtest.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,8 +51,11 @@ export interface IFooterTabBacktestOptions {
 export class FooterTabBacktestComponent {
   static PREVIOUS_TABLE_DATA = [];
 
-  @Input('options')
-  options: IFooterTabBacktestOptions = {};
+  @Select(SymbolState.getAll) symbols$: Observable<ISymbol[]>
+  @Select(ConfigState.getAll) config$: Observable<IConfigSystem>
+  @Select(BacktestState.getAll) backtests$: Observable<State[]>
+  
+  @Input() options: IFooterTabBacktestOptions = {};
 
   @ViewChild('select') select: MatSelect;
 
@@ -125,7 +133,7 @@ export class FooterTabBacktestComponent {
       this.start();
     }
 
-    this.stateService.backtest$.subscribe((states) => {
+    this.backtests$.subscribe((states) => {
       if (!states?.length) {
         return;
       }
@@ -176,7 +184,7 @@ export class FooterTabBacktestComponent {
     const values: any = Object.assign({}, this.form.value);
 
     this.profileService.profile.settings.client.backtest = values;
-    this.profileService.store();
+    this.profileService.save();
 
     const candleCount =
       values.symbols.length * values.intervals.length * values.candleCount;

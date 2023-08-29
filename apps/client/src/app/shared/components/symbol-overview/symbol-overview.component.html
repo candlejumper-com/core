@@ -27,37 +27,37 @@
 <div class="scroll-area">
   <table class="table-custom table-custom-striped table-custom-row-clickable">
     <tbody (click)="onClickSymbol($event)">
-      <tr *ngFor="let symbol of symbols; trackBy: trackSymbol" [attr.data-symbol]="symbol.name"
-        [class.active]="symbol.name === chartService.activeChart$.value?.symbol.name && chartService.activeChart$.value?.type === 'MAIN'">
+      <tr *ngFor="let item of $any(symbols$ | async | keyvalue); trackBy: trackSymbol" [attr.data-symbol]="item.value.name"
+        [class.active]="item.value.name === chartService.activeChart$.value?.symbol.name && chartService.activeChart$.value?.type === 'MAIN'">
         <td class="col-symbol">
-          <img class="asset-icon" [src]="symbol.baseAssetIcon" title="{{symbol.name}}">{{symbol.name}}
+          <img class="asset-icon" [src]="item.value.baseAssetIcon" title="{{item.value.name}}">{{item.value.name}}
         </td>
-        <td class="col-day symbol-direction-{{symbol.change24H > 0 ? '1' : '-1'}}">
-          {{symbol.change24HString}}%
+        <td class="col-day symbol-direction-{{item.value.change24H > 0 ? '1' : '-1'}}">
+          {{item.value.change24HString}}%
         </td>
-        <td class="col-price symbol-direction-{{symbol.direction}}">{{symbol.price}}</td>
+        <td class="col-price symbol-direction-{{item.value.direction}}">{{item.value.price}}</td>
         <td class="col-trend" *ngIf="isExpanded">
-          <ng-container *ngIf="findIndicator(symbol, '1m') as indicator">
+          <ng-container *ngIf="findIndicator(item.value, '1m') as indicator">
             <mat-icon *ngIf="indicator.data === 'up'" style="color: green">arrow_upward</mat-icon>
             <mat-icon *ngIf="indicator.data === 'down'" style="color: red">arrow_downward</mat-icon>
             <mat-icon *ngIf="!indicator.data" style="color: gray">circle</mat-icon>
           </ng-container>
-          <ng-container *ngIf="findIndicator(symbol, '5m') as indicator">
+          <ng-container *ngIf="findIndicator(item.value, '5m') as indicator">
             <mat-icon *ngIf="indicator.data === 'up'" style="color: green">arrow_upward</mat-icon>
             <mat-icon *ngIf="indicator.data === 'down'" style="color: red">arrow_downward</mat-icon>
             <mat-icon *ngIf="!indicator.data" style="color: gray">circle</mat-icon>
           </ng-container>
-          <ng-container *ngIf="findIndicator(symbol, '15m') as indicator">
+          <ng-container *ngIf="findIndicator(item.value, '15m') as indicator">
             <mat-icon *ngIf="indicator.data === 'up'" style="color: green">arrow_upward</mat-icon>
             <mat-icon *ngIf="indicator.data === 'down'" style="color: red">arrow_downward</mat-icon>
             <mat-icon *ngIf="!indicator.data" style="color: gray">circle</mat-icon>
           </ng-container>
-          <ng-container *ngIf="findIndicator(symbol, '1h') as indicator">
+          <ng-container *ngIf="findIndicator(item.value, '1h') as indicator">
             <mat-icon *ngIf="indicator.data === 'up'" style="color: green">arrow_upward</mat-icon>
             <mat-icon *ngIf="indicator.data === 'down'" style="color: red">arrow_downward</mat-icon>
             <mat-icon *ngIf="!indicator.data" style="color: gray">circle</mat-icon>
           </ng-container>
-          <ng-container *ngIf="findIndicator(symbol, '4h') as indicator">
+          <ng-container *ngIf="findIndicator(item.value, '4h') as indicator">
             <mat-icon *ngIf="indicator.data === 'up'" style="color: green">arrow_upward</mat-icon>
             <mat-icon *ngIf="indicator.data === 'down'" style="color: red">arrow_downward</mat-icon>
             <mat-icon *ngIf="!indicator.data" style="color: gray">circle</mat-icon>

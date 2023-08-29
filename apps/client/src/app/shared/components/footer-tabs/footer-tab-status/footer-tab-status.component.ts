@@ -4,17 +4,22 @@ import { DialogAuthRegistrateComponent } from '../../dialog-auth-registrate/dial
 import { DialogAuthComponent } from '../../dialog-auth/dialog-auth.component';
 import { ProfileService } from '../../../services/profile/profile.service';
 import { StatusService } from '../../../services/status/status.service';
-import { UserService } from '../../../services/user/user.service';
+import { IUser, UserService } from '../../../services/user/user.service';
 import { SharedModule } from '../../../shared.module';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { UserState } from '../../../state/user/user.state';
 
 @Component({
-  selector: 'app-footer-tab-status',
+  selector: 'core-footer-tab-status',
   templateUrl: './footer-tab-status.component.html',
   styleUrls: ['./footer-tab-status.component.scss'],
   standalone: true,
   imports: [SharedModule]
 })
 export class FooterTabStatusComponent {
+
+  @Select(UserState.get) user$: Observable<IUser>
 
   constructor(
     public statusService: StatusService,

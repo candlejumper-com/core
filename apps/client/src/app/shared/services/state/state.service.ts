@@ -88,15 +88,13 @@ export class State {
 export class StateService {
 
   main: State
-  backtest$ = new BehaviorSubject<State[]>(null)
-
-  constructor() { }
 
   loadMain(state: State): void {
+    console.log(state)
     this.main = new State()
     this.main.tickers = state.tickers
 
-    for (let symbol in state.symbols) {
+    for (const symbol in state.symbols) {
       this.main.symbols[symbol] = state.symbols[symbol]
 
       // for (let interval in state.symbols[symbol].candles) {

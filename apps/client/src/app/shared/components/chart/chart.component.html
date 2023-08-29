@@ -36,7 +36,7 @@
 <div class="action-overlay">
   <div class="menu-wrapper">
     <mat-menu #menuInterval="matMenu">
-      <button [attr.disabled]="type === 'MAIN' ? null : true" mat-menu-item *ngFor="let configInterval of configService.config.intervals" (click)="setInterval(configInterval)">{{configInterval}}</button>
+      <button [attr.disabled]="type === 'MAIN' ? null : true" mat-menu-item *ngFor="let configInterval of (config$ | async)['interval']" (click)="setInterval(configInterval)">{{configInterval}}</button>
     </mat-menu>
     <mat-menu #menu="matMenu">
       <button mat-menu-item [matMenuTriggerFor]="chartTypeMenu">Type</button>

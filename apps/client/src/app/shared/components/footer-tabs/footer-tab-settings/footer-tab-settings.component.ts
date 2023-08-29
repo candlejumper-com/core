@@ -3,11 +3,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAuthRegistrateComponent } from '../../dialog-auth-registrate/dialog-auth-registrate.component';
 import { DialogAuthComponent } from '../../dialog-auth/dialog-auth.component';
 import { ProfileService } from '../../../services/profile/profile.service';
-import { UserService } from '../../../services/user/user.service';
+import { IUser, UserService } from '../../../services/user/user.service';
 import { SharedModule } from '../../../shared.module';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { UserState } from '../../../state/user/user.state';
 
 @Component({
-  selector: 'app-footer-tab-settings',
+  selector: 'core-footer-tab-settings',
   templateUrl: './footer-tab-settings.component.html',
   styleUrls: ['./footer-tab-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,6 +18,8 @@ import { SharedModule } from '../../../shared.module';
   imports: [SharedModule]
 })
 export class FooterTabSettingsComponent {
+
+  @Select(UserState.get) user$: Observable<IUser>
 
   constructor(
     public userService: UserService,
@@ -26,7 +31,7 @@ export class FooterTabSettingsComponent {
     const confirmed = confirm("This will reset all local profile settings (can't do much harm)")
     if (confirmed) {
       this.profileService.profile = {}
-      this.profileService.store()
+      this.profileService.save()
 
       window.location.reload()
     }
