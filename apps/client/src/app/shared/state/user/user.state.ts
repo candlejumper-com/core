@@ -30,7 +30,9 @@ const DEFAULT_PROFILE: IProfile = {
 
 @State({
   name: 'User',
-  defaults: null,
+  defaults: {
+    balances: [],
+  },
 })
 @Injectable()
 export class UserState {
@@ -41,8 +43,8 @@ export class UserState {
   ) {}
 
   @Selector()
-  static get(state: IUser): IUser {
-    return state;
+  static get(user: IUser): IUser {
+    return user;
   }
 
   @Selector()

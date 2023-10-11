@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PageHomeComponent } from './page-home.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgxsModule } from '@ngxs/store';
+import { UserState } from '../../../shared/state/user/user.state';
 
 describe('PageHomeComponent', () => {
   let component: PageHomeComponent;
@@ -8,7 +12,13 @@ describe('PageHomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PageHomeComponent ]
+      imports: [ 
+        PageHomeComponent,
+        NgxsModule.forRoot([]),
+        NgxsModule.forFeature([UserState]),
+        HttpClientTestingModule,
+        MatSnackBarModule
+       ]
     })
     .compileComponents();
 

@@ -7,7 +7,7 @@ import { WSService } from '../ws/ws.service';
 import { IPricesWebsocketResponse } from './candle.interfaces';
 import { ISymbol } from '@candlejumper/shared';
 import { Select, Store } from '@ngxs/store';
-import { SYMBOL_GET_ALL, SYMBOL_GET_BY_NAME, SYMBOL_PRICE_SET } from '../../state/symbol/symbol.actions';
+import { SYMBOL_PRICE_SET } from '../../state/symbol/symbol.actions';
 import { SymbolState } from '../../state/symbol/symbol.state';
 
 @Injectable({

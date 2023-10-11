@@ -8,9 +8,7 @@ export class IndicatorService {
 
   indicators = []
 
-  constructor(private wsService: WSService) { 
-    this.init()
-  }
+  constructor(private wsService: WSService) { }
 
   init() {
     this.wsService.socket.on('indicators', data => {

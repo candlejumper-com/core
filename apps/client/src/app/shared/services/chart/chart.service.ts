@@ -64,9 +64,7 @@ export class ChartService {
     private profileService: ProfileService,
     private candleService: CandleService,
     private orderService: OrderService
-  ) {
-    this.init();
-  }
+  ) {}
 
   init() {
     // get open charts from profile

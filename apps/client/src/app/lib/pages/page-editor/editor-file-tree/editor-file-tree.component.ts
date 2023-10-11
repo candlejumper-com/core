@@ -15,7 +15,7 @@ interface ExampleFlatNode {
 }
 
 @Component({
-  selector: 'app-editor-file-tree',
+  selector: 'core-editor-file-tree',
   templateUrl: './editor-file-tree.component.html',
   styleUrls: ['./editor-file-tree.component.scss'],
   standalone: true,

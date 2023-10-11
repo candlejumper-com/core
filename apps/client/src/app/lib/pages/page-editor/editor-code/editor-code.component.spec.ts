@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditorCodeComponent } from './editor-code.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('EditorCodeComponent', () => {
   let component: EditorCodeComponent;
@@ -8,7 +10,11 @@ describe('EditorCodeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditorCodeComponent ]
+      imports: [ 
+        EditorCodeComponent,
+        HttpClientTestingModule,
+        MatSnackBarModule
+      ]
     })
     .compileComponents();
 

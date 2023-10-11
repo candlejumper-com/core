@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { EditorFooterComponent } from './editor-footer.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxsModule } from '@ngxs/store';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('EditorFooterComponent', () => {
   let component: EditorFooterComponent;
@@ -8,7 +10,12 @@ describe('EditorFooterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditorFooterComponent ]
+      imports: [ 
+        EditorFooterComponent,
+        NgxsModule.forRoot(),
+        HttpClientTestingModule,
+        MatSnackBarModule
+      ]
     })
     .compileComponents();
 

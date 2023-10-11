@@ -11,7 +11,9 @@ import { AIGroup } from './ai-group'
 export class AIService {
   containers$ = new BehaviorSubject<AIGroup[]>([])
 
-  constructor(private wsService: WSService) {
+  constructor(private wsService: WSService) {}
+
+  init() {
     this.wsService.socket.on('AI_JOB_PROGRESS', data => {
 
       const container = this.containers$.value.find(container => container.id === data.container)

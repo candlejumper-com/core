@@ -34,9 +34,7 @@ export class BacktestService {
     private stateService: StateService,
     private wsService: WSService,
     private store: Store
-  ) {
-    this.init()
-  }
+  ) {}
 
   init(): void {
     this.wsService.socket.on('backtest-finished', (result: IBacktestResult) => this.onFinished(result))

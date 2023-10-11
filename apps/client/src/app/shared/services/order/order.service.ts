@@ -41,9 +41,7 @@ export class OrderService {
     private httpClient: HttpClient,
     private candleService: CandleService,
     private wsService: WSService
-  ) {
-    this.init()
-  }
+  ) {}
 
   init(): void {
     this.wsService.socket.on('order', order => {

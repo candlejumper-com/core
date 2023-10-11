@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PageEditorComponent } from './page-editor.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgxsModule } from '@ngxs/store';
 
 describe('PageEditorComponent', () => {
   let component: PageEditorComponent;
@@ -8,7 +11,12 @@ describe('PageEditorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PageEditorComponent ]
+      imports: [ 
+        PageEditorComponent,
+        NgxsModule.forRoot(),
+        HttpClientTestingModule,
+        MatSnackBarModule
+      ]
     })
     .compileComponents();
 

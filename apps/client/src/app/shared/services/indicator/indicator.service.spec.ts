@@ -1,12 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
 import { IndicatorService } from './indicator.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('IndicatorService', () => {
   let service: IndicatorService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [
+        MatSnackBarModule      ]
+    });
     service = TestBed.inject(IndicatorService);
   });
 

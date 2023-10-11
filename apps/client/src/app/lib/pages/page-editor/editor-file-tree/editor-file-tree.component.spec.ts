@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FileTreeComponent } from './editor-file-tree.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('FileTreeComponent', () => {
   let component: FileTreeComponent;
@@ -8,7 +10,11 @@ describe('FileTreeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FileTreeComponent ]
+      imports: [ 
+        FileTreeComponent,
+        HttpClientTestingModule,
+        MatSnackBarModule
+       ]
     })
     .compileComponents();
 

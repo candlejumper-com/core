@@ -4,6 +4,13 @@
   "sourceRoot": "apps/server-main/src",
   "projectType": "application",
   "targets": {
+    "pm2": {
+      "executor": "nx-pm2-plugin:pm2-executor",
+      "options": {
+        "command": "server-main:serve",
+        "name": "server-main"
+      }
+    },
     "build": {
       "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],

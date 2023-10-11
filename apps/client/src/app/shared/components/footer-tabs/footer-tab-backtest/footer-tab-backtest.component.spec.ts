@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FooterTabBacktestComponent } from './footer-tab-backtest.component';
+import { NgxsModule } from '@ngxs/store';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('FooterTabBacktestComponent', () => {
   let component: FooterTabBacktestComponent;
@@ -8,7 +11,12 @@ describe('FooterTabBacktestComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FooterTabBacktestComponent ]
+      imports: [ 
+        FooterTabBacktestComponent,
+        HttpClientTestingModule,
+        MatSnackBarModule,
+        NgxsModule.forRoot()
+      ]
     })
     .compileComponents();
 

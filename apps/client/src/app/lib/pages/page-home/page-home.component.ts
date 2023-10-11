@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core'
 import { MessagingModule } from '@angular/fire/messaging'
 import { Subject, distinctUntilChanged, takeUntil, tap } from 'rxjs'
 import { ChartComponent } from '../../../shared/components/chart/chart.component'
@@ -29,7 +29,7 @@ import { SharedModule } from '../../../shared/shared.module'
   ],
   providers: [DeviceService],
 })
-export class PageHomeComponent {
+export class PageHomeComponent implements OnInit, OnDestroy {
   constructor(
     public deviceService: DeviceService,
     public stateService: StateService,

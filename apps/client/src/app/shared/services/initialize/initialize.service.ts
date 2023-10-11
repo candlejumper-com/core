@@ -9,6 +9,12 @@ import { SYMBOL_SET } from '../../state/symbol/symbol.actions';
 import { USER_SET } from '../../state/user/user.actions';
 import { IUser } from '../user/user.service';
 import { ISymbol } from '@candlejumper/shared';
+import { CandleService } from '../candle/candle.service';
+import { ChartService } from '../chart/chart.service';
+import { OrderService } from '../order/order.service';
+import { AIService } from '../ai/ai.service';
+import { BacktestService } from '../backtest/backtest.service';
+import { IndicatorService } from '../indicator/indicator.service';
 
 interface IAppInitResponse {
   config: IConfigResponse
@@ -22,6 +28,11 @@ export class InitializeService {
 
   constructor(
     public wsService: WSService,
+    private chartService: ChartService,
+    private orderService: OrderService,
+    private aiService: AIService,
+    private backtestService: BacktestService,
+    private indicatorService: IndicatorService,
     private httpClient: HttpClient,
     private store: Store
   ) { }
@@ -33,11 +44,16 @@ export class InitializeService {
         next: result => {
           const user = Object.assign({}, result.user, result.state.account)
 
-          this.store.dispatch(new USER_SET(user))
+          this.store.dispatch(new USER_SET({id: 2}))
           this.store.dispatch(new CONFIG_SET(result.config))
           this.store.dispatch(new SYMBOL_SET(result.state.symbols))
 
           this.wsService.init()
+          this.chartService.init()
+          this.orderService.init()
+          this.aiService.init()
+          this.backtestService.init()
+          this.indicatorService.init()
 
           // load firebase and PWA
           // this.deviceService.init();

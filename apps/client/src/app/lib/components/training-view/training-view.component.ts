@@ -9,7 +9,6 @@ import { SharedModule } from "../../../shared/shared.module"
 import { Graph } from "./training-view.interfaces"
 import { TrainingViewService } from "./training-view.service"
 
-
 PlotlyModule.plotlyjs = window['Plotly']
 
 @Component({

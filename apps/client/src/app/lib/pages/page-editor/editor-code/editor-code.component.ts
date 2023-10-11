@@ -3,10 +3,10 @@ import { first } from 'rxjs'
 import { EditorService } from '../../../../shared/services/editor/editor.service';
 import { MonacoEditorService } from '../../../../shared/services/monaco/monaco-editor-service';
 
-declare var monaco: any
+declare let monaco: any
 
 @Component({
-  selector: 'app-editor-code',
+  selector: 'core-editor-code',
   templateUrl: './editor-code.component.html',
   styleUrls: ['./editor-code.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +41,6 @@ export class EditorCodeComponent implements OnInit, OnDestroy {
 
   private updateEditorContent(content: string): void {
     this.editor.getModel().setValue(content)
-    var doesModelHaveErrors = monaco.editor.getModelMarkers().length != 0
   }
 
   private initEditor(): void {
@@ -91,7 +90,7 @@ export class EditorCodeComponent implements OnInit, OnDestroy {
     // monaco.editor.createModel(temp, 'typescript', monaco.Uri.file('../../../../lib/server/dist/bot/bot.ts'))
 
     // Create the editor model
-    var editorModel = monaco.editor.createModel(this.editorService.activeFile$.value?.content, 'typescript', monaco.Uri.file('main.ts'))
+    const editorModel = monaco.editor.createModel(this.editorService.activeFile$.value?.content, 'typescript', monaco.Uri.file('main.ts'))
 
     this.editor = monaco.editor.create(this.elementRef.nativeElement, {
       model: editorModel,
@@ -130,7 +129,7 @@ export class EditorCodeComponent implements OnInit, OnDestroy {
   }
 
   private destroyEditor(): void {
-    monaco.editor.getModels().forEach(model => model.dispose())
+    (window as any).monaco?.editor.getModels().forEach(model => model.dispose())
     this.editor = null
   }
 }

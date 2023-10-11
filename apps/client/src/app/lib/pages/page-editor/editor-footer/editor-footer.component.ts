@@ -7,7 +7,6 @@ import { ProfileService } from '../../../../shared/services/profile/profile.serv
 import { StateService } from '../../../../shared/services/state/state.service';
 import { SharedModule } from '../../../../shared/shared.module';
 
-
 export const enum EDITOR_FOOTER_TAB {
   'balances' = 'balances',
   'trades' = 'trades',

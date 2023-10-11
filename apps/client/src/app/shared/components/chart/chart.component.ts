@@ -1,34 +1,29 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { FormGroup, FormControl, Validators } from '@angular/forms'
 import './anychart-theme-dark-custom'
-import { WindowService } from '../../services/window/window.service';
-import { SharedModule } from '../../shared.module';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogOrderComponent, IOrderDialogData } from '../dialog-order/dialog-order.component';
-import { ChartType, ChartViewType } from '../../services/chart/chart.service';
-import { IPricesWebsocketResponse } from '../../services/candle/candle.interfaces';
-import { CandleService } from '../../services/candle/candle.service';
-import { Subject, BehaviorSubject, Subscription, tap, takeUntil, Observable } from 'rxjs';
-import { ConfigService, IConfigSystem } from '../../services/config/config.service';
-import { IOrder, ORDER_SIDE } from '../../services/order/order.service';
-import { ITicker, BOT_INDICATOR_TYPE, BOT_EVENT_TYPE } from '../../services/state/state.service';
-import { ISymbol } from '@candlejumper/shared';
-import { ConfigState } from '../../state/config/config.state';
-import { Select } from '@ngxs/store';
-
-declare let anychart: any
-
-anychart.theme(anychart.themes.darkCustom);
+import { WindowService } from '../../services/window/window.service'
+import { SharedModule } from '../../shared.module'
+import { MatDialog } from '@angular/material/dialog'
+import { DialogOrderComponent, IOrderDialogData } from '../dialog-order/dialog-order.component'
+import { ChartType, ChartViewType } from '../../services/chart/chart.service'
+import { IPricesWebsocketResponse } from '../../services/candle/candle.interfaces'
+import { CandleService } from '../../services/candle/candle.service'
+import { Subject, BehaviorSubject, Subscription, tap, takeUntil, Observable } from 'rxjs'
+import { ConfigService, IConfigSystem } from '../../services/config/config.service'
+import { IOrder, ORDER_SIDE } from '../../services/order/order.service'
+import { ITicker, BOT_INDICATOR_TYPE, BOT_EVENT_TYPE } from '../../services/state/state.service'
+import { ISymbol } from '@candlejumper/shared'
+import { ConfigState } from '../../state/config/config.state'
+import { Select } from '@ngxs/store'
 
 @Component({
   selector: 'core-chart',
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss'],
   standalone: true,
-  imports: [SharedModule, DialogOrderComponent]
+  imports: [SharedModule, DialogOrderComponent],
 })
-export class ChartComponent implements OnDestroy {
-
+export class ChartComponent implements OnInit, OnChanges, OnDestroy {
   @Select(ConfigState.getAll) config$: Observable<IConfigSystem>
 
   @Input()
@@ -44,7 +39,7 @@ export class ChartComponent implements OnDestroy {
   candleCount: number
 
   @Input()
-  timeRange$: Subject<[number, number]> = new Subject();
+  timeRange$: Subject<[number, number]> = new Subject()
 
   @Input()
   candles: number[][] = []
@@ -56,7 +51,7 @@ export class ChartComponent implements OnDestroy {
   indicators: any[] = []
 
   @Input()
-  interval$: BehaviorSubject<string>;
+  interval$: BehaviorSubject<string>
 
   // busy$ = new BehaviorSubject<boolean>(true)
   error$ = new BehaviorSubject<any>(null)
@@ -64,7 +59,7 @@ export class ChartComponent implements OnDestroy {
   viewType: ChartViewType = 'candlesticks'
 
   form = new FormGroup({
-    interval: new FormControl('15m', [Validators.required])
+    interval: new FormControl('15m', [Validators.required]),
   })
 
   @ViewChild('chart', { static: true })
@@ -76,7 +71,7 @@ export class ChartComponent implements OnDestroy {
   private dataMapping: any
   private xhrSubscription: Subscription
   private tickSubscription: Subscription
-  private destroy$ = new Subject<void>();
+  private destroy$ = new Subject<void>()
 
   constructor(
     public configService: ConfigService,
@@ -84,27 +79,42 @@ export class ChartComponent implements OnDestroy {
     private windowService: WindowService,
     private candleService: CandleService,
     private ngZone: NgZone,
-    private changeDetectorRef: ChangeDetectorRef,
-  ) { }
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.tickSubscription = this.candleService.tick$.subscribe(tick => this.updateCurrentPrice(tick));
-
-    this.interval$.pipe(tap((interval) => this.form.patchValue({
-      interval
-    })), takeUntil(this.destroy$)).subscribe();
+    this.setupChartTheme()
+    this.subscribeToTickUpdates()
+    this.subscribeToIntervalChanges()
     this.load()
   }
 
+  private setupChartTheme(): void {
+    window.anychart?.theme((anychart as any).themes.darkCustom)
+  }
+
+  private subscribeToTickUpdates(): void {
+    this.tickSubscription = this.candleService.tick$.subscribe((tick) => this.updateCurrentPrice(tick))
+  }
+
+  private subscribeToIntervalChanges(): void {
+    this.interval$
+      .pipe(
+        tap((interval) => this.form.patchValue({ interval })),
+        takeUntil(this.destroy$)
+      )
+      .subscribe()
+  }
+
   ngOnChanges() {
-    this.load();
+    this.load()
   }
 
   ngOnDestroy(): void {
     this.tickSubscription?.unsubscribe()
-    this.destroy();
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroy()
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 
   /**
@@ -112,24 +122,24 @@ export class ChartComponent implements OnDestroy {
    */
   load(): void {
     this.timeRange$.subscribe(([from, to]) => {
-      this.chart.selectRange(new Date(from), new Date(to));
-    });
+      this.chart.selectRange(new Date(from), new Date(to))
+    })
 
     this.createChart()
   }
 
   onClickBuy() {
-    const data: IOrderDialogData = { symbol: this.symbol, type: ORDER_SIDE.BUY}
+    const data: IOrderDialogData = { symbol: this.symbol, type: ORDER_SIDE.BUY }
     this.dialog.open(DialogOrderComponent, { data })
   }
 
   onClickSell(): void {
-    const data: IOrderDialogData = { symbol: this.symbol, type: ORDER_SIDE.SELL}
+    const data: IOrderDialogData = { symbol: this.symbol, type: ORDER_SIDE.SELL }
     this.dialog.open(DialogOrderComponent, { data })
   }
 
-  setInterval(interval) {
-    this.interval$.next(interval); 
+  setInterval(interval: string): void {
+    this.interval$.next(interval)
     this.load()
   }
 
@@ -140,8 +150,8 @@ export class ChartComponent implements OnDestroy {
     this.destroyChart()
 
     this.ngZone.runOutsideAngular(() => {
-      this.dataTable = anychart.data.table();
-      this.dataTable.addData(this.candles);
+      this.dataTable = window.anychart.data.table()
+      this.dataTable.addData(this.candles)
 
       // map loaded data for the ohlc series
       this.dataMapping = this.dataTable.mapAs({
@@ -149,22 +159,21 @@ export class ChartComponent implements OnDestroy {
         high: 2,
         low: 3,
         close: 4,
-        volume: 5
-      });
+        volume: 5,
+      })
 
       // create stock chart
-      this.chart = anychart.stock();
-      this.chart.padding(10, 80, 20, 50);
+      this.chart = window.anychart.stock()
+      this.chart.padding(10, 80, 20, 50)
       this.chart.credits().enabled(false)
       // this.chart.height('100%');
 
       // create plot on the chart
       const plot = this.chart.plot(0)
       if (this.viewType === 'candlesticks') {
-        plot.candlestick(this.dataMapping);
-      }
-      else if (this.viewType === 'ohlc') {
-        plot.ohlc(this.dataMapping);
+        plot.candlestick(this.dataMapping)
+      } else if (this.viewType === 'ohlc') {
+        plot.ohlc(this.dataMapping)
       }
 
       plot.legend(false)
@@ -172,43 +181,40 @@ export class ChartComponent implements OnDestroy {
       plot.xAxis().labels(false)
 
       const yAxis = plot.yAxis()
-      yAxis.orientation("right")
+      yAxis.orientation('right')
 
       plot.priceIndicator({
-        value: "last-visible",
+        value: 'last-visible',
         stroke: 'blue',
-        dash: "5 5 5",
+        dash: '5 5 5',
         fallingLabelBackground: 'blue',
         fallingLabel: {
-          background: 'blue'
+          background: 'blue',
         },
         risingLabel: {
-          background: 'blue'
-        }
+          background: 'blue',
+        },
       })
 
       // create and setup volume plot
-      const volumePlot = this.chart.plot(1);
+      const volumePlot = this.chart.plot(1)
 
-      volumePlot.height('10%');
-      volumePlot.maxHeight('60px');
-      volumePlot
-        .yAxis()
-        .labels()
-        .format('${%Value}{scale:(1000000)(1000)|(kk)(k)}')
+      volumePlot.height('10%')
+      volumePlot.maxHeight('60px')
+      volumePlot.yAxis().labels().format('${%Value}{scale:(1000000)(1000)|(kk)(k)}')
       volumePlot.xAxis().labels(false)
 
-      const volumeMaIndicator = volumePlot.volumeMa(this.dataMapping, 20, 'sma', 'column', 'splineArea');
-      volumeMaIndicator.volumeSeries('column');
+      const volumeMaIndicator = volumePlot.volumeMa(this.dataMapping, 20, 'sma', 'column', 'splineArea')
+      volumeMaIndicator.volumeSeries('column')
       volumePlot.legend(false)
       volumePlot.title(false)
 
-      const maSeries = volumeMaIndicator.maSeries();
-      maSeries.stroke('red');
-      maSeries.fill('red .2');
+      const maSeries = volumeMaIndicator.maSeries()
+      maSeries.stroke('red')
+      maSeries.fill('red .2')
 
       // set starting range
-      const maxCandlesBack = this.candles.length > 200 ? 200 : this.candles.length;
+      const maxCandlesBack = this.candles.length > 200 ? 200 : this.candles.length
       const startDate = new Date(this.candles[this.candles.length - 1][0])
       const endDate = new Date(this.candles[this.candles.length - maxCandlesBack][0])
       this.chart.selectRange(startDate, endDate)
@@ -258,35 +264,33 @@ export class ChartComponent implements OnDestroy {
 
     this.indicators.forEach((indicator: any) => {
       switch (indicator.type) {
-
         // SMA
         case BOT_INDICATOR_TYPE.SMA: {
           // create SMA indicators with period 20
-          const SMA = plot.sma(this.dataMapping, indicator.params.period.value).series();
-          SMA.stroke('#bf360c');
+          const SMA = plot.sma(this.dataMapping, indicator.params.period.value).series()
+          SMA.stroke('#bf360c')
           break
         }
-
 
         // Bollinger
         case BOT_INDICATOR_TYPE.BB: {
           // create Bollinger Bands indicator
-          const bbMapping = this.dataTable.mapAs({ 'value': 4 });
-          const bbands = plot.bbands(bbMapping, indicator.params.period.value, indicator.params.weight.value);
+          const bbMapping = this.dataTable.mapAs({ value: 4 })
+          const bbands = plot.bbands(bbMapping, indicator.params.period.value, indicator.params.weight.value)
 
           // TODO - should be done in theming file
-          bbands.lowerSeries().stroke('#fff 0.5');
-          bbands.upperSeries().stroke('#fff 0.5');
-          bbands.rangeSeries().fill('#ccc 0.1');
+          bbands.lowerSeries().stroke('#fff 0.5')
+          bbands.upperSeries().stroke('#fff 0.5')
+          bbands.rangeSeries().fill('#ccc 0.1')
           break
         }
         // RSI
         case BOT_INDICATOR_TYPE.RSI: {
-          const rsiPlot = this.chart.plot(2);
+          const rsiPlot = this.chart.plot(2)
           rsiPlot.height('20%')
-          rsiPlot.maxHeight('100px');
-          const rsiMapping = this.dataTable.mapAs({ 'value': 4 });
-          const rsi14 = rsiPlot.rsi(rsiMapping, indicator.params.period.value).series();
+          rsiPlot.maxHeight('100px')
+          const rsiMapping = this.dataTable.mapAs({ value: 4 })
+          const rsi14 = rsiPlot.rsi(rsiMapping, indicator.params.period.value).series()
           rsi14.stroke('#bf360c')
           break
         }
@@ -299,7 +303,9 @@ export class ChartComponent implements OnDestroy {
           const controller = plot.annotations()
           const period = indicator.params.period.value
           // create a Fibonacci Retracement annotation
-          const candles = this.candles.slice(this.candles.length - period, this.candles.length - 1).map(candle => candle[4])
+          const candles = this.candles
+            .slice(this.candles.length - period, this.candles.length - 1)
+            .map((candle) => candle[4])
           const highestPrice = Math.max(...candles)
           const lowestPrice = Math.min(...candles)
 
@@ -307,8 +313,8 @@ export class ChartComponent implements OnDestroy {
             xAnchor: this.candles[this.candles.length - period][0],
             valueAnchor: lowestPrice,
             secondXAnchor: this.candles[this.candles.length - 1][0],
-            secondValueAnchor: highestPrice
-          });
+            secondValueAnchor: highestPrice,
+          })
           break
         }
         default:
@@ -326,14 +332,14 @@ export class ChartComponent implements OnDestroy {
     const buyOrders = []
     const sellOrders = []
 
-    this.orders.forEach(order => {
+    this.orders.forEach((order) => {
       // Don't show orders that are longer ago then the first candle time
       if (order.time < firstCandleTime) {
         return
       }
 
       // get the nearest candle time, so that the icon shows 'over' the candle (think: z-index) (instead of slighly next to it)
-      const nearestCandleIndex = this.candles.findIndex(candle => candle[0] > order.time)
+      const nearestCandleIndex = this.candles.findIndex((candle) => candle[0] > order.time)
       const nearestTime = this.candles[nearestCandleIndex - 1]?.[0] || this.candles[0][0]
 
       if (order.side === 'BUY') {
@@ -341,79 +347,74 @@ export class ChartComponent implements OnDestroy {
       } else {
         sellOrders.push([nearestTime, order.price])
       }
-    });
-
-    ['BUY', 'SELL'].forEach(side => {
+    })
+    ;['BUY', 'SELL'].forEach((side) => {
       // const symbol = ['ERROR', 'PENDING'].includes(order.state) ? 'url(/assets/img/icon-warning.png)' : 'circle'
       const color = side === 'BUY' ? 'darkgreen' : 'darkred'
-      const table = anychart.data.table();
-      table.addData(side === 'BUY' ? buyOrders : sellOrders);
+      const table = anychart.data.table()
+      table.addData(side === 'BUY' ? buyOrders : sellOrders)
 
       // map the data
-      const orderMapping = table.mapAs();
-      orderMapping.addField('value', 1);
+      const orderMapping = table.mapAs()
+      orderMapping.addField('value', 1)
 
       const markers = plot.marker(table)
-      markers.normal().size(15);
-      markers.hovered().size(15);
-      markers.selected().size(15);
-      markers.normal().fill(color);
-      markers.normal().stroke(color.replace('dark', 'light'));
-      markers.normal().type("star3");
+      markers.normal().size(15)
+      markers.hovered().size(15)
+      markers.selected().size(15)
+      markers.normal().fill(color)
+      markers.normal().stroke(color.replace('dark', 'light'))
+      markers.normal().type('star3')
     })
   }
-
 
   /**
    * Add events
    */
   private addEvents(): void {
-    const plot = this.chart.plot();
-    const controller = plot.annotations();
+    const plot = this.chart.plot()
+    const controller = plot.annotations()
     let lastTrendUpTime
     let lastTrenDownTime
 
     this.events.forEach((event, index) => {
-
       switch (event.type) {
-
         // start line of bot
         case BOT_EVENT_TYPE.START:
-
           controller.verticalLine({
             xAnchor: event.time,
-            normal: { stroke: "2 green" },
-            hovered: { stroke: "2 #ff0000" },
-            selected: { stroke: "4 #ff0000" }
-          });
+            normal: { stroke: '2 green' },
+            hovered: { stroke: '2 #ff0000' },
+            selected: { stroke: '4 #ff0000' },
+          })
           break
 
         case BOT_EVENT_TYPE.WATCHER_START: {
           const color = event.data.dir === 'up' ? 'green' : 'red'
           controller.verticalLine({
             xAnchor: event.time,
-            normal: { stroke: "2 " + color },
-            hovered: { stroke: "2 #ff0000" },
-            selected: { stroke: "4 #ff0000" }
-          });
+            normal: { stroke: '2 ' + color },
+            hovered: { stroke: '2 #ff0000' },
+            selected: { stroke: '4 #ff0000' },
+          })
           break
         }
         case BOT_EVENT_TYPE.WATCHER_STOP:
           controller.verticalLine({
             xAnchor: event.time,
-            normal: { stroke: "2 orange" },
-            hovered: { stroke: "2 #ff0000" },
-            selected: { stroke: "4 #ff0000" }
-          });
+            normal: { stroke: '2 orange' },
+            hovered: { stroke: '2 #ff0000' },
+            selected: { stroke: '4 #ff0000' },
+          })
           break
 
         case BOT_EVENT_TYPE.WATCHER_TRIGGERED:
           controller.verticalLine({
             xAnchor: event.time,
-            normal: { stroke: "2 purple" },
-            hovered: { stroke: "2 #ff0000" },
-            selected: { stroke: "4 #ff0000" }
-          });
+            normal: { stroke: '2 purple' },
+            hovered: { stroke: '2 #ff0000' },
+            selected: { stroke: '4 #ff0000' },
+          })
           break
 
         case BOT_EVENT_TYPE.TREND_UP:
@@ -423,11 +424,10 @@ export class ChartComponent implements OnDestroy {
             controller.verticalRange({
               xAnchor: lastTrenDownTime,
               secondXAnchor: event.time,
-            });
+            })
           }
 
           break
-
 
         case BOT_EVENT_TYPE.TREND_DOWN:
           lastTrenDownTime = event.time
@@ -437,14 +437,14 @@ export class ChartComponent implements OnDestroy {
               xAnchor: lastTrendUpTime,
               secondXAnchor: event.time,
               hovered: {
-                fill: "#398cae 0.3",
-                stroke: "2 #ff0000"
+                fill: '#398cae 0.3',
+                stroke: '2 #ff0000',
               },
               normal: {
-                fill: "green 0.3",
-                stroke: "4 #ff0000"
-              }
-            });
+                fill: 'green 0.3',
+                stroke: '4 #ff0000',
+              },
+            })
           }
 
           break
@@ -481,4 +481,3 @@ export class ChartComponent implements OnDestroy {
     this.dataMapping = null
   }
 }
-

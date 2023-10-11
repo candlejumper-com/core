@@ -1,16 +1,27 @@
 import { TestBed } from '@angular/core/testing';
-
 import { CandleService } from './candle.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgxsModule } from '@ngxs/store';
 
 describe('CandleService', () => {
   let service: CandleService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+
+    TestBed.configureTestingModule({
+      imports: [
+        NgxsModule.forRoot(),
+        HttpClientTestingModule,
+        MatSnackBarModule
+      ]
+    });
     service = TestBed.inject(CandleService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  
 });
