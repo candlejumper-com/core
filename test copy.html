@@ -1,0 +1,71 @@
+<style>
+  g {
+    content-visibility: auto;
+    contain-intrinsic-size: 200px;
+    width: 1000px;
+    min-width: 5000px;
+    height: 1000px;
+  }
+
+  .block {
+    content-visibility: auto;
+    background-color: red;
+    width: 1000px;
+    min-width: 5000px;
+    height: 1000px;
+  }
+</style>
+<!-- <div style="overflow: auto; display: flex">
+  <div class="block" style="background: red"></div>
+
+  <div class="block" style="background: blue"></div>
+
+  <div class="block" style="background: green"></div>
+</div> -->
+<svg width="6500" height="300" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(100, 100)">
+    <title>SVG Title Demo example</title>
+    <rect width="200" height="50" style="fill: wheat; stroke: blue; stroke-width: 1px" />
+    <text x="100" y="30" style="text-anchor: middle" class="small">1</text>
+  </g>
+  <g height="250" width="200" transform="translate(400, 100)">
+    <title>SVG Title Demo example</title>
+    <rect width="200" height="50" style="fill: wheat; stroke: blue; stroke-width: 1px" />
+    <text x="100" y="30" style="text-anchor: middle" class="small">My Text</text>
+  </g>
+  <g transform="translate(2900, 100)">
+    <title>SVG Title Demo example</title>
+    <rect width="200" height="50" style="fill: wheat; stroke: blue; stroke-width: 1px" />
+    <text x="100" y="30" style="text-anchor: middle" class="small">My Text</text>
+  </g>
+  <g transform="translate(4100, 100)">
+    <title>SVG Title Demo example</title>
+    <rect width="200" height="50" style="fill: wheat; stroke: blue; stroke-width: 1px" />
+    <text x="100" y="30" style="text-anchor: middle" class="small">My Text</text>
+  </g>
+  <g transform="translate(100, 100)">
+    <title>SVG Title Demo example</title>
+    <rect width="200" height="50" style="fill: wheat; stroke: blue; stroke-width: 1px" />
+    <text x="100" y="30" style="text-anchor: middle" class="small">My Text</text>
+  </g>
+</svg>
+<!-- <svg  width="5500" height="300" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(100, 100)" fill="red" stroke="green" stroke-width="5">
+    <circle cx="40" cy="40" r="25" />
+    <circle cx="60" cy="60" r="25" />
+  </g>
+
+  <g fill="white" stroke="green" stroke-width="5">
+    <circle cx="40" cy="40" r="25" />
+    <circle cx="60" cy="60" r="25" />
+  </g>
+</svg> -->
+
+<script>
+  const elements = document.querySelectorAll('g')
+  Array.from(elements).forEach((el) => {
+    el.addEventListener('contentvisibilityautostatechange', (event) => {
+      console.log('change', el, event.skipped)
+    })
+  })
+</script>
