@@ -4,6 +4,7 @@
     "declaration": true,
     "composite": true,
     "esModuleInterop": true,
+    "strictNullChecks": false,
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
     "types": ["node", "express"]

@@ -51,12 +51,10 @@ export class BrokerIG extends Broker {
   async onInit(): Promise<void> {
     this.queue = new QueueBinance(this.system)
 
-    const apiKey = this.system.configManager.config.brokers.ig.apiKey
-    const username = this.system.configManager.config.brokers.ig.username
-    const password = this.system.configManager.config.brokers.ig.password
+    const { apiKey, username, password } = this.system.configManager.config.brokers.ig || {}
 
     // set default headers
-    http.defaults.headers['X-IG-API-KEY'] = apiKey
+    http.defaults.headers['X-IG-API-KEY'] = apiKey as string
     http.defaults.headers['IG-ACCOUNT-ID'] = 'BSYOC'
 
     // get access token 
@@ -172,9 +170,9 @@ export class BrokerIG extends Broker {
     const epic = this.getEpicFromSymbolName(symbol)
     const limit = 1000
     const loops = Math.ceil(count / limit)
-    const allCandles = []
+    const allCandles: ICandle[] = []
 
-    let endTime = Date.now()
+    const endTime = Date.now()
 
     interval = BROKER_IG_TIMEFRAMES[interval]
 
@@ -232,8 +230,8 @@ export class BrokerIG extends Broker {
     }
   }
 
-  getEpicFromSymbolName(symbolName: string): string {
-    return this.system.broker.exchangeInfo.symbols.find(symbol => symbol.name === symbolName).epic
+  getEpicFromSymbolName(symbolName: string): string | undefined {
+    return this.system.broker.exchangeInfo.symbols.find(symbol => symbol.name === symbolName)?.epic
   }
 
   /**

@@ -23,6 +23,7 @@ import { ISystemState } from "./system.interfaces"
 import { BrokerIG } from "../brokers/ig/broker-ig"
 import { AIManager } from "../modules/ai-manager/ai-manager"
 import { ISymbol } from "@candlejumper/shared"
+import { setProcessExitHandlers } from "../util/exit-handlers.util"
 
 export enum SYSTEM_ENV {
   MAIN = "MAIN",
@@ -56,6 +57,8 @@ export class System extends Ticker<any> {
 
   constructor(public env: SYSTEM_ENV) {
     super(null, null, null, null, null)
+
+    // setProcessExitHandlers(this)
   }
 
   async init(): Promise<void> {

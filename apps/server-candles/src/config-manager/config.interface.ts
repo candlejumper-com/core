@@ -13,15 +13,15 @@ export interface ISystemConfig {
     automize?: {
         enabled?: boolean
     }
-    brokers?: {
+    brokers: {
         binance?: {
             apiKey?: string
             apiSecret?: string
         },
         ig?: {
-            apiKey?: string
-            password?: string
-            username?: string
+            apiKey: string
+            password: string
+            username: string
         },
     }
     data?: {

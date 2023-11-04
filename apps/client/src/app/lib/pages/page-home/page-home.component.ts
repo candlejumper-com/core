@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core'
-import { MessagingModule } from '@angular/fire/messaging'
+// import { MessagingModule } from '@angular/fire/messaging'
 import { Subject, distinctUntilChanged, takeUntil, tap } from 'rxjs'
 import { ChartComponent } from '../../../shared/components/chart/chart.component'
 import { DialogAuthRegistrateComponent } from '../../../shared/components/dialog-auth-registrate/dialog-auth-registrate.component'
@@ -20,7 +20,7 @@ import { SharedModule } from '../../../shared/shared.module'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     SharedModule,
-    MessagingModule,
+    // MessagingModule,
     ChartComponent,
     SymbolOverviewComponent,
     FooterTabsComponent,
