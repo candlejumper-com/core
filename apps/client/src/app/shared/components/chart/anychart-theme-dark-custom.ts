@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 /**
  * AnyChart is lightweight robust charting library with great API and Docs, that works with your stack and has tons of chart types and features.
  *
@@ -22,7 +25,7 @@
   function d() {
     return window.anychart.color.lighten(this.sourceColor);
   }
-  var f = {
+  const f = {
     palette: {
       type: "distinct",
       items: "#827717 #c77532 #998675 #6b617b #c69c6d #d29b9b #879872 #16685d #57a7b1 #bdbdbd".split(
@@ -243,6 +246,6 @@
     // }
   };
   window.anychart = window.anychart || {};
-  window.anychart.themes = window.anychart.themes || {};
-  window.anychart.themes.darkCustom = f;
+  window.anychart.theme = window.anychart.theme || {};
+  window.anychart.theme.darkCustom = f;
 })();

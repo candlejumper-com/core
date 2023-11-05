@@ -2,84 +2,22 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChartComponent } from './chart.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { NgxsModule } from '@ngxs/store';
+import { NgxsModule, Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
+import { ConfigState } from '../../state/config/config.state';
+import { CONFIG_SET } from '../../state/config/config.actions';
 
-let windowSpy;
+const CONFIG_STATE_DEFAULT = { system: { symbols: [], intervals: [], bots: [] }, availableBots: [] }
 
 describe('ChartComponent', () => {
   let component: ChartComponent;
   let fixture: ComponentFixture<ChartComponent>;
+  let store: Store
 
   beforeEach(async () => {
-    windowSpy = jest.spyOn(window, "window", "get");
-    windowSpy.mockImplementation(() => ({
-      anychart: {
-        data: {
-          table: () => {
-            return {
-              addData: () => {
-                //
-              },
-              mapAs: () =>{
-                //
-              }
-            }
-          }
-        },
-        theme: () => {
-          return "dark";
-        },
-        stock: () => {
-          return {
-            padding: () => {
-              //
-            },
-            credits: () => {
-              return {
-                enabled: () => {
-                  //
-                }
-              }
-            },
-            plot: () => {
-              return {
-                candlestick: () => {
-                  //                  
-                },
-                legend: () => {
-                  //
-                },
-                title: () => {
-                  //
-                },
-                xAxis: () => {
-                  return {
-                    labels: () => {
-                      //
-                    }
-                  }
-                },
-                yAxis: () => {
-                  return {
-                    labels: () => {
-                      //
-                    },
-                    orientation: () => {
-                      //
-                    },
-                  }
-                },
-              }
-            }
-          }
-        }
-      }
-    }));
-
     await TestBed.configureTestingModule({
       imports: [ 
-        NgxsModule.forRoot(),
+        NgxsModule.forRoot([ConfigState]),
         HttpClientTestingModule,
         MatSnackBarModule,
         ChartComponent
@@ -87,14 +25,14 @@ describe('ChartComponent', () => {
     })
     .compileComponents();
 
+    store = TestBed.inject(Store)
+    store.dispatch(new CONFIG_SET(CONFIG_STATE_DEFAULT))
+    
     fixture = TestBed.createComponent(ChartComponent);
     component = fixture.componentInstance;
+    component.candles = [[1,1,1,1,1,1]]
     component.interval$ = new BehaviorSubject(null)
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    windowSpy.mockRestore();
   });
 
   it('should create', () => {

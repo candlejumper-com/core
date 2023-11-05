@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { FooterTabLogsComponent } from './footer-tab-logs.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CommonModule } from '@angular/common';
 
 describe('FooterTabLogsComponent', () => {
   let component: FooterTabLogsComponent;
@@ -8,7 +9,11 @@ describe('FooterTabLogsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FooterTabLogsComponent ]
+      imports: [ 
+        CommonModule,
+        HttpClientTestingModule,
+        FooterTabLogsComponent
+       ]
     })
     .compileComponents();
 

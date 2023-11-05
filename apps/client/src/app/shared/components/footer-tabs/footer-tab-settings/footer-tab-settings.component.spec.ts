@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FooterTabSettingsComponent } from './footer-tab-settings.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxsModule } from '@ngxs/store';
 
 describe('FooterTabSettingsComponent', () => {
   let component: FooterTabSettingsComponent;
@@ -8,7 +10,11 @@ describe('FooterTabSettingsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FooterTabSettingsComponent ]
+      imports: [ 
+        NgxsModule.forRoot([]),
+        HttpClientTestingModule,
+        FooterTabSettingsComponent
+       ]
     })
     .compileComponents();
 

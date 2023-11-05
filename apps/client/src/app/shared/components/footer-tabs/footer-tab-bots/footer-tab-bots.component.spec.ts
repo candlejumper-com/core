@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FooterTabBotsComponent } from './footer-tab-bots.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgxsModule } from '@ngxs/store';
 
 describe('FooterTabBotsComponent', () => {
   let component: FooterTabBotsComponent;
@@ -8,7 +11,12 @@ describe('FooterTabBotsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FooterTabBotsComponent ]
+      imports: [ 
+        HttpClientTestingModule,
+        MatSnackBarModule,
+        NgxsModule.forRoot([]),
+        FooterTabBotsComponent
+       ]
     })
     .compileComponents();
 

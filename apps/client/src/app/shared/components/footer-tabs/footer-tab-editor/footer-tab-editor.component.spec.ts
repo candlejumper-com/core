@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { FooterTabsEditorComponent } from './footer-tab-editor.component';
+import { FooterTabEditorComponent } from './footer-tab-editor.component';
 
 describe('FooterTabsEditorComponent', () => {
-  let component: FooterTabsEditorComponent;
-  let fixture: ComponentFixture<FooterTabsEditorComponent>;
+  let component: FooterTabEditorComponent;
+  let fixture: ComponentFixture<FooterTabEditorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FooterTabsEditorComponent ]
+      imports: [ FooterTabEditorComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FooterTabsEditorComponent);
+    fixture = TestBed.createComponent(FooterTabEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

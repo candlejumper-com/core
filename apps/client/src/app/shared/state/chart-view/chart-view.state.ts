@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core"
-import { Action, Selector, State, Store } from "@ngxs/store"
+import { Selector, State } from "@ngxs/store"
 import { IBacktestResult } from "../../services/backtest/backtest.service"
 import { StateService } from "../../services/state/state.service"
 

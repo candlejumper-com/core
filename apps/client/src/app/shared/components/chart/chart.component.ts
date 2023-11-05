@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
-import './anychart-theme-dark-custom'
+import { MatDialog } from '@angular/material/dialog'
+import { Select } from '@ngxs/store'
 import { WindowService } from '../../services/window/window.service'
 import { SharedModule } from '../../shared.module'
-import { MatDialog } from '@angular/material/dialog'
 import { DialogOrderComponent, IOrderDialogData } from '../dialog-order/dialog-order.component'
 import { ChartType, ChartViewType } from '../../services/chart/chart.service'
 import { IPricesWebsocketResponse } from '../../services/candle/candle.interfaces'
@@ -12,9 +12,12 @@ import { Subject, BehaviorSubject, Subscription, tap, takeUntil, Observable } fr
 import { ConfigService, IConfigSystem } from '../../services/config/config.service'
 import { IOrder, ORDER_SIDE } from '../../services/order/order.service'
 import { ITicker, BOT_INDICATOR_TYPE, BOT_EVENT_TYPE } from '../../services/state/state.service'
-import { ISymbol } from '@candlejumper/shared'
+import { ICandle, ISymbol } from '@candlejumper/shared'
 import { ConfigState } from '../../state/config/config.state'
-import { Select } from '@ngxs/store'
+
+/// <reference types="anychart" />
+import 'anychart';
+import './anychart-theme-dark-custom'
 
 @Component({
   selector: 'core-chart',
@@ -42,7 +45,7 @@ export class ChartComponent implements OnInit, OnChanges, OnDestroy {
   timeRange$: Subject<[number, number]> = new Subject()
 
   @Input()
-  candles: number[][] = []
+  candles: ICandle[] = []
 
   @Input()
   orders: IOrder[] = []
@@ -90,7 +93,8 @@ export class ChartComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private setupChartTheme(): void {
-    window.anychart?.theme((anychart as any).themes.darkCustom)
+    anychart.theme(anychart.theme['darkCustom'])
+    // window.anychart?.theme((anychart as any).themes.darkCustom)
   }
 
   private subscribeToTickUpdates(): void {
@@ -150,7 +154,8 @@ export class ChartComponent implements OnInit, OnChanges, OnDestroy {
     this.destroyChart()
 
     this.ngZone.runOutsideAngular(() => {
-      this.dataTable = window.anychart.data.table()
+      this.dataTable = anychart.data.table()
+      // this.dataTable = window.anychart.data.table()
       this.dataTable.addData(this.candles)
 
       // map loaded data for the ohlc series
@@ -163,7 +168,8 @@ export class ChartComponent implements OnInit, OnChanges, OnDestroy {
       })
 
       // create stock chart
-      this.chart = window.anychart.stock()
+      this.chart = anychart.stock()
+      // this.chart = window.anychart.stock()
       this.chart.padding(10, 80, 20, 50)
       this.chart.credits().enabled(false)
       // this.chart.height('100%');

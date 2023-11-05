@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SymbolOverviewComponent } from './symbol-overview.component';
+import { NgxsModule } from '@ngxs/store';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('SymbolOverviewComponent', () => {
   let component: SymbolOverviewComponent;
@@ -8,7 +10,12 @@ describe('SymbolOverviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SymbolOverviewComponent ]
+      imports: [ 
+        NgxsModule.forRoot([]),
+        HttpClientTestingModule,
+        MatSnackBarModule,
+        SymbolOverviewComponent 
+      ]
     })
     .compileComponents();
 

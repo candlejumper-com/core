@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
 import { SharedModule } from '../../../shared.module';
 
 @Component({
-  selector: 'app-footer-tab-logs',
+  selector: 'core-footer-tab-logs',
   templateUrl: './footer-tab-logs.component.html',
   styleUrls: ['./footer-tab-logs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

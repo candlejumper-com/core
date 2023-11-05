@@ -12,9 +12,9 @@ import {
 } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
-import { BehaviorSubject, Observable, Subject, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
 import millify from 'millify';
-import { BacktestService, IBacktestResult } from '../../../services/backtest/backtest.service';
+import { BacktestService } from '../../../services/backtest/backtest.service';
 import { CandleService } from '../../../services/candle/candle.service';
 import { ChartService } from '../../../services/chart/chart.service';
 import { ConfigService, IConfigSystem } from '../../../services/config/config.service';

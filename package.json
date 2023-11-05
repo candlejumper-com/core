@@ -7,6 +7,7 @@
     "stop": "pm2 stop all",
     "client:dev": "nx serve client",
     "client:build": "nx build client",
+    "client:test": "nx run client:test --watch",
     "server-main:dev": "nx serve server-main:serve",
     "server-main:build": "nx build server-main && cd ./dist/apps/server-main && npm ci",
     "server-candles:dev": "nx serve server-candles:serve",

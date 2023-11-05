@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SharedModule } from '../../../shared.module';
 
 @Component({
-  selector: 'app-footer-tab-editor',
+  selector: 'core-footer-tab-editor',
   templateUrl: './footer-tab-editor.component.html',
   styleUrls: ['./footer-tab-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

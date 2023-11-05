@@ -2,6 +2,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FooterTabOrdersComponent } from './footer-tab-orders.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgxsModule } from '@ngxs/store';
 
 describe('FooterTabOrdersComponent', () => {
   let component: FooterTabOrdersComponent;
@@ -9,7 +12,13 @@ describe('FooterTabOrdersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FooterTabOrdersComponent ]
+      imports: [ 
+        NgxsModule.forRoot([]),
+        HttpClientTestingModule,
+        MatSnackBarModule,
+        FooterTabOrdersComponent
+      ],
+      providers: []
     })
     .compileComponents();
 

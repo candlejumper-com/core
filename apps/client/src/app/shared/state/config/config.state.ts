@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core"
-import { Action, Selector, State, Store } from "@ngxs/store"
+import { Action, Selector, State } from "@ngxs/store"
 import { CONFIG_SET } from "./config.actions"
 import { IConfigSystem } from "../../services/config/config.service"
 

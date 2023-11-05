@@ -11,7 +11,7 @@ export interface IOrderDialogData {
 }
 
 @Component({
-  selector: 'app-dialog-order',
+  selector: 'core-dialog-order',
   templateUrl: './dialog-order.component.html',
   styleUrls: ['./dialog-order.component.scss'],
   standalone: true,

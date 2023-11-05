@@ -7,7 +7,7 @@ import { SharedModule } from '../../../shared.module';
 
 
 @Component({
-  selector: 'app-footer-tab-orders',
+  selector: 'core-footer-tab-orders',
   templateUrl: './footer-tab-orders.component.html',
   styleUrls: ['./footer-tab-orders.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { FooterTabStatusComponent } from './footer-tab-status.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxsModule } from '@ngxs/store';
 
 describe('FooterTabStatusComponent', () => {
   let component: FooterTabStatusComponent;
@@ -8,7 +9,11 @@ describe('FooterTabStatusComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FooterTabStatusComponent ]
+      imports: [ 
+        NgxsModule.forRoot([]),
+        HttpClientTestingModule,
+        FooterTabStatusComponent
+       ]
     })
     .compileComponents();
 

@@ -33,7 +33,6 @@ export class EditorManager {
     async init(): Promise<void> {
         this.pool = pool(url.toString(), { maxWorkers: 1 })
 
-        console.log(23434, url.toString())
         await this.readAndUpdate()
         await this.compile()
 

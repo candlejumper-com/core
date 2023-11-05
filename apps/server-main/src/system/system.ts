@@ -1,8 +1,7 @@
 import "colors"
 import { join } from "path"
-import axiosRetry from "axios-retry"
 import axios from "axios"
-
+import axiosRetry from "axios-retry"
 import { Bot } from "../tickers/bot/bot"
 import { logger, setSystemEnvironment } from "../util/log"
 import { ApiServer } from "./api"
@@ -24,6 +23,7 @@ import { BrokerIG } from "../brokers/ig/broker-ig"
 import { AIManager } from "../modules/ai-manager/ai-manager"
 import { ISymbol } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
+import { BrokerBinance } from "../brokers/binance/broker_binance"
 
 export enum SYSTEM_ENV {
   MAIN = "MAIN",
@@ -33,7 +33,7 @@ export enum SYSTEM_ENV {
 // set global retry on axiosZ
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay })
 
-export class System extends Ticker<any> {
+export class System extends Ticker<null> {
   type = TICKER_TYPE.SYSTEM
 
   time: Date
@@ -47,6 +47,7 @@ export class System extends Ticker<any> {
 
   readonly db = new DB(this)
   readonly configManager = new ConfigManager(this)
+  // readonly broker = new BrokerBinance(this)
   readonly broker = new BrokerIG(this)
   readonly aiManager = new AIManager(this)
   readonly candleManager = new CandleManager(this)
