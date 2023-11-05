@@ -1,5 +1,4 @@
-import { ISymbol } from "@candlejumper/shared"
-import { TICKER_TYPE } from "../tickers/ticker"
+import { ISymbol, TICKER_TYPE } from "@candlejumper/shared"
 import { SYSTEM_ENV } from "./system"
 
 export interface ISystemState {

@@ -27,4 +27,8 @@ describe('SymbolOverviewComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('can find indicator', () => {
+    expect(component.findIndicator({ name: 'BTC-USDT' }, '1m')).toEqual(undefined)
+  })
 });

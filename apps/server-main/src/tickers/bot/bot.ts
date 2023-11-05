@@ -1,10 +1,10 @@
 import { DiffPercentageWatcher } from './bot-helpers';
 import { IBotConfig, IWatcherOptions } from './bot.interfaces';
-import { TICKER_EVENT_TYPE, TICKER_TYPE, Ticker } from '../ticker';
+import { Ticker } from '../ticker';
 import { CANDLE_FIELD } from '../../modules/candle-manager/candle-manager';
 import { Indicator } from '../indicator/indicator';
 import { IOrderSnapshot } from '../../modules/order-manager/order.interfaces';
-import { ITickerSnapshot } from '../ticker.interfaces';
+import { ITickerSnapshot, TICKER_EVENT_TYPE, TICKER_TYPE } from '@candlejumper/shared';
 
 export abstract class Bot<T> extends Ticker<T> {
   readonly type = TICKER_TYPE.BOT;

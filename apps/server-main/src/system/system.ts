@@ -17,11 +17,11 @@ import {
   PATH_CUSTOM_DIST_INDICATORS,
 } from "../modules/editor-manager/editor-manager"
 import { UserManager } from "../modules/user-manager/user-manager"
-import { TICKER_TYPE, Ticker } from "../tickers/ticker"
+import { Ticker } from "../tickers/ticker"
 import { ISystemState } from "./system.interfaces"
 import { BrokerIG } from "../brokers/ig/broker-ig"
 import { AIManager } from "../modules/ai-manager/ai-manager"
-import { ISymbol } from "@candlejumper/shared"
+import { ISymbol, TICKER_TYPE } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
 import { BrokerBinance } from "../brokers/binance/broker_binance"
 

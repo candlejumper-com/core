@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { IndicatorService } from './indicator.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 

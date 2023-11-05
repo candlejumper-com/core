@@ -1,27 +1,9 @@
-import { ICandle, ISymbol } from '@candlejumper/shared'
+import { ICandle, ISymbol, ITickerEvent, ITickerParams, TICKER_EVENT_TYPE, TICKER_TYPE } from '@candlejumper/shared'
 import { CANDLE_FIELD } from '../modules/candle-manager/candle-manager'
 import { System } from '../system/system'
 import { logger } from '../util/log'
 import { sleep } from '../util/util'
-import { ITickerEvent, ITickerParams } from './ticker.interfaces'
 import { join } from 'path'
-
-export enum TICKER_TYPE {
-  'INDICATOR' = 'INDICATOR',
-  'BOT' = 'BOT',
-  'SYSTEM' = 'SYSTEM',
-}
-
-export enum TICKER_EVENT_TYPE {
-  START = 'START',
-  STOP = 'STOP',
-  TRADE = 'TRADE',
-  WATCHER_START = 'WATCHER_START',
-  WATCHER_STOP = 'WATCHER_STOP',
-  WATCHER_TRIGGERED = 'WATCHER_TRIGGERED',
-  TREND_UP = 'TREND_UP',
-  TREND_DOWN = 'TREND_DOWN',
-}
 
 export abstract class Ticker<T> {
   static eventId = 0

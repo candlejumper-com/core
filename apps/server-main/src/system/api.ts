@@ -18,7 +18,7 @@ import aiRoutes from '../modules/ai-manager/ai.api'
 import passport from 'passport'
 import { json } from 'body-parser'
 import helmet from 'helmet'
-import { TICKER_TYPE } from '../tickers/ticker'
+import { TICKER_TYPE } from '@candlejumper/shared'
 
 const PATH_PUBLIC = join(__dirname, '../../public/client')
 

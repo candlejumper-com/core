@@ -22,7 +22,6 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
 
   @Select(SymbolState.getAll) symbols$: Observable<ISymbol[]>
 
-  symbols: ISymbol[] = []
   isVisible = window.document.body.clientWidth >= this.windowService.breakpoints.lg
   isExpanded: boolean
 
@@ -67,7 +66,7 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
     this.elementRef.nativeElement.classList.toggle('visible', this.isVisible)
   }
 
-  onClickSymbol(event: any): void {
+  onClickSymbol(event: MouseEvent): void {
     const symbolName = (event.target as HTMLElement).closest("tr")?.dataset['symbol']
     const symbol = symbolName ? this.candleService.getSymbolByName(symbolName) : null
 
@@ -81,7 +80,7 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleExpanded() {
+  toggleExpanded(): void {
     this.elementRef.nativeElement.classList.toggle('expanded', this.isExpanded = !this.isExpanded)
   }
 

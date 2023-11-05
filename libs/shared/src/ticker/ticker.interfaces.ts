@@ -1,6 +1,6 @@
-import { ICandle, ISymbol } from '@candlejumper/shared'
-import { BOT_INDICATOR_TYPE } from './bot/bot.interfaces'
-import { TICKER_EVENT_TYPE } from "./ticker"
+import { ICandle, ISymbol } from '../candle/candle.interfaces'
+import { BOT_INDICATOR_TYPE } from '../bot/bot.interfaces'
+import { TICKER_EVENT_TYPE } from "./ticker.util"
 
 export interface ITickerParams<T> {
     class?: any
