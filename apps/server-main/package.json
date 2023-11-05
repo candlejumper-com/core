@@ -1,0 +1,10 @@
+{
+  "name": "server-main",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "todo.. run server only"
+  },
+  "dependencies": {
+    
+  }
+}

@@ -24,6 +24,7 @@
         "assets": ["apps/server-main/src/assets", "apps/server-main/src/modules/ai-manager/ai-worker.ts"],
         "isolatedConfig": true,
         "webpackConfig": "apps/server-main/webpack.config.js",
+        "generatePackageJson": true,
         "additionalEntryPoints": [
           {
             "entryName": "ai-worker",

@@ -58,7 +58,7 @@ export class System extends Ticker<any> {
   constructor(public env: SYSTEM_ENV) {
     super(null, null, null, null, null)
 
-    // setProcessExitHandlers(this)
+    setProcessExitHandlers(this)
   }
 
   async init(): Promise<void> {
@@ -250,7 +250,7 @@ export class System extends Ticker<any> {
       )
     }
 
-    const data: ISystemState = {
+    const data = {
       config: {
         symbols: this.configManager.config.symbols,
       },
