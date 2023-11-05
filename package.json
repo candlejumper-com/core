@@ -100,7 +100,7 @@
     "@angular-eslint/eslint-plugin": "~16.0.0",
     "@angular-eslint/eslint-plugin-template": "~16.0.0",
     "@angular-eslint/template-parser": "~16.0.0",
-    "@angular/cli": "~16.1.0",
+    "@angular/cli": "~16.2.0",
     "@angular/compiler-cli": "16.2.12",
     "@angular/language-service": "16.2.12",
     "@ngxs/devtools-plugin": "^3.8.1",
@@ -132,7 +132,7 @@
     "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
-    "cypress": "^12.16.0",
+    "cypress": "^13.0.0",
     "esbuild": "0.19.5",
     "eslint": "8.46.0",
     "eslint-config-prettier": "8.1.0",
@@ -156,4 +156,3 @@
     "typescript": "^5.1.6"
   }
 }
-
