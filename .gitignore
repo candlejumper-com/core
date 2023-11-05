@@ -39,3 +39,4 @@ Thumbs.db
 /_logs
 /_data
 dist
+.nx/cache
