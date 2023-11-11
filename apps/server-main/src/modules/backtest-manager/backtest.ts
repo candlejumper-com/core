@@ -1,12 +1,10 @@
 import { System, SYSTEM_ENV } from '../../system/system';
 import { BACKTEST_TYPE } from './backtest-manager';
-import { ORDER_SIDE } from '../../modules/order-manager/order.interfaces';
 import { Bot } from '../../tickers/bot/bot';
 import { CANDLE_FIELD } from '../candle-manager/candle-manager';
 import { ORDER_TYPE } from '../order-manager/order-manager';
-import { IBalance } from '../../brokers/broker.interfaces';
 import { IWorkerData } from './backtest.interfaces';
-import { ICandle, ISymbol } from '@candlejumper/shared';
+import { ICandle, ISymbol, ORDER_SIDE, IBalance } from '@candlejumper/shared';
 
 export class Backtest {
 
@@ -157,7 +155,7 @@ export class Backtest {
      */
     private getAssetValue(asset: string): number {
         const balance = this.system.broker.getBalance(asset)
-        const currentPrice = (this.system.tickers[0] as Bot<any>).price
+        const currentPrice = (this.system.tickers[0] as unknown as Bot<any>).price
         return currentPrice * balance
     }
 

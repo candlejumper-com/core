@@ -1,8 +1,7 @@
 import admin from "firebase-admin";
 import { join } from "path";
 import { System } from "../../system/system";
-import { logger } from "../../util/log";
-import { IOrder } from "../order-manager/order.interfaces";
+import { logger, IOrder } from "@candlejumper/shared";
 
 import FIREBASE_CERT from './../../../../../firebase-keys.json';
 import sdf from './device.json'

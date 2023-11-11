@@ -1,8 +1,8 @@
-import { System, SYSTEM_ENV } from '../system/system';
-import { IOrder } from '../modules/order-manager/order.interfaces';
+import { SystemBase, SYSTEM_ENV } from '../system/system';
+import { IOrder } from '../order/order.interfaces';
 import { OrderResponseACK, OrderResponseResult, OrderResponseFull } from 'binance';
 import { IAccount, IBrokerInfo } from './broker.interfaces';
-import axiosRetry from 'axios-retry';
+import * as axiosRetry from 'axios-retry';
 import axios, { AxiosError } from 'axios';
 import { logger } from '../util/log';
 
@@ -22,7 +22,9 @@ const retryDelay = (retryCount: number): number => {
   return Math.min(maxDelay, retryCount * delayMultiplier);
 };
 
-axiosRetry(axios, { retries: 3, retryDelay, onRetry });
+// console.log(axiosRetry)
+
+// axiosRetry(axios, { retries: 3, retryDelay, onRetry });
 
 export abstract class Broker {
   account = { balances: [] } as IAccount;
@@ -36,7 +38,7 @@ export abstract class Broker {
   abstract getOrdersByMarket(market: string): Promise<IOrder[]>;
   abstract placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull>;
 
-  constructor(public system: System) {}
+  constructor(public system: SystemBase) {}
 
   async init() {
     await this.onInit?.();

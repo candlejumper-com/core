@@ -1,12 +1,12 @@
-import { logger } from '../../util/log';
-import { Broker } from '../broker';
+import { logger } from '@candlejumper/shared';
 import { OrderResponseFull, OrderResponseResult, WebsocketClient } from 'binance';
 import axios, { AxiosError } from 'axios';
 import rateLimit from 'axios-rate-limit';
 import IG, { API_BASE_URL } from 'ig-node-api';
 import { QueueBinance } from '../binance/binance.queue';
-import { IOrder } from '../../modules/order-manager/order.interfaces';
-import { SYSTEM_ENV } from '../../system/system';
+import { IOrder } from '../../order/order.interfaces';
+import { SYSTEM_ENV } from '../../../../../apps/server-main/src/system/system';
+import { Broker } from '../broker';
 
 const defaultOptions = {
   baseURL: API_BASE_URL.PROD,
@@ -43,7 +43,7 @@ export class BrokerIG extends Broker {
 
   http = rateLimit(axios.create(defaultOptions), { maxRequests: 5, perMilliseconds: 1000 });
 
-  async onInit() {
+  override async onInit() {
     if (this.system.env === SYSTEM_ENV.BACKTEST) {
       throw new Error('System env BACKTEST should not execute broker.onInit()');
     }

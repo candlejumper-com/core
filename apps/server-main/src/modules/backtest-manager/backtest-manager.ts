@@ -1,8 +1,7 @@
 import { join } from 'path';
 import { System } from "../../system/system";
 import { pool, WorkerPool } from 'workerpool';
-import { logger } from '../../util/log';
-import { ISystemState } from '../../system/system.interfaces';
+import { logger, ISystemState } from '@candlejumper/shared';
 import { IBacktestResult, IBacktestOptions, IWorkerData } from './backtest.interfaces';
 
 const PATH_WORKER = new URL(join(__dirname, 'backtest-worker.js'), import.meta.url)

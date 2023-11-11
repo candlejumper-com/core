@@ -1,7 +1,6 @@
 import { ExchangeInfo } from "binance"
-import { ISystemState } from "../../system/system.interfaces"
 import { BACKTEST_TYPE } from "./backtest-manager"
-import { ISymbol } from "@candlejumper/shared"
+import { ISymbol, ISystemState } from "@candlejumper/shared"
 
 export interface IBacktestOptions {
     symbols: string[]

@@ -3,8 +3,7 @@ import { IBotConfig, IWatcherOptions } from './bot.interfaces';
 import { Ticker } from '../ticker';
 import { CANDLE_FIELD } from '../../modules/candle-manager/candle-manager';
 import { Indicator } from '../indicator/indicator';
-import { IOrderSnapshot } from '../../modules/order-manager/order.interfaces';
-import { ITickerSnapshot, TICKER_EVENT_TYPE, TICKER_TYPE } from '@candlejumper/shared';
+import { ITickerSnapshot, TICKER_EVENT_TYPE, TICKER_TYPE, IOrderSnapshot } from '@candlejumper/shared';
 
 export abstract class Bot<T> extends Ticker<T> {
   readonly type = TICKER_TYPE.BOT;

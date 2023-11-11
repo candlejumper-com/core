@@ -2,7 +2,7 @@ import { Application } from 'express'
 import { readFileSync } from 'fs'
 import { System } from "./system"
 import * as jwt from 'jsonwebtoken'
-import { logger, PATH_LOGS_COMBINED } from '../util/log'
+import { logger, PATH_LOGS_COMBINED } from '@candlejumper/shared'
 
 export default function (system: System, app: Application) {
     

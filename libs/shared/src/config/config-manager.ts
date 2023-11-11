@@ -1,6 +1,6 @@
 import { existsSync, writeFileSync } from "fs";
 import { join } from "path";
-import { System } from "../../system/system";
+import { SystemBase } from "../system/system";
 import { logger } from "@candlejumper/shared";
 import { ISystemConfig } from "./config.interfaces";
 
@@ -13,16 +13,15 @@ export class ConfigManager {
 
     config: ISystemConfig
 
-    constructor(public system: System) {
-
-    }
+    constructor(public system: SystemBase) {}
 
     async init() {
         await this.load()
     }
 
     private async load(): Promise<void> {
-        const config = (await import('../../../../../config.json')).default
+        const config = require('../../../../config.json')
+        // const config = await import('../../../../config.json')
         this.config = config
         // this.config = require(join(__dirname, '../../../../../../../scripts/config.js')).config
     }

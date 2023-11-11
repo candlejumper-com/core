@@ -1,5 +1,5 @@
-import { System } from "../../system/system"
-import { Queue } from "../../util/queue"
+import { System } from "../../../../../apps/server-main/src/system/system"
+import { Queue } from "../../../../../apps/server-main/src/util/queue"
 
 export class QueueBinance extends Queue {
 

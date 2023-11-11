@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { WSService } from '../ws/ws.service'
-import { ISymbol, ITickerSnapshot } from '@candlejumper/shared'
+import { ISymbol } from '@candlejumper/shared'
 
 @Injectable({
   providedIn: 'root'

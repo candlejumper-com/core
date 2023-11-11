@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from "fs"
 import watch from "node-watch"
 import dirTree, { DirectoryTree } from "directory-tree"
 import { System } from '../../system/system'
-import { logger } from '../../util/log'
+import { logger } from '@candlejumper/shared'
 import { pool, WorkerPool } from 'workerpool'
 import { IEditorCompileOptions } from './editor-worker'
 import { readFile, writeFile } from 'fs/promises'

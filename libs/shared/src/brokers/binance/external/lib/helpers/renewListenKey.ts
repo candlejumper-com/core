@@ -1,4 +1,4 @@
-import { logger } from '../../../../../util/log';
+import { logger } from '@candlejumper/shared';
 import extendUserDataStream from '../services/extendUserDataStream';
 
 const renewListenKey = (apiKey) => (listenKey) => {

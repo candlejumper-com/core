@@ -1,9 +1,8 @@
-import "colors"
 import { join } from "path"
 import axios from "axios"
 import axiosRetry from "axios-retry"
 import { Bot } from "../tickers/bot/bot"
-import { logger, setSystemEnvironment } from "../util/log"
+import { logger, setSystemEnvironment, ISystemState, SystemBase } from "@candlejumper/shared"
 import { ApiServer } from "./api"
 import { DB } from "../db/db"
 import { CANDLE_FIELD, CandleManager } from "../modules/candle-manager/candle-manager"
@@ -17,13 +16,8 @@ import {
   PATH_CUSTOM_DIST_INDICATORS,
 } from "../modules/editor-manager/editor-manager"
 import { UserManager } from "../modules/user-manager/user-manager"
-import { Ticker } from "../tickers/ticker"
-import { ISystemState } from "./system.interfaces"
-import { BrokerIG } from "../brokers/ig/broker-ig"
 import { AIManager } from "../modules/ai-manager/ai-manager"
-import { ISymbol, TICKER_TYPE } from "@candlejumper/shared"
-import { setProcessExitHandlers } from "../util/exit-handlers.util"
-import { BrokerBinance } from "../brokers/binance/broker_binance"
+import { ISymbol, TICKER_TYPE, BrokerIG } from "@candlejumper/shared"
 
 export enum SYSTEM_ENV {
   MAIN = "MAIN",
@@ -33,10 +27,9 @@ export enum SYSTEM_ENV {
 // set global retry on axiosZ
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay })
 
-export class System extends Ticker<null> {
+export class System extends SystemBase {
+  id = "SYSTEM"
   type = TICKER_TYPE.SYSTEM
-
-  time: Date
 
   apiServer: ApiServer
   deviceManager: DeviceManager
@@ -46,7 +39,6 @@ export class System extends Ticker<null> {
   system = this
 
   readonly db = new DB(this)
-  readonly configManager = new ConfigManager(this)
   // readonly broker = new BrokerBinance(this)
   readonly broker = new BrokerIG(this)
   readonly aiManager = new AIManager(this)
@@ -54,15 +46,8 @@ export class System extends Ticker<null> {
   readonly orderManager = new OrderManager(this)
   readonly userManager = new UserManager(this)
 
-  private isRunning = false
-
-  constructor(public env: SYSTEM_ENV) {
-    super(null, null, null, null, null)
-
-    setProcessExitHandlers(this)
-  }
-
   async init(): Promise<void> {
+    await super.init()
     setSystemEnvironment(SYSTEM_ENV.MAIN)
 
     await this.configManager.init()
@@ -170,15 +155,7 @@ export class System extends Ticker<null> {
    * start running
    */
   async start(): Promise<void> {
-    if (this.isRunning) {
-      throw new Error("Already running")
-    }
-
-    if (!this.isInitialized) {
-      await this.init()
-    }
-
-    this.isRunning = true
+    await super.start()
 
     if (this.env === SYSTEM_ENV.MAIN) {
       logger.info(`${this.env} - ${"READY".green}`)
@@ -190,12 +167,7 @@ export class System extends Ticker<null> {
    * stop running
    */
   async stop(): Promise<void> {
-    if (!this.isRunning) {
-      logger.warn("Not running")
-      return
-    }
-
-    this.isRunning = false
+    super.stop()
 
     // make sure backtests & custom bots code compilers are stopt
     await this.backtestManager.destroy()
@@ -216,7 +188,7 @@ export class System extends Ticker<null> {
     try {
       // tick all bots
       for (let i = 0, len = this.tickers.length; i < len; i++) {
-        const ticker = this.tickers[i] as Bot<any>
+        const ticker = this.tickers[i] as unknown as Bot<any>
 
         if (ticker.symbol.name !== symbol.name) {
           continue

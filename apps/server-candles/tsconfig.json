@@ -1,7 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
   "files": [],
-  "include": ["*.ts"],
+  "include": [],
+  "composite": true,
   "references": [
     {
       "path": "./tsconfig.app.json"
@@ -11,5 +12,6 @@
     }
   ],
   "compilerOptions": {
+    "esModuleInterop": true
   }
 }

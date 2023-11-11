@@ -2,7 +2,7 @@ import { join } from 'path';
 import { DataSource } from "typeorm"
 import { System } from '../system/system';
 import { User } from '../modules/user-manager/user.entity';
-import { logger } from '../util/log';
+import { logger } from '@candlejumper/shared';
 
 const PATH_DATA = join(__dirname, '../../../../_data/server')
 const PATH_ENTITIES = join(__dirname, '../user-manager/user.entity.ts')

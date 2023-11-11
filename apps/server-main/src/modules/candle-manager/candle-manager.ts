@@ -1,9 +1,7 @@
 import axios from 'axios'
 import { io, Socket } from 'socket.io-client'
 import { System } from "../../system/system"
-import { logger } from "../../util/log"
-import { ICandle, ISymbol } from '@candlejumper/shared'
-import { ICandleServerEvent } from './candle.interfaces'
+import { logger, ICandle, ISymbol, ICandleServerEvent } from '@candlejumper/shared'
 
 export const INTERVAL_MILLISECONDS = {
     '1m': 60000,

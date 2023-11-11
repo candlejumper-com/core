@@ -29,8 +29,7 @@ export class ApiServer {
         this.bindRoutes()
 
         return new Promise((resolve, reject) => {
-            const host = this.system.configManager.config.server?.api?.host
-            const port = this.system.configManager.config.server?.api?.port
+            const { host, port } = this.system.configManager.config.server?.candles
 
             this.server.listen(port, host, () => {
                 logger.info(`API started on http://${host}:${port}`)

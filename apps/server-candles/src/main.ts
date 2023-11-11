@@ -1,9 +1,8 @@
+import { SYSTEM_ENV } from '@candlejumper/shared';
 import { System } from './system/system';
 
-process.stdin.resume()
-
 // create unique system instance
-const system = new System()
+const system = new System(SYSTEM_ENV.MAIN)
 
 // start
 system.start().catch(console.error)

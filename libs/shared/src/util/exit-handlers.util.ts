@@ -1,8 +1,13 @@
-import { System } from '../system/system'
+import { SystemBase } from '../system/system'
 
-export function setProcessExitHandlers(system: System) {
+export interface IExitHandlerOptions {
+  cleanup?: boolean
+  exit?: boolean
+}
+
+export function setProcessExitHandlers(system: SystemBase) {
   
-  function exitHandler(options: { cleanup: boolean; exit: boolean }, exitCode: number) {
+  function exitHandler(options: IExitHandlerOptions, exitCode: number) {
     if (options.cleanup) {
       system.stop()
     }
@@ -15,7 +20,7 @@ export function setProcessExitHandlers(system: System) {
   }
 
   //do something when app is closing
-  process.on('exit', exitHandler.bind(null, { cleanup: true }))
+  process.on('exit', exitHandler.bind(null, { cleanup: true, exit: true }))
 
   //catches ctrl+c event
   process.on('SIGINT', exitHandler.bind(null, { exit: true }))

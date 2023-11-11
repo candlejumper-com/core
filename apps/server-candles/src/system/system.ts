@@ -1,61 +1,68 @@
-import { ApiServer } from "../api/api";
-import commandLineArgs from "command-line-args";
-import { CandleManager } from "../candle-manager/candle-manager";
-import { ConfigManager } from "../config-manager/config-manager";
-import { DB } from "../db/db";
-import { logger } from "../util/log";
-import { BrokerIG } from "../broker/ig/broker-ig";
-import { BrokerYahoo } from "../broker/yahoo/broker-yahoo";
+import { ApiServer } from '../api/api'
+import commandLineArgs from 'command-line-args'
+import { CandleManager } from '../candle-manager/candle-manager'
+import { DB } from '../db/db'
+import { logger } from '../util/log'
+import { BrokerIG } from '../broker/ig/broker-ig'
+import { BrokerYahoo } from '../broker/yahoo/broker-yahoo'
+import { SYSTEM_ENV, SystemBase } from '@candlejumper/shared'
 
 const cliOptions = commandLineArgs([
-  { name: "clean", alias: "c", type: Boolean, defaultOption: false },
-  { name: "dev", type: Boolean, defaultOption: false },
-]);
+  { name: 'clean', alias: 'c', type: Boolean, defaultOption: false },
+  { name: 'dev', type: Boolean, defaultOption: false },
+])
 
-export class System {
-  readonly configManager = new ConfigManager(this);
-  readonly db = new DB(this);
-  readonly broker = new BrokerYahoo(this);
-  readonly candleManager = new CandleManager(this);
-  readonly apiServer = new ApiServer(this);
+export class System extends SystemBase {
+  id = "SYSTEM"
+  readonly db = new DB(this)
+  readonly broker = new BrokerYahoo(this)
+  readonly candleManager = new CandleManager(this)
+  readonly apiServer = new ApiServer(this)
 
-  async start() {
-    logger.info(
-      `\u231B Initialize system \n--------------------------------------------------------------`
-    );
+  async init() {
+    await super.init()
 
     if (cliOptions.clean) {
-      await this.clean();
+      await this.clean()
     }
 
-    await this.db.init();
-    await this.broker.init();
+    await this.db.init()
+    await this.broker.init()
 
     // use only symbols with USDT (for now)
     // this.broker.exchangeInfo.symbols = this.broker.exchangeInfo.symbols.filter(symbol => this.configManager.config.symbols.includes(symbol.name))
 
-    this.broker.exchangeInfo.symbols = this.broker.exchangeInfo.symbols.filter(
-      (symbol) => this.configManager.config.symbols.includes(symbol.name)
-    );
+    this.broker.exchangeInfo.symbols = this.broker.exchangeInfo.symbols.filter((symbol) =>
+      this.configManager.config.symbols.includes(symbol.name),
+    )
 
-    this.configManager.config.symbols = this.broker.exchangeInfo.symbols.map(
-      (symbol) => symbol.name
-    );
+    this.configManager.config.symbols = this.broker.exchangeInfo.symbols.map((symbol) => symbol.name)
 
-    await this.candleManager.init();
-    await this.candleManager.sync();
-    await this.apiServer.start();
+    await this.candleManager.init()
+    await this.candleManager.sync()
+    await this.apiServer.start()
 
-    this.candleManager.startWebsocketListener();
-    this.candleManager.startOutTickInterval();
-    logger.info(
-      `\u2705 Initialize system \n-------------------------------------------------------------`
-    );
+    this.candleManager.startWebsocketListener()
+    this.candleManager.startOutTickInterval()
+
+    logger.info(`\u2705 Initialize system \n-------------------------------------------------------------`)
+
+    this.isInitialized = true
   }
 
-  stop() {}
+  /**
+   * start running
+   */
+  async start(): Promise<void> {
+    await super.start()
+
+    if (this.env === SYSTEM_ENV.MAIN) {
+      logger.info(`${this.env} - ${'READY'.green}`)
+      console.info(`--------------------------------------------------------------`)
+    }
+  }
 
   async clean() {
-    await this.db.clean();
+    await this.db.clean()
   }
 }

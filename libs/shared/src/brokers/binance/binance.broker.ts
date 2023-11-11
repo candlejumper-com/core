@@ -1,20 +1,19 @@
 import { MainClient, OrderResponseFull, OrderResponseResult } from 'binance'
 import axios, { } from 'axios'
-import { SYSTEM_ENV } from '../../system/system'
-import { Broker } from '../broker'
 import { userTransforms } from './binance.tranformers'
-import { logger } from '../../util/log'
-import { IOrder, ORDER_SIDE } from '../../modules/order-manager/order.interfaces'
+import { IOrder, ORDER_SIDE } from '../../order/order.interfaces'
 import renewListenKey from './external/lib/helpers/renewListenKey'
 import getUserDataStream from './external/lib/services/getUserDataStream'
 import SocketClient from './external/lib/socketClient'
-import { threadId } from 'worker_threads'
+import { Broker } from '../broker'
+import { SYSTEM_ENV } from '../../system/system'
+import { logger } from '../../util/log';
 
 export class BrokerBinance extends Broker {
 
   instance: MainClient
 
-  async onInit() {
+  override async onInit() {
     if (this.system.env === SYSTEM_ENV.BACKTEST) {
       throw new Error('System env BACKTEST should not execute broker.onInit()')
     }
@@ -59,7 +58,7 @@ export class BrokerBinance extends Broker {
         locked: parseFloat(balance.locked as string),
         asset: balance.coin
       }))
-    } catch (error) {
+    } catch (error: any) {
       if (error.status) {
         console.error(error.status)
         console.error(error.data)
@@ -86,7 +85,7 @@ export class BrokerBinance extends Broker {
       const { data } = await axios.get(`${candleServerUrl}/api/exchange/binance`)
       this.exchangeInfo = data.exchangeInfo
       this.timezone = (this.exchangeInfo as any).timezone
-    } catch (error) {
+    } catch (error: any) {
       if (error.cause) {
         logger.error(error.cause)
       }
@@ -115,7 +114,7 @@ export class BrokerBinance extends Broker {
 
     // normalize
     return orders.map(order => {
-      const commissionAssetPrice = this.system.candleManager.getSymbolByPair(order.commissionAsset + 'USDT')?.price || 1
+      // const commissionAssetPrice = this.system.candleManager.getSymbolByPair(order.commissionAsset + 'USDT')?.price || 1
 
       const cleanOrder: IOrder = {
         id: order.id,
@@ -131,7 +130,7 @@ export class BrokerBinance extends Broker {
         commissionUSDT: 0
       }
 
-      cleanOrder.commissionUSDT = cleanOrder.commission * commissionAssetPrice
+      // cleanOrder.commissionUSDT = cleanOrder.commission * commissionAssetPrice
 
       return cleanOrder
     })

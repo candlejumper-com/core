@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import { logger } from '../../../../util/log';
+import { logger } from '@candlejumper/shared';
 
 class SocketClient {
 

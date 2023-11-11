@@ -1,7 +1,6 @@
 import { Application } from 'express'
 import { System } from "../../system/system"
-import { logger } from '../../util/log'
-import { ORDER_SIDE } from './order.interfaces'
+import { logger, ORDER_SIDE } from '@candlejumper/shared'
 
 interface IOrderPostBody {
     symbol: string

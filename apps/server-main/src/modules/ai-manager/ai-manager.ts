@@ -7,7 +7,7 @@ import {
 } from './ai.interfaces';
 import { join } from 'path';
 import { System } from '../../system/system';
-import { logger } from '../../util/log';
+import { logger } from '@candlejumper/shared';
 import { WorkerPool, pool } from 'workerpool';
 import { TENSORFLOW_WORKER_ACTION } from './ai.util';
 import { AIContainer } from './ai-container';

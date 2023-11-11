@@ -1,10 +1,7 @@
 import { SYSTEM_ENV, System } from "../../system/system";
-import { logger } from "../../util/log";
-import { countDecimals } from "../../util/util";
-import { IOrder, ORDER_SIDE, IOrderOptions, IOrderData } from "./order.interfaces";
+import { logger, ISymbol, IOrder, ORDER_SIDE, IOrderOptions, IOrderData, countDecimals } from "@candlejumper/shared";
 import { join } from 'path';
 import * as fs from 'fs';
-import { ISymbol } from "@candlejumper/shared";
 
 const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../_data/snapshots/backtest')
 
