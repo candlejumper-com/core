@@ -27,6 +27,11 @@ export interface ISystemConfig {
             apiKey?: string
             password?: string
             username?: string
+        },
+        bitmart?: {
+            name: string
+            apiKey: string
+            apiSecret: string
         }
     }
     server?: {

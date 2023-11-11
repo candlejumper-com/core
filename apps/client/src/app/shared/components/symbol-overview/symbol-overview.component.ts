@@ -65,10 +65,6 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
     this.tickSubscription?.unsubscribe()
   }
 
-  trackSymbol(index, symbol: ISymbol): string {
-    return symbol.name
-  }
-
   findIndicator(symbol: ISymbol, interval: string) {
     return this.indicatorService.indicators.find(
       (indicator) => indicator.symbol.name === symbol.name && indicator.interval === interval,

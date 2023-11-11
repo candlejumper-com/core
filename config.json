@@ -26,6 +26,11 @@
       "apiKey": "2f5d00d82c41e7a92be4d1f478b1187c2afde56d",
       "username": "dutchkevv5",
       "password": "Bettie123!!!"
+    },
+    "bitmart": {
+      "name": "TradeBot",
+      "apiKey": "9cc0d2f9729943bef449a5b7b1eb28734bce3211",
+      "apiSecret": "73576cc24df211b96a3a0a97761c6821b38583bf1e52b849c4a140747ada2c71"
     }
   },
   "automize": {
