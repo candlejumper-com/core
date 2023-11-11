@@ -3,17 +3,15 @@ import { Action, Selector, State, StateToken, createSelector } from '@ngxs/store
 import { SYMBOL_PRICE_SET, SYMBOL_SET } from './symbol.actions'
 import { ISymbol } from '@candlejumper/shared'
 
-export const SYMBOLS_STATE_TOKEN = new StateToken<string>('symbols')
+export const BRUGOPENINGEN_STATE_TOKEN = new StateToken<string>(
+  'symbols'
+);
 
-@State<ISymbol[]>({
-  name: 'symbols',
-  defaults: [],
-})
-@Injectable()
-export class SymbolState {
-  @Selector([SYMBOLS_STATE_TOKEN])
+export class SymbolSelectors {
+
+  @Selector([BRUGOPENINGEN_STATE_TOKEN])
   static entities(stateModel) {
-    return stateModel.entities
+    return stateModel.entities;
   }
 
   @Selector()
@@ -39,10 +37,19 @@ export class SymbolState {
 
   // @Selector([SymbolState.getAll])
   static getFilteredByName(name: string) {
-    return createSelector([SymbolState], (state) => {
-      if (!name.trim()) {
+    // return (name: string) => {
+    //   if (!name.trim()) {
+    //     return state
+    //   }
+
+    //   return Object.values(state).filter((symbol: ISymbol) => symbol.name.includes(name.toUpperCase()))
+    // }
+    return createSelector([this.entities], (state: ISymbol[]) => {
+      console.log(222)
+      if (!name) {
         return state
       }
+
       return Object.values(state).filter((symbol: ISymbol) => symbol.name.includes(name.toUpperCase()))
     })
   }
@@ -53,7 +60,7 @@ export class SymbolState {
   }
 
   @Action(SYMBOL_PRICE_SET)
-  symbolPriceSet({ patchState: patchState }, action: SYMBOL_PRICE_SET) {
+  symbolPriceSet({ patchState: patchState, setState: setState, getState: getState }, action: SYMBOL_PRICE_SET) {
     patchState({ [`${action.symbol.name}`]: { ...action.symbol, price: action.price } })
   }
 }

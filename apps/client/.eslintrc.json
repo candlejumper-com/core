@@ -5,6 +5,7 @@
     {
       "files": ["*.ts"],
       "rules": {
+        "no-unused-vars": "off",
         "@angular-eslint/directive-selector": [
           "error",
           {
