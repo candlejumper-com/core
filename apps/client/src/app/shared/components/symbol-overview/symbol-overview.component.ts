@@ -1,29 +1,43 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { SharedModule } from '../../shared.module';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core'
+import { BehaviorSubject, Observable, Subscription, map, tap } from 'rxjs'
+import { SharedModule } from '../../shared.module'
 import { IndicatorService } from '../../services/indicator/indicator.service'
-import { CandleService } from '../../services/candle/candle.service';
-import { ChartService } from '../../services/chart/chart.service';
-import { WindowService } from '../../services/window/window.service';
-import { ISymbol } from '@candlejumper/shared';
-import { Select, Store } from '@ngxs/store';
-import { SymbolState } from '../../state/symbol/symbol.state';
-import { SymbolStateModule } from '../../state/symbol/symbol.state.module';
+import { CandleService } from '../../services/candle/candle.service'
+import { ChartService } from '../../services/chart/chart.service'
+import { WindowService } from '../../services/window/window.service'
+import { ISymbol } from '@candlejumper/shared'
+import { Select, Store, ofActionSuccessful } from '@ngxs/store'
+import { SymbolState } from '../../state/symbol/symbol.state'
+import { SymbolStateModule } from '../../state/symbol/symbol.state.module'
+import { FormsModule } from '@angular/forms'
 
 @Component({
   selector: 'core-symbol-overview',
   templateUrl: './symbol-overview.component.html',
   styleUrls: ['./symbol-overview.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [SharedModule, SymbolStateModule]
+  imports: [SharedModule, SymbolStateModule, FormsModule],
 })
 export class SymbolOverviewComponent implements OnInit, OnDestroy {
 
-  @Select(SymbolState.getAll) symbols$: Observable<ISymbol[]>
 
+  // symbols$ = this.store.select(SymbolState.getFilteredByName(value)
+  symbols$: any
   isVisible = window.document.body.clientWidth >= this.windowService.breakpoints.lg
   isExpanded: boolean
+  
+  input = {
+    name: ''
+  }      
 
   private tickSubscription: Subscription
 
@@ -38,12 +52,10 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.symbols$ = this.store.select(SymbolState.getFilteredByName(''))
+
     // initial visibility
     this.toggleVisibility(this.isVisible)
-
-    // sort by name
-    // this.symbols = this.candleService.symbols.sort((p1, p2) => (p1.symbol < p2.symbol) ? -11 : (p1.symbol > p2.symbol) ? 0 : -1)
-    // this.symbols = this.candleService.symbols.sort((p1, p2) => (p1.symbol < p2.symbol) ? -11 : (p1.symbol > p2.symbol) ? 0 : -1)
 
     // start listening to price changes
     this.tickSubscription = this.candleService.tick$.subscribe(() => this.onPriceTick())
@@ -53,12 +65,14 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
     this.tickSubscription?.unsubscribe()
   }
 
-  trackSymbol(index, symbol: ISymbol): ISymbol {
-    return symbol
+  trackSymbol(index, symbol: ISymbol): string {
+    return symbol.name
   }
 
   findIndicator(symbol: ISymbol, interval: string) {
-    return this.indicatorService.indicators.find(indicator => indicator.symbol.name === symbol.name && indicator.interval === interval)
+    return this.indicatorService.indicators.find(
+      (indicator) => indicator.symbol.name === symbol.name && indicator.interval === interval,
+    )
   }
 
   toggleVisibility(state = !this.isVisible): void {
@@ -67,7 +81,7 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
   }
 
   onClickSymbol(event: MouseEvent): void {
-    const symbolName = (event.target as HTMLElement).closest("tr")?.dataset['symbol']
+    const symbolName = (event.target as HTMLElement).closest('tr')?.dataset['symbol']
     const symbol = symbolName ? this.candleService.getSymbolByName(symbolName) : null
 
     if (symbolName) {
@@ -75,13 +89,13 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
         this.toggleVisibility(false)
       }
 
-      const chart = this.chartService.createChart('MAIN', symbol, this.chartService.activeInterval$.value);
-      this.chartService.showChart(chart.id);
+      const chart = this.chartService.createChart('MAIN', symbol, this.chartService.activeInterval$.value)
+      this.chartService.showChart(chart.id)
     }
   }
 
   toggleExpanded(): void {
-    this.elementRef.nativeElement.classList.toggle('expanded', this.isExpanded = !this.isExpanded)
+    this.elementRef.nativeElement.classList.toggle('expanded', (this.isExpanded = !this.isExpanded))
   }
 
   onPriceTick(): void {
@@ -90,8 +104,10 @@ export class SymbolOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSearchInputChange(event): void {
-    const value = event.target.value.toLowerCase()
-    // this.symbols = this.candleService.symbols.filter(symbol => symbol.name.toLowerCase().includes(value))
+  onSearchInputChange(event: Event): void {
+    const value = (event.target as HTMLInputElement).value.toLowerCase()
+    // this.symbols = this.candleService.symbols.filter((symbol) => symbol.name.toLowerCase().includes(value))
+    this.symbols$ = this.store.select(SymbolState.getFilteredByName(value));
+    // this.symbols$ = this.store.select(SymbolState.getFilteredByName).pipe(map((filterFn) => filterFn(value)))
   }
 }

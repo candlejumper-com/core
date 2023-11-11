@@ -18,5 +18,9 @@ export class SYMBOL_PRICE_SET {
 
 export class SYMBOL_GET_ALL {
   static readonly type = '[Symbol] set';
-  constructor(public symbols: ISymbol[]) {}
+}
+
+export class SYMBOL_FILTER_BY_NAME {
+  static readonly type = '[Symbol] filter by name';
+  constructor(public name: string) {}
 }

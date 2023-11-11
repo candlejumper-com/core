@@ -1,35 +1,68 @@
-import { Injectable } from "@angular/core"
-import { Action, Selector, State, Store } from "@ngxs/store"
-import { SYMBOL_PRICE_SET, SYMBOL_SET } from "./symbol.actions"
-import { ISymbol } from "@candlejumper/shared"
+import { Injectable } from '@angular/core'
+import { Action, Selector, State, StateToken, createSelector } from '@ngxs/store'
+import { SYMBOL_PRICE_SET, SYMBOL_SET } from './symbol.actions'
+import { ISymbol } from '@candlejumper/shared'
 
-@State({
-    name: 'Symbols',
-    defaults: []
+export const SYMBOLS_STATE_TOKEN = new StateToken<string>('symbols')
+
+
+let name = 2
+
+name += 3
+
+
+alert(name)
+
+
+@State<ISymbol[]>({
+  name: 'symbols',
+  defaults: [],
 })
 @Injectable()
 export class SymbolState {
+  @Selector([SYMBOLS_STATE_TOKEN])
+  static entities(stateModel) {
+    return stateModel.entities
+  }
 
-    constructor(private store: Store) {}
+  @Selector()
+  static getAll(state: ISymbol[]): ISymbol[] {
+    return state
+  }
 
-    @Selector()
-    static getAll(state: ISymbol[]): ISymbol[] {
+  @Selector()
+  static getByName(state: ISymbol[], name: string): ISymbol {
+    return state.find((_symbol) => _symbol.name === name)
+  }
+
+  @Selector()
+  static getFilteredByName3(state: ISymbol[]) {
+    return (name: string) => {
+      if (!name) {
         return state
-    }
+      }
 
-    @Selector()
-    static getByName(state: ISymbol[], name: string): ISymbol {
-        return state.find(_symbol => _symbol.name === name)
+      return Object.values(state).filter((symbol: ISymbol) => symbol.name.includes(name.toUpperCase()))
     }
+  }
 
-    @Action(SYMBOL_SET)
-    symbolSet({setState: setState}, action: SYMBOL_SET) {
-        setState(action.symbols)
-    }
+  // @Selector([SymbolState.getAll])
+  static getFilteredByName(name: string) {
+    return createSelector([SymbolState], (state) => {
+      if (!name.trim()) {
+        return state
+      }
+      return Object.values(state).filter((symbol: ISymbol) => symbol.name.includes(name.toUpperCase()))
+    })
+  }
 
-    @Action(SYMBOL_PRICE_SET)
-    symbolPriceSet({patchState: patchState, setState: setState, getState: getState}, action: SYMBOL_PRICE_SET) {
-        patchState({[`${action.symbol.name}`]: { ...action.symbol, price: action.price }})
-    }
+  @Action(SYMBOL_SET)
+  symbolSet({ setState: setState }, action: SYMBOL_SET) {
+    setState(action.symbols)
+  }
+
+  @Action(SYMBOL_PRICE_SET)
+  symbolPriceSet({ patchState: patchState, setState: setState, getState: getState }, action: SYMBOL_PRICE_SET) {
+    patchState({ [`${action.symbol.name}`]: { ...action.symbol, price: action.price } })
+  }
 }
-

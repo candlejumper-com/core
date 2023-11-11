@@ -1,5 +1,5 @@
 <div class="input-wrapper">
-  <input class="form-input-custom" type="text" placeholder="Search..." (input)="onSearchInputChange($event)">
+  <input class="form-input-custom" type="text" placeholder="Search..." (input)="onSearchInputChange($event)" [(ngModel)]="input.name">
 
   <!-- menu expanded toggle -->
   <mat-icon class="mobile-expanded-toggle" fontIcon="arrow_back" [ngClass]="{'toggle-rotate': !isExpanded}"

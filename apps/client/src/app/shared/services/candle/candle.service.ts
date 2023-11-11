@@ -17,8 +17,6 @@ export class CandleService {
   
   @Select(SymbolState.getAll) symbols$: Observable<ISymbol[]>
 
-  // candles: { [key: string]: { [key: string]: number[][] } } = {}
-  // symbols: ISymbol[] = []
   tick$ = new EventEmitter<IPricesWebsocketResponse>()
 
   constructor(
@@ -30,6 +28,9 @@ export class CandleService {
 
   init(): void {
     this.wsService.socket.on('prices', (prices: IPricesWebsocketResponse) => this.onPriceTick(prices))
+        // sort by name
+    // this.symbols = this.candleService.symbols.sort((p1, p2) => (p1.symbol < p2.symbol) ? -11 : (p1.symbol > p2.symbol) ? 0 : -1)
+    // this.symbols = this.candleService.symbols.sort((p1, p2) => (p1.symbol < p2.symbol) ? -11 : (p1.symbol > p2.symbol) ? 0 : -1)
     // this.wsService.socket.on('indiators', (prices: IPricesWebsocketResponse) => this.onPriceTick(prices))
 
     let symbol
@@ -44,7 +45,7 @@ export class CandleService {
   }
 
   getSymbolByName(name: string): ISymbol {
-    return this.store.selectSnapshot(({Symbols}) => Symbols[name])
+    return this.store.selectSnapshot(({symbols}) => symbols[name])
   }
 
   getSymbolByAsset(asset: string): ISymbol {

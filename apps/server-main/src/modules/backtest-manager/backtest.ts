@@ -52,8 +52,7 @@ export class Backtest {
         // }
 
         let i = this.candles.length
-        let count = 0
-
+        // let count = 0
 
         // loop over candles
         while (i--) {
@@ -82,7 +81,7 @@ export class Backtest {
             if (createTicks) {
                 const totalDiff = candle[CANDLE_FIELD.HIGH] - candle[CANDLE_FIELD.LOW]
                 const stepAmount = totalDiff / ticksCount
-                priceSteps = Array.apply(null, { length: ticksCount }).map((v, index) => candle[CANDLE_FIELD.LOW] + (index * stepAmount))
+                priceSteps = new Array(ticksCount).map((v, index) => candle[CANDLE_FIELD.LOW] + (index * stepAmount))
 
                 if (highFirst) {
                     priceSteps.reverse()

@@ -14,7 +14,6 @@ export interface IAccount extends Omit<AccountInformation, 'balances'> {
     balances: IBalance[]
 }
 
-
 export type CandleTickerCallback = (symbol: string, interval: string, candle: ICandle, isFinal: boolean) => Promise<void>
 
 export interface IBrokerInfo {
