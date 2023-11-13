@@ -10,6 +10,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations'
 import { MatTabsModule } from '@angular/material/tabs'
 import { MatCardModule } from '@angular/material/card'
+import { MatToolbarModule } from '@angular/material/toolbar'
 import { FlexLayoutModule } from '@angular/flex-layout'
 import { routes } from './app.routes'
 import { NgxsReduxDevtoolsPluginModule } from "@ngxs/devtools-plugin";
@@ -22,6 +23,9 @@ import { UserStateModule } from './shared/state/user/user.state.module'
 import { UserService } from './shared/services/user/user.service'
 import { BacktestState } from './shared/state/backtest/backtest.state'
 import { ChartViewState } from './shared/state/chart-view/chart-view.state'
+import { MatIconModule } from '@angular/material/icon'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatListModule } from '@angular/material/list'
 
 export function initializeApp(appInitService: InitializeService) {
   return () => appInitService.Init()
@@ -45,13 +49,17 @@ export function initializeApp(appInitService: InitializeService) {
       // registrationStrategy: 'registerWhenStable:30000'
     }),
     FlexLayoutModule,
+    MatIconModule,
+    MatListModule,
     MatSnackBarModule,
+    MatToolbarModule,
     MatTabsModule,
     MatCardModule,
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsModule.forRoot([ConfigState, BacktestState, ChartViewState]),
     SymbolStateModule,
-    UserStateModule
+    UserStateModule,
+    MatSidenavModule
   ],
   providers: [
     InitializeService,

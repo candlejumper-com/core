@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { CandleService } from './shared/services/candle/candle.service';
-import { WSService } from './shared/services/ws/ws.service';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
+import { WSService } from './shared/services/ws/ws.service'
 
 @Component({
   selector: 'core-root',
@@ -9,15 +8,9 @@ import { WSService } from './shared/services/ws/ws.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-
-  constructor(
-    public wsService: WSService,
-    private candleService: CandleService,
-    
-  ) { }
+  constructor(public wsService: WSService) {}
 
   ngOnInit() {
     // this.wsService.init()
-    this.candleService.init()
   }
 }

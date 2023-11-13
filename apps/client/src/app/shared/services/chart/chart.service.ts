@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { BehaviorSubject, Observable, Subject, forkJoin, map, of, switchMap, tap, timer } from 'rxjs'
+import { BehaviorSubject, Observable, Subject, filter, forkJoin, map, of, switchMap, tap, timer } from 'rxjs'
 import { ProfileService } from '../profile/profile.service'
 import { IOrder, OrderService } from '../order/order.service'
 import { CandleService } from '../candle/candle.service'
@@ -29,6 +29,7 @@ export class ChartService {
   activeInterval$ = new BehaviorSubject<string>('15m')
 
   activeChartWithData$: Observable<Chart> = this.activeChart$.pipe(
+    filter((chart) => !!chart),
     switchMap((chart) => {
       if (chart.type === 'MAIN' || chart.type === 'BACKTEST') {
         return forkJoin([

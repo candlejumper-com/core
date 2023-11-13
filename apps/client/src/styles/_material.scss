@@ -25,6 +25,11 @@ $angular-dark-theme: mat.define-dark-theme((color: (primary: $angular-primary,
 
 .darkMode {
   @include mat.all-component-colors($angular-dark-theme);
+}    
+
+.mat-mdc-tab-header {
+  --mdc-secondary-navigation-tab-container-height: 28px;
+  --mat-tab-header-with-background-background-color: black;
 }
 
 mat-card-header {

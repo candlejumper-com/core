@@ -33,12 +33,15 @@ export class InitializeService {
     private aiService: AIService,
     private backtestService: BacktestService,
     private indicatorService: IndicatorService,
+    private candleService: CandleService,
     private httpClient: HttpClient,
     private store: Store
   ) { }
 
   async Init(): Promise<void> {
-    return new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
+
+      this.setToDefaultState()
 
       this.httpClient.get<IAppInitResponse>('/api/app-init').subscribe({
         next: result => {
@@ -54,17 +57,23 @@ export class InitializeService {
           this.aiService.init()
           this.backtestService.init()
           this.indicatorService.init()
+          this.candleService.init()
 
           // load firebase and PWA
           // this.deviceService.init();
-          resolve()
+          resolve(null)
         },
         error: error => {
           console.error(error);
-          document.body.innerHTML = '<h1 style="color: red; margin-top: 100px; text-align: center;">SERVER CONNECTION FAILED</h1>'
-          reject()
+          // document.body.innerHTML = '<h1 style="color: red; margin-top: 100px; text-align: center;">SERVER CONNECTION FAILED</h1>'
+          // reject()
+          resolve(null)
         }
       })
     })
+  }
+
+  private setToDefaultState() {
+
   }
 }

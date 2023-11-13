@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core'
 // import { MessagingModule } from '@angular/fire/messaging'
-import { Subject, distinctUntilChanged, takeUntil, tap } from 'rxjs'
+import { Subject, combineLatest, distinctUntilChanged, filter, takeUntil, tap } from 'rxjs'
 import { ChartComponent } from '../../../shared/components/chart/chart.component'
 import { DialogAuthRegistrateComponent } from '../../../shared/components/dialog-auth-registrate/dialog-auth-registrate.component'
 import { DialogAuthComponent } from '../../../shared/components/dialog-auth/dialog-auth.component'
@@ -47,12 +47,13 @@ export class PageHomeComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>()
 
   ngOnInit() {
-    this.activeInterval$
+    combineLatest([this.chartService.activeChart$,  this.activeInterval$])
       .pipe(
-        tap((interval) => {
+        filter(([activeChart]) => !!activeChart),
+        tap(([activeChart, interval]) => {
           const chart = this.chartService.createChart(
-            this.chartService.activeChart$.value.type,
-            this.chartService.activeChart$.value.symbol,
+            activeChart.type,
+            activeChart.symbol,
             interval
           )
           this.chartService.showChart(chart.id)
