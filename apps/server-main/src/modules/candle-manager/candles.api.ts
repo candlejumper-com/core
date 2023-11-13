@@ -25,7 +25,9 @@ export default function (system: System, app?: Application) {
             const symbol = req.params.symbol
             const interval = req.params.interval
             const count = parseInt(req.query.count as string, 10) || 1000
+            console.log('nono23434')
             const candles = await system.candleManager.getCandles(symbol.replace('_', '/'), interval, count)
+            // const candles = await system.candleManager.getCandles(symbol.replace('_', '/'), interval, count)
         
             res.send(candles)
 

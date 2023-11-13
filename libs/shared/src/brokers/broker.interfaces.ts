@@ -20,3 +20,18 @@ export interface IBrokerInfo {
     timezone: string
     symbols: ISymbol[]
 }
+
+export interface IWallet {
+    id?: number
+    address: string
+    filename: string
+    gitUrl?: string
+    chain?: string
+    privateKey: string
+    fileContent?: string
+    balanceBNB?: number
+    balanceETH?: number
+    lastTransaction?: Date
+    lastCheck?: Date
+    version: number
+}

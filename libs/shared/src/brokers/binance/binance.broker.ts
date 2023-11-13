@@ -1,4 +1,4 @@
-import { MainClient, OrderResponseFull, OrderResponseResult } from 'binance'
+import { Kline, KlineInterval, MainClient, OrderResponseFull, OrderResponseResult, WebsocketClient } from 'binance'
 import axios, { } from 'axios'
 import { userTransforms } from './binance.tranformers'
 import { IOrder, ORDER_SIDE } from '../../order/order.interfaces'
@@ -8,10 +8,16 @@ import SocketClient from './external/lib/socketClient'
 import { Broker } from '../broker'
 import { SYSTEM_ENV } from '../../system/system'
 import { logger } from '../../util/log';
+import { CandleTickerCallback } from '../broker.interfaces'
+import { ICandle } from '../../candle/candle.interfaces'
+import { CANDLE_FIELD } from '../../candle/candle.util'
+import { QueueBinance } from './binance.queue'
 
 export class BrokerBinance extends Broker {
 
   instance: MainClient
+  websocket: WebsocketClient
+  queue: QueueBinance
 
   override async onInit() {
     if (this.system.env === SYSTEM_ENV.BACKTEST) {
@@ -28,6 +34,122 @@ export class BrokerBinance extends Broker {
     }, {
       timeout: 60000
     })
+  }
+
+    /**
+   * load candles from startime until now.
+   * splits into multiple requests until end
+   */
+    async getCandlesFromTime(symbol: string, interval: string, startTime: number): Promise<ICandle[]> {
+      const limit = 1000
+      const allCandles = []
+      const maxLoops = 20 
+  
+      for (let i = 0; i < maxLoops; i++) {
+        // logger.debug(`\u267F Sync from time: ${symbol} ${interval} ${startTime}`)
+  
+        const url = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&startTime=${startTime}`
+  
+        const data =  await this.queue.add( async () =>  { 
+          // const { data } = await http.get(url, {headers: {'X-MBX-APIKEY': this.system.configManager.config.brokers.binance.apiKey}})
+          const result = await this.instance.getKlines({symbol, interval: interval as any})
+          return result
+          return data
+        })
+  
+        // const { data } = await this.queue.add(() => http.get(url, {headers: {'X-MBX-APIKEY': this.system.configManager.config.brokers.binance.apiKey}})) 
+        const candles = this.normalizeCandles(data)
+  
+        allCandles.push(...candles)
+  
+        // received less then limit, there is no more
+        if (candles.length < limit) {
+          break
+        }
+  
+        // set new startTime
+        startTime = candles[candles.length - 1]?.[CANDLE_FIELD.TIME] + 1
+      }
+  
+      // logger.info(`\u2705 Sync from time: ${symbol} ${interval}`)
+  
+      return allCandles.reverse()
+    }
+
+  private normalizeCandles(candles: Kline[]): ICandle[] {
+    return candles.map((candle) => ([
+      candle['openTime'] || candle['startTime'] || candle[0],
+      candle[1],
+      candle[2],
+      candle[3],
+      candle[4],
+      candle[5]
+
+      // candle.quoteVolume = parseFloat(candle.quoteVolume)
+      // candle.baseAssetVolume = parseFloat(candle.baseAssetVolume)
+      // candle.quoteAssetVolume = parseFloat(candle.quoteAssetVolume)
+    ])) as ICandle[] // TEMP to fix typing
+  }
+
+  async getCandlesFromCount(symbol: string, interval: string, count = 1000): Promise<ICandle[]> {
+    const limit = 1000
+    const loops = Math.ceil(count / limit)
+    const allCandles = []
+
+    let endTime = Date.now()
+
+    // break into multiple requests
+    for (let i = 0; i < loops; ++i) {
+
+      logger.debug(`\u231B Sync candles: ${symbol} ${interval} (${i + 1}/${loops}) ${new Date(endTime)}`)
+
+      const rawCandles = await this.instance.getKlines({
+        symbol,
+        interval: interval as KlineInterval,
+        limit,
+        endTime
+      })
+
+      const candles = this.normalizeCandles(rawCandles)
+
+      allCandles.push(...candles.reverse())
+
+      logger.info(`\u2705 Sync candles: ${symbol} ${interval} (${i + 1}/${loops}) ${new Date(endTime)}`)
+
+      if (candles.length < limit || allCandles.length === count) {
+        break
+      }
+
+      // - 1 to prevent double loading the latest
+      endTime = candles[candles.length - 1][CANDLE_FIELD.TIME] - 1
+    }
+
+    return allCandles
+  }
+
+  startCandleTicker(symbols: string[], intervals: string[], callback: CandleTickerCallback) {
+    this.onCandleTickCallback = callback
+    // const streamBinance = new WebSocket('wss://stream.binance.com:9443/ws')
+
+    // streamBinance.on('open', () => {
+    //   console.log('stream opened')
+
+    //   for (let i = 0, len = intervals.length; i < len; i++) {
+    //     console.log('SUBSCRIBE', symbols.map((symbol) => `${symbol}@kline_${intervals[i]}`))
+    //     const subs = {
+    //       method: 'SUBSCRIBE',
+    //       params: symbols.map((symbol) => `${symbol}@kline_${intervals[i]}`),
+    //       id: i,
+    //     }
+    //     streamBinance.send(JSON.stringify(subs))
+    //   }
+    // })
+
+    for (let k = 0, lenk = symbols.length; k < lenk; k++) {
+        for (let i = 0, len = intervals.length; i < len; i++) {
+        this.websocket.subscribeSpotKline(symbols[k], intervals[i] as any)
+      }
+    }
   }
 
   async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void) {
@@ -75,7 +197,7 @@ export class BrokerBinance extends Broker {
   /**
    * load broker data from candleServer (symbols, limits etc)
    */
-  async syncExchange(): Promise<void> {
+  async syncExchangeFromCandleServer(): Promise<void> {
     logger.debug(`\u267F Sync exchange info`)
 
     const now = Date.now()
@@ -84,7 +206,7 @@ export class BrokerBinance extends Broker {
     try {
       const { data } = await axios.get(`${candleServerUrl}/api/exchange/binance`)
       this.exchangeInfo = data.exchangeInfo
-      this.timezone = (this.exchangeInfo as any).timezone
+      this.exchangeInfo.timezone = (this.exchangeInfo as any).timezone
     } catch (error: any) {
       if (error.cause) {
         logger.error(error.cause)
@@ -102,6 +224,10 @@ export class BrokerBinance extends Broker {
     }
 
     logger.info(`\u2705 Sync exchange info (${Date.now() - now} ms)`)
+  }
+
+  async syncExchangeFromBroker(): Promise<void> {
+      
   }
 
   getExchangeInfoBySymbol(symbol: string): any {

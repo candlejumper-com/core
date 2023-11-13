@@ -1,10 +1,10 @@
-import { SYSTEM_ENV, System } from '@candlejumper/core/system/system'
+import { SYSTEM_ENV, SystemBase } from '@candlejumper/shared'
 import IndicatorBollingerBands from './bollinger-bands.indicator'
 import { createSymbolObject, tickByTicker } from '../../../../test/util/test.util'
 import candles from '../../../../test/mock/candles/BTCUSDT.mock.json'
 import { ICandle } from '@candlejumper/core/modules/candle-manager/candle.interfaces'
 
-let system: System
+let system: SystemBase
 
 beforeEach(async () => {
     system = new System(SYSTEM_ENV.BACKTEST);

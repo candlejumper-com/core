@@ -18,8 +18,6 @@ export class BrokerBinance extends Broker {
 
   queue: QueueBinance
 
-  onCandleTickCallback: (symbol: string, interval: string, candle: ICandle, isFinal: boolean) => Promise<void>
-
   async onInit(): Promise<void> {
     this.queue = new QueueBinance(this.system)
     const apiKey = this.system.configManager.config.brokers.binance.apiKey

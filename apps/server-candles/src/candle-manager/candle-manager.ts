@@ -63,9 +63,14 @@ export class CandleManager {
   }
 
   async getFromDB(symbol: string, interval: string, count: number): Promise<ICandle[]> {
-    const result = await this.getRepository(symbol, interval).find({ take: count, order: { time: "DESC" } })
-    const candles: ICandle[] = result.map((row) => [row.time, row.open, row.high, row.low, row.close, row.volume])
-    return candles.reverse()
+    try {
+      const result = await this.getRepository(symbol, interval).find({ take: count, order: { time: "DESC" } })
+      const candles: ICandle[] = result.map((row) => [row.time, row.open, row.high, row.low, row.close, row.volume])
+      return candles.reverse()
+    } catch (error) {
+      console.warn(`Symbol not found ${symbol} - ${interval}`)
+      return []
+    }
   }
 
   async saveToDB(symbol: string, interval: string, candles: ICandle[]): Promise<void> {
@@ -91,16 +96,16 @@ export class CandleManager {
       volume: candle[5],
     }))
 
-    writeFileSync("../../temp_data.json", JSON.stringify(candleObjects, null, 2))
+    // writeFileSync("../../temp_data.json", JSON.stringify(candleObjects, null, 2))
 
     await this.getRepository(symbol, interval).upsert(candleObjects, ["time"])
   }
 
-  /**
+  /**BNBN
    * sync candles between database and broker
    */
   async sync(): Promise<void> {
-    logger.info(`\u231B Sync candles`)
+    logger.info(`\u231B Sync all candles`)
 
     const now = Date.now()
     const config = this.system.configManager.config

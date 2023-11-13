@@ -21,7 +21,12 @@
         "outputPath": "dist/apps/server-main",
         "main": "apps/server-main/src/main.ts",
         "tsConfig": "apps/server-main/tsconfig.app.json",
-        "assets": ["apps/server-main/src/assets", "apps/server-main/src/modules/ai-manager/ai-worker.ts"],
+        "assets": [
+          "apps/server-main/src/assets", 
+          "apps/server-main/src/modules/ai-manager/ai-worker.ts",
+          "apps/server-main/src/modules/backtest-manager/backtest.worker.ts",
+          "apps/server-main/src/modules/editor-manager/editor.worker.ts"
+        ],
         "isolatedConfig": true,
         "webpackConfig": "apps/server-main/webpack.config.js",
         "generatePackageJson": true,
@@ -29,6 +34,14 @@
           {
             "entryName": "ai-worker",
             "entryPath": "apps/server-main/src/modules/ai-manager/ai-worker.ts"
+          },
+          {
+            "entryName": "backtest.worker",
+            "entryPath": "apps/server-main/src/modules/backtest-manager/backtest.worker.ts"
+          },
+          {
+            "entryName": "editor.worker",
+            "entryPath": "apps/server-main/src/modules/editor-manager/editor.worker.ts"
           }
         ]
       },

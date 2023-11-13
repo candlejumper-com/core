@@ -61,7 +61,7 @@ export class InitializeService {
         },
         error: error => {
           console.error(error);
-          document.body.innerHTML = '<h1 style="color: red; margin-top: 100px; text-align: center;">INITIALIZE FAILED</h1>'
+          document.body.innerHTML = '<h1 style="color: red; margin-top: 100px; text-align: center;">SERVER CONNECTION FAILED</h1>'
           reject()
         }
       })

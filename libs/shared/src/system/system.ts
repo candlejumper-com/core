@@ -4,6 +4,7 @@ import { Ticker } from "../ticker/ticker"
 import { TICKER_TYPE } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
 import { ConfigManager } from "../config/config-manager"
+import { createAxiosRetryInstance } from "../util/axios-retry"
 
 export enum SYSTEM_ENV {
   MAIN = "MAIN",
@@ -11,6 +12,10 @@ export enum SYSTEM_ENV {
 }
 
 export abstract class SystemBase extends Ticker<null> {
+  override id = "SYSTEM"
+
+  axios = createAxiosRetryInstance()
+
   type = TICKER_TYPE.SYSTEM
 
   time: Date

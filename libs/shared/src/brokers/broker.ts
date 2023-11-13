@@ -2,39 +2,23 @@ import { SystemBase, SYSTEM_ENV } from '../system/system';
 import { IOrder } from '../order/order.interfaces';
 import { OrderResponseACK, OrderResponseResult, OrderResponseFull } from 'binance';
 import { IAccount, IBrokerInfo } from './broker.interfaces';
-import * as axiosRetry from 'axios-retry';
-import axios, { AxiosError } from 'axios';
 import { logger } from '../util/log';
+import { ICandle } from '../candle';
+import { createAxiosRetryInstance } from '../util/axios-retry';
 
-const onRetry = (retryCount: number, error: AxiosError) => {
-  if (error.response) {
-    console.log(error.response.data);
-    console.log(error.response.status);
-  } else if (error.cause){
-    console.error(error.cause);
-  }
-}
-
-const retryDelay = (retryCount: number): number => {
-  const maxDelay = 60000;
-  const delayMultiplier = 1000;
-
-  return Math.min(maxDelay, retryCount * delayMultiplier);
-};
-
-// console.log(axiosRetry)
-
-// axiosRetry(axios, { retries: 3, retryDelay, onRetry });
 
 export abstract class Broker {
   account = { balances: [] } as IAccount;
-  exchangeInfo: IBrokerInfo;
-  timezone: string;
+  exchangeInfo: IBrokerInfo
+  axios = createAxiosRetryInstance()
+
+  onCandleTickCallback: (symbol: string, interval: string, candle: ICandle, isFinal: boolean) => Promise<void>
 
   onInit?(): Promise<void>;
 
   abstract syncAccount(): Promise<void>;
-  abstract syncExchange(): Promise<void>;
+  abstract syncExchangeFromCandleServer(): Promise<void>;
+  abstract syncExchangeFromBroker(): Promise<void>;
   abstract getOrdersByMarket(market: string): Promise<IOrder[]>;
   abstract placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull>;
 
@@ -42,14 +26,14 @@ export abstract class Broker {
 
   async init() {
     await this.onInit?.();
-    await this.syncExchange();
+    await this.syncExchangeFromBroker();
 
     if (this.system.env === SYSTEM_ENV.MAIN) {
-      if (!this.timezone) {
+      if (!this.exchangeInfo.timezone) {
         throw new Error('Missing broker timezone');
       }
 
-      process.env.TZ = this.timezone;
+      process.env.TZ = this.exchangeInfo.timezone;
     }
   }
 

@@ -1,17 +1,19 @@
 {
   "extends": "./tsconfig.json",
-  "composite": true,
   "compilerOptions": {
     "lib": ["ESNext"],
     "outDir": "../../dist/out-tsc",
     "module": "esnext",
     "types": ["node", "express"],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true
   },
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "./src/**/*.test.ts"],
   "files": [
     "./src/modules/editor-manager/editor-worker.ts",
-    "./src/modules/ai-manager/ai-worker.ts"
+    "./src/modules/ai-manager/ai-worker.ts",
+    "../../custom/tsconfig.build.json"
   ],
-  "include": ["src/**/*.ts", "src/**/*.worker.ts"]
+  "include": ["src/**/*.ts", "src/**/*.worker.ts", "dist"]
 }

@@ -16,7 +16,7 @@
     "skipDefaultLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
-    "allowJs": false,
+    "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "@candlejumper/shared": ["./libs/shared/src/index.ts"]

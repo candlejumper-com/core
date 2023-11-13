@@ -26,7 +26,7 @@ export class PageAIComponent {
   activeTab = 0
 
   form = new FormGroup({
-    symbols: new FormControl(['OIL', 'AAPL'], [Validators.required]),
+    symbols: new FormControl(['OIL', 'SOLAR_USDT'], [Validators.required]),
     timeframe: new FormControl('1d', [Validators.required]),
     SMALength: new FormControl<number>(50, [Validators.required]),
     RSILength: new FormControl<number>(50, [Validators.required]),

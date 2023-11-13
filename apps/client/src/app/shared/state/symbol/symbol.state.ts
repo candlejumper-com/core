@@ -22,6 +22,11 @@ export class SymbolState {
   }
 
   @Selector()
+  static getFirst(state: ISymbol[]): ISymbol {
+    return state[Object.keys(state)[0]]
+  }
+
+  @Selector()
   static getByName(state: ISymbol[], name: string): ISymbol {
     return state.find((_symbol) => _symbol.name === name)
   }
@@ -54,6 +59,7 @@ export class SymbolState {
 
   @Action(SYMBOL_PRICE_SET)
   symbolPriceSet({ patchState: patchState }, action: SYMBOL_PRICE_SET) {
+    console.log(action)
     patchState({ [`${action.symbol.name}`]: { ...action.symbol, price: action.price } })
   }
 }

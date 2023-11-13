@@ -4,9 +4,9 @@ import { System } from '../system/system';
 import { logger } from '../util/log';
 import { createCandleEntity, getCandleEntityName } from '../candle-manager/candle.entity'
 import { rm } from 'fs/promises';
-import { BrokerEntity } from '../broker/binance/broker-binance.entity'
+import { BrokerEntity } from '@candlejumper/shared';
 
-const PATH_DATA = join(__dirname, '../../../../_data/candles')
+const PATH_DATA = join(__dirname, '../../../_data/candles')
 
 export class DB {
 
@@ -21,6 +21,7 @@ export class DB {
 
         const now = Date.now()
         const dataFilePath = join(PATH_DATA, 'candles.db')
+        console.log(dataFilePath)
         const CandleEntities = this.createCandleEntities()
 
         const myDataSource = new DataSource({

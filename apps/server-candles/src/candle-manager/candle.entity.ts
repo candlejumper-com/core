@@ -12,19 +12,19 @@ export const BaseCandleSchema: EntitySchemaOptions<ICandleObject> = {
             unique: true
         },
         open: {
-            type: 'double',
+            type: 'text',
         },
         high: {
-            type: 'double',
+            type: 'text',
         },
         low: {
-            type: 'double',
+            type: 'text',
         },
         close: {
-            type: 'double',
+            type: 'text',
         },
         volume: {
-            type: 'double',
+            type: 'text',
         }
     }
 }

@@ -1,6 +1,7 @@
 {
-    "extends": "../tsconfig.base.json",
     "compilerOptions": {
+        "rootDir": "./src",
+        "outDir": "./dist",
         "baseUrl": ".",
         "noImplicitAny": false,
         "strictNullChecks": false,
@@ -11,6 +12,10 @@
         "allowSyntheticDefaultImports": true,
         "resolveJsonModule": true,
         "target": "ES2022",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
         "allowJs": false,
         "lib": [
             "es2023"
@@ -24,11 +29,14 @@
             "@candlejumper/shared": ["../libs/shared/src/index.ts"]
         }
     },
-    "include": ["./src/**/*.ts"],
+    "include": ["./src/**/*.ts", "*.json"],
     "exclude": [
         "**/lib/**/*",
+        "**/shared/**/*",
+        "**/server-main/**/*",
         "**/modules/**/*",
         "dist",
-        "node_modules"
+        "node_modules",
+        "**/*.test.ts"
     ]
 }

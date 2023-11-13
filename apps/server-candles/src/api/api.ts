@@ -21,7 +21,8 @@ export class ApiServer {
         this.app = express()
         this.app.use(cors())
         this.app.use(helmet())
-        this.app.use(bodyParser.json())
+        this.app.use(bodyParser.json({limit: '50mb'}))
+        this.app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
         this.server = createServer(this.app);
         this.io = new IOServer(this.server)
@@ -51,18 +52,17 @@ export class ApiServer {
         this.app.get('/', (req, res) => res.send('Candle server is running'))
 
         // get candles
-        this.app.get('/api/candles', async (req, res) => {
+        this.app.post('/api/candles', async (req, res) => {
             try {
                 const query = req.query as any
-                const pairs = (query.pairs as string).split(',')
+                const pairs = req.body as any
                 const from = parseInt(query.from, 10) || 0
                 const count = parseInt(query.count, 10)
                 const data = {}
-
                 for (let i = 0, len = pairs.length; i < len; i++) {
                     const pair = pairs[i]
-                    const symbol = pair.split('_')[0]
-                    const interval = pair.split('_')[1]
+                    const symbol = pair.symbol
+                    const interval = pair.interval
                     const candles = await this.system.candleManager.getFromDB(symbol, interval, count)
 
                     data[symbol] = data[symbol] || {}
@@ -76,14 +76,13 @@ export class ApiServer {
             }
         })
 
-        this.app.get('/api/candles/:symbol/:interval', async (req, res) => {
+        this.app.get('/api-candles/candles/:symbol/:interval', async (req, res) => {
             try {
                 const params = req.params
                 const query = req.query as any
                 const count = parseInt(query.count, 10) || 1000
                 // const candles = this.system.candleManager.get(params.symbol, params.interval, count)
                 const candles = await this.system.candleManager.getFromDB(params.symbol, params.interval, count)
-
                 res.send(candles)
             } catch (error) {
                 console.error(error)

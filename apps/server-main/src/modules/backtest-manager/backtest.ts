@@ -1,10 +1,10 @@
-import { System, SYSTEM_ENV } from '../../system/system';
+import { System } from '../../system/system';
 import { BACKTEST_TYPE } from './backtest-manager';
 import { Bot } from '../../tickers/bot/bot';
 import { CANDLE_FIELD } from '../candle-manager/candle-manager';
 import { ORDER_TYPE } from '../order-manager/order-manager';
 import { IWorkerData } from './backtest.interfaces';
-import { ICandle, ISymbol, ORDER_SIDE, IBalance } from '@candlejumper/shared';
+import { ICandle, ISymbol, ORDER_SIDE, IBalance, SYSTEM_ENV } from '@candlejumper/shared';
 
 export class Backtest {
 
@@ -17,9 +17,7 @@ export class Backtest {
         this.options = workerOptions.options
 
         this.validateOptions()
-
         this.system.broker.exchangeInfo = this.workerOptions.exchangeInfo
-        this.system.configManager.config.preloadAmount = this.options.candleCount
     }
 
     /**
@@ -28,6 +26,9 @@ export class Backtest {
     async run(): Promise<void> {
         // startup system
         await this.system.start()
+
+        this.system.configManager.config.preloadAmount = this.options.candleCount
+
         await this.setupSystem()
 
         const system = this.system
@@ -192,6 +193,7 @@ export class Backtest {
 
         // load candles only first time
         if (!this.candles) {
+            console.log('nonono candles')
             const loadAmount = this.options.candleCount + warmupAmount
             const loadArray = [{ symbol: symbol.name, interval }]
             const data = await system.candleManager.load(loadArray, loadAmount)

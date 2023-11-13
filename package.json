@@ -16,6 +16,7 @@
   "private": true,
   "dependencies": {
     "@binance/connector": "^3.0.0",
+    "@bitmartexchange/bitmart-node-sdk-api": "^1.0.1",
     "@candlejumper/core": "file:./dist/server-main",
     "@tensorflow/tfjs-backend-wasm": "^4.12.0",
     "@tensorflow/tfjs-node": "^4.12.0",
@@ -23,7 +24,6 @@
     "axios-rate-limit": "^1.3.0",
     "axios-retry": "^3.8.1",
     "binance": "^2.8.11",
-    "bitmart-api": "^1.2.1",
     "body-parser": "^1.20.2",
     "colors": "^1.4.0",
     "command-line-args": "^5.2.1",

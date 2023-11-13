@@ -3,9 +3,7 @@ import commandLineArgs from 'command-line-args'
 import { CandleManager } from '../candle-manager/candle-manager'
 import { DB } from '../db/db'
 import { logger } from '../util/log'
-import { BrokerIG } from '../broker/ig/broker-ig'
-import { BrokerYahoo } from '../broker/yahoo/broker-yahoo'
-import { SYSTEM_ENV, SystemBase } from '@candlejumper/shared'
+import { BrokerBinance, BrokerBitmart, BrokerYahoo, SYSTEM_ENV, SystemBase } from '@candlejumper/shared'
 
 const cliOptions = commandLineArgs([
   { name: 'clean', alias: 'c', type: Boolean, defaultOption: false },
@@ -13,9 +11,10 @@ const cliOptions = commandLineArgs([
 ])
 
 export class System extends SystemBase {
-  id = "SYSTEM"
   readonly db = new DB(this)
-  readonly broker = new BrokerYahoo(this)
+  readonly broker = new BrokerBitmart(this)
+  // readonly broker = new BrokerYahoo(this)
+  // readonly broker = new BrokerBinance(this)
   readonly candleManager = new CandleManager(this)
   readonly apiServer = new ApiServer(this)
 
@@ -31,7 +30,6 @@ export class System extends SystemBase {
 
     // use only symbols with USDT (for now)
     // this.broker.exchangeInfo.symbols = this.broker.exchangeInfo.symbols.filter(symbol => this.configManager.config.symbols.includes(symbol.name))
-
     this.broker.exchangeInfo.symbols = this.broker.exchangeInfo.symbols.filter((symbol) =>
       this.configManager.config.symbols.includes(symbol.name),
     )

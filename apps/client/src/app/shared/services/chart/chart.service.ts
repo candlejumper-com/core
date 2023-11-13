@@ -4,6 +4,8 @@ import { ProfileService } from '../profile/profile.service'
 import { IOrder, OrderService } from '../order/order.service'
 import { CandleService } from '../candle/candle.service'
 import { ICandle, ISymbol } from '@candlejumper/shared'
+import { Store } from '@ngxs/store'
+import { SymbolState } from '../../state/symbol/symbol.state'
 
 export type ChartType = 'MAIN' | 'SNAPSHOT' | 'BACKTEST'
 export type ChartViewType = 'ohlc' | 'candlesticks'
@@ -67,6 +69,7 @@ export class ChartService {
     private profileService: ProfileService,
     private candleService: CandleService,
     private orderService: OrderService,
+    private store: Store
   ) {}
 
   init() {
@@ -174,7 +177,8 @@ export class ChartService {
 
   requireOneChart() {
     if (!this.chartsInTabs$?.value.length) {
-      this.showChart(this.createChart('MAIN', this.candleService.getSymbolByName('OIL'), '15m').id)
+      const symbol = this.store.selectSnapshot(SymbolState.getFirst)
+      this.showChart(this.createChart('MAIN', symbol, '15m').id)
     }
   }
 }

@@ -1,4 +1,5 @@
-import { System, SYSTEM_ENV } from './system/system';
+import { SYSTEM_ENV } from '@candlejumper/shared';
+import { System } from './system/system';
 
 // MAIN SYSTEM INSTANCE
 const system = new System(SYSTEM_ENV.MAIN)

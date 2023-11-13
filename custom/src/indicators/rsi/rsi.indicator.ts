@@ -1,5 +1,5 @@
-import { BOT_INDICATOR_TYPE, ITickerSnapshot, Indicator } from "@candlejumper/core";
-import { CANDLE_FIELD } from "@candlejumper/shared";
+import { BOT_INDICATOR_TYPE, Indicator } from "@candlejumper/core";
+import { CANDLE_FIELD, ITickerSnapshot } from "@candlejumper/shared";
 import { RSI } from "technicalindicators";
 
 export default class IndicatorRSI extends Indicator<IndicatorRSI> {

@@ -1,5 +1,5 @@
-import { Indicator, ITickerSnapshot, BOT_INDICATOR_TYPE } from "@candlejumper/core";
-import { CANDLE_FIELD } from "@candlejumper/shared";
+import { Indicator, BOT_INDICATOR_TYPE } from "@candlejumper/core";
+import { CANDLE_FIELD, ITickerSnapshot } from "@candlejumper/shared";
 
 
 export default class IndicatorShock extends Indicator<IndicatorShock> {

@@ -4,7 +4,7 @@ import { pool, WorkerPool } from 'workerpool';
 import { logger, ISystemState } from '@candlejumper/shared';
 import { IBacktestResult, IBacktestOptions, IWorkerData } from './backtest.interfaces';
 
-const PATH_WORKER = new URL(join(__dirname, 'backtest-worker.js'), import.meta.url)
+const PATH_WORKER = new URL(join(__dirname, 'backtest.worker.js'), import.meta.url)
 
 export enum BACKTEST_TYPE {
     'OHLC' = 'OHLC',
@@ -135,7 +135,7 @@ export class BacktestManager {
         if (this.maxWorker) {
             options.maxWorkers = this.maxWorker
         }
-
-        this.pool = pool(PATH_WORKER.toString(), options);
+        console.log(3434, PATH_WORKER.toString())
+        this.pool = pool(PATH_WORKER.toString().replace('file:///', '/'), options);
     }
 }

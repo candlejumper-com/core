@@ -15,7 +15,7 @@ export class IndicatorService {
     this.wsService.socket.on('indicators', data => {
       this.indicators = data
 
-      console.log('sadfsdf', data)
+      // console.log('sadfsdf', data)
     })
   }
 

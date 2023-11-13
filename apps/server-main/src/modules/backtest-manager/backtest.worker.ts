@@ -8,8 +8,7 @@
 import 'color'
 import { worker } from 'workerpool';
 import { Backtest } from './backtest'
-import { SYSTEM_ENV } from '../../system/system'
-import { setSystemEnvironment } from '@candlejumper/shared'
+import { SYSTEM_ENV, setSystemEnvironment } from '@candlejumper/shared'
 
 setSystemEnvironment(SYSTEM_ENV.BACKTEST)
 

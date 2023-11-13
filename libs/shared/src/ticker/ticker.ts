@@ -140,7 +140,8 @@ export abstract class Ticker<T> {
       // add ticker
 
       const url = new URL(join(config.path) + '.js', import.meta.url)
-      TickerClass = await import('/home/kewin/Projects/candlejumper/core/custom/dist/bots/bollinger/bot_bollinger.js')
+      TickerClass =  (await import(`${config.path}.js`)).default
+      // TickerClass = require('/home/kewin/Projects/candlejumper/core/custom/dist/bots/bollinger/bot_bollinger.js').default
       console.log(232, TickerClass.constructor)
       TickerClass = TickerClass.constructor
 

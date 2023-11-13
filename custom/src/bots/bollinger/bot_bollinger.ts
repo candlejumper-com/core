@@ -5,7 +5,7 @@ import IndicatorBollingerBands from '../../indicators/bollinger-bands/bollinger-
 export default class BotBollinger<T> extends Bot<T> {
 
     id = 'BotBollinger2'
-
+    
     crossedLower = false
     crossedMiddle = false
     crossedUpper = false

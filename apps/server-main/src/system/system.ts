@@ -1,15 +1,12 @@
 import { join } from "path"
-import axios from "axios"
-import axiosRetry from "axios-retry"
 import { Bot } from "../tickers/bot/bot"
-import { logger, setSystemEnvironment, ISystemState, SystemBase } from "@candlejumper/shared"
+import { logger, setSystemEnvironment, ISystemState, SystemBase, BrokerBitmart, SYSTEM_ENV } from "@candlejumper/shared"
 import { ApiServer } from "./api"
 import { DB } from "../db/db"
 import { CANDLE_FIELD, CandleManager } from "../modules/candle-manager/candle-manager"
 import { OrderManager } from "../modules/order-manager/order-manager"
 import { DeviceManager } from "../modules/device-manager/device-manager"
 import { BacktestManager } from "../modules/backtest-manager/backtest-manager"
-import { ConfigManager } from "../modules/config-manager/config-manager"
 import {
   EditorManager,
   PATH_CUSTOM_DIST_BOTS,
@@ -18,17 +15,14 @@ import {
 import { UserManager } from "../modules/user-manager/user-manager"
 import { AIManager } from "../modules/ai-manager/ai-manager"
 import { ISymbol, TICKER_TYPE, BrokerIG } from "@candlejumper/shared"
+import axios, { AxiosError, AxiosInstance } from "axios"
+import axiosRetry from "axios-retry"
+import { Ticker } from "../tickers/ticker"
+import { readFileSync } from "fs"
 
-export enum SYSTEM_ENV {
-  MAIN = "MAIN",
-  BACKTEST = "BACKTEST",
-}
 
-// set global retry on axiosZ
-axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay })
 
 export class System extends SystemBase {
-  id = "SYSTEM"
   type = TICKER_TYPE.SYSTEM
 
   apiServer: ApiServer
@@ -40,7 +34,7 @@ export class System extends SystemBase {
 
   readonly db = new DB(this)
   // readonly broker = new BrokerBinance(this)
-  readonly broker = new BrokerIG(this)
+  readonly broker = new BrokerBitmart(this)
   readonly aiManager = new AIManager(this)
   readonly candleManager = new CandleManager(this)
   readonly orderManager = new OrderManager(this)
@@ -89,6 +83,7 @@ export class System extends SystemBase {
    * only executed on MAIN system (not a backtest)
    */
   private async initAsMain(): Promise<void> {
+    console.log('23423434')
     this.backtestManager = new BacktestManager(this)
     this.editorManager = new EditorManager(this)
     this.deviceManager = new DeviceManager(this)
@@ -287,27 +282,31 @@ export class System extends SystemBase {
     const now = Date.now()
     const configBots = this.configManager.config.production.bots
 
-    this.removeTickers()
+    // this.removeTickers()
 
     for (let i = 0, len = configBots.length; i < len; i++) {
-      const ticker = configBots[i]
-      const botName = ticker.class.toLowerCase()
+      const ticker = configBots[i] as any
+      console.log(ticker)
+      const botName = ticker.class.name.toLowerCase()
       const botPath = join(PATH_CUSTOM_DIST_BOTS, `${botName}/bot_${botName}`)
       const symbol = this.candleManager.getSymbolByPair(ticker.symbol)
       // clean up cached module
-      delete require.cache[require.resolve(botPath)]
+      // delete require.cache[require.resolve(botPath)]
 
       // load file
+      const file = readFileSync(botPath + ".js", "utf8")
+      console.log(234, file)
+      const TickerClass = require('../../../../custom/dist/bots/bollinger/bot_bollinger').default as new () => Bot<Ticker<any>>
       // const TickerClass = require(botPath).default as new () => Bot<Ticker<any>>
 
-      // await this.addTicker({
-      //   path: botPath,
-      //   params: {},
-      //   ...ticker,
-      //   id: ticker.id,
-      //   class: TickerClass,
-      //   symbol,
-      // })
+      await this.addTicker({
+        path: botPath,
+        params: {},
+        ...ticker,
+        id: ticker.id,
+        class: TickerClass,
+        symbol,
+      })
     }
 
     logger.info(`\u2705 Add bots from config ${Date.now() - now}ms)`)

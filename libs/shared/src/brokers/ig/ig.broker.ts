@@ -5,8 +5,8 @@ import rateLimit from 'axios-rate-limit';
 import IG, { API_BASE_URL } from 'ig-node-api';
 import { QueueBinance } from '../binance/binance.queue';
 import { IOrder } from '../../order/order.interfaces';
-import { SYSTEM_ENV } from '../../../../../apps/server-main/src/system/system';
 import { Broker } from '../broker';
+import { SYSTEM_ENV } from '../../system/system';
 
 const defaultOptions = {
   baseURL: API_BASE_URL.PROD,
@@ -119,7 +119,7 @@ export class BrokerIG extends Broker {
   /**
    * load broker data from candleServer (symbols, limits etc)
    */
-  async syncExchange(): Promise<void> {
+  async syncExchangeFromCandleServer(): Promise<void> {
     logger.debug(`\u267F Sync exchange info`);
 
     const now = Date.now();
@@ -133,13 +133,16 @@ export class BrokerIG extends Broker {
       });
 
       this.exchangeInfo = data.exchangeInfo;
-      this.timezone = (this.exchangeInfo as any).timezone;
 
       logger.info(`\u2705 Sync exchange info (${Date.now() - now} ms)`);
     } catch (error) {
       // Throw an error indicating the failure to fetch broker config
       throw new Error(`error fetching broker config from candle server`.red);
     }
+  }
+
+  async syncExchangeFromBroker(): Promise<void> {
+      
   }
 
   getExchangeInfoBySymbol(symbol: string): any {

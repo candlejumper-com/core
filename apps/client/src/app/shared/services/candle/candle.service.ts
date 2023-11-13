@@ -33,9 +33,9 @@ export class CandleService {
     // this.symbols = this.candleService.symbols.sort((p1, p2) => (p1.symbol < p2.symbol) ? -11 : (p1.symbol > p2.symbol) ? 0 : -1)
     // this.wsService.socket.on('indiators', (prices: IPricesWebsocketResponse) => this.onPriceTick(prices))
 
-    let symbol
+    let symbol: ISymbol
     this.symbols$.subscribe(symbols => {
-      symbol = symbols['AAPL']
+      symbol = symbols[Object.keys(symbols)[0]]
       // this.store.dispatch(new SYMBOL_PRICE_SET(symbols[Object.keys(symbols)[0]], Date.now()))
     })
 
@@ -67,7 +67,7 @@ export class CandleService {
     // })
 
     // return from(promise) as Observable<any>
-    return this.httpClient.get(`/api/candles/${symbol.replace('/', '_')}/${interval}?count=${count}`)
+    return this.httpClient.get(`/api-candles/candles/${symbol.replace('/', '_')}/${interval}?count=${count}`)
   }
 
 

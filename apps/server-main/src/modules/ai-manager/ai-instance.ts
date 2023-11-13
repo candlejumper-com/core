@@ -35,7 +35,7 @@ export class AIInstance {
       candles: await this.system.candleManager.getCandles(symbolName, '1d', this.options.count),
     };
 
-    console.log(222, workerData.candles.length);
+    console.log(222333, workerData.candles.length);
 
     this.workerPool.exec('run', [workerData], {
       on: ({ data, action }: ITensorFlowWorkerMessage<ITensorFlowWorkerMessageProgress>) => {

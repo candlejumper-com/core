@@ -5,7 +5,7 @@ import dirTree, { DirectoryTree } from "directory-tree"
 import { System } from '../../system/system'
 import { logger } from '@candlejumper/shared'
 import { pool, WorkerPool } from 'workerpool'
-import { IEditorCompileOptions } from './editor-worker'
+import { IEditorCompileOptions } from './editor.worker'
 import { readFile, writeFile } from 'fs/promises'
 
 export const PATH_ROOT = join(__dirname, '../../..')
@@ -18,7 +18,7 @@ export const PATH_CUSTOM_DIST_BOTS = join(PATH_CUSTOM_DIST, 'bots')
 export const PATH_CUSTOM_DIST_INDICATORS = join(PATH_CUSTOM_DIST, 'indicators')
 export const PATH_TSCONFIG = join(PATH_CUSTOM, 'tsconfig.json')
 
-const url = new URL(join(__dirname, 'editor-worker.js'), import.meta.url)
+const url = new URL(join(__dirname, 'editor.worker.js'), import.meta.url)
 
 export class EditorManager {
 
@@ -31,10 +31,10 @@ export class EditorManager {
     constructor(public system: System) { }
 
     async init(): Promise<void> {
-        this.pool = pool(url.toString(), { maxWorkers: 1 })
+        this.pool = pool(url.toString().replace('file:///', '/'), { maxWorkers: 1 })
 
         await this.readAndUpdate()
-        await this.compile()
+        // await this.compile()
 
         this.setAvailableBots()
 
@@ -105,7 +105,7 @@ export class EditorManager {
 
         try {
             // using 1 worker to compile, is faster then a woker per bot, hmmmkay
-            // await this.pool.exec('compile', [{ root: PATH_CUSTOM, dir: this.fileTree[0] }])
+            await this.pool.exec('compile', [{ root: PATH_CUSTOM, dir: this.fileTree[0] }])
 
             logger.info(`\u2705 Compiling bots & indicators done (${Date.now() - now}ms)`)
         } catch (error) {

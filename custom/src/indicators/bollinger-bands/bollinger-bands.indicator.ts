@@ -1,5 +1,6 @@
 import { BollingerBands } from "technicalindicators"
-import { BOT_INDICATOR_TYPE, Bot, IOrderSnapshot, ITickerSnapshot, Indicator, ORDER_SIDE } from '@candlejumper/core';
+import { BOT_INDICATOR_TYPE, Bot, IOrderSnapshot, Indicator, ORDER_SIDE } from '@candlejumper/core';
+import { ITickerSnapshot } from '@candlejumper/shared';
 import { CANDLE_FIELD } from "@candlejumper/shared";
 
 export interface IIndicatorBollingerBandsConfig {

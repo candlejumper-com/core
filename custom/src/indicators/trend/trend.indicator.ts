@@ -4,7 +4,7 @@ import { SMA, RSI } from "technicalindicators";
 
 export default class IndicatorTrend extends Indicator<IndicatorTrend> {
 
-    declare data: 'up' | 'down'
+    declare data: any
 
     periodSMA = 30
     periodRSI = 20

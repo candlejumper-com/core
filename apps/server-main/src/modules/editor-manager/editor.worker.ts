@@ -6,9 +6,11 @@ export interface IEditorCompileOptions {
     root: string
 }
 
-console.log('WOERKDSLFKDF')
 
-export const PATH_ROOT = join(__dirname, '../../../../../../../')
+
+export const PATH_ROOT = join(__dirname, '../../../')
+
+console.log(PATH_ROOT, PATH_ROOT)
 export const PATH_CUSTOM = join(PATH_ROOT, 'custom')
 export const PATH_CUSTOM_SRC = join(PATH_CUSTOM, 'src')
 export const PATH_CUSTOM_DIST = join(PATH_CUSTOM, 'dist')
@@ -27,8 +29,8 @@ worker({
 })
 
 async function compile(compileOptions: IEditorCompileOptions): Promise<readonly Diagnostic[]> {
-    const tsconfig = require(PATH_TSCONFIG)
-    
+    const tsconfig = require('../../../../../custom/tsconfig.build.json')
+        console.log(compileOptions.root)
     // transpile tsconfig object as tsconfig.json
     const { options, fileNames, errors } = parseJsonConfigFileContent(tsconfig, sys, compileOptions.root)
 

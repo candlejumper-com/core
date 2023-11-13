@@ -1,5 +1,5 @@
-import { System } from "../../../../../apps/server-main/src/system/system"
-import { Queue } from "../../../../../apps/server-main/src/util/queue"
+import { Queue } from "../../util/queue"
+import { SystemBase } from "../../system/system"
 
 export class QueueBinance extends Queue {
 
@@ -12,7 +12,7 @@ export class QueueBinance extends Queue {
     private maxActive = 5
     private active = 0
 
-    constructor(public system: System) {
+    constructor(public system: SystemBase) {
         super()
 
         this.startInterval()
