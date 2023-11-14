@@ -19,6 +19,8 @@ export class CandleService {
 
   tick$ = new EventEmitter<IPricesWebsocketResponse>()
 
+  private updateInterval: any
+
   constructor(
     private httpClient: HttpClient,
     private wsService: WSService,
@@ -28,20 +30,13 @@ export class CandleService {
 
   init(): void {
     this.wsService.socket.on('prices', (prices: IPricesWebsocketResponse) => this.onPriceTick(prices))
-        // sort by name
+    
+    // sort by name
     // this.symbols = this.candleService.symbols.sort((p1, p2) => (p1.symbol < p2.symbol) ? -11 : (p1.symbol > p2.symbol) ? 0 : -1)
     // this.symbols = this.candleService.symbols.sort((p1, p2) => (p1.symbol < p2.symbol) ? -11 : (p1.symbol > p2.symbol) ? 0 : -1)
     // this.wsService.socket.on('indiators', (prices: IPricesWebsocketResponse) => this.onPriceTick(prices))
 
-    let symbol: ISymbol
-    this.symbols$.subscribe(symbols => {
-      symbol = symbols[Object.keys(symbols)[0]]
-      // this.store.dispatch(new SYMBOL_PRICE_SET(symbols[Object.keys(symbols)[0]], Date.now()))
-    })
-
-    setInterval(() => {
-      this.store.dispatch(new SYMBOL_PRICE_SET(symbol, Date.now()))
-    }, 5000)
+    this.startSymbolUpdateInterval()
   }
 
   getSymbolByName(name: string): ISymbol {
@@ -80,6 +75,17 @@ export class CandleService {
   //     this.symbols.push(symbol)
   //   }
   // }
+
+  private startSymbolUpdateInterval() {
+    clearInterval(this.updateInterval)
+
+    this.updateInterval = setInterval(() => {
+      const symbols = this.store.selectSnapshot(SymbolState.getAll)
+      for (const key in symbols) {
+        this.store.dispatch(new SYMBOL_PRICE_SET(symbols[key], Date.now()))
+      }
+    }, 5000)
+  }
 
   /**
    * executed on every socket io tick (prices + chart)

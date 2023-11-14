@@ -2,6 +2,11 @@ export interface ISystemConfig {
     security?: {
         jwtSecret?: string
     }
+    thirdParty: {
+        alphavantage: {
+            apiKey: string
+        }
+    }
     symbols?: string[]
     intervals?: string[]
     bots?: string[]

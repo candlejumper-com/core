@@ -179,7 +179,10 @@ export class ChartService {
   requireOneChart() {
     if (!this.chartsInTabs$?.value.length) {
       const symbol = this.store.selectSnapshot(SymbolState.getFirst)
-      this.showChart(this.createChart('MAIN', symbol, '15m').id)
+
+      if (symbol) {
+        this.showChart(this.createChart('MAIN', symbol, '15m').id)
+      }
     }
   }
 }

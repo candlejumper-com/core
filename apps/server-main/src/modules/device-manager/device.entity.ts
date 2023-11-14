@@ -1,0 +1,10 @@
+import { Entity, Column, PrimaryGeneratedColumn, Unique } from "typeorm"
+
+@Entity()
+export class Device {
+    @PrimaryGeneratedColumn()
+    id: number
+
+    @Column({ nullable: false })
+    token: string
+}

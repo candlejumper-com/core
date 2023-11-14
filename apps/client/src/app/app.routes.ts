@@ -4,6 +4,10 @@ export const routes = [
     loadComponent: () => import('./lib/pages/page-home/page-home.component').then((mod) => mod.PageHomeComponent),
   },
   {
+    path: 'news',
+    loadComponent: () => import('./lib/pages/page-news/page-news.component').then((mod) => mod.PageNewsComponent),
+  },
+  {
     path: 'ai',
     loadComponent: () => import('./lib/pages/page-ai/page-ai.component').then((mod) => mod.PageAIComponent),
   },

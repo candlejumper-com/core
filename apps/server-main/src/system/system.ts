@@ -19,8 +19,8 @@ import axios, { AxiosError, AxiosInstance } from "axios"
 import axiosRetry from "axios-retry"
 import { Ticker } from "../tickers/ticker"
 import { readFileSync } from "fs"
-
-
+import { NewsManager } from "../modules/news-manager/news.manager"
+import { CalendarManager } from "../modules/calendar-manager/calendar.manager"
 
 export class System extends SystemBase {
   type = TICKER_TYPE.SYSTEM
@@ -29,6 +29,8 @@ export class System extends SystemBase {
   deviceManager: DeviceManager
   editorManager: EditorManager
   backtestManager: BacktestManager
+  newsManager: NewsManager
+  calendarManager: CalendarManager
 
   system = this
 
@@ -83,7 +85,9 @@ export class System extends SystemBase {
    * only executed on MAIN system (not a backtest)
    */
   private async initAsMain(): Promise<void> {
-    console.log('23423434')
+
+    this.newsManager = new NewsManager(this)
+    this.calendarManager = new CalendarManager(this)
     this.backtestManager = new BacktestManager(this)
     this.editorManager = new EditorManager(this)
     this.deviceManager = new DeviceManager(this)
@@ -94,8 +98,13 @@ export class System extends SystemBase {
 
     console.info(`--------------------------------------------------------------`)
 
+    await this.deviceManager.init()
+    
     // load current user
     await this.userManager.init()
+
+    // load calendar
+    await this.calendarManager.init()
 
     await Promise.all([
       // load broker (symbols, timezone, details etc)
@@ -129,7 +138,6 @@ export class System extends SystemBase {
 
   // TEMP
   async loadAsValidUser(): Promise<void> {
-    await this.deviceManager.init()
     await this.broker.syncAccount() // get balances
 
     // only sync orders in production

@@ -18,6 +18,11 @@
       "url2": "https://api.templatejump.com"
     }
   },
+  "thirdParty": {
+    "alphavantage": {
+      "apiKey": "OWYPQ4HUJ0NCVSQR"
+    }
+  },
   "brokers": {
     "binance": {
       "apiKey": "AegUy9dWnbC72zWZcIzpOZBYiT4smpcELpEsmt7fGeEhj956SMSIFLkyE2LYLdS4",

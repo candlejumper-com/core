@@ -3,11 +3,13 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { browserName, isAndroid, isApp, isIOS, isMobile, isPWA } from '../../helpers/device.helper';
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken } from "firebase/messaging";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 declare let window: any;
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DeviceService {
 
   version = window.__APP_VERSION__;
@@ -20,8 +22,11 @@ export class DeviceService {
   async init() {
     try {
       // this.setInstallAppButtonType();
-      // alert('init firevase')
-      // await this.initFirebase();
+
+      setTimeout(async () => {
+        await this.initFirebase();
+      }, 10000)
+
     } catch (error) {
       console.error(error)
     }
@@ -45,6 +50,11 @@ export class DeviceService {
 
     // Initialize Firebase Cloud Messaging and get a reference to the service
     const messaging = getMessaging(app);
+
+    onMessage(messaging, (payload) => {
+      console.log('Message received. ', payload);
+      // ...
+    });
 
     const currentToken = await getToken(messaging, { vapidKey: 'BAsHexhMADBsIxdW87DUAMN54Do04kHZ7L1ZlyNsTr2eJ6hGtI7qM2ANHjsaqL8GIoIY6ewgUlVZaCaM9OLd6b4' })
 

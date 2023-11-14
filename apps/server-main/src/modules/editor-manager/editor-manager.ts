@@ -94,7 +94,7 @@ export class EditorManager {
         watch(PATH_CUSTOM_SRC, { recursive: true }, (evt: string, name: string) => {
             this.readAndUpdate()
             this.system.apiServer.io.emit('editor/file-tree', this.fileTree)
-            this.compile()
+            // this.compile()
         });
     }
 
