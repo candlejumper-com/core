@@ -7,7 +7,7 @@ import { readFileSync } from "fs";
 const PATH_BASE = join(__dirname, '../../../')
 
 // USING THESE VARIABLES DOENST SEEM TO WORK
-const PATH_CONFIG_DEFAULT_FILE = join('config.default.json')
+const PATH_CONFIG_DEFAULT_FILE = join(PATH_BASE, 'config.default.json')
 const PATH_CONFIG_CUSTOM_FILE = join(PATH_BASE, 'config.json')
 
 export class ConfigManager {
