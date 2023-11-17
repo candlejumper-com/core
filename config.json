@@ -38,6 +38,12 @@
       "name": "TradeBot",
       "apiKey": "9cc0d2f9729943bef449a5b7b1eb28734bce3211",
       "apiSecret": "73576cc24df211b96a3a0a97761c6821b38583bf1e52b849c4a140747ada2c71"
+    },
+    "xtb": {
+      "type": "demo",
+      "accountId": "15377349",
+      "username": "dennis@dowebdevelopment.nl",
+      "password": "Bettie123!!!"
     }
   },
   "automize": {
