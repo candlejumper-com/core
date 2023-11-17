@@ -22,8 +22,8 @@ export class PageNewsComponent implements OnInit {
     'symbol',
     'name',
     'reportDate',
-    'fiscalDateEnding',
-    'estimate'
+    'estimate',
+    'diffInPercent'
   ];
 
   orderColumns: string[] = [

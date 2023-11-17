@@ -14,14 +14,14 @@
     <td mat-cell *matCellDef="let item">{{item.reportDate | date:'dd/MM/yyyy'}}</td>
   </ng-container>
 
-  <ng-container matColumnDef="fiscalDateEnding">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header="fiscalDateEnding">Date end</th>
-    <td mat-cell *matCellDef="let item">{{item.fiscalDateEnding | date:'dd/MM/yyyy'}}</td>
-  </ng-container>
-
   <ng-container matColumnDef="estimate">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="estimate">Pred.</th>
     <td mat-cell *matCellDef="let item">{{item.estimate}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="diffInPercent">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="diffInPercent">Diff.</th>
+    <td mat-cell *matCellDef="let item">{{item.diffInPercent.toFixed(2)}}%</td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -5,4 +5,5 @@ export interface ICalendarItem {
   fiscalDateEnding: Date,
   estimate: string,
   currency: string
+  diffInPercent?: number
 }

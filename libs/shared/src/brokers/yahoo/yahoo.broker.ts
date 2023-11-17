@@ -101,8 +101,11 @@ export class BrokerYahoo extends Broker {
     return this.normalizeCandles(candles)
   }
   async getCandlesFromCount(symbol: string, interval: string, count: number): Promise<ICandle[]> {
+    const now = new Date()
+    now.setDate(now.getDate() - count);
+    const period1 = format(now, 'yyyy-MM-dd')
     const query = symbol.includes('/') ? `${symbol.split('/')[0]}=X` : symbol
-    const queryOptions = { period1: '2000-01-01', interval: '1d' as any }
+    const queryOptions = { period1, interval: interval as any}
     const candles = await yahooFinance.historical(query, queryOptions)
     return this.normalizeCandles(candles)
   }

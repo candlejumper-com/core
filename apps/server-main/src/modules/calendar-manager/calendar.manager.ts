@@ -20,6 +20,7 @@ export class CalendarManager {
   brokerYahoo: BrokerYahoo
   
   trendingSymbols: string[] = []
+  selectedItems: ICalendarItem[] = []
 
   constructor(public system: System) {}
 
@@ -42,18 +43,24 @@ export class CalendarManager {
 
     const selectedItems = []
     console.log(trendyItems.length)
-    // for (let i = 0; i < activeItems.length; i++) {
-    //   const item = activeItems[i]
 
-    //   // get diff from 100 days ago until today
-    //   const candles = await this.brokerYahoo.getCandlesFromCount(item[i].symbol, '1d', 100)
-    //   const diff = candles[0][CANDLE_FIELD.CLOSE] - candles.at(-1)[CANDLE_FIELD.CLOSE]
-    //   const diffInPercent = (diff / candles.at(-1)[CANDLE_FIELD.CLOSE]) * 100
+    for (let i = 0; i < trendyItems.length; i++) {
+      const item = trendyItems[i]
 
-    //   if (Math.abs(diffInPercent) > 30) {
-    //     selectedItems.push(activeItems)
-    //   }
-    // }
+      // get diff from 100 days ago until today
+      const candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
+      const diff = candles.at(-1)[CANDLE_FIELD.CLOSE] - candles[0][CANDLE_FIELD.CLOSE]
+      const diffInPercent = (diff / candles.at(0)[CANDLE_FIELD.CLOSE]) * 100
+
+      item.diffInPercent = diffInPercent
+      // if (Math.abs(diffInPercent) > 30) {
+        selectedItems.push(item)
+      // }
+    }
+
+    selectedItems.sort(function(a, b) { return a.reportDate - b.reportDate; });
+
+    this.selectedItems = selectedItems
 
     if (selectedItems.length > 0) {
       await this.system.deviceManager.sendCalendarNotifiction(selectedItems)
