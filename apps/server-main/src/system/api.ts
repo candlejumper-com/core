@@ -22,7 +22,7 @@ import helmet from 'helmet'
 import { TICKER_TYPE } from '@candlejumper/shared'
 import { readFileSync } from 'fs'
 
-const PATH_PUBLIC = join(__dirname, '../../public/client')
+const PATH_PUBLIC = join(__dirname, '../../../dist/apps/client')
 
 export class ApiServer {
   app: express.Application
@@ -63,7 +63,7 @@ export class ApiServer {
     this.app.use(json())
     this.app.use(passport.initialize())
     this.app.use(express.static(PATH_PUBLIC, { maxAge: this.cacheMaxAge }))
-
+    console.log(3434, PATH_PUBLIC)
     // setup public API routes
     this.bindRoutes()
 
