@@ -9,7 +9,7 @@
     "client:build": "nx build client",
     "client:test": "nx run client:test --watch",
     "server-main:dev": "nx serve server-main:serve",
-    "server-main:build": "nx build server-main && cd ./dist/apps/server-main && npm ci",
+    "server-main:build": "nx build server-main && cd ./dist/apps/server-main",
     "server-candles:dev": "nx serve server-candles:serve",
     "server-candles:build": "nx build server-candles"
   },

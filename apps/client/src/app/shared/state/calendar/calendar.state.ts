@@ -18,27 +18,8 @@ export class CalendarState {
     return state;
   }
 
-  @Selector()
-  static isLoggedIn(state: IUser): boolean {
-    return !!state;
-  }
-
-  @Selector()
-  static getBalanceByAsset(state: IUser, asset: string): number {
-    return state.balances.find(balance => balance.asset === asset)?.free || 0
-  }
-
   @Action(CALENDAR_SET)
   set({ setState: setState }, action: CALENDAR_SET) {
     setState(action.items);
-
-    // update balances every second
-    // setInterval(() => this.userService.updateBalances(), 1000);
-    // this.updateBalances()
-  }
-
-  @Action(LoginSuccess)
-  loginSuccess(action: any, payload: any) {
-    // alert('login success')
   }
 }

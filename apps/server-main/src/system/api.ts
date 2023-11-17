@@ -37,7 +37,7 @@ export class ApiServer {
   // create public server for web clients
   async start(): Promise<void> {
     this.app = express()
-    const isDev = false
+    const isDev = true
 
     if (isDev) {
       this.server = createServerHttp(this.app)
@@ -63,7 +63,7 @@ export class ApiServer {
     this.app.use(json())
     this.app.use(passport.initialize())
     this.app.use(express.static(PATH_PUBLIC, { maxAge: this.cacheMaxAge }))
-    console.log(3434, PATH_PUBLIC)
+
     // setup public API routes
     this.bindRoutes()
 
@@ -73,7 +73,7 @@ export class ApiServer {
     return new Promise((resolve, reject) => {
       const { host, port } = this.system.configManager.config.server.api
 
-      this.server.listen(port, '0.0.0.0', null, () => {
+      this.server.listen(port, host, null, () => {
         logger.info(`\u2705 Public API listening on ${host}:${port}`)
         resolve(null)
       })

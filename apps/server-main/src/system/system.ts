@@ -44,6 +44,7 @@ export class System extends SystemBase {
 
   async init(): Promise<void> {
     await super.init()
+
     setSystemEnvironment(SYSTEM_ENV.MAIN)
 
     await this.configManager.init()
@@ -120,7 +121,7 @@ export class System extends SystemBase {
       }),
 
       // load editor (compile bots, load file-tree etc)
-      this.editorManager.init(),
+      // this.editorManager.init(),
 
       this.loadAsValidUser(),
     ])
@@ -128,7 +129,7 @@ export class System extends SystemBase {
     console.info(`--------------------------------------------------------------`)
 
     // initialize default bots / indicators
-    await this.addDefaultTickers()
+    // await this.addDefaultTickers()
 
     // open websocket to candle server
     await this.candleManager.openCandleServerSocket()
@@ -304,17 +305,17 @@ export class System extends SystemBase {
       // load file
       const file = readFileSync(botPath + ".js", "utf8")
       console.log(234, file)
-      const TickerClass = require('../../../../custom/dist/bots/bollinger/bot_bollinger').default as new () => Bot<Ticker<any>>
+      // const TickerClass = require('../../../../custom/dist/bots/bollinger/bot_bollinger').default as new () => Bot<Ticker<any>>
       // const TickerClass = require(botPath).default as new () => Bot<Ticker<any>>
 
-      await this.addTicker({
-        path: botPath,
-        params: {},
-        ...ticker,
-        id: ticker.id,
-        class: TickerClass,
-        symbol,
-      })
+      // await this.addTicker({
+      //   path: botPath,
+      //   params: {},
+      //   ...ticker,
+      //   id: ticker.id,
+      //   class: TickerClass,
+      //   symbol,
+      // })
     }
 
     logger.info(`\u2705 Add bots from config ${Date.now() - now}ms)`)
@@ -346,13 +347,13 @@ export class System extends SystemBase {
               tickerPath = join(PATH_CUSTOM_DIST_BOTS, `${name}/bot_${name}`)
           }
 
-          // await this.addTicker({
-          //   id: `${name}_${symbolName}_${intervals[k]}_${i}`,
-          //   path: tickerPath,
-          //   interval: intervals[k],
-          //   symbol,
-          //   params: {},
-          // })
+          await this.addTicker({
+            id: `${name}_${symbolName}_${intervals[k]}_${i}`,
+            path: tickerPath,
+            interval: intervals[k],
+            symbol,
+            params: {},
+          })
         }
       }
     }

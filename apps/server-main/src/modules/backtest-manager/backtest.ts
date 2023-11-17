@@ -193,7 +193,6 @@ export class Backtest {
 
         // load candles only first time
         if (!this.candles) {
-            console.log('nonono candles')
             const loadAmount = this.options.candleCount + warmupAmount
             const loadArray = [{ symbol: symbol.name, interval }]
             const data = await system.candleManager.load(loadArray, loadAmount)
@@ -216,7 +215,7 @@ export class Backtest {
         }
 
         // add bots to system
-        await system.addBotsFromConfig()
+        // await system.addBotsFromConfig()
 
         // logger.verbose(`setup system took : ${Date.now() - now}`)
     }

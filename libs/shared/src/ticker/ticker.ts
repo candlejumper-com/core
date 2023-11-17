@@ -131,6 +131,7 @@ export abstract class Ticker<T> {
    * add a child ticker
    */
   async addTicker<T>(config: ITickerParams<T>): Promise<Ticker<T>> {
+    return null
     let TickerClass = config.class as any
     // let TickerClass: typeof Ticker = config.class
     if (!TickerClass) {

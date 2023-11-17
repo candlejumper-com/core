@@ -59,6 +59,10 @@ export class DeviceManager {
     }
 
     async sendCalendarNotifiction(data: ICalendarItem[]) {
+        if (!data.length) {
+            return
+        }
+
         const tokens = await this.get()
         // console.log(233, tokens)
         for (let i = 0, len = tokens.length; i < len; i++) {

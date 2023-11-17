@@ -32,7 +32,6 @@ export class AIService {
       const container = this.containers$.value.find(container => container.id === data.container)
       const instance = container.instances.find(instance => instance.id === data.id)
       instance.result$.next(data.data)
-      console.log(3434,instance)
     })
   }
 
