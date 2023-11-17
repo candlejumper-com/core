@@ -73,7 +73,7 @@ export class ApiServer {
     return new Promise((resolve, reject) => {
       const { host, port } = this.system.configManager.config.server.api
 
-      this.server.listen(port, host, null, () => {
+      this.server.listen(port, '0.0.0.0', null, () => {
         logger.info(`\u2705 Public API listening on ${host}:${port}`)
         resolve(null)
       })

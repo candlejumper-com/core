@@ -42,7 +42,6 @@ export class CalendarManager {
     const trendyItems = this.filterItemsWithTrendySymbol(activeItems)
 
     const selectedItems = []
-    console.log(trendyItems.length)
 
     for (let i = 0; i < trendyItems.length; i++) {
       const item = trendyItems[i]
@@ -65,6 +64,8 @@ export class CalendarManager {
     if (selectedItems.length > 0) {
       await this.system.deviceManager.sendCalendarNotifiction(selectedItems)
     }
+
+    console.log(343434, trendyItems.length)
   }
 
   async loadNews() {
