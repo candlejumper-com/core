@@ -37,7 +37,7 @@ export class ApiServer {
   // create public server for web clients
   async start(): Promise<void> {
     this.app = express()
-    const isDev = true
+    const isDev = false
 
     if (isDev) {
       this.server = createServerHttp(this.app)
