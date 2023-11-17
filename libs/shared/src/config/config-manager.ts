@@ -16,7 +16,6 @@ export class ConfigManager {
         const configDefault = require('../../../../config.default.json')
         const config = require('../../../../config.json')
         this.config = merge(configDefault, config)
-
-        console.log(this.config.server, config.server, configDefault.server)
+        
     }
 }
