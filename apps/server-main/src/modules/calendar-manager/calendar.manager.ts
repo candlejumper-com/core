@@ -45,7 +45,7 @@ export class CalendarManager {
   async checkCalendarItems() {
     try {
       // (re)load all calendar items
-      this.items = await this.brokerAlphavantage.loadCalendarItems()
+      this.items = await this.brokerAlphavantage.getCalendarItems()
 
       // (re)load current trending symbols
       this.trendingSymbols = await this.brokerYahoo.getTrendingSymbols()
@@ -56,19 +56,12 @@ export class CalendarManager {
       // filter calendar items by trending symbols
       this.selectedItems = filterItemsBySymbols(activeItems, this.trendingSymbols)
 
-      // TODO - make batches to not hit request limit
-      for await (const [index, item] of this.selectedItems.entries()) {
-        if (index > 2) {
-          break
-        }
+      // DEV ONLY
+      // this.selectedItems = this.selectedItems.slice(0, 2)
 
-        // load candles from broker by symbol
-        const candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
-
-        // get diff from oldest to newest
-        item.diffInPercent = getDiffInPercentage(candles.at(0), candles.at(-1))
-      }
-
+      // set current price diff and other stuff
+      await this.setItemsMetadata()
+      
       // sort by reportDate
       this.selectedItems.sort((a, b) => (a.reportDate as any) - (b.reportDate as any))
 
@@ -76,6 +69,22 @@ export class CalendarManager {
       await this.system.deviceManager.sendCalendarUpcomingNotifiction(this.selectedItems)
     } catch (error) {
       console.error(error)
+    }
+  }
+
+  /**
+   * TODO - make batches to not hit request limit
+   */
+  private async setItemsMetadata() {
+    for await (const [index, item] of this.selectedItems.entries()) {
+      // load candles of symbol
+      const candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
+
+      // set diff from oldest to newest
+      item.diffInPercent = getDiffInPercentage(candles.at(0), candles.at(-1))
+      
+      // set extra data
+      item.insights = await this.brokerYahoo.getSymbolInsights(item.symbol)
     }
   }
 }

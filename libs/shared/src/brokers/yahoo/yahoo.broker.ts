@@ -10,6 +10,7 @@ import { writeFileSync } from 'fs'
 import { TrendingSymbolsResult } from 'yahoo-finance2/dist/esm/src/modules/trendingSymbols'
 import TEMP_BROKER_INFO from './broker-yahoo.json'
 import TEMP_TRENDING_SYMBOLS from './trending-symbols.json'
+import { InsightsResult } from 'yahoo-finance2/dist/esm/src/modules/insights'
 
 export class BrokerYahoo extends Broker {
   id = 'Yahoo'
@@ -28,6 +29,10 @@ export class BrokerYahoo extends Broker {
     writeFileSync('./trending-symbols.json', JSON.stringify(symbols, null, 2))
 
     return symbols
+  }
+
+  getSymbolInsights(symbol: string): Promise<InsightsResult> {
+    return yahooFinance.insights(symbol)
   }
 
   async placeOrder(order: IOrder): Promise<OrderResponseResult | OrderResponseFull> {

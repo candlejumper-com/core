@@ -1,3 +1,5 @@
+import { InsightsResult } from "yahoo-finance2/dist/esm/src/modules/insights"
+
 export interface ICalendarItem {
   symbol: string,
   name: string,
@@ -6,4 +8,5 @@ export interface ICalendarItem {
   estimate: string,
   currency: string
   diffInPercent?: number
+  insights?: InsightsResult
 }

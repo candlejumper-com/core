@@ -41,7 +41,7 @@ export class StatusService {
     private httpClient: HttpClient,
     private store: Store
   ) {
-    this.init()
+    // this.init()
   }
 
   init() {

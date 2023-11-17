@@ -15,7 +15,7 @@ export class BrokerAlphavantage extends Broker {
     this.instance = alphavantage({ key: apiKey })
   }
 
-  async loadCalendarItems(): Promise<ICalendarItem[]> {
+  async getCalendarItems(): Promise<ICalendarItem[]> {
     const { apiKey } = this.system.configManager.config.thirdParty.alphavantage
 
     // const { data } = await axios.get(
