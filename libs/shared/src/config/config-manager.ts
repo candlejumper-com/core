@@ -1,6 +1,14 @@
+import { resolve } from "path";
 import { SystemBase } from "../system/system";
 import { ISystemConfig } from "./config.interfaces";
 import merge from 'deepmerge';
+import { readFileSync } from "fs";
+
+const PATH_BASE = resolve(__dirname, '../../../')
+
+// USING THESE VARIABLES DOENST SEEM TO WORK
+const PATH_CONFIG_DEFAULT_FILE = resolve('config.default.json')
+const PATH_CONFIG_CUSTOM_FILE = resolve(PATH_BASE, 'config.json')
 
 export class ConfigManager {
 
@@ -12,10 +20,16 @@ export class ConfigManager {
         return this.load()
     }
 
+    /**
+     * load config from root dir
+     * COMMENT - not using require() or import(), because it seems to 'lock' the file, giving watcher/tsc problems
+     * also, this way it will never cache the config file and always reload it from disk
+     */
     private async load(): Promise<void> {
-        const configDefault = require('../../../../config.default.json')
-        const config = require('../../../../config.json')
-        this.config = merge(configDefault, config)
-        
+        const configDefault = JSON.parse(readFileSync(PATH_CONFIG_DEFAULT_FILE, 'utf8')) as ISystemConfig
+        const configCustom = JSON.parse(readFileSync(PATH_CONFIG_CUSTOM_FILE, 'utf8')) as ISystemConfig
+        this.config = merge(configDefault, configCustom)
+
+        console.log(this.config)
     }
 }
