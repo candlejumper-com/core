@@ -57,8 +57,10 @@ export class CalendarManager {
       this.selectedItems = filterItemsBySymbols(activeItems, this.trendingSymbols)
 
       // DEV ONLY
-      this.selectedItems = this.selectedItems.slice(0, 2)
-      
+      // limit to 2 symbols
+      if (this.system.configManager.config.dev) {
+        this.selectedItems = this.selectedItems.slice(0, 2)
+      }
 
       // set current price diff and other stuff
       await this.setItemsMetadata()

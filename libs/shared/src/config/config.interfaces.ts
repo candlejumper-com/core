@@ -1,4 +1,5 @@
 export interface ISystemConfig {
+    dev: boolean,
     security?: {
         jwtSecret?: string
     }

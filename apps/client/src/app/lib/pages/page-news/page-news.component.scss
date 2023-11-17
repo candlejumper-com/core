@@ -31,11 +31,18 @@ table {
 }
 
 .mat-column-estimate {
-  width: 80px;
-  max-width: 80px;
+  width: 70px;
+  max-width: 70px;
+  min-width: 70px;
 }
 
 .mat-column-diffInPercent {
+  width: 80px;
+  max-width: 80px;
+  min-width: 80px;
+}
+
+.mat-column-target {
   width: 100px;
   max-width: 100px;
 }

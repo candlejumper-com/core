@@ -21,10 +21,11 @@ export class PageNewsComponent implements OnInit {
   displayedColumns: string[] = [
     'symbol',
     'name',
+    'rating',
+    'target',
     'intermediate',
     'short',
     'long',
-    'rating',
     'estimate',
     'diffInPercent',
     'reportDate',

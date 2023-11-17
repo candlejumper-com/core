@@ -45,6 +45,14 @@
     </td>
   </ng-container>
 
+  <!-- TARGET -->
+  <ng-container matColumnDef="target">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="target">Target</th>
+    <td mat-cell *matCellDef="let item">
+      {{ item.insights?.recommendation?.targetPrice | currency: item.currency }}
+    </td>
+  </ng-container>
+
   <!-- ESTIMATE -->
   <ng-container matColumnDef="estimate">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="estimate">Pred.</th>
