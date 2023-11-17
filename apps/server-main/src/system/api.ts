@@ -8,13 +8,13 @@ import { logger, PATH_LOGS_COMBINED } from '@candlejumper/shared'
 import systemRoutes from './system.api'
 import deviceRoutes from '../modules/device-manager/device.api'
 import backtestRoutes from '../modules/backtest-manager/backtest.api'
-import candlesRoutes from '../modules/candle-manager/candles.api'
+import candlesRoutes from '../modules/candle-manager/candle.api'
 import ordersRoutes from '../modules/order-manager/order.api'
 import editorRoutes from '../modules/editor-manager/editor.api'
 import snapshotRoutes from '../modules/snapshot-manager/snapshot.api'
 import userRoutes from '../modules/user-manager/user.api'
 import aiRoutes from '../modules/ai-manager/ai.api'
-
+import calendarRoutes from '../modules/calendar-manager/calendar.api'
 import passport from 'passport'
 import { json } from 'body-parser'
 import helmet from 'helmet'
@@ -46,6 +46,7 @@ export class ApiServer {
         this.app.use(json())
         this.app.use(passport.initialize())
         this.app.use(express.static(PATH_PUBLIC, { maxAge: this.cacheMaxAge }))
+        
         
         // setup public API routes
         this.bindRoutes()
@@ -101,5 +102,6 @@ export class ApiServer {
         ordersRoutes(this.system, this.app)
         editorRoutes(this.system, this.app)
         snapshotRoutes(this.system, this.app)
+        calendarRoutes(this.system, this.app)
     }
 }

@@ -1,4 +1,5 @@
-export * from './candle'
+export * from './candle/candle.interfaces'
+export * from './candle/candle.util'
 export * from './ticker/ticker.interfaces'
 export * from './ticker/ticker.util'
 export * from './system/system'

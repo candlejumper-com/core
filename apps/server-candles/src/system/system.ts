@@ -12,8 +12,8 @@ const cliOptions = commandLineArgs([
 
 export class System extends SystemBase {
   readonly db = new DB(this)
-  readonly broker = new BrokerBitmart(this)
-  // readonly broker = new BrokerYahoo(this)
+  // readonly broker = new BrokerBitmart(this)
+  readonly broker = new BrokerYahoo(this)
   // readonly broker = new BrokerBinance(this)
   readonly candleManager = new CandleManager(this)
   readonly apiServer = new ApiServer(this)

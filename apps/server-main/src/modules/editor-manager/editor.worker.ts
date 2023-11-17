@@ -30,7 +30,7 @@ worker({
 
 async function compile(compileOptions: IEditorCompileOptions): Promise<readonly Diagnostic[]> {
     const tsconfig = require('../../../../../custom/tsconfig.build.json')
-        console.log(compileOptions.root)
+        // console.log(compileOptions.root)
     // transpile tsconfig object as tsconfig.json
     const { options, fileNames, errors } = parseJsonConfigFileContent(tsconfig, sys, compileOptions.root)
 

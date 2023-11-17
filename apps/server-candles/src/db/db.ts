@@ -21,7 +21,6 @@ export class DB {
 
         const now = Date.now()
         const dataFilePath = join(PATH_DATA, 'candles.db')
-        console.log(dataFilePath)
         const CandleEntities = this.createCandleEntities()
 
         const myDataSource = new DataSource({

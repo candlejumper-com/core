@@ -4,6 +4,7 @@ import { System } from "../../system/system";
 import { logger, IOrder, ICalendarItem } from "@candlejumper/shared";
 import FIREBASE_CERT from './../../../../../firebase-keys.json';
 import { Device } from "./device.entity";
+
 export class DeviceManager {
 
     constructor(public system: System) { }
@@ -59,13 +60,11 @@ export class DeviceManager {
 
     async sendCalendarNotifiction(data: ICalendarItem[]) {
         const tokens = await this.get()
-
+        // console.log(233, tokens)
         for (let i = 0, len = tokens.length; i < len; i++) {
             const token = tokens[i]
 
             try {
-
-                
                 const payload = {
                     token,
                     notification: {

@@ -26,6 +26,7 @@ import { ChartViewState } from './shared/state/chart-view/chart-view.state'
 import { MatIconModule } from '@angular/material/icon'
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
+import { CalendarState } from './shared/state/calendar/calendar.state'
 
 export function initializeApp(appInitService: InitializeService) {
   return () => appInitService.Init()
@@ -56,7 +57,7 @@ export function initializeApp(appInitService: InitializeService) {
     MatTabsModule,
     MatCardModule,
     NgxsReduxDevtoolsPluginModule.forRoot(),
-    NgxsModule.forRoot([ConfigState, BacktestState, ChartViewState]),
+    NgxsModule.forRoot([ConfigState, BacktestState, ChartViewState, CalendarState]),
     SymbolStateModule,
     UserStateModule,
     MatSidenavModule

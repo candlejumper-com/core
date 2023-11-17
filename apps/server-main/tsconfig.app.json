@@ -11,7 +11,7 @@
   },
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "./src/**/*.test.ts"],
   "files": [
-    "./src/modules/editor-manager/editor-worker.ts",
+    "./src/modules/editor-manager/editor.worker.ts",
     "./src/modules/ai-manager/ai-worker.ts",
     "../../custom/tsconfig.build.json"
   ],

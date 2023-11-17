@@ -4,6 +4,11 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { PageNewsComponent } from './page-news.component';
+import { NgxsModule } from '@ngxs/store';
+import { SharedModule } from '../../../shared/shared.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { CalendarService } from '../../../shared/services/calendar/calendar.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PageNewsComponent', () => {
   let component: PageNewsComponent;
@@ -11,7 +16,16 @@ describe('PageNewsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ PageNewsComponent ]
+      imports: [
+        NoopAnimationsModule,
+        HttpClientTestingModule,
+        NgxsModule.forRoot([]),
+        SharedModule,
+        PageNewsComponent 
+      ],
+      providers: [
+        CalendarService
+      ]
     })
     .compileComponents();
   }));
