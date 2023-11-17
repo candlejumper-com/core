@@ -21,7 +21,7 @@ export class DeviceService {
 
   async init() {
     try {
-      // this.setInstallAppButtonType();
+      this.setInstallAppButtonType();
 
       setTimeout(async () => {
         await this.initFirebase();
@@ -32,45 +32,10 @@ export class DeviceService {
     }
   }
 
-  async initFirebase() {
-
-    // TODO: Replace the following with your app's Firebase project configuration
-    // See: https://firebase.google.com/docs/web/learn-more#config-object
-    const firebaseConfig = {
-      apiKey: "AIzaSyAVr1RmPpgSUGuAMS7y1t7aK16lG78zVIM",
-      authDomain: "tradebot-ce742.firebaseapp.com",
-      projectId: "tradebot-ce742",
-      storageBucket: "tradebot-ce742.appspot.com",
-      messagingSenderId: "991998010613",
-      appId: "1:991998010613:web:524da2fb9381104aa5d1bc"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-
-    // Initialize Firebase Cloud Messaging and get a reference to the service
-    const messaging = getMessaging(app);
-
-    onMessage(messaging, (payload) => {
-      console.log('Message received. ', payload);
-      // ...
-    });
-
-    const currentToken = await getToken(messaging, { vapidKey: 'BAsHexhMADBsIxdW87DUAMN54Do04kHZ7L1ZlyNsTr2eJ6hGtI7qM2ANHjsaqL8GIoIY6ewgUlVZaCaM9OLd6b4' })
-
-    if (currentToken) {
-      this.onPushEnableSave(currentToken).subscribe()
-    } else {
-      console.log('No registration token available. Request permission to generate one.');
-    }
-  }
-
-  onPushEnableSave(fcmToken: string): Observable<any> {
-    return this.httpClient.post('/api/device', { fcmToken, browserName })
-  }
-
   async installPWA(): Promise<void> {
+    console.log(window.app.pwa)
     if (!window.app.pwa?.promptEvent) {
+      alert(2)
       return;
     }
 
@@ -88,6 +53,10 @@ export class DeviceService {
   setPWABannerClosed(): void {
     this.showPWABanner$.next(false);
     window.localStorage.setItem('PWA_BANNER_CLOSED', '1');
+  }
+
+  private showNotificationBanner() {
+
   }
 
   private setInstallAppButtonType(): void {
@@ -122,5 +91,42 @@ export class DeviceService {
     if (this.appInstallButtonType === 'pwa') {
       this.showPWABanner$.next(!window.localStorage.getItem('PWA_BANNER_CLOSED'));
     }
+  }
+
+  private async initFirebase() {
+
+    // TODO: Replace the following with your app's Firebase project configuration
+    // See: https://firebase.google.com/docs/web/learn-more#config-object
+    const firebaseConfig = {
+      apiKey: "AIzaSyAVr1RmPpgSUGuAMS7y1t7aK16lG78zVIM",
+      authDomain: "tradebot-ce742.firebaseapp.com",
+      projectId: "tradebot-ce742",
+      storageBucket: "tradebot-ce742.appspot.com",
+      messagingSenderId: "991998010613",
+      appId: "1:991998010613:web:524da2fb9381104aa5d1bc"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    // Initialize Firebase Cloud Messaging and get a reference to the service
+    const messaging = getMessaging(app);
+
+    onMessage(messaging, (payload) => {
+      console.log('Message received. ', payload);
+      // ...
+    });
+
+    const currentToken = await getToken(messaging, { vapidKey: 'BAsHexhMADBsIxdW87DUAMN54Do04kHZ7L1ZlyNsTr2eJ6hGtI7qM2ANHjsaqL8GIoIY6ewgUlVZaCaM9OLd6b4' })
+
+    if (currentToken) {
+      this.onPushEnableSave(currentToken).subscribe()
+    } else {
+      console.log('No registration token available. Request permission to generate one.');
+    }
+  }
+
+  private onPushEnableSave(fcmToken: string): Observable<any> {
+    return this.httpClient.post('/api/device', { fcmToken, browserName })
   }
 }

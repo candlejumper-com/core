@@ -1,4 +1,4 @@
-import { join, resolve } from "path";
+import { join } from "path";
 import { SystemBase } from "../system/system";
 import { ISystemConfig } from "./config.interfaces";
 import merge from 'deepmerge';
@@ -29,7 +29,5 @@ export class ConfigManager {
         const configDefault = JSON.parse(readFileSync(PATH_CONFIG_DEFAULT_FILE, 'utf8')) as ISystemConfig
         const configCustom = JSON.parse(readFileSync(PATH_CONFIG_CUSTOM_FILE, 'utf8')) as ISystemConfig
         this.config = merge(configDefault, configCustom)
-
-        console.log(this.config)
     }
 }

@@ -16,6 +16,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/service-worker": "17.0.3",
     "@binance/connector": "^3.0.0",
     "@bitmartexchange/bitmart-node-sdk-api": "^1.0.1",
     "@candlejumper/core": "file:./dist/server-main",
@@ -87,6 +88,7 @@
     "@angular/material": "17.0.1",
     "@angular/platform-browser": "17.0.3",
     "@angular/platform-browser-dynamic": "17.0.3",
+    "@angular/pwa": "^17.0.1",
     "@angular/router": "17.0.3",
     "@angular/service-worker": "17.0.3",
     "@babel/runtime": "^7.23.2",
@@ -155,4 +157,3 @@
     "cypress": "^13.5.1"
   }
 }
-

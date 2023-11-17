@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core'
+import { APP_INITIALIZER, NgModule, isDevMode } from '@angular/core'
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { AppComponent } from './app.component'
 import { CustomHttpInterceptor } from './shared/interceptors/http.interceptor'
@@ -40,15 +40,6 @@ export function initializeApp(appInitService: InitializeService) {
     // NoopAnimationsModule,
     BrowserAnimationsModule,
     HttpClientModule,
-
-    ServiceWorkerModule.register('./ngsw-worker.js', {
-      // enabled: false,
-      enabled: false,
-      // enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      // registrationStrategy: 'registerWhenStable:30000'
-    }),
     FlexLayoutModule,
     MatIconModule,
     MatListModule,
@@ -60,7 +51,15 @@ export function initializeApp(appInitService: InitializeService) {
     NgxsModule.forRoot([ConfigState, BacktestState, ChartViewState, CalendarState]),
     SymbolStateModule,
     UserStateModule,
-    MatSidenavModule
+    MatSidenavModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled:true,
+      registrationStrategy: 'registerImmediately',
+      // enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      // registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [
     InitializeService,

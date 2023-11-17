@@ -1,5 +1,5 @@
 <nav mat-tab-nav-bar backgroundColor="accent" color="warn" [tabPanel]="tabPanel">
-  <a mat-tab-link [routerLink]="['/']" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}">Bots</a>
+  <a mat-tab-link [routerLink]="['/']" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: true }">Bots</a>
   <a mat-tab-link [routerLink]="['/news']" [routerLinkActive]="['active']">News</a>
   <a mat-tab-link [routerLink]="['/ai']" [routerLinkActive]="['active']">AI</a>
 </nav>
@@ -34,3 +34,12 @@
 </main>
 
 <div class="overlay" *ngIf="wsService.error$ | async"></div>
+<!-- && window.app.pwa.promptEvent -->
+<!-- PWA install banner -->
+<div
+  *ngIf="(deviceService.showPWABanner$ | async)"
+  class="pwaBanner d-flex justify-content-center position-relative"
+>
+  <button color="primary" (click)="deviceService.installPWA()">Install App</button>
+  <span class="closePwaInstall" (click)="deviceService.setPWABannerClosed()" aria-hidden="true">&times;</span>
+</div>

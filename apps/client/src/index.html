@@ -11,6 +11,8 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <meta name="theme-color" content="#1976d2">
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#1976d2">
 </head>
 <body class="mat-typography darkMode">
   <core-root>
@@ -21,12 +23,11 @@
   <!-- <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-stock.min.js" async></script> -->
   <!-- <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-annotations.min.js" async></script> -->
   <!-- <script src="assets/anychart/_anychart-combined-custom.js" async></script> -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.9.0/dist/tf.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.9.0/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script>
-  <script src="https://cdn.plot.ly/plotly-2.24.3.min.js" crossorigin="anonymous" charset="utf-8"></script>
+  <script src="https://cdn.plot.ly/plotly-2.24.3.min.js" crossorigin="anonymous" charset="utf-8"></script> -->
   
   <script>
-
     window.app = {
       pwa: {
         promptEvent: null
@@ -35,9 +36,11 @@
     };
 
     window.addEventListener('beforeinstallprompt', event => {
+      alert(2)
       window.app.pwa.promptEvent = event;
       event.preventDefault();
     }, { once: true });
   </script>
+  <noscript>Please enable JavaScript to continue using this application.</noscript>
 </body>
 </html>
