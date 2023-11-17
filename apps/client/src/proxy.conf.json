@@ -3,16 +3,19 @@
     "target": "http://localhost:3001",
     "secure": false,
     "changeOrigin": true,
-    "timeout": 600000
+    "timeout": 600000,
+    "logLevel": "silent"
   },
   "/api/*": {
     "target": "http://localhost:3000",
     "secure": false,
     "changeOrigin": true,
-    "timeout": 600000
+    "timeout": 600000,
+    "logLevel": "silent"
   },
   "/socket.io/*": {
     "target": "http://localhost:3000/socket.io/",
-    "ws": true
+    "ws": true,
+    "logLevel": "silent"
   }
 }

@@ -5,6 +5,8 @@ import { logger, IOrder, ICalendarItem } from "@candlejumper/shared";
 import FIREBASE_CERT from './../../../../../firebase-keys.json';
 import { Device } from "./device.entity";
 
+const ERROR_TOKEN_NOT_FOUND = 'messaging/registration-token-not-registered'
+
 export class DeviceManager {
 
     constructor(public system: System) { }
@@ -55,15 +57,17 @@ export class DeviceManager {
     }
 
     async remove(token: string) {
-        // await this.system.db.connection.run(`DELETE FROM DEVICES WHERE token='${token}'`)
+        const DeviceRepo = this.system.db.connection.getRepository(Device)
+        await DeviceRepo.delete({ token })
     }
 
-    async sendCalendarNotifiction(data: ICalendarItem[]) {
+    async sendCalendarUpcomingNotifiction(data: ICalendarItem[]) {
         if (!data.length) {
             return
         }
 
         const tokens = await this.get()
+
         // console.log(233, tokens)
         for (let i = 0, len = tokens.length; i < len; i++) {
             const token = tokens[i]
@@ -89,14 +93,14 @@ export class DeviceManager {
                 const result = await admin.messaging().send(payload)
 
             } catch (error: any) {
-                logger.warn(error.message, error.code)
-
-                if (error.code === 'messaging/registration-token-not-registered') {
+                if (error.code === ERROR_TOKEN_NOT_FOUND) {
                     try {
                         await this.remove(token)
                     } catch (removeError) {
-                        console.error(removeError)
+                        logger.error(removeError)
                     }
+                } else {
+                    logger.warn(error.message, error.code)
                 }
             }
         }
@@ -129,17 +133,16 @@ export class DeviceManager {
                 const result = await admin.messaging().send(payload)
 
             } catch (error: any) {
-                logger.warn(error.message, error.code)
-
-                if (error.code === 'messaging/registration-token-not-registered') {
+                if (error.code === ERROR_TOKEN_NOT_FOUND) {
                     try {
                         await this.remove(token)
                     } catch (removeError) {
-                        console.error(removeError)
+                        logger.error(removeError)
                     }
+                } else {
+                    logger.warn(error.message, error.code)
                 }
             }
         }
-        
     }
 }

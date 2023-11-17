@@ -56,11 +56,9 @@ export class CalendarManager {
       // filter calendar items by trending symbols
       this.selectedItems = filterItemsBySymbols(activeItems, this.trendingSymbols)
 
-      // loop over remaining calendar items
-      for (let i = 0; i < this.selectedItems.length; i++) {
-        const item = this.selectedItems[i]
-
-        if (i > 0) {
+      // TODO - make batches to not hit request limit
+      for await (const [index, item] of this.selectedItems.entries()) {
+        if (index > 2) {
           break
         }
 
@@ -68,14 +66,14 @@ export class CalendarManager {
         const candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
 
         // get diff from oldest to newest
-        item.diffInPercent = getDiffInPercentage(candles.at(-1), candles[0])
+        item.diffInPercent = getDiffInPercentage(candles.at(0), candles.at(-1))
       }
 
       // sort by reportDate
       this.selectedItems.sort((a, b) => (a.reportDate as any) - (b.reportDate as any))
 
       // send push notification to clients
-      await this.system.deviceManager.sendCalendarNotifiction(this.selectedItems)
+      await this.system.deviceManager.sendCalendarUpcomingNotifiction(this.selectedItems)
     } catch (error) {
       console.error(error)
     }
