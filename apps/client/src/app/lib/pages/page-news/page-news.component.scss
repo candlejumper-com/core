@@ -1,3 +1,36 @@
 table {
   margin-top: 50px;
+  // font-size: 10px;
+}
+
+.mat-column-symbol {
+  width: 80px;
+  max-width: 80px;
+}
+
+.mat-column-name {
+  // width: 380px;
+  // max-width: 380px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  a {
+    color: white;
+  }
+}
+
+.mat-column-reportDate {
+  width: 110px;
+  max-width: 110px;
+}
+
+.mat-column-estimate {
+  width: 80px;
+  max-width: 80px;
+}
+
+.mat-column-diffInPercent {
+  width: 100px;
+  max-width: 100px;
 }
