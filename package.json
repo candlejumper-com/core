@@ -10,7 +10,7 @@
     "client:test": "nx run client:test --watch",
     "server-main:dev": "nx serve server-main:serve",
     "server-main:build": "nx build server-main && cd ./dist/apps/server-main",
-    "server-main:prod": "npm run server-main:build && cd ./dist/apps/server-main && sudo node main.js",
+    "server-main:prod": "rimraf ./dist/apps/server-main && npm run server-main:build && cd ./dist/apps/server-main && sudo node main.js",
     "server-candles:dev": "nx serve server-candles:serve",
     "server-candles:build": "nx build server-candles"
   },
