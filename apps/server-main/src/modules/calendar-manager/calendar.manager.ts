@@ -1,14 +1,12 @@
 import { System } from '../../system/system'
-import { BrokerYahoo, ICalendarItem } from '@candlejumper/shared'
-import calendarMOCK from './calendar.json'
-import alphavantage from 'alphavantage'
 import {
-  filterItemsInTimeRange,
+  BrokerAlphavantage,
+  BrokerYahoo,
+  ICalendarItem,
   filterItemsBySymbols,
-  getDiffInPercentage,
-  normalizeCalendarData,
-  parseCSV,
-} from './calendar.util'
+  filterItemsInTimeRange,
+} from '@candlejumper/shared'
+import { getDiffInPercentage } from './calendar.util'
 
 export class CalendarManager {
   // all calendar items
@@ -26,8 +24,8 @@ export class CalendarManager {
   // how much time from now until calender event
   private activeTimeWindow = 1000 * 60 * 60 * 24 * 7 // 7 days
 
-  private alphavantage: any
   private brokerYahoo: BrokerYahoo
+  private brokerAlphavantage: BrokerAlphavantage
 
   constructor(public system: System) {}
 
@@ -36,10 +34,8 @@ export class CalendarManager {
    * - start interval
    */
   async init() {
-    const { apiKey } = this.system.configManager.config.thirdParty.alphavantage
-
-    this.alphavantage = alphavantage({ key: apiKey })
     this.brokerYahoo = new BrokerYahoo(this.system)
+    this.brokerAlphavantage = new BrokerAlphavantage(this.system)
 
     this.checkCalendarItems()
 
@@ -48,42 +44,40 @@ export class CalendarManager {
 
   async checkCalendarItems() {
     try {
-      this.items = await this.loadItems()
+      // (re)load all calendar items
+      this.items = await this.brokerAlphavantage.loadCalendarItems()
+
+      // (re)load current trending symbols
       this.trendingSymbols = await this.brokerYahoo.getTrendingSymbols()
 
+      // filter calendar items that are between now and X days
       const activeItems = filterItemsInTimeRange(this.items, this.activeTimeWindow)
-      const trendyItems = filterItemsBySymbols(activeItems, this.trendingSymbols)
 
-      this.selectedItems = []
+      // filter calendar items by trending symbols
+      this.selectedItems = filterItemsBySymbols(activeItems, this.trendingSymbols)
 
-      for (let i = 0; i < trendyItems.length; i++) {
-        const item = trendyItems[i]
+      // loop over remaining calendar items
+      for (let i = 0; i < this.selectedItems.length; i++) {
+        const item = this.selectedItems[i]
 
-        // get diff from 100 days ago until today
+        if (i > 0) {
+          break
+        }
+
+        // load candles from broker by symbol
         const candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
-        item.diffInPercent = getDiffInPercentage(candles.at(-1), candles[0])
 
-        this.selectedItems.push(item)
+        // get diff from oldest to newest
+        item.diffInPercent = getDiffInPercentage(candles.at(-1), candles[0])
       }
 
+      // sort by reportDate
       this.selectedItems.sort((a, b) => (a.reportDate as any) - (b.reportDate as any))
 
+      // send push notification to clients
       await this.system.deviceManager.sendCalendarNotifiction(this.selectedItems)
     } catch (error) {
       console.error(error)
     }
-  }
-
-  private async loadItems() {
-    const { apiKey } = this.system.configManager.config.thirdParty.alphavantage
-
-    // const { data } = await axios.get(
-    //   `https://www.alphavantage.co/query?function=EARNINGS_CALENDAR&horizon=3month&apikey=${apiKey}`,
-    // )
-    // const items = await parseCSV(data)
-    // writeFileSync('./data3.json', JSON.stringify(items, null, 2))
-
-    const items = calendarMOCK as any
-    return normalizeCalendarData(items)
   }
 }
