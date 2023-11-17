@@ -1,7 +1,7 @@
 const { existsSync, writeFileSync } = require("fs")
 const { join } = require("path")
 
-const ROOT =join(__dirname, '../')
+const ROOT = join(__dirname, '../')
 const PATH_CONFIG_DEFAULT_FILE = module.exports.PATH_CONFIG_DEFAULT_FILE = join(ROOT, '../config.default.json')
 const PATH_CONFIG_EXAMPLE_FILE = module.exports.PATH_CONFIG_EXAMPLE_FILE = join(ROOT, '../config.example.json')
 const PATH_CONFIG_CUSTOM_FILE = module.exports.PATH_CONFIG_CUSTOM_FILE = join(ROOT, '../config.json')
