@@ -59,7 +59,7 @@ export class CalendarManager {
       // DEV ONLY
       // limit to 2 symbols
       if (this.system.configManager.config.dev) {
-        this.selectedItems = this.selectedItems.slice(0, 2)
+        // this.selectedItems = this.selectedItems.slice(0, 2)
       }
 
       // set current price diff and other stuff
@@ -81,10 +81,10 @@ export class CalendarManager {
   private async setItemsMetadata() {
     for await (const item of this.selectedItems) {
       // load candles of symbol
-      const candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
+      item.candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
 
       // set diff from oldest to newest
-      item.diffInPercent = getDiffInPercentage(candles.at(0), candles.at(-1))
+      item.diffInPercent = getDiffInPercentage(item.candles.at(0), item.candles.at(-1))
       
       // set extra data
       item.insights = await this.brokerYahoo.getSymbolInsights(item.symbol)

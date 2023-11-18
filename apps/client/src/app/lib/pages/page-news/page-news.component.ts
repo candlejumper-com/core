@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { CalendarState } from '../../../shared/state/calendar/calendar.state';
 import { ICalendarItem } from '@candlejumper/shared';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { SharedModule } from '../../../shared/shared.module';
 import { CalendarService } from '../../../shared/services/calendar/calendar.service';
 import { ChartMiniComponent } from '../../../shared/components/chart-mini/chart-mini.component';
@@ -18,6 +18,8 @@ import { ChartMiniComponent } from '../../../shared/components/chart-mini/chart-
 export class PageNewsComponent implements OnInit {
 
   @Select(CalendarState.getAll) calendarItems$: Observable<ICalendarItem[]>
+
+  activeInterval$ = new BehaviorSubject('1D')
 
   displayedColumns: string[] = [
     'symbol',
