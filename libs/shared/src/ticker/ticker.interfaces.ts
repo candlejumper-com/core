@@ -26,3 +26,22 @@ export interface ITickerSnapshot {
     type: BOT_INDICATOR_TYPE,
     params: any,
 }
+
+export interface ITicker {
+    // type: string
+    env: string
+    account: any
+    name: string
+    price: number
+    symbol: ISymbol
+    interval: string
+    events: any[]
+    config: any
+    baseAsset: string
+    quoteAsset: string
+    hits: number
+    stats: {
+      ticks: number
+      candles: number
+    }
+  }

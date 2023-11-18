@@ -3,12 +3,7 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": [],
-    "lib": ["DOM", "ES2023"],
-    "paths": {
-      "@candlejumper/shared": [
-        "./libs/shared/src/index_client.ts",
-      ]
-    }
+    "lib": ["DOM", "ES2023"]
   },
   "files": ["src/main.ts"],
   "include": ["src/**/*.d.ts"],

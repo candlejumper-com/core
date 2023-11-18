@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
-import { Select, Store } from '@ngxs/store'
+import { Store } from '@ngxs/store'
 import { CalendarState } from '../../../shared/state/calendar/calendar.state'
 import { ICalendarItem } from '@candlejumper/shared'
 import { BehaviorSubject, Observable, combineLatest, filter, map, tap } from 'rxjs'

@@ -1,5 +1,5 @@
 import { InsightsResult } from "yahoo-finance2/dist/esm/src/modules/insights"
-import { ICandle } from "../candle"
+import { ICandle } from "../candle/candle.interfaces"
 
 export interface ICalendarItem {
   symbol: string,

@@ -11,8 +11,8 @@ import { CandleService } from '../../services/candle/candle.service'
 import { Subject, BehaviorSubject, Subscription, tap, takeUntil, Observable } from 'rxjs'
 import { ConfigService, IConfigSystem } from '../../services/config/config.service'
 import { IOrder, ORDER_SIDE } from '../../services/order/order.service'
-import { ITicker, BOT_INDICATOR_TYPE, BOT_EVENT_TYPE } from '../../services/state/state.service'
-import { ICandle, ISymbol } from '@candlejumper/shared'
+import { BOT_INDICATOR_TYPE, BOT_EVENT_TYPE } from '../../services/state/state.service'
+import { ICandle, ISymbol, ITicker } from '@candlejumper/shared'
 import { ConfigState } from '../../state/config/config.state'
 
 /// <reference types="anychart" />

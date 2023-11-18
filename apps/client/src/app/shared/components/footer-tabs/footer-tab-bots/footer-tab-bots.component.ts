@@ -40,8 +40,6 @@ export class FooterTabBotsComponent {
     //     trades: this.stateService.main.symbols[bot.symbol.name].totalOrders
     //   }
     // })
-
-    console.log(this.bots[0])
   }
 
   onClickBot(bot: any) {

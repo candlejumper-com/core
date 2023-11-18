@@ -10,7 +10,12 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@candlejumper/shared": [
+        "./libs/shared/src/index_client.ts",
+      ]
+    }
   },
   "files": [],
   "include": [],

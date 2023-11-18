@@ -10,8 +10,7 @@ import { IPricesWebsocketResponse } from '../../services/candle/candle.interface
 import { CandleService } from '../../services/candle/candle.service'
 import { Subject, BehaviorSubject, Subscription, tap, takeUntil, Observable } from 'rxjs'
 import { ConfigService, IConfigSystem } from '../../services/config/config.service'
-import { IOrder, ORDER_SIDE } from '../../services/order/order.service'
-import { ITicker, BOT_INDICATOR_TYPE, BOT_EVENT_TYPE } from '../../services/state/state.service'
+import { ORDER_SIDE } from '../../services/order/order.service'
 import { CANDLE_FIELD, ICandle, ISymbol } from '@candlejumper/shared'
 import { ConfigState } from '../../state/config/config.state'
 
@@ -24,7 +23,7 @@ import '../chart/anychart-theme-dark-custom'
   templateUrl: './chart-mini.component.html',
   styleUrls: ['./chart-mini.component.scss'],
   standalone: true,
-  imports: [SharedModule, DialogOrderComponent],
+  imports: [DialogOrderComponent],
 })
 export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
   @Select(ConfigState.getAll) config$: Observable<IConfigSystem>
@@ -36,22 +35,10 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
   type: ChartType = 'MAIN'
 
   @Input()
-  bot: ITicker
-
-  @Input()
-  candleCount: number
-
-  @Input()
   timeRange$: Subject<[number, number]> = new Subject()
 
   @Input()
   candles: ICandle[] = []
-
-  @Input()
-  orders: IOrder[] = []
-
-  @Input()
-  indicators: any[] = []
 
   @Input()
   interval$: BehaviorSubject<string>
@@ -69,7 +56,6 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
   private chartRef: ElementRef
 
   private chart: any
-  private events: any[] = []
   private dataTable: any
   private dataMapping: any
   private xhrSubscription: Subscription
@@ -286,10 +272,6 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
   private destroy(): void {
     this.destroyChart()
 
-    this.bot = null
-    this.indicators = []
-    this.events = []
-    this.orders = []
     this.dataTable = null
     this.dataMapping = null
   }

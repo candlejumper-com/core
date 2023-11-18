@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State } from '@ngxs/store';
-import { LoginSuccess, CALENDAR_SET } from './calendar.actions';
-import { IProfile, IUser, UserService } from '../../services/user/user.service';
-import { LocalStorageService } from '../../services/local-storage/local-storage.service';
-import { FOOTER_TAB } from '../../components/footer-tabs/footer-tabs.component';
+import { CALENDAR_SET } from './calendar.actions';
 import { ICalendarItem } from '@candlejumper/shared';
 
 @State({

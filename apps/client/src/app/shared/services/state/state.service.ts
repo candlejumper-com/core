@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { ISymbol } from '@candlejumper/shared';
+import { ISymbol, ITicker } from '@candlejumper/shared';
 
 export interface ISystemState {
   account: any
@@ -9,25 +8,6 @@ export interface ISystemState {
   symbols: any[]
   profit: number
   profitIndex: number
-}
-
-export interface ITicker {
-  // type: string
-  env: string
-  account: any
-  name: string
-  price: number
-  symbol: ISymbol
-  interval: string
-  events: any[]
-  config: any
-  baseAsset: string
-  quoteAsset: string
-  hits: number
-  stats: {
-    ticks: number
-    candles: number
-  }
 }
 
 export enum BOT_EVENT_TYPE {
