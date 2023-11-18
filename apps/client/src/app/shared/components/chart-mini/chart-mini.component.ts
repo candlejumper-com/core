@@ -12,7 +12,7 @@ import { Subject, BehaviorSubject, Subscription, tap, takeUntil, Observable } fr
 import { ConfigService, IConfigSystem } from '../../services/config/config.service'
 import { IOrder, ORDER_SIDE } from '../../services/order/order.service'
 import { ITicker, BOT_INDICATOR_TYPE, BOT_EVENT_TYPE } from '../../services/state/state.service'
-import { ICandle, ISymbol } from '@candlejumper/shared'
+import { CANDLE_FIELD, ICandle, ISymbol } from '@candlejumper/shared'
 import { ConfigState } from '../../state/config/config.state'
 
 /// <reference types="anychart" />
@@ -111,7 +111,7 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges() {
-    this.load()
+ 
   }
 
   ngOnDestroy(): void {
@@ -147,10 +147,53 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
     this.load()
   }
 
+  private createChart(): void {
+    this.destroyChart()
+    console.log('crea')
+    setTimeout(() => {
+      this.ngZone.runOutsideAngular(() => {
+        // create data
+        var data2 = [
+          ['January', 10000],
+          ['February', 12000],
+          ['March', 18000],
+          ['April', 11000],
+          ['May', 9000],
+        ]
+  
+        const data = this.candles.slice(0, 10).map(candle => {
+          return [candle[CANDLE_FIELD.TIME], candle[CANDLE_FIELD.CLOSE]]
+        })
+  
+        // create a chart
+        this.chart = anychart.line()
+        this.chart.background().stroke(null);
+        // this.chart.width('100%')
+        // this.chart.height('100px')
+  
+        // create a line series and set the data
+        var series = this.chart.line(data)
+  
+        this.chart.xAxis(false);
+        this.chart.yAxis(false);
+  
+  
+        // set the container id
+        this.chart.container(this.chartRef.nativeElement)
+  
+        // initiate drawing the chart
+        this.chart.draw()
+  
+        // this.changeDetectorRef.detectChanges()
+      })
+    }, 0)
+    
+  }
+
   /**
    * Create the chart
    */
-  private createChart(): void {
+  private createChart2(): void {
     this.destroyChart()
 
     this.ngZone.runOutsideAngular(() => {
@@ -189,49 +232,28 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
       const yAxis = plot.yAxis()
       yAxis.orientation('right')
 
-      plot.priceIndicator({
-        value: 'last-visible',
-        stroke: 'blue',
-        dash: '5 5 5',
-        fallingLabelBackground: 'blue',
-        fallingLabel: {
-          background: 'blue',
-        },
-        risingLabel: {
-          background: 'blue',
-        },
-      })
-
-      // create and setup volume plot
-      const volumePlot = this.chart.plot(1)
-
-      volumePlot.height('10%')
-      volumePlot.maxHeight('60px')
-      volumePlot.yAxis().labels().format('${%Value}{scale:(1000000)(1000)|(kk)(k)}')
-      volumePlot.xAxis().labels(false)
-
-      const volumeMaIndicator = volumePlot.volumeMa(this.dataMapping, 20, 'sma', 'column', 'splineArea')
-      volumeMaIndicator.volumeSeries('column')
-      volumePlot.legend(false)
-      volumePlot.title(false)
-
-      const maSeries = volumeMaIndicator.maSeries()
-      maSeries.stroke('red')
-      maSeries.fill('red .2')
+      // plot.priceIndicator({
+      //   value: 'last-visible',
+      //   stroke: 'blue',
+      //   dash: '5 5 5',
+      //   fallingLabelBackground: 'blue',
+      //   fallingLabel: {
+      //     background: 'blue',
+      //   },
+      //   risingLabel: {
+      //     background: 'blue',
+      //   },
+      // })
 
       // set starting range
-      const maxCandlesBack = this.candles.length > 200 ? 200 : this.candles.length
-      const startDate = new Date(this.candles[this.candles.length - 1][0])
-      const endDate = new Date(this.candles[this.candles.length - maxCandlesBack][0])
-      this.chart.selectRange(startDate, endDate)
+      // const maxCandlesBack = this.candles.length > 200 ? 200 : this.candles.length
+      // const startDate = new Date(this.candles[this.candles.length - 1][0])
+      // const endDate = new Date(this.candles[this.candles.length - maxCandlesBack][0])
+      // this.chart.selectRange(startDate, endDate)
 
-      this.addOrders()
-      this.addIndicators()
-      this.addEvents()
-
-      this.chart.padding().left(0)
+      // this.chart.padding().left(0)
       this.chart.container(this.chartRef.nativeElement)
-      this.chart.scroller().candlestick(this.dataMapping)
+      // this.chart.scroller().candlestick(this.dataMapping)
       this.chart.draw()
 
       this.changeDetectorRef.detectChanges()
@@ -260,205 +282,6 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
       this.candles[this.candles.length - 1][4] = tick.prices[this.symbol.name]
       this.dataTable.addData([this.candles[this.candles.length - 1]])
     }
-  }
-
-  /**
-   * Add indicators
-   */
-  private addIndicators(): void {
-    const plot = this.chart.plot(0)
-
-    this.indicators.forEach((indicator: any) => {
-      switch (indicator.type) {
-        // SMA
-        case BOT_INDICATOR_TYPE.SMA: {
-          // create SMA indicators with period 20
-          const SMA = plot.sma(this.dataMapping, indicator.params.period.value).series()
-          SMA.stroke('#bf360c')
-          break
-        }
-
-        // Bollinger
-        case BOT_INDICATOR_TYPE.BB: {
-          // create Bollinger Bands indicator
-          const bbMapping = this.dataTable.mapAs({ value: 4 })
-          const bbands = plot.bbands(bbMapping, indicator.params.period.value, indicator.params.weight.value)
-
-          // TODO - should be done in theming file
-          bbands.lowerSeries().stroke('#fff 0.5')
-          bbands.upperSeries().stroke('#fff 0.5')
-          bbands.rangeSeries().fill('#ccc 0.1')
-          break
-        }
-        // RSI
-        case BOT_INDICATOR_TYPE.RSI: {
-          const rsiPlot = this.chart.plot(2)
-          rsiPlot.height('20%')
-          rsiPlot.maxHeight('100px')
-          const rsiMapping = this.dataTable.mapAs({ value: 4 })
-          const rsi14 = rsiPlot.rsi(rsiMapping, indicator.params.period.value).series()
-          rsi14.stroke('#bf360c')
-          break
-        }
-
-        case BOT_INDICATOR_TYPE.FIBONACCI: {
-          // const candles = this.candles.slice(0, 20).map(candle => ({ h: candle[2], l: candle[3]}))
-          // var resists = tw.fibonacciRetrs(candles, 'UPTREND');
-
-          // access the annotations() object of the plot to work with annotations
-          const controller = plot.annotations()
-          const period = indicator.params.period.value
-          // create a Fibonacci Retracement annotation
-          const candles = this.candles
-            .slice(this.candles.length - period, this.candles.length - 1)
-            .map((candle) => candle[4])
-          const highestPrice = Math.max(...candles)
-          const lowestPrice = Math.min(...candles)
-
-          controller.fibonacciRetracement({
-            xAnchor: this.candles[this.candles.length - period][0],
-            valueAnchor: lowestPrice,
-            secondXAnchor: this.candles[this.candles.length - 1][0],
-            secondValueAnchor: highestPrice,
-          })
-          break
-        }
-        default:
-          console.error('Unknown indicator: ' + indicator.type)
-      }
-    })
-  }
-
-  /**
-   * Add òrders
-   */
-  private addOrders(): any {
-    const plot = this.chart.plot(0)
-    const firstCandleTime = this.candles[0][0]
-    const buyOrders = []
-    const sellOrders = []
-
-    this.orders.forEach((order) => {
-      // Don't show orders that are longer ago then the first candle time
-      if (order.time < firstCandleTime) {
-        return
-      }
-
-      // get the nearest candle time, so that the icon shows 'over' the candle (think: z-index) (instead of slighly next to it)
-      const nearestCandleIndex = this.candles.findIndex((candle) => candle[0] > order.time)
-      const nearestTime = this.candles[nearestCandleIndex - 1]?.[0] || this.candles[0][0]
-
-      if (order.side === 'BUY') {
-        buyOrders.push([nearestTime, order.price])
-      } else {
-        sellOrders.push([nearestTime, order.price])
-      }
-    })
-    ;['BUY', 'SELL'].forEach((side) => {
-      // const symbol = ['ERROR', 'PENDING'].includes(order.state) ? 'url(/assets/img/icon-warning.png)' : 'circle'
-      const color = side === 'BUY' ? 'darkgreen' : 'darkred'
-      const table = anychart.data.table()
-      table.addData(side === 'BUY' ? buyOrders : sellOrders)
-
-      // map the data
-      const orderMapping = table.mapAs()
-      orderMapping.addField('value', 1)
-
-      const markers = plot.marker(table)
-      markers.normal().size(15)
-      markers.hovered().size(15)
-      markers.selected().size(15)
-      markers.normal().fill(color)
-      markers.normal().stroke(color.replace('dark', 'light'))
-      markers.normal().type('star3')
-    })
-  }
-
-  /**
-   * Add events
-   */
-  private addEvents(): void {
-    const plot = this.chart.plot()
-    const controller = plot.annotations()
-    let lastTrendUpTime
-    let lastTrenDownTime
-
-    this.events.forEach((event, index) => {
-      switch (event.type) {
-        // start line of bot
-        case BOT_EVENT_TYPE.START:
-          controller.verticalLine({
-            xAnchor: event.time,
-            normal: { stroke: '2 green' },
-            hovered: { stroke: '2 #ff0000' },
-            selected: { stroke: '4 #ff0000' },
-          })
-          break
-
-        case BOT_EVENT_TYPE.WATCHER_START: {
-          const color = event.data.dir === 'up' ? 'green' : 'red'
-          controller.verticalLine({
-            xAnchor: event.time,
-            normal: { stroke: '2 ' + color },
-            hovered: { stroke: '2 #ff0000' },
-            selected: { stroke: '4 #ff0000' },
-          })
-          break
-        }
-        case BOT_EVENT_TYPE.WATCHER_STOP:
-          controller.verticalLine({
-            xAnchor: event.time,
-            normal: { stroke: '2 orange' },
-            hovered: { stroke: '2 #ff0000' },
-            selected: { stroke: '4 #ff0000' },
-          })
-          break
-
-        case BOT_EVENT_TYPE.WATCHER_TRIGGERED:
-          controller.verticalLine({
-            xAnchor: event.time,
-            normal: { stroke: '2 purple' },
-            hovered: { stroke: '2 #ff0000' },
-            selected: { stroke: '4 #ff0000' },
-          })
-          break
-
-        case BOT_EVENT_TYPE.TREND_UP:
-          lastTrendUpTime = event.time
-          if (lastTrenDownTime) {
-            // create a Vertical Channel annotation
-            controller.verticalRange({
-              xAnchor: lastTrenDownTime,
-              secondXAnchor: event.time,
-            })
-          }
-
-          break
-
-        case BOT_EVENT_TYPE.TREND_DOWN:
-          lastTrenDownTime = event.time
-
-          if (lastTrendUpTime) {
-            controller.verticalRange({
-              xAnchor: lastTrendUpTime,
-              secondXAnchor: event.time,
-              hovered: {
-                fill: '#398cae 0.3',
-                stroke: '2 #ff0000',
-              },
-              normal: {
-                fill: 'green 0.3',
-                stroke: '4 #ff0000',
-              },
-            })
-          }
-
-          break
-
-        default:
-          throw 'Unkown event: ' + event.type
-      }
-    })
   }
 
   private destroyChart(): void {

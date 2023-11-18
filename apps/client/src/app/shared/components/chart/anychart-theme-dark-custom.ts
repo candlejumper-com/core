@@ -44,8 +44,8 @@
     defaultLinearColorScale: { colors: ["#827717", "#c77532"] },
     defaultFontSettings: { fontColor: "#888888" },
     defaultBackground: {
-      fill: "#0d0d0d",
-      stroke: "#212121",
+      fill: "rgb(66, 66, 66)",
+      stroke: null,
       cornerType: "round",
       corners: 0
     },

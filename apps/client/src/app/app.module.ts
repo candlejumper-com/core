@@ -53,7 +53,7 @@ export function initializeApp(appInitService: InitializeService) {
     UserStateModule,
     MatSidenavModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled:true,
+      enabled: false,
       registrationStrategy: 'registerImmediately',
       // enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
