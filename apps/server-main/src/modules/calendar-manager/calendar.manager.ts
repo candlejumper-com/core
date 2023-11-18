@@ -22,7 +22,7 @@ export class CalendarManager {
   private updateIntervalTime = 1000 * 60 * 60 * 4 // 4 hours
 
   // how much time from now until calender event
-  private activeTimeWindow = 1000 * 60 * 60 * 24 * 7// 7 days
+  private activeTimeWindow = 1000 * 60 * 60 * 24 * 7 * 3 // 7 * 3days
 
   private brokerYahoo: BrokerYahoo
   private brokerAlphavantage: BrokerAlphavantage
@@ -79,7 +79,7 @@ export class CalendarManager {
    * TODO - make batches to not hit request limit
    */
   private async setItemsMetadata() {
-    for await (const item of this.selectedItems) {
+    for (const item of this.selectedItems) {
       // load candles of symbol
       item.candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
 
