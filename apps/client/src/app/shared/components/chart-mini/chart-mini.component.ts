@@ -149,18 +149,9 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
 
   private createChart(): void {
     this.destroyChart()
-    console.log('crea')
+
     setTimeout(() => {
       this.ngZone.runOutsideAngular(() => {
-        // create data
-        var data2 = [
-          ['January', 10000],
-          ['February', 12000],
-          ['March', 18000],
-          ['April', 11000],
-          ['May', 9000],
-        ]
-  
         const data = this.candles.slice(0, 10).map(candle => {
           return [candle[CANDLE_FIELD.TIME], candle[CANDLE_FIELD.CLOSE]]
         })
