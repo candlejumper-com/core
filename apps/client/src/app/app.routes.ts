@@ -4,7 +4,7 @@ export const routes = [
     loadComponent: () => import('./lib/pages/page-home/page-home.component').then((mod) => mod.PageHomeComponent),
   },
   {
-    path: 'news',
+    path: 'calendar',
     loadComponent: () => import('./lib/pages/page-news/page-news.component').then((mod) => mod.PageNewsComponent),
   },
   {

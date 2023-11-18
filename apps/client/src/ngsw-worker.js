@@ -29,10 +29,10 @@ self.addEventListener('activate', event => {
     event.waitUntil(activationCompleted);
 });
 
-// Non-Caching version
-self.addEventListener('fetch', function(event) {
-  return fetch(event.request);
-});
+// // Non-Caching version
+// self.addEventListener('fetch', function(event) {
+//   return fetch(event.request);
+// });
 
 // Caching version
 // self.addEventListener('fetch', event => {

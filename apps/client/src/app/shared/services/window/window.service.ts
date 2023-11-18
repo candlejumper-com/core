@@ -27,7 +27,7 @@ export class WindowService {
     this.router.events.subscribe(event => {
       if (event instanceof RoutesRecognized) {
         const data = event.state.root.firstChild.data as any;
-        document.title = 'EasyNFT - ' + data.title;
+        document.title = 'TradeBot - ' + data.title;
       }
     });
   }

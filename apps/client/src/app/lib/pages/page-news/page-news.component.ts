@@ -5,13 +5,14 @@ import { ICalendarItem } from '@candlejumper/shared';
 import { Observable } from 'rxjs';
 import { SharedModule } from '../../../shared/shared.module';
 import { CalendarService } from '../../../shared/services/calendar/calendar.service';
+import { ChartMiniComponent } from '../../../shared/components/chart-mini/chart-mini.component';
 
 @Component({
   selector: 'core-page-news',
   templateUrl: './page-news.component.html',
   styleUrls: ['./page-news.component.scss'],
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule, ChartMiniComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageNewsComponent implements OnInit {
@@ -21,6 +22,7 @@ export class PageNewsComponent implements OnInit {
   displayedColumns: string[] = [
     'symbol',
     'name',
+    'chart',
     'rating',
     'target',
     'intermediate',

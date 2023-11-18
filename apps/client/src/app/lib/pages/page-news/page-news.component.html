@@ -13,6 +13,14 @@
     </td>
   </ng-container>
 
+  <!-- chart -->
+  <ng-container matColumnDef="chart">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="chart">Chart</th>
+    <td mat-cell *matCellDef="let item">
+      <core-chart-mini></core-chart-mini>
+    </td>
+  </ng-container>
+
   <!-- RATING -->
   <ng-container matColumnDef="rating">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="rating">Rating</th>

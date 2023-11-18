@@ -22,8 +22,7 @@
         "assets": [
           "apps/client/src/favicon.ico",
           "apps/client/src/firebase-messaging-sw.js",
-          "apps/client/src/manifest.webmanifest",
-          "apps/client/src/ngsw-worker.js"
+          "apps/client/src/manifest.webmanifest"
         ],
         "styles": [
           "apps/client/src/styles/main.scss"
