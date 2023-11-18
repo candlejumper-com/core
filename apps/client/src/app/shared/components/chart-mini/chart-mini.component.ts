@@ -16,7 +16,7 @@ import { CANDLE_FIELD, ICandle, ISymbol } from '@candlejumper/shared'
 import { ConfigState } from '../../state/config/config.state'
 
 /// <reference types="anychart" />
-import 'anychart';
+import 'anychart'
 import '../chart/anychart-theme-dark-custom'
 
 @Component({
@@ -82,7 +82,7 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
     private windowService: WindowService,
     private candleService: CandleService,
     private ngZone: NgZone,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -104,14 +104,12 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
     this.interval$
       .pipe(
         tap((interval) => this.form.patchValue({ interval })),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe()
   }
 
-  ngOnChanges() {
- 
-  }
+  ngOnChanges() {}
 
   ngOnDestroy(): void {
     this.tickSubscription?.unsubscribe()
@@ -149,33 +147,31 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
   private createChart(): void {
     this.destroyChart()
 
-    // setTimeout(() => {
-      this.ngZone.runOutsideAngular(() => {
-        const data = this.candles.slice(0, 10).map(candle => {
-          return [candle[CANDLE_FIELD.TIME], candle[CANDLE_FIELD.CLOSE]]
-        })
-  
-        // create a chart
-        this.chart = anychart.line()
-        this.chart.background().stroke(null);
-        // this.chart.width('100%')
-        // this.chart.height('100px')
-  
-        // create a line series and set the data
-        var series = this.chart.line(data)
-  
-        this.chart.xAxis(false);
-        this.chart.yAxis(false);
-  
-  
-        // set the container id
-        this.chart.container(this.chartRef.nativeElement)
-  
-        // initiate drawing the chart
-        this.chart.draw()
-      })
-    // }, 0)
-    
+    this.ngZone.runOutsideAngular(() => {
+      const data = this.candles.map((candle) => ({
+        value: candle[CANDLE_FIELD.CLOSE],
+        x: candle[CANDLE_FIELD.TIME],
+      }))
+
+      // create a chart
+      this.chart = anychart.line(data)
+      this.chart.background().stroke(null)
+      const dateTimeScale = anychart.scales.dateTime()
+      const dateTimeTicks = dateTimeScale.ticks()
+      dateTimeTicks.interval(0, 6)
+
+      // apply Date Time scale
+      this.chart.xScale(dateTimeScale)
+
+      this.chart.xAxis(false)
+      this.chart.yAxis(false)
+
+      // set the container id
+      this.chart.container(this.chartRef.nativeElement)
+
+      // initiate drawing the chart
+      this.chart.draw()
+    })
   }
 
   /**
