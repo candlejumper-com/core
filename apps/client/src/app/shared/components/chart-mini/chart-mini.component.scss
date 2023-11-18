@@ -1,3 +1,13 @@
+:host {
+  max-height: 100px;
+  height: 100px;
+  display: block;
+}
+
+.chart-wrapper {
+  height: 100px;
+}
+
 ::ng-deep {
   .anychart-control,
   .anychart-credits {

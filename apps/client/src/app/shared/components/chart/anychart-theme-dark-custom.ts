@@ -123,6 +123,12 @@
           selected: { risingStroke: "3 #827717", fallingStroke: "3 #c77532" }
         }
       },
+      background: {
+        stroke: null
+      },
+      yAxis: {
+        orientation: 'right'
+      },
       padding: { top: 20, right: 55, bottom: 15, left: 0 }
     },
     cartesianBase: {

@@ -3,11 +3,16 @@ table {
   // font-size: 10px;
 }
 
-tbody .mat-column-symbol {
-  height: 150px;
+::ng-deep tbody .mat-column-symbol {
+  // height: 150px;
 }
 
-thead .mat-column-symbol {
+td.cdk-cell{
+  border-right: 1px solid #5b5b5b;
+  min-width: 50px;
+ }
+
+.mat-column-symbol {
   width: 80px;
   max-width: 80px;
 }
