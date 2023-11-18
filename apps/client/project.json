@@ -20,6 +20,12 @@
         ],
         "tsConfig": "apps/client/tsconfig.app.json",
         "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/client/src/assets/",
+            "output": "./assets/"
+          },
+          "apps/client/src/assets",
           "apps/client/src/favicon.ico",
           "apps/client/src/firebase-messaging-sw.js",
           "apps/client/src/manifest.webmanifest"

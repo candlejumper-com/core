@@ -36,7 +36,6 @@
     };
 
     window.addEventListener('beforeinstallprompt', event => {
-      alert(2)
       window.app.pwa.promptEvent = event;
       event.preventDefault();
     }, { once: true });
