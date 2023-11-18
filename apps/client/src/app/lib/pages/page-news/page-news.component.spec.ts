@@ -3,7 +3,6 @@ import { PageNewsComponent } from './page-news.component';
 import { NgxsModule } from '@ngxs/store';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ChartMiniComponent } from '../../../shared/components/chart-mini/chart-mini.component';
 
 describe('PageNewsComponent', () => {
   let component: PageNewsComponent;

@@ -3,10 +3,13 @@ table {
   // font-size: 10px;
 }
 
-.mat-column-symbol {
+tbody .mat-column-symbol {
+  height: 150px;
+}
+
+thead .mat-column-symbol {
   width: 80px;
   max-width: 80px;
-  height: 150px;
 }
 
 .mat-column-name {
