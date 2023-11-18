@@ -26,10 +26,15 @@ tr:not(.example-expanded-row):hover {
   cursor: pointer;
 }
 
-td.cdk-cell{
+.cdk-header-cell {
+  border-bottom: 3px solid white
+}
+
+.cdk-header-cell,
+.cdk-cell {
   border-right: 1px solid #5b5b5b;
   min-width: 50px;
- }
+}
 
 .mat-column-symbol {
   width: 80px;
