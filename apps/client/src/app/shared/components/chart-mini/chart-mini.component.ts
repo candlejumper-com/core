@@ -92,7 +92,7 @@ export class ChartMiniComponent implements OnInit, OnDestroy {
    * start loading data for chart
    */
   load(): void {
-    if (!this.candles.length) {
+    if (!this.candles?.length) {
       return
     }
 
