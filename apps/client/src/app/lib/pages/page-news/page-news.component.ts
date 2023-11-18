@@ -7,6 +7,7 @@ import { SharedModule } from '../../../shared/shared.module'
 import { CalendarService } from '../../../shared/services/calendar/calendar.service'
 import { ChartMiniComponent } from '../../../shared/components/chart-mini/chart-mini.component'
 import { CALENDAR_SET } from '../../../shared/state/calendar/calendar.actions'
+import { PeriodicElement } from '../../../shared/components/footer-tabs/footer-tab-backtest/footer-tab-backtest.component'
 
 @Component({
   selector: 'core-page-news',
@@ -20,6 +21,7 @@ export class PageNewsComponent implements OnInit {
   calendarItems$: Observable<ICalendarItem[]>
 
   activeInterval$ = new BehaviorSubject('1D')
+  expandedElement: PeriodicElement | null;
 
   displayedColumns: string[] = [
     'symbol',
@@ -53,5 +55,25 @@ export class PageNewsComponent implements OnInit {
 
   ngOnDestroy() {
     this.store.dispatch(new CALENDAR_SET([]))
+  }
+
+  openBacktest(row) {
+    // const chart = this.chartService.createChart(
+    //   'BACKTEST',
+    //   row.symbol,
+    //   row.interval,
+    //   0,
+    //   row
+    // );
+    // this.chartService.showChart(chart.id);
+  }
+
+  toggleOrders(element) {
+    if (element) {
+      // this.chartService.activeOrders$.next(element.bot.orders);
+      return element;
+    } else {
+      return null;
+    }
   }
 }

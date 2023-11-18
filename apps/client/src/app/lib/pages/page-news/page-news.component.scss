@@ -6,6 +6,25 @@ table {
 ::ng-deep tbody .mat-column-symbol {
   // height: 150px;
 }
+tr.example-detail-row {
+  height: 0;
+  width: 0;
+}
+.table-row-detail {
+  height: 0;
+  min-height: 0;
+  width: 0;
+}
+
+.expanded {
+  height: auto;
+  width: auto;
+}
+
+tr:not(.example-expanded-row):hover {
+  background: rgb(53, 53, 53);
+  cursor: pointer;
+}
 
 td.cdk-cell{
   border-right: 1px solid #5b5b5b;
