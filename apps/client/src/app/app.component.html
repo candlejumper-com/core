@@ -27,8 +27,10 @@
 </main>
 
 <nav mat-tab-nav-bar backgroundColor="accent" color="warn" [tabPanel]="tabPanel">
-  <a mat-tab-link [routerLink]="['/']" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: true }">Bots</a>
-  <a mat-tab-link [routerLink]="['/calendar']" [routerLinkActive]="['active']">Calendar</a>
+  <a mat-tab-link [routerLink]="['/']" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: true }">
+    <mat-icon>align_vertical_bottom</mat-icon>Bots
+  </a>
+  <a mat-tab-link [routerLink]="['/calendar']" [routerLinkActive]="['active']"><mat-icon>calendar_month</mat-icon>Calendar</a>
   <a mat-tab-link [routerLink]="['/ai']" [routerLinkActive]="['active']">AI</a>
 </nav>
 <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
@@ -36,10 +38,7 @@
 <div class="overlay" *ngIf="wsService.error$ | async"></div>
 <!-- && window.app.pwa.promptEvent -->
 <!-- PWA install banner -->
-<div
-  *ngIf="(deviceService.showPWABanner$ | async)"
-  class="pwaBanner d-flex justify-content-center position-relative"
->
+<div *ngIf="deviceService.showPWABanner$ | async" class="pwaBanner d-flex justify-content-center position-relative">
   <button color="primary" (click)="deviceService.installPWA()">Install App</button>
   <span class="closePwaInstall" (click)="deviceService.setPWABannerClosed()" aria-hidden="true">&times;</span>
 </div>

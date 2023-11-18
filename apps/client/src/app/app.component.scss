@@ -17,10 +17,10 @@
 
 main {
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   &::-webkit-scrollbar {
-    display: none;
+    // display: none;
   }
 }
 
@@ -29,9 +29,27 @@ button {
   border: none;
 }
 
-nav .active {
-  background-color: black;
+nav {
+
+  a {
+    border-right: 1px solid black;  
+  }
+
+  mat-icon {
+    margin-right: 10px;
+  }
+  
+  .active {
+    background-color: black;
+  }
 }
+
+.pwaBanner {
+  background-color: transparent;
+  position: relative;
+  height: 50px;
+}
+
 
 // Move the content down so that it won't be hidden by the toolbar
 mat-sidenav {
