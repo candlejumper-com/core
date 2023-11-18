@@ -94,7 +94,6 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
 
   private setupChartTheme(): void {
     anychart.theme(anychart.theme['darkCustom'])
-    // window.anychart?.theme((anychart as any).themes.darkCustom)
   }
 
   private subscribeToTickUpdates(): void {
@@ -150,7 +149,7 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
   private createChart(): void {
     this.destroyChart()
 
-    setTimeout(() => {
+    // setTimeout(() => {
       this.ngZone.runOutsideAngular(() => {
         const data = this.candles.slice(0, 10).map(candle => {
           return [candle[CANDLE_FIELD.TIME], candle[CANDLE_FIELD.CLOSE]]
@@ -174,10 +173,8 @@ export class ChartMiniComponent implements OnInit, OnChanges, OnDestroy {
   
         // initiate drawing the chart
         this.chart.draw()
-  
-        // this.changeDetectorRef.detectChanges()
       })
-    }, 0)
+    // }, 0)
     
   }
 
