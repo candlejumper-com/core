@@ -11,6 +11,7 @@ import { ConfigState } from '../../state/config/config.state'
 /// <reference types="anychart" />
 import 'anychart'
 import '../chart/anychart-theme-dark-custom'
+import { InsightsResult } from 'yahoo-finance2/dist/esm/src/modules/insights'
 
 anychart.theme(anychart.theme['darkCustom'])
 
@@ -34,6 +35,9 @@ export class ChartMiniComponent implements OnInit, OnDestroy {
   candles: ICandle[] = []
 
   @Input()
+  insights: InsightsResult
+
+  @Input()
   interval$: BehaviorSubject<string>
 
   // busy$ = new BehaviorSubject<boolean>(true)
@@ -47,6 +51,7 @@ export class ChartMiniComponent implements OnInit, OnDestroy {
   private xhrSubscription: Subscription
   private tickSubscription: Subscription
   private destroy$ = new Subject<void>()
+  private data: any[] = []
 
   constructor(
     public configService: ConfigService,
@@ -78,13 +83,13 @@ export class ChartMiniComponent implements OnInit, OnDestroy {
     this.destroyChart()
 
     this.ngZone.runOutsideAngular(() => {
-      const data = this.candles.map((candle) => ({
+      this.data = this.candles.map((candle) => ({
         value: candle[CANDLE_FIELD.CLOSE],
         x: candle[CANDLE_FIELD.TIME],
       }))
 
       // create a chart
-      this.chart = anychart.line(data)
+      this.chart = anychart.line(this.data)
       this.chart.background().stroke(null)
       const dateTimeScale = anychart.scales.dateTime()
       const dateTimeTicks = dateTimeScale.ticks()
@@ -94,7 +99,10 @@ export class ChartMiniComponent implements OnInit, OnDestroy {
       this.chart.xScale(dateTimeScale)
 
       this.chart.xAxis(false)
-      this.chart.yAxis(false)
+      // this.chart.yAxis(false)
+      this.chart.yAxis().orientation('right')
+
+      this.addTargetPrice()
 
       // set the container id
       this.chart.container(this.chartRef.nativeElement)
@@ -102,6 +110,33 @@ export class ChartMiniComponent implements OnInit, OnDestroy {
       // initiate drawing the chart
       this.chart.draw()
     })
+  }
+
+  private addTargetPrice() {
+    if (this.insights?.recommendation?.targetPrice) {
+
+      const lastPrice = this.candles.at(-1)[CANDLE_FIELD.CLOSE]
+      const lastCandleDate = new Date(this.candles.at(-1)[CANDLE_FIELD.TIME])
+
+      const targetPrice = this.insights.recommendation?.targetPrice
+      const targetCandleDate = new Date(lastCandleDate)
+      targetCandleDate.setDate(lastCandleDate.getDate() + 10)
+
+      const color = lastPrice > targetPrice ? 'red' : 'green'
+
+      const lineSeries = this.chart.line([
+        {
+          x: lastCandleDate.getTime(),
+          value: lastPrice
+        },
+        {
+          x: targetCandleDate.getTime(),
+          value: this.insights.recommendation?.targetPrice
+        }
+      ])
+      
+      lineSeries.stroke(`3 ${color}`);
+    }
   }
 
   private destroyChart(): void {
