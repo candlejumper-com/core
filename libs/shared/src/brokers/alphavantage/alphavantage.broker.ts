@@ -24,7 +24,7 @@ export class BrokerAlphavantage extends Broker {
       items = MOCK_CALENDAR_ITEMS as any
     } else {
       const { data } = await axios.get(`https://www.alphavantage.co/query?function=EARNINGS_CALENDAR&horizon=3month&apikey=${apiKey}`)
-      const items = await parseCSV(data)
+      items = await parseCSV(data)
     }
 
     // writeFileSync('./data3.json', JSON.stringify(items, null, 2))
