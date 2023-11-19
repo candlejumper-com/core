@@ -90,3 +90,49 @@ tr:not(.example-expanded-row):hover {
   width: 40px;
   max-width: 40px;
 }
+
+.arrow-direction {
+  .very-strong-bullish {
+    color: purple;
+  }
+
+  .strong-bullish {
+    color: lightgreen;
+    transform: rotate(22.5deg);
+  }
+
+  .bullish {
+    color: green;
+    transform: rotate(45deg);
+  }
+
+  .weak-bullish {
+    color: darkgreen;
+    transform: rotate(67.5deg);
+  }
+
+  .neutral {
+    color: orange;
+    transform: rotate(90deg);
+  }
+
+  .weak-bearish {
+    color: orange;
+    transform: rotate(112.5deg);
+  }
+
+  .bearish {
+    color: darkred;
+    transform: rotate(135deg);
+  }
+
+  .strong-bearish {
+    color: red;
+    transform: rotate(158.5deg);
+  }
+
+  .very-strong-bearish {
+    color: purple;
+    transform: rotate(180deg);
+  }
+}
