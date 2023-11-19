@@ -112,8 +112,15 @@ tr:not(.example-expanded-row):hover {
 }
 
 .arrow-direction {
+  mat-icon {
+    font-size: 12px;
+    line-height: 12px;
+    height: 12px;
+    width: 12px;
+  }
+
   .very-strong-bullish {
-    color: purple;
+    // color: purple;
   }
 
   .strong-bullish {
@@ -152,7 +159,7 @@ tr:not(.example-expanded-row):hover {
   }
 
   .very-strong-bearish {
-    color: purple;
+    // color: purple;
     transform: rotate(180deg);
   }
 }

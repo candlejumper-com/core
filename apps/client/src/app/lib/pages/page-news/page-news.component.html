@@ -137,16 +137,19 @@
 </table>
 
 <ng-template #scoreArrow let-score="score" let-direction="direction">
-  <span [class]="'score-' + score">{{ score }}</span>
-  <div class="arrow-direction" style="display:none">
-    <mat-icon *ngIf="score === 4 && direction === 'Bullish'" class="very-strong-bullish">arrow_upward</mat-icon>
-    <mat-icon *ngIf="score === 3 && direction === 'Bullish'" class="strong-bullish">arrow_upward</mat-icon>
+  <div style="display: flex; align-items: center; justify-content: center;">
+    <span [class]="'score-' + score">{{ score }}</span>
+  <div class="arrow-direction">
+    <mat-icon *ngIf="direction === 'Bullish'" class="very-strong-bullish2">arrow_upward</mat-icon>
+    <!-- <mat-icon *ngIf="score === 3 && direction === 'Bullish'" class="strong-bullish">arrow_upward</mat-icon>
     <mat-icon *ngIf="score === 2 && direction === 'Bullish'" class="bullish">arrow_upward</mat-icon>
-    <mat-icon *ngIf="score === 1 && direction === 'Bullish'" class="weak-bullish">arrow_upward</mat-icon>
-    <mat-icon *ngIf="score === 4 && direction === 'Bearish'" class="very-strong-bearish">arrow_upward</mat-icon>
-    <mat-icon *ngIf="score === 3 && direction === 'Bearish'" class="strong-bearish">arrow_upward</mat-icon>
+    <mat-icon *ngIf="score === 1 && direction === 'Bullish'" class="weak-bullish">arrow_upward</mat-icon> -->
+    <mat-icon *ngIf="direction === 'Bearish'" class="very-strong-bearish">arrow_upward</mat-icon>
+    <!-- <mat-icon *ngIf="score === 3 && direction === 'Bearish'" class="strong-bearish">arrow_upward</mat-icon>
     <mat-icon *ngIf="score === 2 && direction === 'Bearish'" class="strong-bearish">arrow_upward</mat-icon>
-    <mat-icon *ngIf="score === 1 && direction === 'Bearish'" class="strong-bearish">arrow_upward</mat-icon>
-    <mat-icon *ngIf="score === 0" class="neutral">arrow_upward</mat-icon>
+    <mat-icon *ngIf="score === 1 && direction === 'Bearish'" class="strong-bearish">arrow_upward</mat-icon> -->
+    <!-- <mat-icon *ngIf="score === 0" class="neutral">arrow_upward</mat-icon> -->
   </div>
+  </div>
+  
 </ng-template>
