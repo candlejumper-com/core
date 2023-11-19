@@ -9,7 +9,7 @@
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Name</th>
     <td mat-cell *matCellDef="let item">
-      <a [href]="'https://finance.yahoo.com/quote/' + item.symbol" target="_blank">{{ item.name }}</a>
+      <a [href]="'https://www.etoro.com/markets/' + item.symbol + '/chart'" target="_blank">{{ item.name }}</a>
     </td>
   </ng-container>
 
