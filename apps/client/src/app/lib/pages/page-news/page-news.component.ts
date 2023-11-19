@@ -57,20 +57,8 @@ export class PageNewsComponent implements OnInit {
     this.store.dispatch(new CALENDAR_SET([]))
   }
 
-  openBacktest(row) {
-    // const chart = this.chartService.createChart(
-    //   'BACKTEST',
-    //   row.symbol,
-    //   row.interval,
-    //   0,
-    //   row
-    // );
-    // this.chartService.showChart(chart.id);
-  }
-
-  toggleOrders(element) {
+  toggleDetails(element) {
     if (element) {
-      // this.chartService.activeOrders$.next(element.bot.orders);
       return element;
     } else {
       return null;
