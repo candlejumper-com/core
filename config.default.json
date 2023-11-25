@@ -22,6 +22,9 @@
   "thirdParty": {
     "alphavantage": {
       "apiKey": "OWYPQ4HUJ0NCVSQR"
+    },
+    "openAI": {
+      "apiKey": "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"
     }
   },
   "brokers": {

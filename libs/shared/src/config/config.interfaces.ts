@@ -6,6 +6,9 @@ export interface ISystemConfig {
     thirdParty: {
         alphavantage: {
             apiKey: string
+        },
+        openAI: {
+            apiKey: string
         }
     }
     symbols?: string[]

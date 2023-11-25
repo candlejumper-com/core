@@ -21,6 +21,7 @@ import { Ticker } from "../tickers/ticker"
 import { readFileSync } from "fs"
 import { NewsManager } from "../modules/news-manager/news.manager"
 import { CalendarManager } from "../modules/calendar-manager/calendar.manager"
+import { ChatGPTManager } from "../modules/chatgpt-manager/chatgpt.manager"
 
 export class System extends SystemBase {
   type = TICKER_TYPE.SYSTEM
@@ -31,6 +32,7 @@ export class System extends SystemBase {
   backtestManager: BacktestManager
   newsManager: NewsManager
   calendarManager: CalendarManager
+  chatGPTManager: ChatGPTManager
 
   system = this
 
@@ -87,6 +89,7 @@ export class System extends SystemBase {
    */
   private async initAsMain(): Promise<void> {
 
+    this.chatGPTManager = new ChatGPTManager(this)
     this.newsManager = new NewsManager(this)
     this.calendarManager = new CalendarManager(this)
     this.backtestManager = new BacktestManager(this)
@@ -105,6 +108,7 @@ export class System extends SystemBase {
     await this.userManager.init()
 
     // load calendar
+    await this.chatGPTManager.init()
     await this.calendarManager.init()
 
     await Promise.all([

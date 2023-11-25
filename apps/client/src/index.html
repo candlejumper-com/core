@@ -1,45 +1,67 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Tradebot</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <meta name="theme-color" content="#1976d2">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#1976d2">
-</head>
-<body class="mat-typography darkMode">
-  <core-root>
-    <div class="height: 100%; text-align: center"></div>
-  </core-root>
+  <head>
+    <meta charset="utf-8" />
+    <title>Tradebot</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <meta name="theme-color" content="#1976d2" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#1976d2" />
+  </head>
+  <body class="mat-typography darkMode">
+    <core-root>
+      <div class="height: 100%; text-align: center"></div>
+    </core-root>
 
-  <!-- <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-base.min.js" defer></script> -->
-  <!-- <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-stock.min.js" async></script> -->
-  <!-- <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-annotations.min.js" async></script> -->
-  <!-- <script src="assets/anychart/_anychart-combined-custom.js" async></script> -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.9.0/dist/tf.min.js"></script>
+    <!-- <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-base.min.js" defer></script> -->
+    <!-- <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-stock.min.js" async></script> -->
+    <!-- <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-annotations.min.js" async></script> -->
+    <!-- <script src="assets/anychart/_anychart-combined-custom.js" async></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.9.0/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script>
   <script src="https://cdn.plot.ly/plotly-2.24.3.min.js" crossorigin="anonymous" charset="utf-8"></script> -->
-  
-  <script>
-    window.app = {
-      pwa: {
-        promptEvent: null
-      },
-      report: Promise.resolve()
-    };
 
-    window.addEventListener('beforeinstallprompt', event => {
-      window.app.pwa.promptEvent = event;
-      event.preventDefault();
-    }, { once: true });
-  </script>
-  <noscript>Please enable JavaScript to continue using this application.</noscript>
-</body>
+    <script>
+      window.app = {
+        pwa: {
+          promptEvent: null,
+        },
+        report: Promise.resolve(),
+      }
+
+      window.addEventListener(
+        'beforeinstallprompt',
+        (event) => {
+          window.app.pwa.promptEvent = event
+          event.preventDefault()
+        },
+        { once: true },
+      )
+    </script>
+    <noscript>Please enable JavaScript to continue using this application.</noscript>
+
+    <script>
+      ;(async () => {
+        const cookies =
+    'intercom-device-id-dgkjq2bp=84c38580-3df6-4549-92ae-33723419a4fd; __stripe_mid=0fcd508c-c393-42c3-a342-987445ba47dfcfd8bb; _cfuvid=OyYFqEd0KhEfOaUdElSzM3wWzrUAqxuJJKawiMyTzLw-1700907430509-0-604800000; cf_clearance=8wt3gO3X0wllxvxIXnlqnlhjqilU90l49UytMGw13ZU-1700907431-0-1-35530993.723d5efc.530a57f6-0.2.1700907431; _cfuvid=ABhlFrpLEjuGb7wHqeZ6kH1G2g_uxCKvGSSrZBJh5GQ-1700907649253-0-604800000; cf_clearance=60DwGz7Ga0VI74LkT6uuVq0IJkXk2Q5fNc33hz_oMa4-1700907650-0-1-35530993.723d5efc.530a57f6-0.2.1700907650; __Host-next-auth.csrf-token=7f032dcacaaa797a3824c783b6279da3e2ad20c6ec848614437ad3eaa882e653%7C7fa95d35b4cfe91069fb0062650f42522c19871d2cb797f2b3c056b497680c48; ajs_user_id=user-3bAq5sYp5jF1ezAQV0HNPfA1; ajs_anonymous_id=463182bd-3a98-40a4-93fe-f8dd04f6870a; ajs_user_id=user-3bAq5sYp5jF1ezAQV0HNPfA1; _puid=user-3bAq5sYp5jF1ezAQV0HNPfA1:1700910305-ktJihx3vWpydRcLR23GMJz3uKDvcJfQZeq1U5MORshA%3D; __cf_bm=cWW.M.RpKvkZCd5RBYHHATDs4NN_bw2ypculeBuZ3H4-1700911681-0-ASxe6JaCHYpGzq7ySqJgH08rpITzNkYsr5ogSDag2+QkmlrbMZuKw90IlY8lIkSabfYPI2h/8jr8Prj9A1oY1Fs=; __cflb=0H28vVfF4aAyg2hkHFH9CkdHRXPsfCUf6KssxBGnXkZ; __Secure-next-auth.callback-url=https%3A%2F%2Fchat.openai.com; __Secure-next-auth.session-token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..uZdjvYz40-AAq-XI.dA1PFF9v19uxHvoibSSkxy_MCQG6GWlhFdJ0i0B76P4OWke_iun_SJ-W2zkottz5UQWdZD9Kl14OW76BmYICjrRiShnBLsHBe0kLTUBn1csKEwQnqItEjmjVEEB7exQs-CoNH4qhYB8JDylatfvdKP-rfxufW4fb4OAz_HLhjiY5D8KeN5bEuRT2r70FAuxw3Y26gS5RH9xZDaJSM-BGeMX1P1K7lioUpNI-OVUlOKkfOWjTvs_xfgmztz5wd3BjFOVkqf0jLUmLNwi5XJEW_fXTlsHzBvY0neD_g_LoAMa22fSUn-d-dR7ngMc1rVSWLpQvUaXkR5L4vuelR03O1I6RFWs-Fqt0kgBjUTpVozDOt7Bv1FEkGgCsMNm5gjvCVxVr7XykGUrmWiIl3UvrePvP3xXOAtU3Ndvr5X-KpTCT3ERwBlVMGJknV9QRGhfQuz_OsDxG-WjadOQ5U5oj02jnrFkaDrPowQJLxiPl3po2Ag47K7Jlp9lG-dPJSGYTN_cR4HpNH3Gcd9pxgS6RThNbRMh8qnB6SMprb2ObbLKxMXAIAwwwdcrKAl0SrYCNleN50BO3RE0sNEW2BmnMIWmrPm_0G2REiAxlkCzlIDDsbEX3e8fo7v9OTtW4oKwshnWFiQ3Bpa34Ee1_iCHuqecZsUmyLI8GTjRmUDUSz-vw6I3KH9q7Hlj7PuzMPCEWsEpVovifizgBVboQ4uZfOfzZalq46pQIpY3iwKf6_6-azSDOHytnulJe3JCQf6uFXwmyaW7wOfh7yHKQv_TXomvALss4miomvWxKXPvtpU7UyV5rOo_4pP9TUYQFWZOnrRhlgnt8NAkFRHaZds4Y4MLCPFtQvijxfKXtqbAwWhm_3iDB6KILMtsqnjh35VXCVmq2eI26DkdwU9ap6u7z_eiw6xpD8tir3D7900UcGWzE_X6nyEO5hk5eja-emeaZYMOPOidkFxqJv8zPOrD2KkK9X-oq9YJdlt35PYKBFs8oIpeKUaHSOjg9M1MWSY3NXt1wbFgtq0uYy4EGfXxH5qi40LnuVp25bjdP57d4UG2kBlDvChYZR16ZaoOclRkdMU4P0R4cG17Af8ZfQxxm7pdfn7IOIcSKpfikixQlnV9g8MEAG3SwSAj2zsdhR25vQGSJFQ4H1F95Dgkv3bonthaqeWkPKlxIc7RnEzTkR1Gfca9GwB8SiD8wsp9wAFHmcWFAvsh9cfbSE2O9ovf8dfTUDgQ-PJboTIdEv3fFXaVYmwQEG6C0_9HXtTPv1Qrs_-ngtKLyoVQLXz1RDUOGv1mJoMZUUUdEu7isvGG0fVqm9vJ8__E_6zbMb_p_Z7MT463FmTBEFP0UQw_r8QHWAzuQFGVqHCPGWDcytxHNTSi_nri3FvuX9OzMJEtxZ2bfj-zeWGsC_w8nL8hB8Jov1Uhyv_zOOobI6sKijPi95L20OXjczqqDOpPtEp8AnCJEuVxB7jq2WYQQNL3ogfyCRDOXh-wdWn9QjkBjVs2R23jA7OgxWEVI9fsOn2j-jYXZ8zoIHvEBsid4MQNXSO9iD-B8q4oONff3xmcGcguU88j5JYG8518TVkI-eadL9MoYhlYNNfTXOIvMuTtB7cJFUFOEpoFyy97EGZd-HwZa9nsxmFH4zhBFfbqu2lbWFirVsQq9mK0nDCQO5XLX87JyvLfBQYklG8QDabqWuOdMkZxjzG6BtX1Tsjy_hcjGdiVFXhbg6pLJC7M2mne1HDcju2CEXwNUYm4XV4VDOhXNSV0WWbaDngJrInKRUL-cB9f2q_aUEOUsBp-JwsUXyBZUYIE2dzNOqo2DMHeXruTrAarXqfyHD9bcKwhWSEKIoWdEWQY8sc3yPKeaF52JFoPN3dat6bMdEzsHCIEDxo2gEoWJEf3dMr690_sUsap8cGc2m_BcYx0FAhkMuk1w0OklsilTST2RNLGKDDz0SOu9FET36k-6QtBP-zYfFyDJ7k67FV1mU3KpHnG2up0Q21L0n4ybP1BVTb9Ra8YSQL_Xihc3t-6QtAyNSRdho_tKphT_iKlXH_dij8T0j1D8zBsw9PJQGkpe5RDu7WoODget0sOQHTv9InVuT2OyRLMb7WDchkv0Lxhi3-1oRIfaswpX6CWtUE2ooCkfrzpNOaGvG78kvLSHeZFNxsh3z8tbk6RZ9Jmb0A7_fq53werKOFTP1frjraUczPwdVz6YGAYVXF6Bwe68F3fQHMrM8KBxBO1jBbETPKOyYgrNNcsimUWt_EULxA6Hjkr8iiqPxYF0D2k2G8-AVwsEk7-3f0UQgig9F90IElouGuB305O6jRK3koYRa0ad48xjwOwipK8_sAN66BgphWtlZMaTIdRZ-oRD5qyrT9I0pMF8tJWAZy9jWIfcknpZ-r4SXwz4Aby3hpo3vgNdMQoFRTN89Jtu9AMfkk9YxJYdJukqr9bXxz0EpgfzNHLO8Rw1_g54ZQkuNXwooIJ6iO-3mLBDT2aUHVPYdztk8zm97sEjPYh7OW0CiZziOE0w33F_X_9bKYsWx42J14L2abF3hfmvZEUsCSArJaNLk7qGfY-MDvyq1y4BxGc89qZAQtxgeuNnxLPAgSQBE-4kBV2QmYi5rkeh_ATEXV5HIH-pfkGnwKLUL_3nqbpFzt9vhTq8UHaENKMWnZqqxf1pO5bcrJwX7RBOQYpYxjhMaRdDNGjapDggNvqPe4umIAhNZgfBJ5NVyWMjsDOnEvqw7y7oax3VXECoEJGwvilWU72-fkxPm1mWiv8bdvRfAV-F95ms3KG6UEai1TvXCjhzEl_DKP2MaI7cadRG4K97E3sEK9kHLHlxHP4ckqg5aCFBnUra-eg_FTPdWjdd0xGkKnIo_Pqufhzi44GlqppLApTOlyErR4eNQweF1ucsIS-umQTPgmOblA.LZQx_N4q-XcE5BFxUK5KZQ; _puid=user-3bAq5sYp5jF1ezAQV0HNPfA1:1700912155-mx2HEsTiGJjF%2FmMR8koe5mwCkkMHH8%2Fh9wDVLCc72Ac%3D; intercom-session-dgkjq2bp=NDUySDRPcGY1dkcxYlFsL2xocm1keXpKYjNyTlRleE11cDdPaWNodGR5SFdOc2FVOUZJL3pWbGFQbTY5TnlvUy0tWkk4Y0t2TmRJL2J2RWhDcUp1Y3RTdz09--baa37cb723675031b54f6d7ec0f464cc0630914b; _dd_s=rum=0&expire=1700913363771'
+
+        const request = await fetch('https://chat.openai.com/', {
+          mode: "no-cors", // no-cors, *cors, same-origin
+
+          credentials: 'include',
+          headers: {
+            Cookie: cookies,
+            Referer: "https://chat.openai.com/"
+          },
+
+        })
+      })()
+    </script>
+  </body>
 </html>

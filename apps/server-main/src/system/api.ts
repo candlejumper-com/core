@@ -16,6 +16,7 @@ import snapshotRoutes from '../modules/snapshot-manager/snapshot.api'
 import userRoutes from '../modules/user-manager/user.api'
 import aiRoutes from '../modules/ai-manager/ai.api'
 import calendarRoutes from '../modules/calendar-manager/calendar.api'
+import chatGPTRoutes from '../modules/chatgpt-manager/chatgpt.api'
 import passport from 'passport'
 import { json } from 'body-parser'
 import helmet from 'helmet'
@@ -116,5 +117,6 @@ export class ApiServer {
     editorRoutes(this.system, this.app)
     snapshotRoutes(this.system, this.app)
     calendarRoutes(this.system, this.app)
+    chatGPTRoutes(this.system, this.app)
   }
 }
