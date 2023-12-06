@@ -5,7 +5,7 @@ export default function (system: System, app: Application) {
 
     app.get('/api/calendar', (req, res) => {
         try {
-            res.send(system.calendarManager.selectedItems)
+            res.send(system.calendarManager.items)
         } catch (error) {
             console.error(error)
             res.status(500).send(error)

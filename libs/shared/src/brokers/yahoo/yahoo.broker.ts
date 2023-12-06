@@ -10,11 +10,16 @@ import { TrendingSymbolsResult } from 'yahoo-finance2/dist/esm/src/modules/trend
 import TEMP_BROKER_INFO from './broker-yahoo.json'
 import TEMP_TRENDING_SYMBOLS from './trending-symbols.json'
 import { InsightsResult } from 'yahoo-finance2/dist/esm/src/modules/insights'
+import axios from 'axios'
+
+const defaultOptions = {};
 
 export class BrokerYahoo extends Broker {
   id = 'Yahoo'
   instance: any
   websocket = null
+
+  http = rateLimit(axios.create(defaultOptions), { maxRequests: 5, perMilliseconds: 1000 });
 
   async getTrendingSymbols(count = 500, mock = true): Promise<ISymbol[]> {
     if (mock) {
@@ -121,3 +126,7 @@ export class BrokerYahoo extends Broker {
     return candles.map((candle) => [new Date(candle.date).getTime(), candle.open, candle.high, candle.low, candle.close, candle.volume])
   }
 }
+function rateLimit(arg0: any, arg1: { maxRequests: number; perMilliseconds: number }) {
+  throw new Error('Function not implemented.')
+}
+

@@ -15,13 +15,11 @@ import {
 import { UserManager } from "../modules/user-manager/user-manager"
 import { AIManager } from "../modules/ai-manager/ai-manager"
 import { ISymbol, TICKER_TYPE, BrokerIG } from "@candlejumper/shared"
-import axios, { AxiosError, AxiosInstance } from "axios"
-import axiosRetry from "axios-retry"
-import { Ticker } from "../tickers/ticker"
 import { readFileSync } from "fs"
 import { NewsManager } from "../modules/news-manager/news.manager"
 import { CalendarManager } from "../modules/calendar-manager/calendar.manager"
 import { ChatGPTManager } from "../modules/chatgpt-manager/chatgpt.manager"
+import { InsightManager } from "../modules/insight-manager/insight.manager"
 
 export class System extends SystemBase {
   type = TICKER_TYPE.SYSTEM
@@ -43,6 +41,7 @@ export class System extends SystemBase {
   readonly candleManager = new CandleManager(this)
   readonly orderManager = new OrderManager(this)
   readonly userManager = new UserManager(this)
+  readonly insightManager = new InsightManager(this)
 
   async init(): Promise<void> {
     await super.init()
@@ -107,9 +106,12 @@ export class System extends SystemBase {
     // load current user
     await this.userManager.init()
 
+    // load generic insights
+    await this.insightManager.init()
+
     // load calendar
     await this.chatGPTManager.init()
-    await this.calendarManager.init()
+    // await this.calendarManager.init()
 
     await Promise.all([
       // load broker (symbols, timezone, details etc)

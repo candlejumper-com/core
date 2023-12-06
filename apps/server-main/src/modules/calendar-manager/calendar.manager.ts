@@ -48,9 +48,6 @@ export class CalendarManager {
       // (re)load all calendar items
       this.items = await this.brokerAlphavantage.getCalendarItems()
 
-      // (re)load current trending symbols
-      this.symbols = await this.brokerYahoo.getTrendingSymbols()
-
       // filter calendar items that are between now and X days
       const activeItems = filterCalendarItemsInTimeRange(this.items, this.activeTimeWindow)
 
