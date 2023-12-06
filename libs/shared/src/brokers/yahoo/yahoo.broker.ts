@@ -4,7 +4,6 @@ import { Broker } from '../broker'
 import { IBrokerInfo, CandleTickerCallback } from '../broker.interfaces'
 import yahooFinance from 'yahoo-finance2'
 import { format } from 'date-fns'
-import axios from 'axios'
 import { OrderResponseFull, OrderResponseResult } from 'binance'
 import { writeFileSync } from 'fs'
 import { TrendingSymbolsResult } from 'yahoo-finance2/dist/esm/src/modules/trendingSymbols'
@@ -17,13 +16,13 @@ export class BrokerYahoo extends Broker {
   instance: any
   websocket = null
 
-  async getTrendingSymbols(count = 500, mock = true): Promise<string[]> {
+  async getTrendingSymbols(count = 500, mock = true): Promise<ISymbol[]> {
     if (mock) {
-      return TEMP_TRENDING_SYMBOLS
+      return TEMP_TRENDING_SYMBOLS.map(symbol => ({ name: symbol }))
     }
 
-    const result = await yahooFinance.trendingSymbols('US', { count }) as TrendingSymbolsResult
-    const symbols = result.quotes.map(symbolObj => symbolObj.symbol)
+    const result = (await yahooFinance.trendingSymbols('US', { count })) as TrendingSymbolsResult
+    const symbols: ISymbol[] = result.quotes.map(symbol => ({ name: symbol.symbol }))
 
     // temp
     writeFileSync('./trending-symbols.json', JSON.stringify(symbols, null, 2))
@@ -107,10 +106,10 @@ export class BrokerYahoo extends Broker {
   }
   async getCandlesFromCount(symbol: string, interval: string, count: number): Promise<ICandle[]> {
     const now = new Date()
-    now.setDate(now.getDate() - count);
+    now.setDate(now.getDate() - count)
     const period1 = format(now, 'yyyy-MM-dd')
     const query = symbol.includes('/') ? `${symbol.split('/')[0]}=X` : symbol
-    const queryOptions = { period1, interval: interval as any}
+    const queryOptions = { period1, interval: interval as any }
     const candles = await yahooFinance.historical(query, queryOptions)
     return this.normalizeCandles(candles)
   }
@@ -119,13 +118,6 @@ export class BrokerYahoo extends Broker {
   private normalizeCandles(candles: HistoricalHistoryResult): ICandle[] {
     // console.log(parse(candles[0].snapshotTime, "yyyy:MM:dd-HH:mm:ss", new Date()))
 
-    return candles.map((candle) => [
-      new Date(candle.date).getTime(),
-      candle.open,
-      candle.high,
-      candle.low,
-      candle.close,
-      candle.volume,
-    ])
+    return candles.map((candle) => [new Date(candle.date).getTime(), candle.open, candle.high, candle.low, candle.close, candle.volume])
   }
 }

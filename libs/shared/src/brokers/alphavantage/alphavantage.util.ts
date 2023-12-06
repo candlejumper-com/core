@@ -1,4 +1,4 @@
-import { ICalendarItem } from '@candlejumper/shared'
+import { ICalendarItem, ISymbol } from '@candlejumper/shared'
 import { ICalendarAlphaVantage } from './alphavantage.interfaces'
 import { parse } from 'csv-parse'
 
@@ -23,11 +23,11 @@ export function normalizeCalendarData(data: ICalendarAlphaVantage[]): ICalendarI
   }))
 }
 
-export function filterItemsInTimeRange(items: ICalendarItem[], timeWindow: number): ICalendarItem[] {
+export function filterCalendarItemsInTimeRange(items: ICalendarItem[], timeWindow: number): ICalendarItem[] {
   const now = Date.now()
   return items.filter(item => item.reportDate.getTime() - now < timeWindow)
 }
 
-export function filterItemsBySymbols(items: ICalendarItem[], filterList: string[]): ICalendarItem[] {
-  return items.filter(item => filterList.includes(item.symbol))
+export function filterCalendarItemsBySymbols(items: ICalendarItem[], symbols: ISymbol[]): ICalendarItem[] {
+  return items.filter(item => !!symbols.find(symbol => symbol.name === item.symbol))
 }

@@ -3,8 +3,9 @@ import {
   BrokerAlphavantage,
   BrokerYahoo,
   ICalendarItem,
-  filterItemsBySymbols,
-  filterItemsInTimeRange,
+  ISymbol,
+  filterCalendarItemsBySymbols,
+  filterCalendarItemsInTimeRange,
 } from '@candlejumper/shared'
 import { getDiffInPercentage } from './calendar.util'
 
@@ -13,10 +14,10 @@ export class CalendarManager {
   items: ICalendarItem[] = []
 
   // calendar items within X days + trending
-  selectedItems: ICalendarItem[] = []
+  calendarItems: ICalendarItem[] = []
 
   // list of trending symbols
-  trendingSymbols: string[] = []
+  symbols: ISymbol[] = []
 
   // how many times per day to check
   private updateIntervalTime = 1000 * 60 * 60 * 4 // 4 hours
@@ -48,13 +49,13 @@ export class CalendarManager {
       this.items = await this.brokerAlphavantage.getCalendarItems()
 
       // (re)load current trending symbols
-      this.trendingSymbols = await this.brokerYahoo.getTrendingSymbols()
+      this.symbols = await this.brokerYahoo.getTrendingSymbols()
 
       // filter calendar items that are between now and X days
-      const activeItems = filterItemsInTimeRange(this.items, this.activeTimeWindow)
+      const activeItems = filterCalendarItemsInTimeRange(this.items, this.activeTimeWindow)
 
       // filter calendar items by trending symbols
-      this.selectedItems = filterItemsBySymbols(activeItems, this.trendingSymbols)
+      this.calendarItems = filterCalendarItemsBySymbols(activeItems, this.symbols)
 
       // DEV ONLY
       // limit to 2 symbols
@@ -66,10 +67,10 @@ export class CalendarManager {
       await this.setItemsMetadata()
       
       // sort by reportDate
-      this.selectedItems.sort((a, b) => (a.reportDate as any) - (b.reportDate as any))
+      this.calendarItems.sort((a, b) => (a.reportDate as any) - (b.reportDate as any))
 
       // send push notification to clients
-      await this.system.deviceManager.sendCalendarUpcomingNotifiction(this.selectedItems)
+      await this.system.deviceManager.sendCalendarUpcomingNotifiction(this.calendarItems)
     } catch (error) {
       console.error(error)
     }
@@ -79,7 +80,7 @@ export class CalendarManager {
    * TODO - make batches to not hit request limit
    */
   private async setItemsMetadata() {
-    for (const item of this.selectedItems) {
+    for (const item of this.calendarItems) {
       // load candles of symbol
       item.candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
 

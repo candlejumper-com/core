@@ -8,7 +8,6 @@ export interface ICandle {
 
 export interface ISymbol {
   name?: string
-  symbol?: string
   baseAsset?: string
   baseAssetPrecision?: number
   baseAssetIcon?: string

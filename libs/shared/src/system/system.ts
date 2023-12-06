@@ -20,6 +20,7 @@ export abstract class SystemBase extends Ticker<null> {
 
   time: Date
 
+  readonly brokers = new Map<string, any>()
   readonly configManager = new ConfigManager(this)
 
   override system = this
@@ -35,6 +36,14 @@ export abstract class SystemBase extends Ticker<null> {
   override async init(): Promise<void> {
     await super.init()
     await this.configManager.init()
+  }
+
+  addBroker<T>(broker: any) {
+    this.brokers.set(broker.id, broker)
+  }
+
+  removeBroker(broker: any) {
+    this.brokers.delete(broker.id)
   }
 
   async start() {
