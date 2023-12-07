@@ -1,0 +1,170 @@
+<form>
+  <mat-form-field appearance="fill">
+    <mat-label>Fill form field</mat-label>
+    <input matInput placeholder="Placeholder">
+    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+    <mat-hint>Hint</mat-hint>
+  </mat-form-field>
+</form>
+
+<table mat-table matSort [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8" (matSortChange)="announceSortChange($event)">
+   <!-- INDEX -->
+   <ng-container matColumnDef="index">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="index">#</th>
+    <td mat-cell *matCellDef="let element; let i = index;">{{ i }}</td>
+  </ng-container>
+ 
+  <!-- SYMBOL -->
+  <ng-container matColumnDef="symbol">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="symbol">Symbol</th>
+    <td mat-cell *matCellDef="let item">{{ item.symbol.name }}</td>
+  </ng-container>
+
+  <!-- NAME -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Name</th>
+    <td mat-cell *matCellDef="let item">
+      <a [href]="'https://www.etoro.com/markets/' + item.symbol.name + '/chart'" target="_blank">{{ item.symbol.name }}</a>
+    </td>
+  </ng-container>
+
+  <!-- chart -->
+  <ng-container matColumnDef="chart">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="chart">Chart</th>
+    <td mat-cell *matCellDef="let item">
+      <core-chart-mini
+        [insights]="item.insights"
+        [interval$]="activeInterval$"
+        [symbol]="item.symbol"
+        [candles]="item.candles"
+        [interval$]="activeInterval$"
+      ></core-chart-mini>
+    </td>
+  </ng-container>
+
+  <!-- RATING -->
+  <ng-container matColumnDef="rating">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="rating">Rating</th>
+    <td mat-cell *matCellDef="let item">
+      <i>{{ item.insights?.recommendation?.rating }}</i>
+    </td>
+  </ng-container>
+
+  <!-- instrumentInfo -->
+  <ng-container matColumnDef="intermediate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>I.</th>
+    <td mat-cell *matCellDef="let item">
+      <ng-container
+      *ngTemplateOutlet="
+        scoreArrow;
+        context: {
+          score: item.insights?.instrumentInfo?.technicalEvents.intermediateTermOutlook.score,
+          direction: item.insights?.instrumentInfo?.technicalEvents.intermediateTermOutlook.direction
+        }"
+    ></ng-container>
+    </td>
+  </ng-container>
+
+  <!-- instrumentInfo -->
+  <ng-container matColumnDef="short">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="short">S.</th>
+    <td mat-cell *matCellDef="let item">
+      <ng-container
+        *ngTemplateOutlet="
+          scoreArrow;
+          context: {
+            score: item.insights?.instrumentInfo?.technicalEvents.shortTermOutlook.score,
+            direction: item.insights?.instrumentInfo?.technicalEvents.shortTermOutlook.direction
+          }"
+      ></ng-container>
+    </td>
+  </ng-container>
+
+  <!-- instrumentInfo -->
+  <ng-container matColumnDef="long">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="long">L.</th>
+    <td mat-cell *matCellDef="let item">
+      <ng-container
+      *ngTemplateOutlet="
+        scoreArrow;
+        context: {
+          score: item.insights?.instrumentInfo?.technicalEvents.longTermOutlook.score,
+          direction: item.insights?.instrumentInfo?.technicalEvents.longTermOutlook.direction
+        }"
+    ></ng-container>
+    </td>
+  </ng-container>
+
+  <!-- TARGET -->
+  <ng-container matColumnDef="target">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="target">Target</th>
+    <td mat-cell *matCellDef="let item">
+      {{ item.insights?.recommendation?.targetPrice | currency: item.currency }}
+    </td>
+  </ng-container>
+
+  <!-- ESTIMATE -->
+  <ng-container matColumnDef="estimate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="estimate">Pred.</th>
+    <td mat-cell *matCellDef="let item" [ngClass]="{ 'text-success': item.estimate > 0, 'text-error': item.estimate < 0 }">
+      {{ item.estimate }}
+    </td>
+  </ng-container>
+
+  <!-- DIFF -->
+  <ng-container matColumnDef="diffInPercent">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="diffInPercent">Diff.</th>
+    <td mat-cell *matCellDef="let item" [ngClass]="{ 'text-success': item.diffInPercent > 0, 'text-error': item.diffInPercent < 0 }">
+      {{ item.diffInPercent?.toFixed(2) }}%
+    </td>
+  </ng-container>
+
+  <!-- REPORT DATE -->
+  <ng-container matColumnDef="reportDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="reportDate">Date</th>
+    <td mat-cell *matCellDef="let item">{{ item.reportDate | date: 'dd/MM/yyyy' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let item" [attr.colspan]="displayedColumns.length" class="test">
+      <div class="table-row-detail" [class.expanded]="item === expandedElement" #chart>
+        <!-- <core-chart [bot]="element.bot" [candleCount]="form.value.candleCount" *ngIf="element == expandedElement"
+          [timeRange$]="timeRange$"
+          [symbol]="candleService.getSymbolByName(element.bot.symbol)" type="BACKTEST"></core-chart> -->
+        <ng-container>
+          <div>
+            <pre>{{ item.insights | json }}</pre>
+          </div>
+        </ng-container>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr
+    mat-row
+    *matRowDef="let element; let i = index; columns: displayedColumns"
+    class="example-element-row"
+    [class.example-expanded-row]="expandedElement === element"
+    (click)="expandedElement = expandedElement === element ? toggleDetails(null) : toggleDetails(element);"
+  ></tr>
+  <tr mat-row *matRowDef="let i = index;let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+</table>
+
+<ng-template #scoreArrow let-score="score" let-direction="direction">
+  <div style="display: flex; align-items: center; justify-content: center;">
+    <span [class]="'score-' + score">{{ score }}</span>
+  <div class="arrow-direction">
+    <mat-icon *ngIf="direction === 'Bullish'" class="very-strong-bullish2">arrow_upward</mat-icon>
+    <!-- <mat-icon *ngIf="score === 3 && direction === 'Bullish'" class="strong-bullish">arrow_upward</mat-icon>
+    <mat-icon *ngIf="score === 2 && direction === 'Bullish'" class="bullish">arrow_upward</mat-icon>
+    <mat-icon *ngIf="score === 1 && direction === 'Bullish'" class="weak-bullish">arrow_upward</mat-icon> -->
+    <mat-icon *ngIf="direction === 'Bearish'" class="very-strong-bearish">arrow_upward</mat-icon>
+    <!-- <mat-icon *ngIf="score === 3 && direction === 'Bearish'" class="strong-bearish">arrow_upward</mat-icon>
+    <mat-icon *ngIf="score === 2 && direction === 'Bearish'" class="strong-bearish">arrow_upward</mat-icon>
+    <mat-icon *ngIf="score === 1 && direction === 'Bearish'" class="strong-bearish">arrow_upward</mat-icon> -->
+    <!-- <mat-icon *ngIf="score === 0" class="neutral">arrow_upward</mat-icon> -->
+  </div>
+  </div>
+  
+</ng-template>

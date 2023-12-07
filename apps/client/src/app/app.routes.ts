@@ -8,6 +8,10 @@ export const routes = [
     loadComponent: () => import('./lib/pages/page-news/page-news.component').then((mod) => mod.PageNewsComponent),
   },
   {
+    path: 'insight',
+    loadComponent: () => import('./lib/pages/page-insight/page-insight.component').then((mod) => mod.PageInsightComponent),
+  },
+  {
     path: 'ai',
     loadComponent: () => import('./lib/pages/page-ai/page-ai.component').then((mod) => mod.PageAIComponent),
   },

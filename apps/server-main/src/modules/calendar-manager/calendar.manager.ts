@@ -79,13 +79,13 @@ export class CalendarManager {
   private async setItemsMetadata() {
     for (const item of this.calendarItems) {
       // load candles of symbol
-      item.candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
+      // item.candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
 
       // set diff from oldest to newest
-      item.diffInPercent = getDiffInPercentage(item.candles.at(0), item.candles.at(-1))
+      // item.diffInPercent = getDiffInPercentage(item.candles.at(0), item.candles.at(-1))
       
       // set extra data
-      item.insights = await this.brokerYahoo.getSymbolInsights(item.symbol)
+      // item.insights = await this.brokerYahoo.getSymbolInsights(item.symbol)
     }
   }
 }

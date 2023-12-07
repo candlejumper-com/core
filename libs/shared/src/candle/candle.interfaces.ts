@@ -1,3 +1,5 @@
+import { ICalendarItem } from "../index_client"
+
 export interface ICandle {
   [0]: number
   [1]: number
@@ -23,6 +25,7 @@ export interface ISymbol {
   changedSinceLastClientTick?: boolean
   totalOrders?: number
   orders?: any[]
+  calendar?: ICalendarItem[]
 }
 
 export interface ICandleObject {

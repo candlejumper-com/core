@@ -1,0 +1,560 @@
+[
+  {
+    "name": "AI"
+  },
+  {
+    "name": "CHWY"
+  },
+  {
+    "name": "AMD"
+  },
+  {
+    "name": "RIVN"
+  },
+  {
+    "name": "GME"
+  },
+  {
+    "name": "MLGO"
+  },
+  {
+    "name": "NKLA"
+  },
+  {
+    "name": "BTI"
+  },
+  {
+    "name": "VEEV"
+  },
+  {
+    "name": "SERA"
+  },
+  {
+    "name": "CERE"
+  },
+  {
+    "name": "PLTR"
+  },
+  {
+    "name": "CL=F"
+  },
+  {
+    "name": "ABBV"
+  },
+  {
+    "name": "BXMT"
+  },
+  {
+    "name": "ADA-USD"
+  },
+  {
+    "name": "WBUY"
+  },
+  {
+    "name": "CHPT"
+  },
+  {
+    "name": "SU.TO"
+  },
+  {
+    "name": "SQ"
+  },
+  {
+    "name": "CCL"
+  },
+  {
+    "name": "CXM"
+  },
+  {
+    "name": "AC.TO"
+  },
+  {
+    "name": "DOCU"
+  },
+  {
+    "name": "KAVL"
+  },
+  {
+    "name": "BRZE"
+  },
+  {
+    "name": "C"
+  },
+  {
+    "name": "ANIX"
+  },
+  {
+    "name": "MPW"
+  },
+  {
+    "name": "CNQ.TO"
+  },
+  {
+    "name": "SYRS"
+  },
+  {
+    "name": "TRKA"
+  },
+  {
+    "name": "HPCO"
+  },
+  {
+    "name": "CYTO"
+  },
+  {
+    "name": "MO"
+  },
+  {
+    "name": "SMTC"
+  },
+  {
+    "name": "DG"
+  },
+  {
+    "name": "RSLS"
+  },
+  {
+    "name": "CPB"
+  },
+  {
+    "name": "FSR"
+  },
+  {
+    "name": "LCID"
+  },
+  {
+    "name": "MCD"
+  },
+  {
+    "name": "3690.HK"
+  },
+  {
+    "name": "0001.HK"
+  },
+  {
+    "name": "BF-B"
+  },
+  {
+    "name": "RVPH"
+  },
+  {
+    "name": "ARVN"
+  },
+  {
+    "name": "XLV"
+  },
+  {
+    "name": "RKT"
+  },
+  {
+    "name": "HNT-USD"
+  },
+  {
+    "name": "FSLR"
+  },
+  {
+    "name": "MRNA"
+  },
+  {
+    "name": "RIG"
+  },
+  {
+    "name": "XLU"
+  },
+  {
+    "name": "GTHX"
+  },
+  {
+    "name": "BLUE"
+  },
+  {
+    "name": "VTGN"
+  },
+  {
+    "name": "EXPI"
+  },
+  {
+    "name": "DAL"
+  },
+  {
+    "name": "SHOT"
+  },
+  {
+    "name": "XLE"
+  },
+  {
+    "name": "ABCL"
+  },
+  {
+    "name": "CLF24.NYM"
+  },
+  {
+    "name": "ZI"
+  },
+  {
+    "name": "LILM"
+  },
+  {
+    "name": "^CMC200"
+  },
+  {
+    "name": "LXRX"
+  },
+  {
+    "name": "AMRN"
+  },
+  {
+    "name": "WBA"
+  },
+  {
+    "name": "UNG"
+  },
+  {
+    "name": "USO"
+  },
+  {
+    "name": "UCO"
+  },
+  {
+    "name": "AFRM"
+  },
+  {
+    "name": "INMD"
+  },
+  {
+    "name": "GOOG"
+  },
+  {
+    "name": "BOIL"
+  },
+  {
+    "name": "ALLY"
+  },
+  {
+    "name": "CNQ"
+  },
+  {
+    "name": "NEE"
+  },
+  {
+    "name": "AVGO"
+  },
+  {
+    "name": "LULU"
+  },
+  {
+    "name": "SYM"
+  },
+  {
+    "name": "BZ=F"
+  },
+  {
+    "name": "CONY"
+  },
+  {
+    "name": "ODFL"
+  },
+  {
+    "name": "NG=F"
+  },
+  {
+    "name": "PM"
+  },
+  {
+    "name": "LEG"
+  },
+  {
+    "name": "PFE"
+  },
+  {
+    "name": "CYDY"
+  },
+  {
+    "name": "VERU"
+  },
+  {
+    "name": "CURLF"
+  },
+  {
+    "name": "BYND"
+  },
+  {
+    "name": "LAAC"
+  },
+  {
+    "name": "OXY"
+  },
+  {
+    "name": "CIEN"
+  },
+  {
+    "name": "ABR"
+  },
+  {
+    "name": "AAL"
+  },
+  {
+    "name": "ONON"
+  },
+  {
+    "name": "TCNNF"
+  },
+  {
+    "name": "NCLH"
+  },
+  {
+    "name": "SU"
+  },
+  {
+    "name": "TVE.TO"
+  },
+  {
+    "name": "SNDL"
+  },
+  {
+    "name": "CTRA"
+  },
+  {
+    "name": "HKD"
+  },
+  {
+    "name": "ASTS"
+  },
+  {
+    "name": "BX"
+  },
+  {
+    "name": "RCL"
+  },
+  {
+    "name": "SOXX"
+  },
+  {
+    "name": "XOM"
+  },
+  {
+    "name": "STLA"
+  },
+  {
+    "name": "^GSPTSE"
+  },
+  {
+    "name": "JPY=X"
+  },
+  {
+    "name": "ZM"
+  },
+  {
+    "name": "REGN"
+  },
+  {
+    "name": "AAOI"
+  },
+  {
+    "name": "LNG"
+  },
+  {
+    "name": "HIMS"
+  },
+  {
+    "name": "MSOS"
+  },
+  {
+    "name": "SWKS"
+  },
+  {
+    "name": "HUM"
+  },
+  {
+    "name": "ADA-CAD"
+  },
+  {
+    "name": "BTE"
+  },
+  {
+    "name": "LOVE"
+  },
+  {
+    "name": "NLY"
+  },
+  {
+    "name": "RH"
+  },
+  {
+    "name": "GMBL"
+  },
+  {
+    "name": "BYDDY"
+  },
+  {
+    "name": "D05.SI"
+  },
+  {
+    "name": "KVUE"
+  },
+  {
+    "name": ":entitySlug"
+  },
+  {
+    "name": "COP"
+  },
+  {
+    "name": "LIT"
+  },
+  {
+    "name": "CRSP"
+  },
+  {
+    "name": "ULTA"
+  },
+  {
+    "name": "BABA"
+  },
+  {
+    "name": "T.TO"
+  },
+  {
+    "name": "RDFN"
+  },
+  {
+    "name": "ORCL"
+  },
+  {
+    "name": "^SPX"
+  },
+  {
+    "name": "XRP-USD"
+  },
+  {
+    "name": "RXRX"
+  },
+  {
+    "name": "UPST"
+  },
+  {
+    "name": "EDIT"
+  },
+  {
+    "name": "CDIO"
+  },
+  {
+    "name": "RYCEY"
+  },
+  {
+    "name": "SLB"
+  },
+  {
+    "name": "RKLB"
+  },
+  {
+    "name": "SPCE"
+  },
+  {
+    "name": "^DJI"
+  },
+  {
+    "name": "JOBY"
+  },
+  {
+    "name": "ABT"
+  },
+  {
+    "name": "LUMN"
+  },
+  {
+    "name": "APPS"
+  },
+  {
+    "name": "UAL"
+  },
+  {
+    "name": "LTHM"
+  },
+  {
+    "name": "FFIE"
+  },
+  {
+    "name": "KOLD"
+  },
+  {
+    "name": "^GSPC"
+  },
+  {
+    "name": "ALT"
+  },
+  {
+    "name": "PATH"
+  },
+  {
+    "name": "DISH"
+  },
+  {
+    "name": "^IXIC"
+  },
+  {
+    "name": "AULT"
+  },
+  {
+    "name": "ACLS"
+  },
+  {
+    "name": "QS"
+  },
+  {
+    "name": "NOC"
+  },
+  {
+    "name": "BAC"
+  },
+  {
+    "name": "DUK"
+  },
+  {
+    "name": "TMUS"
+  },
+  {
+    "name": "BLK"
+  },
+  {
+    "name": "BTE.TO"
+  },
+  {
+    "name": "SBSW"
+  },
+  {
+    "name": "BMY"
+  },
+  {
+    "name": "VVOS"
+  },
+  {
+    "name": "JEPQ"
+  },
+  {
+    "name": "LABU"
+  },
+  {
+    "name": "DPST"
+  },
+  {
+    "name": "MPC"
+  },
+  {
+    "name": "QYLD"
+  },
+  {
+    "name": "SENS"
+  },
+  {
+    "name": "2318.HK"
+  },
+  {
+    "name": "AVTX"
+  },
+  {
+    "name": "VFIAX"
+  },
+  {
+    "name": "9988.HK"
+  }
+]

@@ -9,6 +9,4 @@ export interface ICalendarItem {
   estimate: string,
   currency: string
   diffInPercent?: number
-  insights?: InsightsResult
-  candles?: ICandle[]
 }
