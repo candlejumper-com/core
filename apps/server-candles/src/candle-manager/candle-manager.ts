@@ -18,7 +18,7 @@ export class CandleManager {
    */
   startWebsocketListener(): void {
     const intervals = this.system.configManager.config.intervals
-    const symbols = this.system.configManager.config.symbols
+    const symbols = this.system.symbolManager.symbols.map((symbol) => symbol.name)
 
     this.system.brokerManager.get().startCandleTicker(symbols, intervals, async (symbol, interval, candle, isFinal) => {
       if (isFinal) {

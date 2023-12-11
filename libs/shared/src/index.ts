@@ -1,6 +1,6 @@
 export * from './candle/candle.interfaces'
 export * from './candle/candle.util'
-export * from './ticker/ticker'
+
 export * from './ticker/ticker.interfaces'
 export * from './ticker/ticker.util'
 export * from './system/system'
@@ -22,3 +22,4 @@ export * from './calendar/calendar.interfaces'
 export * from './news/news.interfaces'
 export * from './modules/insight/insight.interfaces'
 export * from './modules/symbol/symbol.interfaces'
+export * from './ticker/ticker'

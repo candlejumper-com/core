@@ -1,10 +1,7 @@
-import { ICandle, ITickerEvent, ITickerParams, TICKER_EVENT_TYPE, TICKER_TYPE } from '@candlejumper/shared'
-import { SystemBase } from '../system/system'
-import { CANDLE_FIELD } from '../candle/candle.util'
-import { logger } from '../util/log'
-import { sleep } from '../util/util'
+import { logger, ICandle, ISymbol, ITickerEvent, ITickerParams, TICKER_EVENT_TYPE, TICKER_TYPE, sleep } from '@candlejumper/shared'
+import { CANDLE_FIELD } from '../modules/candle-manager/candle-manager'
+import { System } from '../system/system'
 import { join } from 'path'
-import { ISymbol } from '../modules/symbol/symbol.interfaces'
 
 export abstract class Ticker<T> {
   static eventId = 0
@@ -62,7 +59,7 @@ export abstract class Ticker<T> {
   protected onDestroy?(): Promise<void>
 
   constructor(
-    public system: SystemBase,
+    public system: System,
     public parent: Ticker<any>,
     public symbol: ISymbol,
     public interval: string,
@@ -77,6 +74,9 @@ export abstract class Ticker<T> {
     if (!this.id) {
       throw 'Missing id ' + this.constructor.name
     }
+
+    // set pointer to candles
+    // this.candles = this.system.candleManager.candles[this.symbol.name][this.interval].candles
   }
 
   async tick(...arg: any): Promise<void> {
@@ -132,6 +132,7 @@ export abstract class Ticker<T> {
    * add a child ticker
    */
   async addTicker<T>(config: ITickerParams<T>): Promise<Ticker<T>> {
+    return null
     let TickerClass = config.class as any
     // let TickerClass: typeof Ticker = config.class
     if (!TickerClass) {
@@ -141,8 +142,8 @@ export abstract class Ticker<T> {
       // add ticker
 
       const url = new URL(join(config.path) + '.js', import.meta.url)
-      TickerClass =  (await import(`${config.path}.js`)).default
-      // TickerClass = require('/home/kewin/Projects/candlejumper/core/custom/dist/bots/bollinger/bot_bollinger.js').default
+
+      TickerClass = require('/home/kewin/Projects/candlejumper/core/custom/dist/bots/bollinger/bot_bollinger.js').default
       console.log(232, TickerClass.constructor)
       TickerClass = TickerClass.constructor
 

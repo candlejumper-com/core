@@ -40,11 +40,11 @@ export class DB {
         await rm(PATH_DATA, { recursive: true, force: true })
     }
 
-    private createCandleEntities() {
-        const symbols = this.system.configManager.config.symbols
+    createCandleEntities() {
+        const symbols = this.system.symbolManager.symbols
         const intervals = this.system.configManager.config.intervals
-        const tableNames = symbols.map(symbol => intervals.map(interval => getCandleEntityName(this.system, symbol, interval))).flat()
-        console.log(this.system.configManager.config.symbols)
+        const tableNames = symbols.map(symbol => intervals.map(interval => getCandleEntityName(this.system, symbol.name, interval))).flat()
+        console.log(tableNames)
         return tableNames.map(tableName => createCandleEntity(tableName))
     }
 }

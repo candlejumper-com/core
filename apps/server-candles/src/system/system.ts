@@ -14,11 +14,11 @@ export class System extends SystemBase {
   async onInit() {
     const broker = await this.brokerManager.add(BrokerYahoo)
 
-    this.configManager.config.symbols = broker.exchangeInfo.symbols
-      .map((symbol) => symbol.name)
-      .filter((symbolName) => /^[^.=:]+$/.test(symbolName))
+    // this.configManager.config.symbols = broker.exchangeInfo.symbols
+    //   .map((symbol) => symbol.name)
+    //   .filter((symbolName) => /^[^.=:]+$/.test(symbolName))
 
-      console.log(66666666666, this.configManager.config.symbols, broker.exchangeInfo.symbols, this.system.symbolManager.symbols)
+    //   console.log(66666666666, this.configManager.config.symbols, broker.exchangeInfo.symbols, this.system.symbolManager.symbols)
     await this.db.init()
 
     await this.candleManager.sync()

@@ -21,6 +21,12 @@ import { CalendarManager } from "../modules/calendar-manager/calendar.manager"
 import { ChatGPTManager } from "../modules/chatgpt-manager/chatgpt.manager"
 import { InsightManager } from "../modules/insight-manager/insight.manager"
 
+// export class System {
+//   tick(...arg): any {
+    
+//   }
+// }
+
 export class System extends SystemBase {
   override readonly name = 'MAIN'
 
@@ -104,7 +110,7 @@ export class System extends SystemBase {
 
     console.info(`--------------------------------------------------------------`)
 
-    await this.deviceManager.init()
+    // await this.deviceManager.init()
     
     // load current user
     await this.userManager.init()
@@ -113,7 +119,7 @@ export class System extends SystemBase {
     await this.insightManager.init()
 
     // load calendar
-    await this.chatGPTManager.init()
+    // await this.chatGPTManager.init()
     // await this.calendarManager.init()
 
     await Promise.all([
@@ -174,8 +180,8 @@ export class System extends SystemBase {
     super.stop()
 
     // make sure backtests & custom bots code compilers are stopt
-    await this.backtestManager.destroy()
-    await this.editorManager.destroy()
+    // await this.backtestManager.destroy()
+    // await this.editorManager.destroy()
 
     logger.debug(`${this.env} - Stopped`)
   }
