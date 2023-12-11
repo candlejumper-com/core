@@ -14,7 +14,7 @@ import { CANDLE_FIELD } from '../../candle/candle.util'
 import { QueueBinance } from './binance.queue'
 
 export class BrokerBinance extends Broker {
-
+  id = 'BINANCE'
   instance: MainClient
   websocket: WebsocketClient
   queue: QueueBinance
@@ -152,7 +152,7 @@ export class BrokerBinance extends Broker {
     }
   }
 
-  async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void) {
+  override async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void) {
     const APIKEY = this.system.configManager.config.brokers.binance.apiKey
 
     const listenKey = await getUserDataStream(APIKEY)
@@ -228,11 +228,6 @@ export class BrokerBinance extends Broker {
 
   async syncExchangeFromBroker(): Promise<void> {
       
-  }
-
-  getExchangeInfoBySymbol(symbol: string): any {
-    // getExchangeInfoBySymbol(symbol: string): Exc['symbols'][0] {
-    return this.exchangeInfo.symbols.find(_symbol => _symbol.name === symbol)
   }
 
   async getOrdersByMarket(symbol: string): Promise<IOrder[]> {

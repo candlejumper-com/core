@@ -11,7 +11,7 @@ export interface ISystemConfig {
             apiKey: string
         }
     }
-    symbols?: string[]
+    symbols2?: string[]
     intervals?: string[]
     bots?: string[]
     quantityPercentage?: number

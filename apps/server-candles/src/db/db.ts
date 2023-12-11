@@ -44,7 +44,7 @@ export class DB {
         const symbols = this.system.configManager.config.symbols
         const intervals = this.system.configManager.config.intervals
         const tableNames = symbols.map(symbol => intervals.map(interval => getCandleEntityName(this.system, symbol, interval))).flat()
-
+        console.log(this.system.configManager.config.symbols)
         return tableNames.map(tableName => createCandleEntity(tableName))
     }
 }

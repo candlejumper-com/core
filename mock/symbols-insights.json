@@ -1,0 +1,3569 @@
+{
+  "CHPT": {
+    "insights": null,
+    "symbol": {
+      "name": "CHPT"
+    }
+  },
+  "AMAT": {
+    "insights": null,
+    "symbol": {
+      "name": "AMAT"
+    }
+  },
+  "GPS": {
+    "insights": {
+      "symbol": "GPS",
+      "instrumentInfo": {
+        "technicalEvents": {
+          "provider": "Trading Central",
+          "sector": "Consumer Cyclical",
+          "shortTermOutlook": {
+            "stateDescription": "Bullish events outweigh bearish events.",
+            "direction": "Bullish",
+            "score": 1,
+            "scoreDescription": "Weak Bullish Evidence",
+            "sectorDirection": "Bullish",
+            "sectorScore": 2,
+            "sectorScoreDescription": "Bullish Evidence",
+            "indexDirection": "Bearish",
+            "indexScore": 2,
+            "indexScoreDescription": "Bearish Evidence"
+          },
+          "intermediateTermOutlook": {
+            "stateDescription": "All events are bullish.",
+            "direction": "Bullish",
+            "score": 2,
+            "scoreDescription": "Bullish Evidence",
+            "sectorDirection": "Bullish",
+            "sectorScore": 3,
+            "sectorScoreDescription": "Strong Bullish Evidence",
+            "indexDirection": "Bullish",
+            "indexScore": 4,
+            "indexScoreDescription": "Very Strong Bullish Evidence"
+          },
+          "longTermOutlook": {
+            "stateDescription": "Recent bullish events outweigh bearish events.",
+            "direction": "Bullish",
+            "score": 3,
+            "scoreDescription": "Strong Bullish Evidence",
+            "sectorDirection": "Bullish",
+            "sectorScore": 3,
+            "sectorScoreDescription": "Strong Bullish Evidence",
+            "indexDirection": "Bullish",
+            "indexScore": 3,
+            "indexScoreDescription": "Strong Bullish Evidence"
+          }
+        },
+        "keyTechnicals": {
+          "provider": "Trading Central",
+          "support": 9.4374,
+          "stopLoss": 19.735303
+        },
+        "valuation": {
+          "color": 0,
+          "description": "Overvalued",
+          "discount": "-49%",
+          "relativeValue": "Premium",
+          "provider": "Trading Central"
+        }
+      },
+      "companySnapshot": {
+        "sectorInfo": "Consumer Cyclical",
+        "company": {
+          "innovativeness": 0.7679,
+          "hiring": 0.7955,
+          "sustainability": 0.2974,
+          "insiderSentiments": 0.1883,
+          "earningsReports": 0.9891,
+          "dividends": 0.499
+        },
+        "sector": {
+          "innovativeness": 0.5,
+          "hiring": 0.5,
+          "sustainability": 0.5,
+          "insiderSentiments": 0.5,
+          "earningsReports": 0.5,
+          "dividends": 0.5
+        }
+      },
+      "recommendation": {
+        "provider": "Argus Research",
+        "rating": "HOLD"
+      },
+      "upsell": {
+        "msBullishSummary": [
+          "According to Euromonitor, Old Navy was the second-largest apparel brand (after Nike) in the U.S. in 2022. It competes in the discount apparel sector, which has been healthier than other areas of apparel retail.",
+          "Athleta has established itself in the fast-growing women’s athleisure market, one of the bright spots in North America apparel. Its merchandize carries higher price points than other Gap brands.",
+          "Gap’s e-commerce accounted for $5 billion in sales in 2022 (32% of its total sales) and has helped the firm to become less dependent on indoor malls."
+        ],
+        "msBearishSummary": [
+          "Gap’s poor results and significant management turnover make it highly unlikely that the company will achieve its stated targets, such as a 10% operating margin, in the foreseeable future.",
+          "We believe Old Navy generates most of Gap’s operating profit, but its same-store sales have been inconsistent due, in part, to merchandising issues. The ultimate success of Gap’s turnaround plan for the brand is uncertain.",
+          "Banana Republic and Gap Global continue to post disappointing results, suggesting that closing low-performing stores has brought little benefit."
+        ],
+        "companyName": "Gap, Inc. (The)",
+        "msBullishBearishSummariesPublishDate": "2023-11-29T00:36:17.000Z",
+        "upsellReportType": "MORNINGSTAR_ANALYST"
+      },
+      "upsellSearchDD": {
+        "researchReports": {
+          "reportId": "MS_0P000002CM_AnalystReport_1701218177000",
+          "provider": "Morningstar",
+          "title": "Gap Earnings: Nice Start to New CEO’s Tenure as Old Navy and Margins Outperform; Shares Undervalued",
+          "reportDate": "2023-11-29T00:36:17.000Z",
+          "summary": "Gap retails apparel, accessories, and personal-care products under the Gap, Old Navy, Banana Republic, and Athleta brands. Old Navy generates more than half of Gap’s sales. The firm also operates e-commerce sites, outlet stores, and specialty stores under various Gap names. Gap operates approximately 2,600 stores in North America, Europe, and Asia and franchises about 850 more in Asia, Europe, Latin America, and other regions. Gap was founded in 1969 and is based in San Francisco. ",
+          "investmentRating": "Neutral"
+        }
+      },
+      "events": [
+        {
+          "eventType": "Commodity Channel Index",
+          "pricePeriod": "D",
+          "tradingHorizon": "S",
+          "tradeType": "U",
+          "imageUrl": "https://s.yimg.com/uc/fin/img/assets/generic.svg",
+          "startDate": "2023-11-30T14:30:00.000Z",
+          "endDate": "2023-11-30T14:30:00.000Z"
+        }
+      ],
+      "reports": [
+        {
+          "id": "MS_0P000002CM_AnalystReport_1701218177000",
+          "headHtml": "Analyst Report: The Gap, Inc.",
+          "provider": "Morningstar",
+          "reportDate": "2023-11-29T00:36:17.000Z",
+          "reportTitle": "Gap retails apparel, accessories, and personal-care products under the Gap, Old Navy, Banana Republic, and Athleta brands. Old Navy generates more than half of Gap’s sales. The firm also operates e-commerce sites, outlet stores, and specialty stores under various Gap names. Gap operates approximately 2,600 stores in North America, Europe, and Asia and franchises about 850 more in Asia, Europe, Latin America, and other regions. Gap was founded in 1969 and is based in San Francisco. ",
+          "reportType": "Analyst Report",
+          "targetPrice": 23.5,
+          "targetPriceStatus": "Maintained",
+          "investmentRating": "Neutral",
+          "tickers": [
+            "GPS"
+          ]
+        },
+        {
+          "id": "MS_0P000002CM_AnalystReport_1700194308000",
+          "headHtml": "Analyst Report: The Gap, Inc.",
+          "provider": "Morningstar",
+          "reportDate": "2023-11-17T04:11:48.000Z",
+          "reportTitle": "Gap retails apparel, accessories, and personal-care products under the Gap, Old Navy, Banana Republic, and Athleta brands. Old Navy generates more than half of Gap’s sales. The firm also operates e-commerce sites, outlet stores, and specialty stores under various Gap names. Gap operates approximately 2,600 stores in North America, Europe, and Asia and franchises about 850 more in Asia, Europe, Latin America, and other regions. Gap was founded in 1969 and is based in San Francisco. ",
+          "reportType": "Analyst Report",
+          "targetPrice": 23.5,
+          "targetPriceStatus": "Maintained",
+          "investmentRating": "Bullish",
+          "tickers": [
+            "GPS"
+          ]
+        }
+      ],
+      "sigDevs": [
+        {
+          "headline": "Gap Q3 Basic EPS USD 0.59",
+          "date": "2023-11-16T00:00:00.000Z"
+        }
+      ],
+      "secReports": [
+        {
+          "id": "0000039911-23-000132_39911",
+          "type": "Periodic Financial Reports",
+          "title": "10-Q : Periodic Financial Reports",
+          "description": "Quarterly report pursuant to Section 13 or 15(d)",
+          "filingDate": "2023-11-21T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000132/thumbnail.png",
+          "formType": "10-Q"
+        },
+        {
+          "id": "0000039911-23-000130_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2023-11-16T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000130/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-23-000110_39911",
+          "type": "Periodic Financial Reports",
+          "title": "10-Q : Periodic Financial Reports",
+          "description": "Quarterly report pursuant to Section 13 or 15(d)",
+          "filingDate": "2023-08-25T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000110/thumbnail.png",
+          "formType": "10-Q"
+        },
+        {
+          "id": "0000039911-23-000104_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2023-08-24T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000104/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-23-000082_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2023-07-26T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000082/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-23-000043_39911",
+          "type": "Periodic Financial Reports",
+          "title": "10-Q : Periodic Financial Reports",
+          "description": "Quarterly report pursuant to Section 13 or 15(d)",
+          "filingDate": "2023-05-26T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000043/thumbnail.png",
+          "formType": "10-Q"
+        },
+        {
+          "id": "0000039911-23-000044_39911",
+          "type": "Offering Registrations",
+          "title": "S-8 : Offering Registrations",
+          "description": "Initial registration statement for securities to be offered to employees pursuant to employee benefit plans",
+          "filingDate": "2023-05-26T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000044/thumbnail.png",
+          "formType": "S-8"
+        },
+        {
+          "id": "0000039911-23-000039_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2023-05-25T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000039/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-23-000035_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2023-05-12T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000035/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-23-000026_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2023-04-27T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000026/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0001564590-23-004649_39911",
+          "type": "Proxy Statements",
+          "title": "DEF 14A : Proxy Statements",
+          "description": "Definitive proxy statements",
+          "filingDate": "2023-03-29T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000156459023004649/thumbnail.png",
+          "formType": "DEF 14A"
+        },
+        {
+          "id": "0000039911-23-000015_39911",
+          "type": "Periodic Financial Reports",
+          "title": "10-K : Periodic Financial Reports",
+          "description": "Annual report pursuant to Section 13 and 15(d)",
+          "filingDate": "2023-03-14T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000015/thumbnail.png",
+          "formType": "10-K"
+        },
+        {
+          "id": "0000039911-23-000010_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2023-03-10T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000010/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-23-000007_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2023-03-09T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991123000007/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0001193125-23-038591_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13G/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities by passive investors and certain institutions",
+          "filingDate": "2023-02-14T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000200217/000119312523038591/thumbnail.png",
+          "formType": "SC 13G/A"
+        },
+        {
+          "id": "0001104659-23-016013_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13G/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities by passive investors and certain institutions",
+          "filingDate": "2023-02-09T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000102909/000110465923016013/thumbnail.png",
+          "formType": "SC 13G/A"
+        },
+        {
+          "id": "0000039911-22-000093_39911",
+          "type": "Periodic Financial Reports",
+          "title": "10-Q : Periodic Financial Reports",
+          "description": "Quarterly report pursuant to Section 13 or 15(d)",
+          "filingDate": "2022-11-22T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000093/thumbnail.png",
+          "formType": "10-Q"
+        },
+        {
+          "id": "0000039911-22-000089_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-11-17T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000089/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-22-000077_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-11-08T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000077/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0001104659-22-097516_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13D/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities",
+          "filingDate": "2022-09-02T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0001079847/000110465922097516/thumbnail.png",
+          "formType": "SC 13D/A"
+        },
+        {
+          "id": "0001104659-22-097513_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13D/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities",
+          "filingDate": "2022-09-02T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0001079848/000110465922097513/thumbnail.png",
+          "formType": "SC 13D/A"
+        },
+        {
+          "id": "0001104659-22-097514_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13D/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities",
+          "filingDate": "2022-09-02T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0001217081/000110465922097514/thumbnail.png",
+          "formType": "SC 13D/A"
+        },
+        {
+          "id": "0000039911-22-000071_39911",
+          "type": "Periodic Financial Reports",
+          "title": "10-Q : Periodic Financial Reports",
+          "description": "Quarterly report pursuant to Section 13 or 15(d)",
+          "filingDate": "2022-08-26T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000071/thumbnail.png",
+          "formType": "10-Q"
+        },
+        {
+          "id": "0000039911-22-000070_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-08-25T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000070/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-22-000065_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-08-17T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000065/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-22-000060_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K/A : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-08-03T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000060/thumbnail.png",
+          "formType": "8-K/A"
+        },
+        {
+          "id": "0000039911-22-000058_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-07-13T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000058/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-22-000056_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-07-11T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000056/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-22-000037_39911",
+          "type": "Periodic Financial Reports",
+          "title": "10-Q : Periodic Financial Reports",
+          "description": "Quarterly report pursuant to Section 13 or 15(d)",
+          "filingDate": "2022-05-27T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000037/thumbnail.png",
+          "formType": "10-Q"
+        },
+        {
+          "id": "0000039911-22-000034_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-05-26T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000034/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000039911-22-000023_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-05-12T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000023/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0000019617-22-000325_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13G/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities by passive investors and certain institutions",
+          "filingDate": "2022-05-04T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000001961722000325/thumbnail.png",
+          "formType": "SC 13G/A"
+        },
+        {
+          "id": "0000039911-22-000019_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-04-21T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000019/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0001104659-22-044200_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13D/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities",
+          "filingDate": "2022-04-08T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0001217081/000110465922044200/thumbnail.png",
+          "formType": "SC 13D/A"
+        },
+        {
+          "id": "0001104659-22-044195_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13D/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities",
+          "filingDate": "2022-04-08T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000908441/000110465922044195/thumbnail.png",
+          "formType": "SC 13D/A"
+        },
+        {
+          "id": "0001104659-22-044197_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13D/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities",
+          "filingDate": "2022-04-08T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0001079848/000110465922044197/thumbnail.png",
+          "formType": "SC 13D/A"
+        },
+        {
+          "id": "0001104659-22-044203_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13D/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities",
+          "filingDate": "2022-04-08T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0001079847/000110465922044203/thumbnail.png",
+          "formType": "SC 13D/A"
+        },
+        {
+          "id": "0001564590-22-012627_39911",
+          "type": "Proxy Statements",
+          "title": "DEF 14A : Proxy Statements",
+          "description": "Definitive proxy statements",
+          "filingDate": "2022-03-30T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000156459022012627/thumbnail.png",
+          "formType": "DEF 14A"
+        },
+        {
+          "id": "0001564590-22-012631_39911",
+          "type": "Proxy Statements",
+          "title": "DEFA14A : Proxy Statements",
+          "description": "Definitive additional proxy soliciting materials including Rule 14(a)(12) material. Note: Submission type DEFA14A can be filed as part of Form 8-K. For filers subject to 8-K filing requirements we recommend the use of the 8-K combined form type as the easiest method for fulfilling your filing requirement for both forms",
+          "filingDate": "2022-03-30T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000156459022012631/thumbnail.png",
+          "formType": "DEFA14A"
+        },
+        {
+          "id": "0000039911-22-000012_39911",
+          "type": "Periodic Financial Reports",
+          "title": "10-K : Periodic Financial Reports",
+          "description": "Annual report pursuant to Section 13 and 15(d)",
+          "filingDate": "2022-03-15T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000012/thumbnail.png",
+          "formType": "10-K"
+        },
+        {
+          "id": "0000039911-22-000007_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-03-11T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000007/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0001193125-22-071664_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13G/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities by passive investors and certain institutions",
+          "filingDate": "2022-03-10T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000200217/000119312522071664/thumbnail.png",
+          "formType": "SC 13G/A"
+        },
+        {
+          "id": "0000039911-22-000005_39911",
+          "type": "Corporate Changes & Voting Matters",
+          "title": "8-K : Corporate Changes & Voting Matters",
+          "description": "Current report filing",
+          "filingDate": "2022-03-03T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000003991122000005/thumbnail.png",
+          "formType": "8-K"
+        },
+        {
+          "id": "0001193125-22-040941_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13G/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities by passive investors and certain institutions",
+          "filingDate": "2022-02-14T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000200217/000119312522040941/thumbnail.png",
+          "formType": "SC 13G/A"
+        },
+        {
+          "id": "0001104659-22-017616_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13G/A : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities by passive investors and certain institutions",
+          "filingDate": "2022-02-10T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000102909/000110465922017616/thumbnail.png",
+          "formType": "SC 13G/A"
+        },
+        {
+          "id": "0000019617-22-000152_39911",
+          "type": "Tender Offer/Acquisition Reports",
+          "title": "SC 13G : Tender Offer/Acquisition Reports",
+          "description": "Schedule filed to report acquisition of beneficial ownership of 5% or more of a class of equity securities by passive investors and certain institutions",
+          "filingDate": "2022-01-21T00:00:00.000Z",
+          "snapshotUrl": "https://cdn.yahoofinance.com/prod/sec-reports-thumbnails/0000039911/000001961722000152/thumbnail.png",
+          "formType": "SC 13G"
+        }
+      ]
+    },
+    "symbol": {
+      "name": "GPS"
+    }
+  },
+  "SGD": {
+    "insights": null,
+    "symbol": {
+      "name": "SGD"
+    }
+  },
+  "SOFI": {
+    "insights": null,
+    "symbol": {
+      "name": "SOFI"
+    }
+  },
+  "LI": {
+    "insights": null,
+    "symbol": {
+      "name": "LI"
+    }
+  },
+  "FSR": {
+    "insights": null,
+    "symbol": {
+      "name": "FSR"
+    }
+  },
+  "CRSP": {
+    "insights": null,
+    "symbol": {
+      "name": "CRSP"
+    }
+  },
+  "WLGS": {
+    "insights": null,
+    "symbol": {
+      "name": "WLGS"
+    }
+  },
+  "TSLA": {
+    "insights": null,
+    "symbol": {
+      "name": "TSLA"
+    }
+  },
+  "ROST": {
+    "insights": null,
+    "symbol": {
+      "name": "ROST"
+    }
+  },
+  "SGBX": {
+    "insights": null,
+    "symbol": {
+      "name": "SGBX"
+    }
+  },
+  "CYTO": {
+    "insights": null,
+    "symbol": {
+      "name": "CYTO"
+    }
+  },
+  "BJ": {
+    "insights": null,
+    "symbol": {
+      "name": "BJ"
+    }
+  },
+  "MANU": {
+    "insights": null,
+    "symbol": {
+      "name": "MANU"
+    }
+  },
+  "BOIL": {
+    "insights": null,
+    "symbol": {
+      "name": "BOIL"
+    }
+  },
+  "ATKR": {
+    "insights": null,
+    "symbol": {
+      "name": "ATKR"
+    }
+  },
+  "MURA": {
+    "insights": null,
+    "symbol": {
+      "name": "MURA"
+    }
+  },
+  "VRT": {
+    "insights": null,
+    "symbol": {
+      "name": "VRT"
+    }
+  },
+  "TWST": {
+    "insights": null,
+    "symbol": {
+      "name": "TWST"
+    }
+  },
+  "EVGO": {
+    "insights": null,
+    "symbol": {
+      "name": "EVGO"
+    }
+  },
+  "THC": {
+    "insights": null,
+    "symbol": {
+      "name": "THC"
+    }
+  },
+  "GLOB": {
+    "insights": null,
+    "symbol": {
+      "name": "GLOB"
+    }
+  },
+  "LAZR": {
+    "insights": null,
+    "symbol": {
+      "name": "LAZR"
+    }
+  },
+  "OPTX": {
+    "insights": null,
+    "symbol": {
+      "name": "OPTX"
+    }
+  },
+  "CISS": {
+    "insights": null,
+    "symbol": {
+      "name": "CISS"
+    }
+  },
+  "OTLY": {
+    "insights": null,
+    "symbol": {
+      "name": "OTLY"
+    }
+  },
+  "KR": {
+    "insights": null,
+    "symbol": {
+      "name": "KR"
+    }
+  },
+  "CPRT": {
+    "insights": null,
+    "symbol": {
+      "name": "CPRT"
+    }
+  },
+  "LAES": {
+    "insights": null,
+    "symbol": {
+      "name": "LAES"
+    }
+  },
+  "ATGL": {
+    "insights": null,
+    "symbol": {
+      "name": "ATGL"
+    }
+  },
+  "LLY": {
+    "insights": null,
+    "symbol": {
+      "name": "LLY"
+    }
+  },
+  "ZM": {
+    "insights": null,
+    "symbol": {
+      "name": "ZM"
+    }
+  },
+  "ABCM": {
+    "insights": null,
+    "symbol": {
+      "name": "ABCM"
+    }
+  },
+  "AGE": {
+    "insights": null,
+    "symbol": {
+      "name": "AGE"
+    }
+  },
+  "BURBY": {
+    "insights": null,
+    "symbol": {
+      "name": "BURBY"
+    }
+  },
+  "PAGS": {
+    "insights": null,
+    "symbol": {
+      "name": "PAGS"
+    }
+  },
+  "UGI": {
+    "insights": null,
+    "symbol": {
+      "name": "UGI"
+    }
+  },
+  "SNES": {
+    "insights": null,
+    "symbol": {
+      "name": "SNES"
+    }
+  },
+  "DLB": {
+    "insights": null,
+    "symbol": {
+      "name": "DLB"
+    }
+  },
+  "CAUD": {
+    "insights": null,
+    "symbol": {
+      "name": "CAUD"
+    }
+  },
+  "ANF": {
+    "insights": null,
+    "symbol": {
+      "name": "ANF"
+    }
+  },
+  "DML.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "DML.TO"
+    }
+  },
+  "FBIO": {
+    "insights": null,
+    "symbol": {
+      "name": "FBIO"
+    }
+  },
+  "KOD": {
+    "insights": null,
+    "symbol": {
+      "name": "KOD"
+    }
+  },
+  "TRVG": {
+    "insights": null,
+    "symbol": {
+      "name": "TRVG"
+    }
+  },
+  "MRAI": {
+    "insights": null,
+    "symbol": {
+      "name": "MRAI"
+    }
+  },
+  "IWM": {
+    "insights": null,
+    "symbol": {
+      "name": "IWM"
+    }
+  },
+  "AEO": {
+    "insights": null,
+    "symbol": {
+      "name": "AEO"
+    }
+  },
+  "WING": {
+    "insights": null,
+    "symbol": {
+      "name": "WING"
+    }
+  },
+  "NG=F": {
+    "insights": null,
+    "symbol": {
+      "name": "NG=F"
+    }
+  },
+  "RTY=F": {
+    "insights": null,
+    "symbol": {
+      "name": "RTY=F"
+    }
+  },
+  "VOLCAR-B.ST": {
+    "insights": null,
+    "symbol": {
+      "name": "VOLCAR-B.ST"
+    }
+  },
+  "FSZ.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "FSZ.TO"
+    }
+  },
+  "AMTD": {
+    "insights": null,
+    "symbol": {
+      "name": "AMTD"
+    }
+  },
+  "IVN.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "IVN.TO"
+    }
+  },
+  "EXPE": {
+    "insights": null,
+    "symbol": {
+      "name": "EXPE"
+    }
+  },
+  "BKE": {
+    "insights": null,
+    "symbol": {
+      "name": "BKE"
+    }
+  },
+  "^RUT": {
+    "insights": null,
+    "symbol": {
+      "name": "^RUT"
+    }
+  },
+  "UNG": {
+    "insights": null,
+    "symbol": {
+      "name": "UNG"
+    }
+  },
+  "ISRG": {
+    "insights": null,
+    "symbol": {
+      "name": "ISRG"
+    }
+  },
+  "KOLD": {
+    "insights": null,
+    "symbol": {
+      "name": "KOLD"
+    }
+  },
+  "AMAT231117C00155000": {
+    "insights": null,
+    "symbol": {
+      "name": "AMAT231117C00155000"
+    }
+  },
+  "RYAAY": {
+    "insights": null,
+    "symbol": {
+      "name": "RYAAY"
+    }
+  },
+  "ACLS": {
+    "insights": null,
+    "symbol": {
+      "name": "ACLS"
+    }
+  },
+  "SJT": {
+    "insights": null,
+    "symbol": {
+      "name": "SJT"
+    }
+  },
+  "NAPA": {
+    "insights": null,
+    "symbol": {
+      "name": "NAPA"
+    }
+  },
+  "ABVC": {
+    "insights": null,
+    "symbol": {
+      "name": "ABVC"
+    }
+  },
+  "DKNG": {
+    "insights": null,
+    "symbol": {
+      "name": "DKNG"
+    }
+  },
+  "DXLG": {
+    "insights": null,
+    "symbol": {
+      "name": "DXLG"
+    }
+  },
+  "SPB": {
+    "insights": null,
+    "symbol": {
+      "name": "SPB"
+    }
+  },
+  "QFIN": {
+    "insights": null,
+    "symbol": {
+      "name": "QFIN"
+    }
+  },
+  "UEC": {
+    "insights": null,
+    "symbol": {
+      "name": "UEC"
+    }
+  },
+  "CHPT231117C00005000": {
+    "insights": null,
+    "symbol": {
+      "name": "CHPT231117C00005000"
+    }
+  },
+  "CRBU": {
+    "insights": null,
+    "symbol": {
+      "name": "CRBU"
+    }
+  },
+  "BUD": {
+    "insights": null,
+    "symbol": {
+      "name": "BUD"
+    }
+  },
+  "VFS": {
+    "insights": null,
+    "symbol": {
+      "name": "VFS"
+    }
+  },
+  "ZTO": {
+    "insights": null,
+    "symbol": {
+      "name": "ZTO"
+    }
+  },
+  "LRHC": {
+    "insights": null,
+    "symbol": {
+      "name": "LRHC"
+    }
+  },
+  "GTLB": {
+    "insights": null,
+    "symbol": {
+      "name": "GTLB"
+    }
+  },
+  "HCDI": {
+    "insights": null,
+    "symbol": {
+      "name": "HCDI"
+    }
+  },
+  "BZH": {
+    "insights": null,
+    "symbol": {
+      "name": "BZH"
+    }
+  },
+  "XIACY": {
+    "insights": null,
+    "symbol": {
+      "name": "XIACY"
+    }
+  },
+  "CMP": {
+    "insights": null,
+    "symbol": {
+      "name": "CMP"
+    }
+  },
+  "TMBR": {
+    "insights": null,
+    "symbol": {
+      "name": "TMBR"
+    }
+  },
+  "HNU.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "HNU.TO"
+    }
+  },
+  "ARDX": {
+    "insights": null,
+    "symbol": {
+      "name": "ARDX"
+    }
+  },
+  "KLAC": {
+    "insights": null,
+    "symbol": {
+      "name": "KLAC"
+    }
+  },
+  "GE": {
+    "insights": null,
+    "symbol": {
+      "name": "GE"
+    }
+  },
+  "RBLX": {
+    "insights": null,
+    "symbol": {
+      "name": "RBLX"
+    }
+  },
+  "OXY": {
+    "insights": null,
+    "symbol": {
+      "name": "OXY"
+    }
+  },
+  "PBT": {
+    "insights": null,
+    "symbol": {
+      "name": "PBT"
+    }
+  },
+  "CMG": {
+    "insights": null,
+    "symbol": {
+      "name": "CMG"
+    }
+  },
+  "HYMTF": {
+    "insights": null,
+    "symbol": {
+      "name": "HYMTF"
+    }
+  },
+  "BAC": {
+    "insights": null,
+    "symbol": {
+      "name": "BAC"
+    }
+  },
+  "CRIS": {
+    "insights": null,
+    "symbol": {
+      "name": "CRIS"
+    }
+  },
+  "VIGL": {
+    "insights": null,
+    "symbol": {
+      "name": "VIGL"
+    }
+  },
+  "BURL": {
+    "insights": null,
+    "symbol": {
+      "name": "BURL"
+    }
+  },
+  "TNA": {
+    "insights": null,
+    "symbol": {
+      "name": "TNA"
+    }
+  },
+  "EXFY": {
+    "insights": null,
+    "symbol": {
+      "name": "EXFY"
+    }
+  },
+  "LRCX": {
+    "insights": null,
+    "symbol": {
+      "name": "LRCX"
+    }
+  },
+  "EVLO": {
+    "insights": null,
+    "symbol": {
+      "name": "EVLO"
+    }
+  },
+  "DBX": {
+    "insights": null,
+    "symbol": {
+      "name": "DBX"
+    }
+  },
+  "ADI": {
+    "insights": null,
+    "symbol": {
+      "name": "ADI"
+    }
+  },
+  "BKD": {
+    "insights": null,
+    "symbol": {
+      "name": "BKD"
+    }
+  },
+  "WWD": {
+    "insights": null,
+    "symbol": {
+      "name": "WWD"
+    }
+  },
+  "CTRA": {
+    "insights": null,
+    "symbol": {
+      "name": "CTRA"
+    }
+  },
+  "RR": {
+    "insights": null,
+    "symbol": {
+      "name": "RR"
+    }
+  },
+  "ONVO": {
+    "insights": null,
+    "symbol": {
+      "name": "ONVO"
+    }
+  },
+  "CSX": {
+    "insights": null,
+    "symbol": {
+      "name": "CSX"
+    }
+  },
+  "NVO": {
+    "insights": null,
+    "symbol": {
+      "name": "NVO"
+    }
+  },
+  "FCU.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "FCU.TO"
+    }
+  },
+  "CVNA": {
+    "insights": null,
+    "symbol": {
+      "name": "CVNA"
+    }
+  },
+  "CDTX": {
+    "insights": null,
+    "symbol": {
+      "name": "CDTX"
+    }
+  },
+  "ABT": {
+    "insights": null,
+    "symbol": {
+      "name": "ABT"
+    }
+  },
+  "DNN": {
+    "insights": null,
+    "symbol": {
+      "name": "DNN"
+    }
+  },
+  "NVDA": {
+    "insights": null,
+    "symbol": {
+      "name": "NVDA"
+    }
+  },
+  "TSLY": {
+    "insights": null,
+    "symbol": {
+      "name": "TSLY"
+    }
+  },
+  "MELI": {
+    "insights": null,
+    "symbol": {
+      "name": "MELI"
+    }
+  },
+  "SITM": {
+    "insights": null,
+    "symbol": {
+      "name": "SITM"
+    }
+  },
+  "TRMB": {
+    "insights": null,
+    "symbol": {
+      "name": "TRMB"
+    }
+  },
+  "KMX": {
+    "insights": null,
+    "symbol": {
+      "name": "KMX"
+    }
+  },
+  "PLTR": {
+    "insights": null,
+    "symbol": {
+      "name": "PLTR"
+    }
+  },
+  "HCA": {
+    "insights": null,
+    "symbol": {
+      "name": "HCA"
+    }
+  },
+  "SPR": {
+    "insights": null,
+    "symbol": {
+      "name": "SPR"
+    }
+  },
+  "POST": {
+    "insights": null,
+    "symbol": {
+      "name": "POST"
+    }
+  },
+  "DOGE-USD": {
+    "insights": null,
+    "symbol": {
+      "name": "DOGE-USD"
+    }
+  },
+  "BRK-B": {
+    "insights": null,
+    "symbol": {
+      "name": "BRK-B"
+    }
+  },
+  "TROW": {
+    "insights": null,
+    "symbol": {
+      "name": "TROW"
+    }
+  },
+  "ADX": {
+    "insights": null,
+    "symbol": {
+      "name": "ADX"
+    }
+  },
+  "ZLAB": {
+    "insights": null,
+    "symbol": {
+      "name": "ZLAB"
+    }
+  },
+  "PGR": {
+    "insights": null,
+    "symbol": {
+      "name": "PGR"
+    }
+  },
+  "NA9.DE": {
+    "insights": null,
+    "symbol": {
+      "name": "NA9.DE"
+    }
+  },
+  "BNS.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "BNS.TO"
+    }
+  },
+  "UBER": {
+    "insights": null,
+    "symbol": {
+      "name": "UBER"
+    }
+  },
+  "ADYEN.AS": {
+    "insights": null,
+    "symbol": {
+      "name": "ADYEN.AS"
+    }
+  },
+  "DDS": {
+    "insights": null,
+    "symbol": {
+      "name": "DDS"
+    }
+  },
+  "BB": {
+    "insights": null,
+    "symbol": {
+      "name": "BB"
+    }
+  },
+  "SHOT": {
+    "insights": null,
+    "symbol": {
+      "name": "SHOT"
+    }
+  },
+  "UNH": {
+    "insights": null,
+    "symbol": {
+      "name": "UNH"
+    }
+  },
+  "CGC": {
+    "insights": null,
+    "symbol": {
+      "name": "CGC"
+    }
+  },
+  "LDOS": {
+    "insights": null,
+    "symbol": {
+      "name": "LDOS"
+    }
+  },
+  "BLNK": {
+    "insights": null,
+    "symbol": {
+      "name": "BLNK"
+    }
+  },
+  "CCJ": {
+    "insights": null,
+    "symbol": {
+      "name": "CCJ"
+    }
+  },
+  "CHRS": {
+    "insights": null,
+    "symbol": {
+      "name": "CHRS"
+    }
+  },
+  "VNET": {
+    "insights": null,
+    "symbol": {
+      "name": "VNET"
+    }
+  },
+  "JNJ": {
+    "insights": null,
+    "symbol": {
+      "name": "JNJ"
+    }
+  },
+  "CCL": {
+    "insights": null,
+    "symbol": {
+      "name": "CCL"
+    }
+  },
+  "CHWY": {
+    "insights": null,
+    "symbol": {
+      "name": "CHWY"
+    }
+  },
+  "LMDX": {
+    "insights": null,
+    "symbol": {
+      "name": "LMDX"
+    }
+  },
+  "SCLX": {
+    "insights": null,
+    "symbol": {
+      "name": "SCLX"
+    }
+  },
+  "GS": {
+    "insights": null,
+    "symbol": {
+      "name": "GS"
+    }
+  },
+  "TEVA": {
+    "insights": null,
+    "symbol": {
+      "name": "TEVA"
+    }
+  },
+  "BABAF": {
+    "insights": null,
+    "symbol": {
+      "name": "BABAF"
+    }
+  },
+  "NFE": {
+    "insights": null,
+    "symbol": {
+      "name": "NFE"
+    }
+  },
+  "VAC": {
+    "insights": null,
+    "symbol": {
+      "name": "VAC"
+    }
+  },
+  "F": {
+    "insights": null,
+    "symbol": {
+      "name": "F"
+    }
+  },
+  "PRZO": {
+    "insights": null,
+    "symbol": {
+      "name": "PRZO"
+    }
+  },
+  "URTY": {
+    "insights": null,
+    "symbol": {
+      "name": "URTY"
+    }
+  },
+  "JPM": {
+    "insights": null,
+    "symbol": {
+      "name": "JPM"
+    }
+  },
+  "HND.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "HND.TO"
+    }
+  },
+  "C": {
+    "insights": null,
+    "symbol": {
+      "name": "C"
+    }
+  },
+  "GOEV": {
+    "insights": null,
+    "symbol": {
+      "name": "GOEV"
+    }
+  },
+  "SPG": {
+    "insights": null,
+    "symbol": {
+      "name": "SPG"
+    }
+  },
+  "DE": {
+    "insights": null,
+    "symbol": {
+      "name": "DE"
+    }
+  },
+  "DINO": {
+    "insights": null,
+    "symbol": {
+      "name": "DINO"
+    }
+  },
+  "AMRC": {
+    "insights": null,
+    "symbol": {
+      "name": "AMRC"
+    }
+  },
+  "XPEV": {
+    "insights": null,
+    "symbol": {
+      "name": "XPEV"
+    }
+  },
+  "SLB": {
+    "insights": null,
+    "symbol": {
+      "name": "SLB"
+    }
+  },
+  "YM=F": {
+    "insights": null,
+    "symbol": {
+      "name": "YM=F"
+    }
+  },
+  "MA": {
+    "insights": null,
+    "symbol": {
+      "name": "MA"
+    }
+  },
+  "HWM": {
+    "insights": null,
+    "symbol": {
+      "name": "HWM"
+    }
+  },
+  "MDGL": {
+    "insights": null,
+    "symbol": {
+      "name": "MDGL"
+    }
+  },
+  "SMCI": {
+    "insights": null,
+    "symbol": {
+      "name": "SMCI"
+    }
+  },
+  "BLRX": {
+    "insights": null,
+    "symbol": {
+      "name": "BLRX"
+    }
+  },
+  "STLA": {
+    "insights": null,
+    "symbol": {
+      "name": "STLA"
+    }
+  },
+  "OPFI": {
+    "insights": null,
+    "symbol": {
+      "name": "OPFI"
+    }
+  },
+  "NKLA": {
+    "insights": null,
+    "symbol": {
+      "name": "NKLA"
+    }
+  },
+  "TRMD": {
+    "insights": null,
+    "symbol": {
+      "name": "TRMD"
+    }
+  },
+  "CM.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "CM.TO"
+    }
+  },
+  "URNJ": {
+    "insights": null,
+    "symbol": {
+      "name": "URNJ"
+    }
+  },
+  "PCG": {
+    "insights": null,
+    "symbol": {
+      "name": "PCG"
+    }
+  },
+  "UUUU": {
+    "insights": null,
+    "symbol": {
+      "name": "UUUU"
+    }
+  },
+  "FIVE": {
+    "insights": null,
+    "symbol": {
+      "name": "FIVE"
+    }
+  },
+  "LPG": {
+    "insights": null,
+    "symbol": {
+      "name": "LPG"
+    }
+  },
+  "HOOD": {
+    "insights": null,
+    "symbol": {
+      "name": "HOOD"
+    }
+  },
+  "AMT": {
+    "insights": null,
+    "symbol": {
+      "name": "AMT"
+    }
+  },
+  "BKKT": {
+    "insights": null,
+    "symbol": {
+      "name": "BKKT"
+    }
+  },
+  "SQ": {
+    "insights": null,
+    "symbol": {
+      "name": "SQ"
+    }
+  },
+  "AA": {
+    "insights": null,
+    "symbol": {
+      "name": "AA"
+    }
+  },
+  "CLNE": {
+    "insights": null,
+    "symbol": {
+      "name": "CLNE"
+    }
+  },
+  "GSAT": {
+    "insights": null,
+    "symbol": {
+      "name": "GSAT"
+    }
+  },
+  "TU": {
+    "insights": null,
+    "symbol": {
+      "name": "TU"
+    }
+  },
+  "FUBO": {
+    "insights": null,
+    "symbol": {
+      "name": "FUBO"
+    }
+  },
+  "BHP": {
+    "insights": null,
+    "symbol": {
+      "name": "BHP"
+    }
+  },
+  "O": {
+    "insights": null,
+    "symbol": {
+      "name": "O"
+    }
+  },
+  "MGRM": {
+    "insights": null,
+    "symbol": {
+      "name": "MGRM"
+    }
+  },
+  "EL": {
+    "insights": null,
+    "symbol": {
+      "name": "EL"
+    }
+  },
+  "SJM": {
+    "insights": null,
+    "symbol": {
+      "name": "SJM"
+    }
+  },
+  "UBS": {
+    "insights": null,
+    "symbol": {
+      "name": "UBS"
+    }
+  },
+  "INO": {
+    "insights": null,
+    "symbol": {
+      "name": "INO"
+    }
+  },
+  "ODD": {
+    "insights": null,
+    "symbol": {
+      "name": "ODD"
+    }
+  },
+  "NGZ23.NYM": {
+    "insights": null,
+    "symbol": {
+      "name": "NGZ23.NYM"
+    }
+  },
+  "ZEB.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "ZEB.TO"
+    }
+  },
+  "SBRA": {
+    "insights": null,
+    "symbol": {
+      "name": "SBRA"
+    }
+  },
+  "ABR": {
+    "insights": null,
+    "symbol": {
+      "name": "ABR"
+    }
+  },
+  "RILY": {
+    "insights": null,
+    "symbol": {
+      "name": "RILY"
+    }
+  },
+  "PGY": {
+    "insights": null,
+    "symbol": {
+      "name": "PGY"
+    }
+  },
+  "CP": {
+    "insights": null,
+    "symbol": {
+      "name": "CP"
+    }
+  },
+  "XLE": {
+    "insights": null,
+    "symbol": {
+      "name": "XLE"
+    }
+  },
+  "COF": {
+    "insights": null,
+    "symbol": {
+      "name": "COF"
+    }
+  },
+  "RMBS": {
+    "insights": null,
+    "symbol": {
+      "name": "RMBS"
+    }
+  },
+  "V": {
+    "insights": null,
+    "symbol": {
+      "name": "V"
+    }
+  },
+  "NXE": {
+    "insights": null,
+    "symbol": {
+      "name": "NXE"
+    }
+  },
+  "KD": {
+    "insights": null,
+    "symbol": {
+      "name": "KD"
+    }
+  },
+  "BARC.L": {
+    "insights": null,
+    "symbol": {
+      "name": "BARC.L"
+    }
+  },
+  "DIA": {
+    "insights": null,
+    "symbol": {
+      "name": "DIA"
+    }
+  },
+  "URA": {
+    "insights": null,
+    "symbol": {
+      "name": "URA"
+    }
+  },
+  "WW": {
+    "insights": null,
+    "symbol": {
+      "name": "WW"
+    }
+  },
+  "JEPQ": {
+    "insights": null,
+    "symbol": {
+      "name": "JEPQ"
+    }
+  },
+  "LABU": {
+    "insights": null,
+    "symbol": {
+      "name": "LABU"
+    }
+  },
+  "PSTV": {
+    "insights": null,
+    "symbol": {
+      "name": "PSTV"
+    }
+  },
+  "RIO": {
+    "insights": null,
+    "symbol": {
+      "name": "RIO"
+    }
+  },
+  "TPST": {
+    "insights": null,
+    "symbol": {
+      "name": "TPST"
+    }
+  },
+  "DKS": {
+    "insights": null,
+    "symbol": {
+      "name": "DKS"
+    }
+  },
+  "U-UN.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "U-UN.TO"
+    }
+  },
+  "LAAC": {
+    "insights": null,
+    "symbol": {
+      "name": "LAAC"
+    }
+  },
+  "OUST": {
+    "insights": null,
+    "symbol": {
+      "name": "OUST"
+    }
+  },
+  "GUSH": {
+    "insights": null,
+    "symbol": {
+      "name": "GUSH"
+    }
+  },
+  "EBET": {
+    "insights": null,
+    "symbol": {
+      "name": "EBET"
+    }
+  },
+  "BSX": {
+    "insights": null,
+    "symbol": {
+      "name": "BSX"
+    }
+  },
+  "RITM": {
+    "insights": null,
+    "symbol": {
+      "name": "RITM"
+    }
+  },
+  "NUE": {
+    "insights": null,
+    "symbol": {
+      "name": "NUE"
+    }
+  },
+  "APPN": {
+    "insights": null,
+    "symbol": {
+      "name": "APPN"
+    }
+  },
+  "SHEL": {
+    "insights": null,
+    "symbol": {
+      "name": "SHEL"
+    }
+  },
+  "FANG": {
+    "insights": null,
+    "symbol": {
+      "name": "FANG"
+    }
+  },
+  "URG": {
+    "insights": null,
+    "symbol": {
+      "name": "URG"
+    }
+  },
+  "XRP-USD": {
+    "insights": null,
+    "symbol": {
+      "name": "XRP-USD"
+    }
+  },
+  "ITRM": {
+    "insights": null,
+    "symbol": {
+      "name": "ITRM"
+    }
+  },
+  "SCHW": {
+    "insights": null,
+    "symbol": {
+      "name": "SCHW"
+    }
+  },
+  "RIVN": {
+    "insights": null,
+    "symbol": {
+      "name": "RIVN"
+    }
+  },
+  "URNM": {
+    "insights": null,
+    "symbol": {
+      "name": "URNM"
+    }
+  },
+  "HAL": {
+    "insights": null,
+    "symbol": {
+      "name": "HAL"
+    }
+  },
+  "AMC": {
+    "insights": null,
+    "symbol": {
+      "name": "AMC"
+    }
+  },
+  "HBAN": {
+    "insights": null,
+    "symbol": {
+      "name": "HBAN"
+    }
+  },
+  "IONQ": {
+    "insights": null,
+    "symbol": {
+      "name": "IONQ"
+    }
+  },
+  "DOGE-CAD": {
+    "insights": null,
+    "symbol": {
+      "name": "DOGE-CAD"
+    }
+  },
+  "FL": {
+    "insights": null,
+    "symbol": {
+      "name": "FL"
+    }
+  },
+  "LAAC.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "LAAC.TO"
+    }
+  },
+  "ELF": {
+    "insights": null,
+    "symbol": {
+      "name": "ELF"
+    }
+  },
+  "BXMT": {
+    "insights": null,
+    "symbol": {
+      "name": "BXMT"
+    }
+  },
+  "DOCU": {
+    "insights": null,
+    "symbol": {
+      "name": "DOCU"
+    }
+  },
+  "STRL": {
+    "insights": null,
+    "symbol": {
+      "name": "STRL"
+    }
+  },
+  "HTGC": {
+    "insights": null,
+    "symbol": {
+      "name": "HTGC"
+    }
+  },
+  "SPY": {
+    "insights": null,
+    "symbol": {
+      "name": "SPY"
+    }
+  },
+  "KSCP": {
+    "insights": null,
+    "symbol": {
+      "name": "KSCP"
+    }
+  },
+  "APD": {
+    "insights": null,
+    "symbol": {
+      "name": "APD"
+    }
+  },
+  "ASO": {
+    "insights": null,
+    "symbol": {
+      "name": "ASO"
+    }
+  },
+  "PKK.CN": {
+    "insights": null,
+    "symbol": {
+      "name": "PKK.CN"
+    }
+  },
+  "GM": {
+    "insights": null,
+    "symbol": {
+      "name": "GM"
+    }
+  },
+  "TSCO": {
+    "insights": null,
+    "symbol": {
+      "name": "TSCO"
+    }
+  },
+  "NVAX": {
+    "insights": null,
+    "symbol": {
+      "name": "NVAX"
+    }
+  },
+  "AZN": {
+    "insights": null,
+    "symbol": {
+      "name": "AZN"
+    }
+  },
+  "TMF": {
+    "insights": null,
+    "symbol": {
+      "name": "TMF"
+    }
+  },
+  "PR": {
+    "insights": null,
+    "symbol": {
+      "name": "PR"
+    }
+  },
+  "TDG": {
+    "insights": null,
+    "symbol": {
+      "name": "TDG"
+    }
+  },
+  "KMI": {
+    "insights": null,
+    "symbol": {
+      "name": "KMI"
+    }
+  },
+  "VXUS": {
+    "insights": null,
+    "symbol": {
+      "name": "VXUS"
+    }
+  },
+  "MTTR": {
+    "insights": null,
+    "symbol": {
+      "name": "MTTR"
+    }
+  },
+  "BRCC": {
+    "insights": null,
+    "symbol": {
+      "name": "BRCC"
+    }
+  },
+  "TWOU": {
+    "insights": null,
+    "symbol": {
+      "name": "TWOU"
+    }
+  },
+  "9988.HK": {
+    "insights": null,
+    "symbol": {
+      "name": "9988.HK"
+    }
+  },
+  "NRGU": {
+    "insights": null,
+    "symbol": {
+      "name": "NRGU"
+    }
+  },
+  "DOCN": {
+    "insights": null,
+    "symbol": {
+      "name": "DOCN"
+    }
+  },
+  "ETSY": {
+    "insights": null,
+    "symbol": {
+      "name": "ETSY"
+    }
+  },
+  "PHUN": {
+    "insights": null,
+    "symbol": {
+      "name": "PHUN"
+    }
+  },
+  "DAR": {
+    "insights": null,
+    "symbol": {
+      "name": "DAR"
+    }
+  },
+  "ARLP": {
+    "insights": null,
+    "symbol": {
+      "name": "ARLP"
+    }
+  },
+  "PHM": {
+    "insights": null,
+    "symbol": {
+      "name": "PHM"
+    }
+  },
+  "ENR.DE": {
+    "insights": null,
+    "symbol": {
+      "name": "ENR.DE"
+    }
+  },
+  "DB": {
+    "insights": null,
+    "symbol": {
+      "name": "DB"
+    }
+  },
+  "IJR": {
+    "insights": null,
+    "symbol": {
+      "name": "IJR"
+    }
+  },
+  "LOVE": {
+    "insights": null,
+    "symbol": {
+      "name": "LOVE"
+    }
+  },
+  "ENB": {
+    "insights": null,
+    "symbol": {
+      "name": "ENB"
+    }
+  },
+  "OCGN": {
+    "insights": null,
+    "symbol": {
+      "name": "OCGN"
+    }
+  },
+  "QSR": {
+    "insights": null,
+    "symbol": {
+      "name": "QSR"
+    }
+  },
+  "TSP": {
+    "insights": null,
+    "symbol": {
+      "name": "TSP"
+    }
+  },
+  "GSL": {
+    "insights": null,
+    "symbol": {
+      "name": "GSL"
+    }
+  },
+  "SRUUF": {
+    "insights": null,
+    "symbol": {
+      "name": "SRUUF"
+    }
+  },
+  "VLO": {
+    "insights": null,
+    "symbol": {
+      "name": "VLO"
+    }
+  },
+  "RIG": {
+    "insights": null,
+    "symbol": {
+      "name": "RIG"
+    }
+  },
+  "MNKD": {
+    "insights": null,
+    "symbol": {
+      "name": "MNKD"
+    }
+  },
+  "AC.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "AC.TO"
+    }
+  },
+  "ARCC": {
+    "insights": null,
+    "symbol": {
+      "name": "ARCC"
+    }
+  },
+  "TRKA": {
+    "insights": null,
+    "symbol": {
+      "name": "TRKA"
+    }
+  },
+  "CLX": {
+    "insights": null,
+    "symbol": {
+      "name": "CLX"
+    }
+  },
+  "PYPL": {
+    "insights": null,
+    "symbol": {
+      "name": "PYPL"
+    }
+  },
+  "JPY=X": {
+    "insights": null,
+    "symbol": {
+      "name": "JPY=X"
+    }
+  },
+  "USO": {
+    "insights": null,
+    "symbol": {
+      "name": "USO"
+    }
+  },
+  "LKNCY": {
+    "insights": null,
+    "symbol": {
+      "name": "LKNCY"
+    }
+  },
+  "BK": {
+    "insights": null,
+    "symbol": {
+      "name": "BK"
+    }
+  },
+  "CCO.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "CCO.TO"
+    }
+  },
+  "MGNI": {
+    "insights": null,
+    "symbol": {
+      "name": "MGNI"
+    }
+  },
+  "PXMD": {
+    "insights": null,
+    "symbol": {
+      "name": "PXMD"
+    }
+  },
+  "DNP": {
+    "insights": null,
+    "symbol": {
+      "name": "DNP"
+    }
+  },
+  "GLO.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "GLO.TO"
+    }
+  },
+  "TSLL": {
+    "insights": null,
+    "symbol": {
+      "name": "TSLL"
+    }
+  },
+  "ARKG": {
+    "insights": null,
+    "symbol": {
+      "name": "ARKG"
+    }
+  },
+  "^FTSE": {
+    "insights": null,
+    "symbol": {
+      "name": "^FTSE"
+    }
+  },
+  "BP": {
+    "insights": null,
+    "symbol": {
+      "name": "BP"
+    }
+  },
+  "OGI": {
+    "insights": null,
+    "symbol": {
+      "name": "OGI"
+    }
+  },
+  "MAIA": {
+    "insights": null,
+    "symbol": {
+      "name": "MAIA"
+    }
+  },
+  "SAVA": {
+    "insights": null,
+    "symbol": {
+      "name": "SAVA"
+    }
+  },
+  "EGY": {
+    "insights": null,
+    "symbol": {
+      "name": "EGY"
+    }
+  },
+  "OCUP": {
+    "insights": null,
+    "symbol": {
+      "name": "OCUP"
+    }
+  },
+  "CAVA": {
+    "insights": null,
+    "symbol": {
+      "name": "CAVA"
+    }
+  },
+  "CPNG": {
+    "insights": null,
+    "symbol": {
+      "name": "CPNG"
+    }
+  },
+  "BILL": {
+    "insights": null,
+    "symbol": {
+      "name": "BILL"
+    }
+  },
+  "BHC": {
+    "insights": null,
+    "symbol": {
+      "name": "BHC"
+    }
+  },
+  "CMCSA": {
+    "insights": null,
+    "symbol": {
+      "name": "CMCSA"
+    }
+  },
+  "KRE": {
+    "insights": null,
+    "symbol": {
+      "name": "KRE"
+    }
+  },
+  "APLS": {
+    "insights": null,
+    "symbol": {
+      "name": "APLS"
+    }
+  },
+  "GGAL": {
+    "insights": null,
+    "symbol": {
+      "name": "GGAL"
+    }
+  },
+  "MULN": {
+    "insights": null,
+    "symbol": {
+      "name": "MULN"
+    }
+  },
+  "ARQT": {
+    "insights": null,
+    "symbol": {
+      "name": "ARQT"
+    }
+  },
+  "ETN": {
+    "insights": null,
+    "symbol": {
+      "name": "ETN"
+    }
+  },
+  "TSM": {
+    "insights": null,
+    "symbol": {
+      "name": "TSM"
+    }
+  },
+  "CSU.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "CSU.TO"
+    }
+  },
+  "PSX": {
+    "insights": null,
+    "symbol": {
+      "name": "PSX"
+    }
+  },
+  "DOW": {
+    "insights": null,
+    "symbol": {
+      "name": "DOW"
+    }
+  },
+  "EDV": {
+    "insights": null,
+    "symbol": {
+      "name": "EDV"
+    }
+  },
+  "AGNC": {
+    "insights": null,
+    "symbol": {
+      "name": "AGNC"
+    }
+  },
+  "FAS": {
+    "insights": null,
+    "symbol": {
+      "name": "FAS"
+    }
+  },
+  "EDIT": {
+    "insights": null,
+    "symbol": {
+      "name": "EDIT"
+    }
+  },
+  "MREO": {
+    "insights": null,
+    "symbol": {
+      "name": "MREO"
+    }
+  },
+  "IBB": {
+    "insights": null,
+    "symbol": {
+      "name": "IBB"
+    }
+  },
+  "ALLO": {
+    "insights": null,
+    "symbol": {
+      "name": "ALLO"
+    }
+  },
+  "WMB": {
+    "insights": null,
+    "symbol": {
+      "name": "WMB"
+    }
+  },
+  "FFIE": {
+    "insights": null,
+    "symbol": {
+      "name": "FFIE"
+    }
+  },
+  "BLK": {
+    "insights": null,
+    "symbol": {
+      "name": "BLK"
+    }
+  },
+  "CI": {
+    "insights": null,
+    "symbol": {
+      "name": "CI"
+    }
+  },
+  "STAG": {
+    "insights": null,
+    "symbol": {
+      "name": "STAG"
+    }
+  },
+  "MPC": {
+    "insights": null,
+    "symbol": {
+      "name": "MPC"
+    }
+  },
+  "AX": {
+    "insights": null,
+    "symbol": {
+      "name": "AX"
+    }
+  },
+  "NIR": {
+    "insights": null,
+    "symbol": {
+      "name": "NIR"
+    }
+  },
+  "BBY": {
+    "insights": null,
+    "symbol": {
+      "name": "BBY"
+    }
+  },
+  "MBG.DE": {
+    "insights": null,
+    "symbol": {
+      "name": "MBG.DE"
+    }
+  },
+  "PACB": {
+    "insights": null,
+    "symbol": {
+      "name": "PACB"
+    }
+  },
+  "SU": {
+    "insights": null,
+    "symbol": {
+      "name": "SU"
+    }
+  },
+  "LINK-USD": {
+    "insights": null,
+    "symbol": {
+      "name": "LINK-USD"
+    }
+  },
+  "PSNY": {
+    "insights": null,
+    "symbol": {
+      "name": "PSNY"
+    }
+  },
+  "PSEC": {
+    "insights": null,
+    "symbol": {
+      "name": "PSEC"
+    }
+  },
+  "CLF": {
+    "insights": null,
+    "symbol": {
+      "name": "CLF"
+    }
+  },
+  "BIG.V": {
+    "insights": null,
+    "symbol": {
+      "name": "BIG.V"
+    }
+  },
+  "SHLS": {
+    "insights": null,
+    "symbol": {
+      "name": "SHLS"
+    }
+  },
+  "XHB": {
+    "insights": null,
+    "symbol": {
+      "name": "XHB"
+    }
+  },
+  "PSTG": {
+    "insights": null,
+    "symbol": {
+      "name": "PSTG"
+    }
+  },
+  "DIS": {
+    "insights": null,
+    "symbol": {
+      "name": "DIS"
+    }
+  },
+  "GFAI": {
+    "insights": null,
+    "symbol": {
+      "name": "GFAI"
+    }
+  },
+  "RKLB": {
+    "insights": null,
+    "symbol": {
+      "name": "RKLB"
+    }
+  },
+  "ERIC": {
+    "insights": null,
+    "symbol": {
+      "name": "ERIC"
+    }
+  },
+  "TD": {
+    "insights": null,
+    "symbol": {
+      "name": "TD"
+    }
+  },
+  "QYLD": {
+    "insights": null,
+    "symbol": {
+      "name": "QYLD"
+    }
+  },
+  "SPXL": {
+    "insights": null,
+    "symbol": {
+      "name": "SPXL"
+    }
+  },
+  "ET": {
+    "insights": null,
+    "symbol": {
+      "name": "ET"
+    }
+  },
+  "NVS": {
+    "insights": null,
+    "symbol": {
+      "name": "NVS"
+    }
+  },
+  "BNTX": {
+    "insights": null,
+    "symbol": {
+      "name": "BNTX"
+    }
+  },
+  "AAL": {
+    "insights": null,
+    "symbol": {
+      "name": "AAL"
+    }
+  },
+  "ERX": {
+    "insights": null,
+    "symbol": {
+      "name": "ERX"
+    }
+  },
+  "HASI": {
+    "insights": null,
+    "symbol": {
+      "name": "HASI"
+    }
+  },
+  "DPZ": {
+    "insights": null,
+    "symbol": {
+      "name": "DPZ"
+    }
+  },
+  "DXCM": {
+    "insights": null,
+    "symbol": {
+      "name": "DXCM"
+    }
+  },
+  "SHOP": {
+    "insights": null,
+    "symbol": {
+      "name": "SHOP"
+    }
+  },
+  "XLF": {
+    "insights": null,
+    "symbol": {
+      "name": "XLF"
+    }
+  },
+  "ARRY": {
+    "insights": null,
+    "symbol": {
+      "name": "ARRY"
+    }
+  },
+  "REKR": {
+    "insights": null,
+    "symbol": {
+      "name": "REKR"
+    }
+  },
+  "NILI.V": {
+    "insights": null,
+    "symbol": {
+      "name": "NILI.V"
+    }
+  },
+  "REE": {
+    "insights": null,
+    "symbol": {
+      "name": "REE"
+    }
+  },
+  "BFLY": {
+    "insights": null,
+    "symbol": {
+      "name": "BFLY"
+    }
+  },
+  "DHI": {
+    "insights": null,
+    "symbol": {
+      "name": "DHI"
+    }
+  },
+  "HTZ": {
+    "insights": null,
+    "symbol": {
+      "name": "HTZ"
+    }
+  },
+  "OCUL": {
+    "insights": null,
+    "symbol": {
+      "name": "OCUL"
+    }
+  },
+  "ABNB": {
+    "insights": null,
+    "symbol": {
+      "name": "ABNB"
+    }
+  },
+  "OGN": {
+    "insights": null,
+    "symbol": {
+      "name": "OGN"
+    }
+  },
+  "CBRL": {
+    "insights": null,
+    "symbol": {
+      "name": "CBRL"
+    }
+  },
+  "STWD": {
+    "insights": null,
+    "symbol": {
+      "name": "STWD"
+    }
+  },
+  "ORSTED.CO": {
+    "insights": null,
+    "symbol": {
+      "name": "ORSTED.CO"
+    }
+  },
+  "CPB": {
+    "insights": null,
+    "symbol": {
+      "name": "CPB"
+    }
+  },
+  "CARR": {
+    "insights": null,
+    "symbol": {
+      "name": "CARR"
+    }
+  },
+  "DPST": {
+    "insights": null,
+    "symbol": {
+      "name": "DPST"
+    }
+  },
+  "MDT": {
+    "insights": null,
+    "symbol": {
+      "name": "MDT"
+    }
+  },
+  "IOVA": {
+    "insights": null,
+    "symbol": {
+      "name": "IOVA"
+    }
+  },
+  "NVDY": {
+    "insights": null,
+    "symbol": {
+      "name": "NVDY"
+    }
+  },
+  "FLNC": {
+    "insights": null,
+    "symbol": {
+      "name": "FLNC"
+    }
+  },
+  "LOW": {
+    "insights": null,
+    "symbol": {
+      "name": "LOW"
+    }
+  },
+  "^N225": {
+    "insights": null,
+    "symbol": {
+      "name": "^N225"
+    }
+  },
+  "TGLS": {
+    "insights": null,
+    "symbol": {
+      "name": "TGLS"
+    }
+  },
+  "BOTZ": {
+    "insights": null,
+    "symbol": {
+      "name": "BOTZ"
+    }
+  },
+  "FUU.V": {
+    "insights": null,
+    "symbol": {
+      "name": "FUU.V"
+    }
+  },
+  "CVX": {
+    "insights": null,
+    "symbol": {
+      "name": "CVX"
+    }
+  },
+  "SPOT": {
+    "insights": null,
+    "symbol": {
+      "name": "SPOT"
+    }
+  },
+  "MU": {
+    "insights": null,
+    "symbol": {
+      "name": "MU"
+    }
+  },
+  "ALDX": {
+    "insights": null,
+    "symbol": {
+      "name": "ALDX"
+    }
+  },
+  "CB": {
+    "insights": null,
+    "symbol": {
+      "name": "CB"
+    }
+  },
+  "JEPI": {
+    "insights": null,
+    "symbol": {
+      "name": "JEPI"
+    }
+  },
+  "NOVO-B.CO": {
+    "insights": null,
+    "symbol": {
+      "name": "NOVO-B.CO"
+    }
+  },
+  "BTE": {
+    "insights": null,
+    "symbol": {
+      "name": "BTE"
+    }
+  },
+  "RC": {
+    "insights": null,
+    "symbol": {
+      "name": "RC"
+    }
+  },
+  "VOW3.DE": {
+    "insights": null,
+    "symbol": {
+      "name": "VOW3.DE"
+    }
+  },
+  "FCX": {
+    "insights": null,
+    "symbol": {
+      "name": "FCX"
+    }
+  },
+  "SBLK": {
+    "insights": null,
+    "symbol": {
+      "name": "SBLK"
+    }
+  },
+  "DCFC": {
+    "insights": null,
+    "symbol": {
+      "name": "DCFC"
+    }
+  },
+  "ENEL.MI": {
+    "insights": null,
+    "symbol": {
+      "name": "ENEL.MI"
+    }
+  },
+  "NTR": {
+    "insights": null,
+    "symbol": {
+      "name": "NTR"
+    }
+  },
+  "PSA": {
+    "insights": null,
+    "symbol": {
+      "name": "PSA"
+    }
+  },
+  "MOS": {
+    "insights": null,
+    "symbol": {
+      "name": "MOS"
+    }
+  },
+  "TLT": {
+    "insights": null,
+    "symbol": {
+      "name": "TLT"
+    }
+  },
+  "BLDE": {
+    "insights": null,
+    "symbol": {
+      "name": "BLDE"
+    }
+  },
+  "POW.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "POW.TO"
+    }
+  },
+  "XFOR": {
+    "insights": null,
+    "symbol": {
+      "name": "XFOR"
+    }
+  },
+  "BKNG": {
+    "insights": null,
+    "symbol": {
+      "name": "BKNG"
+    }
+  },
+  "NOV": {
+    "insights": null,
+    "symbol": {
+      "name": "NOV"
+    }
+  },
+  "AP-UN.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "AP-UN.TO"
+    }
+  },
+  "ICLN": {
+    "insights": null,
+    "symbol": {
+      "name": "ICLN"
+    }
+  },
+  "RACE": {
+    "insights": null,
+    "symbol": {
+      "name": "RACE"
+    }
+  },
+  "SLG": {
+    "insights": null,
+    "symbol": {
+      "name": "SLG"
+    }
+  },
+  "URBN": {
+    "insights": null,
+    "symbol": {
+      "name": "URBN"
+    }
+  },
+  "VDY.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "VDY.TO"
+    }
+  },
+  "AMSC": {
+    "insights": null,
+    "symbol": {
+      "name": "AMSC"
+    }
+  },
+  "UMC": {
+    "insights": null,
+    "symbol": {
+      "name": "UMC"
+    }
+  },
+  "PENN": {
+    "insights": null,
+    "symbol": {
+      "name": "PENN"
+    }
+  },
+  "LEN": {
+    "insights": null,
+    "symbol": {
+      "name": "LEN"
+    }
+  },
+  "GLDG": {
+    "insights": null,
+    "symbol": {
+      "name": "GLDG"
+    }
+  },
+  "AXSM": {
+    "insights": null,
+    "symbol": {
+      "name": "AXSM"
+    }
+  },
+  "VTRS": {
+    "insights": null,
+    "symbol": {
+      "name": "VTRS"
+    }
+  },
+  "PERI": {
+    "insights": null,
+    "symbol": {
+      "name": "PERI"
+    }
+  },
+  "VTNR": {
+    "insights": null,
+    "symbol": {
+      "name": "VTNR"
+    }
+  },
+  "CIVI": {
+    "insights": null,
+    "symbol": {
+      "name": "CIVI"
+    }
+  },
+  "PM": {
+    "insights": null,
+    "symbol": {
+      "name": "PM"
+    }
+  },
+  "TTE": {
+    "insights": null,
+    "symbol": {
+      "name": "TTE"
+    }
+  },
+  "Z": {
+    "insights": null,
+    "symbol": {
+      "name": "Z"
+    }
+  },
+  "SHW": {
+    "insights": null,
+    "symbol": {
+      "name": "SHW"
+    }
+  },
+  "LMT": {
+    "insights": null,
+    "symbol": {
+      "name": "LMT"
+    }
+  },
+  "AKBA": {
+    "insights": null,
+    "symbol": {
+      "name": "AKBA"
+    }
+  },
+  "^HSI": {
+    "insights": null,
+    "symbol": {
+      "name": "^HSI"
+    }
+  },
+  "ACI": {
+    "insights": null,
+    "symbol": {
+      "name": "ACI"
+    }
+  },
+  "BIRK": {
+    "insights": null,
+    "symbol": {
+      "name": "BIRK"
+    }
+  },
+  "BNKU": {
+    "insights": null,
+    "symbol": {
+      "name": "BNKU"
+    }
+  },
+  "ATRA": {
+    "insights": null,
+    "symbol": {
+      "name": "ATRA"
+    }
+  },
+  "ES=F": {
+    "insights": null,
+    "symbol": {
+      "name": "ES=F"
+    }
+  },
+  "KEY": {
+    "insights": null,
+    "symbol": {
+      "name": "KEY"
+    }
+  },
+  "CP.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "CP.TO"
+    }
+  },
+  "TPIC": {
+    "insights": null,
+    "symbol": {
+      "name": "TPIC"
+    }
+  },
+  "KO": {
+    "insights": null,
+    "symbol": {
+      "name": "KO"
+    }
+  },
+  "SWK": {
+    "insights": null,
+    "symbol": {
+      "name": "SWK"
+    }
+  },
+  "JCI": {
+    "insights": null,
+    "symbol": {
+      "name": "JCI"
+    }
+  },
+  "NLY": {
+    "insights": null,
+    "symbol": {
+      "name": "NLY"
+    }
+  },
+  "EFA": {
+    "insights": null,
+    "symbol": {
+      "name": "EFA"
+    }
+  },
+  "FEMY": {
+    "insights": null,
+    "symbol": {
+      "name": "FEMY"
+    }
+  },
+  "NAT": {
+    "insights": null,
+    "symbol": {
+      "name": "NAT"
+    }
+  },
+  "CNQ": {
+    "insights": null,
+    "symbol": {
+      "name": "CNQ"
+    }
+  },
+  "PGEN": {
+    "insights": null,
+    "symbol": {
+      "name": "PGEN"
+    }
+  },
+  "TOP": {
+    "insights": null,
+    "symbol": {
+      "name": "TOP"
+    }
+  },
+  "CONY": {
+    "insights": null,
+    "symbol": {
+      "name": "CONY"
+    }
+  },
+  "RCL": {
+    "insights": null,
+    "symbol": {
+      "name": "RCL"
+    }
+  },
+  "WFRD": {
+    "insights": null,
+    "symbol": {
+      "name": "WFRD"
+    }
+  },
+  "TWLO": {
+    "insights": null,
+    "symbol": {
+      "name": "TWLO"
+    }
+  },
+  "BE": {
+    "insights": null,
+    "symbol": {
+      "name": "BE"
+    }
+  },
+  "BMO.TO": {
+    "insights": null,
+    "symbol": {
+      "name": "BMO.TO"
+    }
+  },
+  "UDOW": {
+    "insights": null,
+    "symbol": {
+      "name": "UDOW"
+    }
+  },
+  "STLD": {
+    "insights": null,
+    "symbol": {
+      "name": "STLD"
+    }
+  },
+  "WPC": {
+    "insights": null,
+    "symbol": {
+      "name": "WPC"
+    }
+  },
+  "DSX": {
+    "insights": null,
+    "symbol": {
+      "name": "DSX"
+    }
+  },
+  "XOM": {
+    "insights": null,
+    "symbol": {
+      "name": "XOM"
+    }
+  },
+  "OKE": {
+    "insights": null,
+    "symbol": {
+      "name": "OKE"
+    }
+  },
+  "ALL": {
+    "insights": null,
+    "symbol": {
+      "name": "ALL"
+    }
+  },
+  "SRTY": {
+    "insights": null,
+    "symbol": {
+      "name": "SRTY"
+    }
+  },
+  "LCID": {
+    "insights": null,
+    "symbol": {
+      "name": "LCID"
+    }
+  },
+  "ALK": {
+    "insights": null,
+    "symbol": {
+      "name": "ALK"
+    }
+  },
+  "SVXY": {
+    "insights": null,
+    "symbol": {
+      "name": "SVXY"
+    }
+  },
+  "AEHR": {
+    "insights": null,
+    "symbol": {
+      "name": "AEHR"
+    }
+  },
+  "HE": {
+    "insights": null,
+    "symbol": {
+      "name": "HE"
+    }
+  },
+  "MT": {
+    "insights": null,
+    "symbol": {
+      "name": "MT"
+    }
+  },
+  "BAYN.DE": {
+    "insights": null,
+    "symbol": {
+      "name": "BAYN.DE"
+    }
+  },
+  "MATIC-USD": {
+    "insights": null,
+    "symbol": {
+      "name": "MATIC-USD"
+    }
+  },
+  "ACAD": {
+    "insights": null,
+    "symbol": {
+      "name": "ACAD"
+    }
+  },
+  "NEP": {
+    "insights": null,
+    "symbol": {
+      "name": "NEP"
+    }
+  },
+  "UPWK": {
+    "insights": null,
+    "symbol": {
+      "name": "UPWK"
+    }
+  },
+  "IBKR": {
+    "insights": null,
+    "symbol": {
+      "name": "IBKR"
+    }
+  },
+  "NVTS": {
+    "insights": null,
+    "symbol": {
+      "name": "NVTS"
+    }
+  },
+  "EXAS": {
+    "insights": null,
+    "symbol": {
+      "name": "EXAS"
+    }
+  },
+  "TOON": {
+    "insights": null,
+    "symbol": {
+      "name": "TOON"
+    }
+  },
+  "SSO": {
+    "insights": null,
+    "symbol": {
+      "name": "SSO"
+    }
+  },
+  "VBR": {
+    "insights": null,
+    "symbol": {
+      "name": "VBR"
+    }
+  },
+  "STEM": {
+    "insights": null,
+    "symbol": {
+      "name": "STEM"
+    }
+  },
+  "CIFR": {
+    "insights": null,
+    "symbol": {
+      "name": "CIFR"
+    }
+  },
+  "GDRX": {
+    "insights": null,
+    "symbol": {
+      "name": "GDRX"
+    }
+  },
+  "UNP": {
+    "insights": null,
+    "symbol": {
+      "name": "UNP"
+    }
+  },
+  "MRO": {
+    "insights": null,
+    "symbol": {
+      "name": "MRO"
+    }
+  },
+  "^FCHI": {
+    "insights": null,
+    "symbol": {
+      "name": "^FCHI"
+    }
+  }
+}

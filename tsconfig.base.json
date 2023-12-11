@@ -6,7 +6,7 @@
     "declaration": true,
     "moduleResolution": "node",
     "noUnusedLocals": false,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": false,
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ESNext",

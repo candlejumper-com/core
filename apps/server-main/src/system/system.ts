@@ -1,6 +1,6 @@
 import { join } from "path"
 import { Bot } from "../tickers/bot/bot"
-import { logger, setSystemEnvironment, ISystemState, SystemBase, BrokerBitmart, SYSTEM_ENV } from "@candlejumper/shared"
+import { logger, setSystemEnvironment, ISystemState, SystemBase, BrokerBitmart, SYSTEM_ENV, BrokerYahoo } from "@candlejumper/shared"
 import { ApiServer } from "./api"
 import { DB } from "../db/db"
 import { CANDLE_FIELD, CandleManager } from "../modules/candle-manager/candle-manager"
@@ -22,6 +22,8 @@ import { ChatGPTManager } from "../modules/chatgpt-manager/chatgpt.manager"
 import { InsightManager } from "../modules/insight-manager/insight.manager"
 
 export class System extends SystemBase {
+  override readonly name = 'MAIN'
+
   type = TICKER_TYPE.SYSTEM
 
   apiServer: ApiServer
@@ -36,7 +38,6 @@ export class System extends SystemBase {
 
   readonly db = new DB(this)
   // readonly broker = new BrokerBinance(this)
-  readonly broker = new BrokerBitmart(this)
   readonly aiManager = new AIManager(this)
   readonly candleManager = new CandleManager(this)
   readonly orderManager = new OrderManager(this)
@@ -88,6 +89,8 @@ export class System extends SystemBase {
    */
   private async initAsMain(): Promise<void> {
 
+    await this.brokerManager.add(BrokerYahoo)
+
     this.chatGPTManager = new ChatGPTManager(this)
     this.newsManager = new NewsManager(this)
     this.calendarManager = new CalendarManager(this)
@@ -115,16 +118,7 @@ export class System extends SystemBase {
 
     await Promise.all([
       // load broker (symbols, timezone, details etc)
-      this.broker.init().then(async () => {
-        // set all symbols
-        this.configManager.config.symbols = this.broker.exchangeInfo.symbols.map((symbol) => symbol.name)
-
-        // setup candle manager
-        await this.candleManager.init()
-
-        // sync candles
-        await this.candleManager.sync()
-      }),
+      this.candleManager.sync(),
 
       // load editor (compile bots, load file-tree etc)
       // this.editorManager.init(),
@@ -145,7 +139,7 @@ export class System extends SystemBase {
 
   // TEMP
   async loadAsValidUser(): Promise<void> {
-    await this.broker.syncAccount() // get balances
+    // await this.broker.syncAccount() // get balances
 
     // only sync orders in production
     // very heavy!
@@ -224,24 +218,28 @@ export class System extends SystemBase {
    *
    */
   getData(orders = false): ISystemState {
-    const findPrice24H = (symbol: string) => {
-      const startTime = new Date()
-      startTime.setHours(0, 0, 0, 0)
-      // * TODO: is fixed on 1h timeframe?????
-      return this.candleManager.candles[symbol]["1h"].candles.find(
-        (candle) => candle[CANDLE_FIELD.TIME] < startTime.getTime()
-      )
-    }
+    // const findPrice24H = (symbol: string) => {
+    //   if (!this.candleManager.candles[symbol]["1h"]) {
+    //     return 0
+    //   }
 
-    const data = {
+    //   const startTime = new Date()
+    //   startTime.setHours(0, 0, 0, 0)
+    //   // * TODO: is fixed on 1h timeframe?????
+    //   return this.candleManager.candles[symbol]["1h"].candles.find(
+    //     (candle) => candle[CANDLE_FIELD.TIME] < startTime.getTime()
+    //   )
+    // }
+
+    const data: ISystemState = {
       config: {
-        symbols: this.configManager.config.symbols,
+        symbols: this.symbolManager.symbols.map(symbol => symbol.name),
       },
       account: {
-        balances: this.broker.account.balances,
+        balances: this.brokerManager.get(BrokerYahoo).account.balances,
         // balances: []
       },
-      symbols: this.candleManager.symbols,
+      symbols: this.symbolManager.symbols,
       tickers: this.tickers.map((ticker) => ({
         env: this.env,
         config: {
@@ -268,25 +266,25 @@ export class System extends SystemBase {
     }
 
     // TODO - refactor
-    if (this.userManager.user) {
-      data.account.balances = this.broker.account.balances.filter(
-        (balance) => balance.asset === "USDT" || balance.asset === this.tickers[0].symbol.baseAsset || balance.free > 0
-      )
-    }
+    // if (this.userManager.user) {
+    //   data.account.balances = this.broker.account.balances.filter(
+    //     (balance) => balance.asset === "USDT" || balance.asset === this.tickers[0].symbol.baseAsset || balance.free > 0
+    //   )
+    // }
 
     // NEEDED???
-    this.broker.exchangeInfo.symbols.forEach((symbol) => {
-      data.symbols[symbol.name] = {
-        name: symbol.name,
-        totalOrders: this.orderManager.orders[symbol.name]?.length || 0,
-        orders: orders ? this.orderManager.orders[symbol.name] : [],
-        price: this.candleManager.symbols[symbol.name].price,
-        baseAsset: symbol.baseAsset,
-        baseAssetPrecision: symbol.baseAssetPrecision,
-        quoteAsset: symbol.quoteAsset,
-        start24HPrice: this.env === SYSTEM_ENV.MAIN ? findPrice24H(symbol.name)?.[CANDLE_FIELD.CLOSE] : 0,
-      }
-    })
+    // this.broker.exchangeInfo.symbols.forEach((symbol) => {
+    //   data.symbols[symbol.name] = {
+    //     name: symbol.name,
+    //     totalOrders: this.orderManager.orders[symbol.name]?.length || 0,
+    //     orders: orders ? this.orderManager.orders[symbol.name] : [],
+    //     price: this.candleManager.symbols[symbol.name].price,
+    //     baseAsset: symbol.baseAsset,
+    //     baseAssetPrecision: symbol.baseAssetPrecision,
+    //     quoteAsset: symbol.quoteAsset,
+    //     start24HPrice: this.env === SYSTEM_ENV.MAIN ? findPrice24H(symbol.name)?.[CANDLE_FIELD.CLOSE] : 0,
+    //   }
+    // })
 
     return data
   }
@@ -304,7 +302,7 @@ export class System extends SystemBase {
       console.log(ticker)
       const botName = ticker.class.name.toLowerCase()
       const botPath = join(PATH_CUSTOM_DIST_BOTS, `${botName}/bot_${botName}`)
-      const symbol = this.candleManager.getSymbolByPair(ticker.symbol)
+      // const symbol = this.candleManager.getSymbolByPair(ticker.symbol)
       // clean up cached module
       // delete require.cache[require.resolve(botPath)]
 
@@ -332,7 +330,7 @@ export class System extends SystemBase {
 
     const now = Date.now()
     const tickers = this.configManager.config.tickers?.default
-    const symbols = this.candleManager.symbols
+    const symbols = this.symbolManager.symbols
     const intervals = this.configManager.config.intervals
 
     for (let i = 0, len = tickers.length; i < len; i++) {

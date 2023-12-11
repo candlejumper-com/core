@@ -4,7 +4,7 @@ import { Bot } from '../../tickers/bot/bot';
 import { CANDLE_FIELD } from '../candle-manager/candle-manager';
 import { ORDER_TYPE } from '../order-manager/order-manager';
 import { IWorkerData } from './backtest.interfaces';
-import { ICandle, ISymbol, ORDER_SIDE, IBalance, SYSTEM_ENV } from '@candlejumper/shared';
+import { ICandle, ISymbol, ORDER_SIDE, IBalance, SYSTEM_ENV, BrokerYahoo } from '@candlejumper/shared';
 
 export class Backtest {
 
@@ -17,7 +17,7 @@ export class Backtest {
         this.options = workerOptions.options
 
         this.validateOptions()
-        this.system.broker.exchangeInfo = this.workerOptions.exchangeInfo
+        this.system.brokerManager.get(BrokerYahoo).exchangeInfo = this.workerOptions.exchangeInfo
     }
 
     /**
@@ -34,9 +34,9 @@ export class Backtest {
         const system = this.system
         const symbol = this.options.symbol
         const interval = this.options.interval
-        const baseAssetBalanceRef = system.broker.account.balances.find(balance => balance.asset !== 'USDT')
+        const baseAssetBalanceRef = system.brokerManager.get(BrokerYahoo).account.balances.find(balance => balance.asset !== 'USDT')
         const warmupAmount = system.configManager.config.warmupAmount
-        const systemCandles = system.candleManager.candles[symbol.name][interval].candles
+        const systemCandles = symbol.candles[interval].candles
         const backtestType = this.options.type
         const createTicks = backtestType === BACKTEST_TYPE.OHLC_TICKS
 
@@ -61,7 +61,7 @@ export class Backtest {
 
             // shorten array
             if (systemCandles.length > 250) {
-                system.candleManager.candles[symbol.name][interval].candles.pop()
+                system.symbolManager.get(symbol.name)[interval].candles.pop()
             }
 
             // do not process candles until warmup is done
@@ -121,7 +121,7 @@ export class Backtest {
         // after all loops, do one last sell 
         if (Math.abs(system.orderManager.orders[symbol.name].length % 2) == 1) {
             const poppedOrder = system.orderManager.orders[symbol.name].pop(); // only include completed orders
-            const balances = this.system.broker.account.balances
+            const balances = this.system.brokerManager.get(BrokerYahoo).account.balances
             const totalPrice = poppedOrder.quantity * poppedOrder.price
             balances.find(balance => balance.asset === symbol.baseAsset).free -= poppedOrder.quantity
             balances.find(balance => balance.asset === symbol.quoteAsset).free += totalPrice
@@ -154,11 +154,11 @@ export class Backtest {
     /**
      * get current value of asset
      */
-    private getAssetValue(asset: string): number {
-        const balance = this.system.broker.getBalance(asset)
-        const currentPrice = (this.system.tickers[0] as unknown as Bot<any>).price
-        return currentPrice * balance
-    }
+    // private getAssetValue(asset: string): number {
+    //     const balance = this.system.brokerManager.get(BrokerYahoo).getBalance(asset)
+    //     const currentPrice = (this.system.tickers[0] as unknown as Bot<any>).price
+    //     return currentPrice * balance
+    // }
 
     /**
      * Refresh the system for next run
@@ -169,16 +169,16 @@ export class Backtest {
         const symbol = this.options.symbol
         const interval = this.options.interval
         const warmupAmount = system.configManager.config.warmupAmount
-        const exchangeInfoSymbol = system.broker.getExchangeInfoBySymbol(symbol.name)
+        const exchangeInfoSymbol = system.brokerManager.get(BrokerYahoo).getExchangeInfoBySymbol(symbol.name)
 
         // reset orders
         system.orderManager.orders[symbol.name] = []
 
         // reset symbols
-        this.system.configManager.config.symbols = [this.options.symbol.name]
+        this.system.symbolManager.symbols = [symbol]
 
         // reset balances
-        system.broker.account.balances = [
+        system.brokerManager.get(BrokerYahoo).account.balances = [
             {
                 asset: exchangeInfoSymbol.baseAsset,
                 free: 0,
@@ -207,7 +207,7 @@ export class Backtest {
         await system.candleManager.init()
 
         // set candles for warmup
-        system.candleManager.candles[symbol.name] = {
+        symbol.candles = {
             [interval]: {
                 candles: this.candles.slice(0 - this.system.configManager.config.warmupAmount - 1),
                 volume: []

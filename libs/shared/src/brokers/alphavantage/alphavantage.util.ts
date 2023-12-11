@@ -1,6 +1,7 @@
-import { ICalendarItem, ISymbol } from '@candlejumper/shared'
+import { ICalendarItem } from '@candlejumper/shared'
 import { ICalendarAlphaVantage } from './alphavantage.interfaces'
 import { parse } from 'csv-parse'
+import { ISymbol } from '../../modules/symbol/symbol.interfaces'
 
 export async function parseCSV(data: string): Promise<ICalendarAlphaVantage[]> {
   return new Promise((resolve, reject) => {

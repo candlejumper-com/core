@@ -1,9 +1,11 @@
 import { BrokerAlphavantage, BrokerYahoo, ISymbol, IInsight } from '@candlejumper/shared'
 import { System } from '../../system/system'
+import { readFileSync, writeFileSync } from 'fs'
+import { join } from 'path'
 
 export class InsightManager {
   // list of trending symbols
-  insights: {[key: string]: IInsight} = {}
+  insights: { [key: string]: IInsight } = {}
 
   brokerYahoo: BrokerYahoo
   brokerAlphavantage: BrokerAlphavantage
@@ -14,28 +16,35 @@ export class InsightManager {
     this.brokerYahoo = new BrokerYahoo(this.system)
     this.brokerAlphavantage = new BrokerAlphavantage(this.system)
 
-    // (re)load current trending symbols
-    const symbols = (await this.brokerYahoo.getTrendingSymbols(500))
-    
     // prepare sybols
-    symbols.forEach(symbol => {
+    this.system.symbolManager.symbols.forEach(symbol => {
       this.insights[symbol.name] = { insights: null, symbol }
     })
 
-    await this.loadPredections()
+    await this.loadPredictions()
   }
 
-  async loadPredections() {
+  async loadPredictions(mock = true) {
+    const PATH_MOCK = join(__dirname, '../../../mock/symbols-insights.json')
+
+    if (mock) {
+      const MOCK_PREDICTIONS = JSON.parse(readFileSync(PATH_MOCK, { encoding: 'utf-8' }))
+      this.insights = MOCK_PREDICTIONS
+      return
+    }
+
     let index = 0
     for (const symbol in this.insights) {
-
-      // if (index++ > 4) {
-      //   return
-      // }
+      if (symbol !== 'GPS') {
+        continue
+      }
 
       const insights = await this.brokerYahoo.getSymbolInsights(symbol)
-      
+
       this.insights[symbol].insights = insights
     }
+
+    // Store mock data
+    writeFileSync(PATH_MOCK, JSON.stringify(this.insights, null, 2))
   }
 }

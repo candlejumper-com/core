@@ -1,4 +1,5 @@
-import { ICalendarItem } from "../index_client"
+import { ICalendarItem, IInsight } from "../index_client"
+import { INTERVAL } from "../util/util"
 
 export interface ICandle {
   [0]: number
@@ -8,25 +9,7 @@ export interface ICandle {
   [4]: number
 }
 
-export interface ISymbol {
-  name?: string
-  baseAsset?: string
-  baseAssetPrecision?: number
-  baseAssetIcon?: string
-  quoteAsset?: string
-  price?: number
-  priceString?: string
-  direction?: number
 
-  // TEMP
-  change24H?: number
-  start24HPrice?: number
-  change24HString?: string
-  changedSinceLastClientTick?: boolean
-  totalOrders?: number
-  orders?: any[]
-  calendar?: ICalendarItem[]
-}
 
 export interface ICandleObject {
   time: number

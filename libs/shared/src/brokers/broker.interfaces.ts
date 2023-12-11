@@ -1,5 +1,6 @@
-import { ICandle, ISymbol } from "@candlejumper/shared"
+import { ICandle } from "@candlejumper/shared"
 import { DailyChangeStatistic, SpotAssetBalance, AccountInformation } from "binance"
+import { ISymbol } from "../modules/symbol/symbol.interfaces"
 
 export interface IDailyStatsResult extends Omit<DailyChangeStatistic, 'quoteVolume'> {
     quoteVolume: number

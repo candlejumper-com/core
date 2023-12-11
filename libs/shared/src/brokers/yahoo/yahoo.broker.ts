@@ -1,15 +1,17 @@
 import { HistoricalHistoryResult } from 'yahoo-finance2/dist/esm/src/modules/historical'
-import { logger, ICandle, ISymbol, IOrder } from '@candlejumper/shared'
+import { logger, ICandle, IOrder } from '@candlejumper/shared'
 import { Broker } from '../broker'
 import { IBrokerInfo, CandleTickerCallback } from '../broker.interfaces'
 import yahooFinance from 'yahoo-finance2'
 import { format } from 'date-fns'
 import { OrderResponseFull, OrderResponseResult } from 'binance'
-import { writeFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
 import { TrendingSymbolsResult } from 'yahoo-finance2/dist/esm/src/modules/trendingSymbols'
 import TEMP_BROKER_INFO from './broker-yahoo.json'
-import TEMP_TRENDING_SYMBOLS from './trending-symbols.json'
 import { InsightsResult } from 'yahoo-finance2/dist/esm/src/modules/insights'
+import { join } from 'path'
+import axios from 'axios'
+import { ISymbol } from '../../modules/symbol/symbol.interfaces'
 
 const defaultOptions = {};
 
@@ -18,16 +20,21 @@ export class BrokerYahoo extends Broker {
   instance: any
   websocket = null
 
+  override async onInit() {
+    console.log('ON INDSFINISDNFSDF')
+  }
+
   async getTrendingSymbols(count = 500, mock = true): Promise<ISymbol[]> {
+    const PATH_MOCK = join(__dirname, '../../../mock/symbols-trending.json')
+
     if (mock) {
-      return TEMP_TRENDING_SYMBOLS.map(symbol => ({ name: symbol }))
+      return JSON.parse(readFileSync(PATH_MOCK, { encoding: 'utf-8' })).quotes.map(symbol => ({ name: symbol.symbol }))
     }
 
     const result = (await yahooFinance.trendingSymbols('US', { count })) as TrendingSymbolsResult
-    const symbols: ISymbol[] = result.quotes.map(symbol => ({ name: symbol.symbol }))
+    const symbols: ISymbol[] = result.quotes.map(symbol => ({ name: symbol.symbol, baseAsset: '' }))
 
-    // temp
-    writeFileSync('./trending-symbols.json', JSON.stringify(symbols, null, 2))
+    writeFileSync(PATH_MOCK, JSON.stringify(result, null, 2))
 
     return symbols
   }
@@ -47,16 +54,47 @@ export class BrokerYahoo extends Broker {
 
   async syncExchangeFromCandleServer(): Promise<void> {
     logger.debug(`\u267F Sync exchange info`)
-    this.exchangeInfo = { ...TEMP_BROKER_INFO }
-    this.exchangeInfo.timezone = 'America/New_York'
+
+    const now = Date.now()
+    const candleServerUrl = this.system.configManager.config.server.candles.url
+
+    try {
+      const { data } = await axios.get(`${candleServerUrl}/api/exchange/yahoo`)
+      this.exchangeInfo = data.exchangeInfo
+      this.exchangeInfo.timezone = (this.exchangeInfo as any).timezone
+    } catch (error: any) {
+      if (error.cause) {
+        logger.error(error.cause)
+      }
+      else if (error.status) {
+        console.error(error.status)
+        console.error(error.data)
+      }
+
+      else {
+        console.error(error)
+      }
+
+      throw new Error(`error fetching broker config from candle server`.red)
+    }
+
+    logger.info(`\u2705 Sync exchange info (${Date.now() - now} ms)`)
   }
 
-  async syncExchangeFromBroker(): Promise<void> {
+  async syncExchangeFromBroker(mock = false): Promise<void> {
     logger.debug(`\u267F Sync exchange info`)
-    this.exchangeInfo = { ...TEMP_BROKER_INFO }
-    // yahooFinance.trendingSymbols().then((res: ISymbol[]) => {
-    //   console.log(res)
-    // })
+
+    if (mock) {
+      this.exchangeInfo = TEMP_BROKER_INFO
+      return
+    }
+
+    const symbols = await this.getTrendingSymbols(1, mock)
+
+    this.exchangeInfo = {
+      symbols: symbols,
+      timezone: 'America/New_York'
+    }
   }
 
   async syncAccount(): Promise<void> {
@@ -98,11 +136,13 @@ export class BrokerYahoo extends Broker {
     return exchangeInfo as IBrokerInfo
   }
   async getCandlesFromTime(symbol: string, interval: string, fromTime: number): Promise<ICandle[]> {
-    // console.log(fromTime)
     const fromTimeDate = new Date(fromTime)
-    const period1 = format(fromTimeDate, 'yyyy-MM-dd')
+    const startTime = format(fromTimeDate, 'yyyy-MM-dd')
     const query = symbol.includes('/') ? `${symbol.split('/')[0]}=X` : symbol
-    const queryOptions = { period1, interval: '1d' as any }
+    const queryOptions = { period1: startTime, interval: interval as any }
+
+    logger.debug(`\u267F Sync from time: ${symbol} ${interval} ${startTime}`)
+
     const candles = await yahooFinance.historical(query, queryOptions)
     return this.normalizeCandles(candles)
   }
@@ -122,8 +162,8 @@ export class BrokerYahoo extends Broker {
 
     return candles.map((candle) => [new Date(candle.date).getTime(), candle.open, candle.high, candle.low, candle.close, candle.volume])
   }
-}
-function rateLimit(arg0: any, arg1: { maxRequests: number; perMilliseconds: number }) {
-  throw new Error('Function not implemented.')
-}
 
+  override async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void): Promise<void> {
+    // throw new Error('Method not implemented.')
+  }
+}

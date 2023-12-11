@@ -1,10 +1,12 @@
 import "colors"
 import { logger } from '../util/log'
-import { Ticker } from "../ticker/ticker"
 import { TICKER_TYPE } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
 import { ConfigManager } from "../config/config-manager"
 import { createAxiosRetryInstance } from "../util/axios-retry"
+import { SymbolManager } from "../modules/symbol/symbol.manager"
+import { BrokerManager } from "../modules/broker/broker.manager"
+import { Ticker } from "../ticker/ticker"
 
 export enum SYSTEM_ENV {
   MAIN = "MAIN",
@@ -12,7 +14,10 @@ export enum SYSTEM_ENV {
 }
 
 export abstract class SystemBase extends Ticker<null> {
+  abstract name?: string
+  
   override id = "SYSTEM"
+  override system = this
 
   axios = createAxiosRetryInstance()
 
@@ -20,10 +25,9 @@ export abstract class SystemBase extends Ticker<null> {
 
   time: Date
 
-  readonly brokers = new Map<string, any>()
+  readonly brokerManager = new BrokerManager(this)
   readonly configManager = new ConfigManager(this)
-
-  override system = this
+  readonly symbolManager = new SymbolManager(this)
 
   protected isRunning = false
 
@@ -36,14 +40,7 @@ export abstract class SystemBase extends Ticker<null> {
   override async init(): Promise<void> {
     await super.init()
     await this.configManager.init()
-  }
-
-  addBroker<T>(broker: any) {
-    this.brokers.set(broker.id, broker)
-  }
-
-  removeBroker(broker: any) {
-    this.brokers.delete(broker.id)
+    await this.onInit?.()
   }
 
   async start() {

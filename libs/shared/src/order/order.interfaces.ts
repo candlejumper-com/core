@@ -1,4 +1,5 @@
-import { ICandle, ISymbol, ITickerSnapshot } from '@candlejumper/shared'
+import { ICandle, ITickerSnapshot } from '@candlejumper/shared'
+import { ISymbol } from '../modules/symbol/symbol.interfaces'
 
 export const enum ORDER_SIDE {
     'BUY' = 'BUY',

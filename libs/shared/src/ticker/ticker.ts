@@ -1,11 +1,12 @@
-import { ICandle, ISymbol, ITickerEvent, ITickerParams, TICKER_EVENT_TYPE, TICKER_TYPE } from '@candlejumper/shared'
+import { ICandle, ITickerEvent, ITickerParams, TICKER_EVENT_TYPE, TICKER_TYPE } from '@candlejumper/shared'
 import { SystemBase } from '../system/system'
 import { CANDLE_FIELD } from '../candle/candle.util'
 import { logger } from '../util/log'
 import { sleep } from '../util/util'
 import { join } from 'path'
+import { ISymbol } from '../modules/symbol/symbol.interfaces'
 
-export abstract class Ticker<T> {
+export abstract class Ticker {
   static eventId = 0
 
   // type of ticker (BOT / INDICATOR / SYSTEM)
@@ -15,7 +16,7 @@ export abstract class Ticker<T> {
   id: string | number
 
   // list of child tickers
-  tickers: Ticker<T>[] = []
+  tickers: Ticker[] = []
 
   // current price
   // TODO: should not be here

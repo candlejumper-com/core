@@ -1,4 +1,3 @@
-import { Ticker } from "../ticker";
 import { Bot } from "./bot";
 import { IWatcherOptions } from "./bot.interfaces";
 

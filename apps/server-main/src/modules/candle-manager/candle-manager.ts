@@ -22,23 +22,14 @@ export enum CANDLE_FIELD {
 }
 
 export class CandleManager {
-  candles: {
-    [symbol: string]: {
-      [interval: string]: {
-        candles: ICandle[]
-        volume: number[]
-      }
-    }
-  } = {}
-
-  symbols: { [symbolName: string]: ISymbol } = {}
+  // symbols: { [symbolName: string]: ISymbol } = {}
 
   private candleWebsocket: Socket
 
   constructor(public system: System) {}
 
   async init(): Promise<void> {
-    this.prepare()
+    // this.prepare()
   }
 
   /**
@@ -65,7 +56,7 @@ export class CandleManager {
    * get a slice of volumes
    */
   getVolume(symbol: ISymbol, interval: string, amount?: number): number[] {
-    const volume = this.candles[symbol.name][interval].volume
+    const volume = symbol.candles[interval].volume
 
     if (typeof amount === 'number') {
       return volume.slice(0, Math.min(volume.length, amount))
@@ -116,7 +107,7 @@ export class CandleManager {
      * flatten nested array
      * [{symbol: 'BTCUSDT', interval: '15m'}, {symbol: 'BNBUSDT', interval: '1h'}]
      */
-    const loadParams = config.symbols.map((symbol) => config.intervals.map((interval) => ({ symbol, interval }))).flat()
+    const loadParams = this.system.symbolManager.symbols.map((symbol) => config.intervals.map((interval) => ({ symbol: symbol.name, interval }))).flat()
 
     try {
       const data = await this.load(loadParams, +config.preloadAmount || 500)
@@ -126,14 +117,15 @@ export class CandleManager {
         // loop over each interval
         for (let interval in data[symbol]) {
           // set candles
-          this.candles[symbol][interval].candles = data[symbol][interval]
+          this.system.symbolManager.get(symbol).candles[interval] = data[symbol][interval]
 
           // set volumes
-          this.candles[symbol][interval].volume = data[symbol][interval].map((candle) => candle[CANDLE_FIELD.VOLUME])
+          // this.candles[symbol][interval].volume = data[symbol][interval].map((candle) => candle[CANDLE_FIELD.VOLUME])
 
           // set current price
           // TODO: symbol should drop price field
-          this.symbols[symbol].price = this.candles[symbol][interval].candles[0][CANDLE_FIELD.CLOSE]
+          // console.log(symbol, interval)
+          // this.symbols[symbol].price = this.candles[symbol][interval].candles[0][CANDLE_FIELD.CLOSE]
         }
       }
     } catch (error) {
@@ -144,9 +136,9 @@ export class CandleManager {
     logger.info(`\u2705 Sync candles (${(Date.now() - now).toString().gray}ms)`)
   }
 
-  getSymbolByPair(symbolName: string): ISymbol {
-    return this.symbols[symbolName]
-  }
+  // getSymbolByPair(symbolName: string): ISymbol {
+  //   return this.symbols[symbolName]
+  // }
 
   /**
    * start listening for candle updates from candle server
@@ -170,7 +162,7 @@ export class CandleManager {
 
     // loop over every symbol
     for (let symbolName in event) {
-      const symbol = this.symbols[symbolName]
+      const symbol = this.system.symbolManager.get(symbolName)
 
       // bot server does not recognize this symbol
       if (!symbol) {
@@ -181,8 +173,13 @@ export class CandleManager {
       // loop over each interval
       for (let interval in event[symbolName]) {
         const candle = event[symbolName][interval]
-        const symbolIntervalRef = this.candles[symbolName][interval]
+        const symbolIntervalRef = this.system.symbolManager.get(symbolName).candles[interval]
 
+        if (!symbolIntervalRef) {
+          continue
+        }
+
+        console.log(2323333, symbolIntervalRef)
         // check if new time < last time
         const isNewCandle =  symbolIntervalRef.candles[0][CANDLE_FIELD.TIME] < candle[CANDLE_FIELD.TIME]
 
@@ -199,18 +196,18 @@ export class CandleManager {
         // no new candle
         // just update latest candle to reflect new price
         else {
-          this.candles[symbolName][interval].candles[0] = candle
-          this.candles[symbolName][interval].volume[0] = candle[CANDLE_FIELD.VOLUME]
+          symbolIntervalRef.candles[0] = candle
+          symbolIntervalRef.volume[0] = candle[CANDLE_FIELD.VOLUME]
         }
 
         // TEMP - keep track of changed candles
         // so that data to client is minimized to only price updates
-        if (candle[CANDLE_FIELD.CLOSE] !== this.symbols[symbolName].price) {
-          // there is a new price!
-          symbol.changedSinceLastClientTick = true
+        // if (candle[CANDLE_FIELD.CLOSE] !== this.symbols[symbolName].price) {
+        //   // there is a new price!
+        //   symbol.changedSinceLastClientTick = true
 
-          this.symbols[symbolName].price = candle[CANDLE_FIELD.CLOSE]
-        }
+        //   this.symbols[symbolName].price = candle[CANDLE_FIELD.CLOSE]
+        // }
       }
 
       this.system.tick(new Date(), symbol)
@@ -225,74 +222,74 @@ export class CandleManager {
   private sendOutbountIOTick(): void {
     return
 
-    const data = {
-      time: this.system.time,
-      chart: {},
-      prices: {},
-    }
+    // const data = {
+    //   time: this.system.time,
+    //   chart: {},
+    //   prices: {},
+    // }
 
-    for (let symbolName in this.symbols) {
-      const symbol = this.symbols[symbolName]
-      if (symbol.changedSinceLastClientTick) {
-        data.prices[symbolName] = symbol.price
-      }
+    // for (let symbolName in this.symbols) {
+    //   const symbol = this.symbols[symbolName]
+    //   if (symbol.changedSinceLastClientTick) {
+    //     data.prices[symbolName] = symbol.price
+    //   }
 
-      // reset
-      symbol.changedSinceLastClientTick = false
-    }
+    //   // reset
+    //   symbol.changedSinceLastClientTick = false
+    // }
 
-    for (let key in this.system.apiServer.sockets) {
-      const socket = this.system.apiServer.sockets[key]
+    // for (let key in this.system.apiServer.sockets) {
+    //   const socket = this.system.apiServer.sockets[key]
 
-      if (socket.data?.watch) {
-        const symbol = socket.data.watch.symbol
-        const interval = socket.data.watch.interval
-        const candle = this.getCandles(symbol, interval, 1)
+    //   if (socket.data?.watch) {
+    //     const symbol = socket.data.watch.symbol
+    //     const interval = socket.data.watch.interval
+    //     const candle = this.getCandles(symbol, interval, 1)
 
-        if (candle) {
-          data.chart = {
-            symbol,
-            interval,
-            candle,
-          }
-        }
-      }
+    //     if (candle) {
+    //       data.chart = {
+    //         symbol,
+    //         interval,
+    //         candle,
+    //       }
+    //     }
+    //   }
 
-      socket.emit('prices', data)
-    }
+    //   socket.emit('prices', data)
+    // }
   }
 
   /**
    * prepare this.candles and this.symbols object array
    * set symbols and timeframes before it is needed
    */
-  private prepare(): void {
-    const symbols = this.system.configManager.config.symbols
-    const intervals = this.system.configManager.config.intervals
+  // private prepare(): void {
+  //   const symbols = this.system.configManager.config.symbols
+  //   const intervals = this.system.configManager.config.intervals
 
-    for (let i = 0, len = symbols.length; i < len; i++) {
-      const symbolName = symbols[i]
-      const symbol = this.system.broker.getExchangeInfoBySymbol(symbolName)
+  //   for (let i = 0, len = symbols.length; i < len; i++) {
+  //     const symbolName = symbols[i]
+  //     const symbol = this.system.broker.getExchangeInfoBySymbol(symbolName)
 
-      // holding all candles
-      this.candles[symbolName] = {}
+  //     // holding all candles
+  //     this.candles[symbolName] = {}
 
-      // loop over each interval, to set object
-      for (let k = 0, lenk = intervals.length; k < lenk; k++) {
-        this.candles[symbolName][intervals[k]] = {
-          candles: [],
-          volume: [],
-        }
-      }
+  //     // loop over each interval, to set object
+  //     for (let k = 0, lenk = intervals.length; k < lenk; k++) {
+  //       this.candles[symbolName][intervals[k]] = {
+  //         candles: [],
+  //         volume: [],
+  //       }
+  //     }
 
-      // holding basic symbol info
-      this.symbols[symbolName] = {
-        name: symbolName,
-        baseAsset: symbol.baseAsset,
-        quoteAsset: symbol.quoteAsset,
-        baseAssetPrecision: symbol.baseAssetPrecision,
-        price: 0,
-      }
-    }
-  }
+  //     // holding basic symbol info
+  //     this.symbols[symbolName] = {
+  //       name: symbolName,
+  //       baseAsset: symbol.baseAsset,
+  //       quoteAsset: symbol.quoteAsset,
+  //       baseAssetPrecision: symbol.baseAssetPrecision,
+  //       price: 0,
+  //     }
+  //   }
+  // }
 }

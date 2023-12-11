@@ -1,4 +1,4 @@
-import { logger, ISymbol, IOrder, ORDER_SIDE, IOrderOptions, IOrderData, countDecimals, SYSTEM_ENV } from "@candlejumper/shared";
+import { logger, IOrder, ORDER_SIDE, IOrderOptions, IOrderData, countDecimals, SYSTEM_ENV, ISymbol, BrokerYahoo } from "@candlejumper/shared";
 import { join } from 'path';
 import * as fs from 'fs';
 import { System } from "../../system/system";
@@ -19,8 +19,8 @@ export class OrderManager {
 
     init(): void {
         // TODO - should not be needed
-        this.system.configManager.config.symbols.forEach(symbol => {
-            this.orders[symbol] = this.orders[symbol] || []
+        this.system.symbolManager.symbols.forEach(symbol => {
+            this.orders[symbol.name] = this.orders[symbol.name] || []
         })
     }
 
@@ -112,10 +112,10 @@ export class OrderManager {
         const eventLog = `${orderEvent.symbol} ${order.side} ${order.type} ${order.quantity} ${order.price}`
 
         try {
-            const orderResult = await this.system.broker.placeOrder(order)
+            const orderResult = await this.system.brokerManager.get(BrokerYahoo).placeOrder(order)
 
             orderEvent.id = orderResult.orderId
-            orderEvent.price = orderResult.price
+            orderEvent.price = orderResult['price']
             console.log('order result', orderResult)
             // orderEvent.commission = parseFloat(orderResult.commission)
 
@@ -138,7 +138,7 @@ export class OrderManager {
      * fake order execute + update balances
      */
     private placeOrderBacktest(order: IOrder, orderEvent, symbol: ISymbol): void {
-        const balances = this.system.broker.account.balances
+        const balances = this.system.brokerManager.get(BrokerYahoo).account.balances
         const totalPrice = order.quantity * orderEvent.price
 
         orderEvent.state = 'SUCCESS'
@@ -173,7 +173,7 @@ export class OrderManager {
      * listen to binance 'userData' stream (order + balances)
      */
     async startWebSocket(): Promise<void> {
-        await this.system.broker.startWebsocket(reason => {
+        await this.system.brokerManager.get(BrokerYahoo).startWebsocket(reason => {
             console.error('Websocket error: ' + reason)
         }, event => {
             switch (event.eventType) {
@@ -192,7 +192,7 @@ export class OrderManager {
      */
     private onBalanceUpdate(event) {
         event.balances.forEach(balance => {
-            const accountAsset = this.system.broker.account.balances.find(_balance => _balance.asset.toLowerCase() === balance.asset.toLowerCase())
+            const accountAsset = this.system.brokerManager.get(BrokerYahoo).account.balances.find(_balance => _balance.asset.toLowerCase() === balance.asset.toLowerCase())
 
             if (accountAsset) {
                 accountAsset.free = parseFloat(balance.free)
@@ -256,7 +256,7 @@ export class OrderManager {
      * calculate the amount to spend on this order (USDT)
      */
     private getToSpendAmount(symbol: ISymbol): number {
-        const quoteAssetBalance = this.system.broker.getBalance(symbol.quoteAsset)
+        const quoteAssetBalance = this.system.brokerManager.get(BrokerYahoo).getBalance(symbol.quoteAsset)
 
         if (this.system.env === SYSTEM_ENV.BACKTEST) {
             return quoteAssetBalance
@@ -271,9 +271,9 @@ export class OrderManager {
      */
     private calculateQuantity(symbol: ISymbol, side: ORDER_SIDE): number {
         const toSpend = this.getToSpendAmount(symbol)
-        const broker = this.system.broker
+        const broker = this.system.brokerManager.get(BrokerYahoo)
         const baseAssetBalance = broker.getBalance(symbol.baseAsset)
-        const price = this.system.candleManager.symbols[symbol.name].price //  TODO - reuse symbol object, also used above
+        const price = this.system.symbolManager.symbols[symbol.name].price //  TODO - reuse symbol object, also used above
         const marketData = broker.getExchangeInfoBySymbol(symbol.name)
         const lotSize = (marketData.filters.find(filter => filter.filterType === 'LOT_SIZE') as any)
         const lotStepSize = parseFloat(lotSize.stepSize)
@@ -324,11 +324,11 @@ export class OrderManager {
         logger.info(`Sync orders`)
 
         const now = Date.now()
-        const promises = this.system.configManager.config.symbols.map(async symbol => {
-            this.orders[symbol] = await this.system.broker.getOrdersByMarket(symbol)
+        const promises = this.system.symbolManager.symbols.map(async symbol => {
+            this.orders[symbol.name] = await this.system.brokerManager.get(BrokerYahoo).getOrdersByMarket(symbol.name)
 
             // add profit to each order
-            this.orders[symbol].forEach(order => this.setOrderProfit(order))
+            this.orders[symbol.name].forEach(order => this.setOrderProfit(order))
         })
 
         await Promise.all(promises)

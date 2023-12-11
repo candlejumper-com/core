@@ -76,7 +76,7 @@ export abstract class Ticker<T> {
     }
 
     // set pointer to candles
-    this.candles = this.system.candleManager.candles[this.symbol.name][this.interval].candles
+    // this.candles = this.system.candleManager.candles[this.symbol.name][this.interval].candles
   }
 
   async tick(...arg: any): Promise<void> {

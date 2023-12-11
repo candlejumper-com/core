@@ -52,7 +52,7 @@ export class BrokerBitmart extends Broker {
     })
   }
 
-  async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void) {
+  override async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void) {
     // const APIKEY = this.system.configManager.config.brokers.binance.apiKey
     // const listenKey = await getUserDataStream(APIKEY)
     // const socketApi = new SocketClient(`ws/${listenKey}`)
@@ -128,7 +128,7 @@ export class BrokerBitmart extends Broker {
     const symbolsRaw = await this.instance.getSymbolsDetails()
 
     const symbols = (symbolsRaw.data.data.symbols as IBrokerBitmartSymbols[])
-      .filter(symbol => this.system.configManager.config.symbols.includes(symbol.symbol))
+      // .filter(symbol => !!this.system.symbolManager.symbols.find(s => s.name === symbol.symbol))
       .map(symbol => ({
         name: symbol.symbol,
         baseAsset: symbol.base_currency,
@@ -141,10 +141,6 @@ export class BrokerBitmart extends Broker {
     }
 
     this.exchangeInfo = exchangeInfo
-  }
-
-  getExchangeInfoBySymbol(symbol: string): any {
-    return this.exchangeInfo.symbols.find((_symbol) => _symbol.name === symbol)
   }
 
   async getOrdersByMarket(symbol: string): Promise<IOrder[]> {

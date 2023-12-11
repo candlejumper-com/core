@@ -1,4 +1,4 @@
-import { logger } from '@candlejumper/shared';
+import { CandleTickerCallback, ICandle, logger } from '@candlejumper/shared';
 import { OrderResponseFull, OrderResponseResult, WebsocketClient } from 'binance';
 import axios, { AxiosError } from 'axios';
 import rateLimit from 'axios-rate-limit';
@@ -35,6 +35,7 @@ export enum BROKER_IG_TIMEFRAMES {
 }
 
 export class BrokerIG extends Broker {
+
   id = 'IG';
   instance: IG;
   websocket: WebsocketClient;
@@ -145,10 +146,6 @@ export class BrokerIG extends Broker {
       
   }
 
-  getExchangeInfoBySymbol(symbol: string): any {
-    return this.exchangeInfo.symbols.find((_symbol) => _symbol.name === symbol);
-  }
-
   async getOrdersByMarket(symbol: string): Promise<IOrder[]> {
     // const orders = await this.system.broker.instance.getAccountTradeList({ symbol, limit: 50 })
 
@@ -183,6 +180,13 @@ export class BrokerIG extends Broker {
     return null;
   }
 
+  override startCandleTicker(symbols: string[], intervals: string[], callback: CandleTickerCallback): void {}
+  override getCandlesFromTime(symbol: string, interval: string, startTime: number): Promise<ICandle[]> {
+    throw new Error('Method not implemented.');
+  }
+  override getCandlesFromCount(symbol: string, interval: string, count: number): Promise<ICandle[]> {
+    throw new Error('Method not implemented.');
+  }
   // async get24HChanges(): Promise<IDailyStatsResult[]> {
   //   const results = await this.instance.get24hrChangeStatististics() as DailyChangeStatistic[]
 

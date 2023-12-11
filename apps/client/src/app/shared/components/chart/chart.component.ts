@@ -12,7 +12,7 @@ import { Subject, BehaviorSubject, Subscription, tap, takeUntil, Observable } fr
 import { ConfigService, IConfigSystem } from '../../services/config/config.service'
 import { IOrder, ORDER_SIDE } from '../../services/order/order.service'
 import { BOT_INDICATOR_TYPE, BOT_EVENT_TYPE } from '../../services/state/state.service'
-import { ICandle, ISymbol, ITicker } from '@candlejumper/shared'
+import { ICandle, INTERVAL, ISymbol, ITicker } from '@candlejumper/shared'
 import { ConfigState } from '../../state/config/config.state'
 
 /// <reference types="anychart" />
@@ -54,7 +54,7 @@ export class ChartComponent implements OnInit, OnChanges, OnDestroy {
   indicators: any[] = []
 
   @Input()
-  interval$: BehaviorSubject<string>
+  interval$: BehaviorSubject<INTERVAL>
 
   // busy$ = new BehaviorSubject<boolean>(true)
   error$ = new BehaviorSubject<any>(null)
@@ -62,7 +62,7 @@ export class ChartComponent implements OnInit, OnChanges, OnDestroy {
   viewType: ChartViewType = 'candlesticks'
 
   form = new FormGroup({
-    interval: new FormControl('15m', [Validators.required]),
+    interval: new FormControl(INTERVAL['1d'], [Validators.required]),
   })
 
   @ViewChild('chart', { static: true })
@@ -142,7 +142,7 @@ export class ChartComponent implements OnInit, OnChanges, OnDestroy {
     this.dialog.open(DialogOrderComponent, { data })
   }
 
-  setInterval(interval: string): void {
+  setInterval(interval: INTERVAL): void {
     this.interval$.next(interval)
     this.load()
   }

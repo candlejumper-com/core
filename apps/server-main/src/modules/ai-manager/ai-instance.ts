@@ -1,6 +1,6 @@
 import { WorkerPool } from 'workerpool';
 import { System } from '../../system/system';
-import { logger } from '@candlejumper/shared';
+import { BrokerYahoo, logger } from '@candlejumper/shared';
 import {
     ITensorflowOptions,
   ITensorflowRunResult,
@@ -20,8 +20,8 @@ export class AIInstance {
 
   async run(): Promise<void> {
     const symbolName = this.options.symbol;
-    const brokerSymbol = this.system.broker.getExchangeInfoBySymbol(symbolName);
-    const symbol = this.system.candleManager.getSymbolByPair(symbolName);
+    const brokerSymbol = this.system.brokerManager.get(BrokerYahoo).getExchangeInfoBySymbol(symbolName);
+    const symbol = this.system.symbolManager.get(symbolName);
 
     // check if symbol is recognized (currently in use / cached)
     if (!brokerSymbol || !symbol) {

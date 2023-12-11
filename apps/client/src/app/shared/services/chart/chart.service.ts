@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, Subject, filter, forkJoin, map, of, switch
 import { ProfileService } from '../profile/profile.service'
 import { IOrder, OrderService } from '../order/order.service'
 import { CandleService } from '../candle/candle.service'
-import { ICandle, ISymbol } from '@candlejumper/shared'
+import { ICandle, INTERVAL, ISymbol } from '@candlejumper/shared'
 import { Store } from '@ngxs/store'
 import { SymbolState } from '../../state/symbol/symbol.state'
 
@@ -26,7 +26,7 @@ export class ChartService {
   chartsInTabs$ = new BehaviorSubject<ViewedChart[]>([])
   activeChart$ = new BehaviorSubject<ViewedChart>(null)
   activeOrders$ = new BehaviorSubject<IOrder[]>([])
-  activeInterval$ = new BehaviorSubject<string>('15m')
+  activeInterval$ = new BehaviorSubject<INTERVAL>(INTERVAL['1d'])
 
   activeChartWithData$: Observable<Chart> = this.activeChart$.pipe(
     filter((chart) => !!chart),
@@ -109,7 +109,7 @@ export class ChartService {
       throw new Error(`No chart found by id "${chartId}"`)
     }
     if (!chartId.startsWith('MAIN-')) {
-      this.activeInterval$.next(chartId.split('-')[2])
+      this.activeInterval$.next(chartId.split('-')[2] as INTERVAL)
     }
     this.activeChart$.next(chart)
     this.rememberActiveChart()

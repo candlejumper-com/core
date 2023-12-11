@@ -13,7 +13,7 @@ export default function (system: System, app: Application) {
     app.post('/api/order', async (req, res) => {
         try {
             const options: IOrderPostBody = req.body
-            const symbol = system.candleManager.getSymbolByPair(options.symbol)
+            const symbol = system.symbolManager.get(options.symbol)
             const result = await system.orderManager.placeOrder({force: true, ...options, symbol}, null)
             res.send(result)
         } catch (error) {
@@ -26,7 +26,7 @@ export default function (system: System, app: Application) {
     app.get('/api/orders', (req, res) => {
         try {
             const count = 100
-            const orders = system.configManager.config.symbols.map(symbol => system.orderManager.orders[symbol]).flat()
+            const orders = system.symbolManager.symbols.map(symbol => system.orderManager.orders[symbol.name]).flat()
     
             orders.sort((p1, p2) => (p1.time < p2.time) ? 1 : (p1.time > p2.time) ? -1 : 0)
     

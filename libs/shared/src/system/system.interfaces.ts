@@ -1,5 +1,6 @@
-import { ISymbol, TICKER_TYPE } from "@candlejumper/shared"
+import { TICKER_TYPE } from "@candlejumper/shared"
 import { SYSTEM_ENV } from "./system"
+import { ISymbol } from "../modules/symbol/symbol.interfaces"
 
 export interface ISystemState {
     config: {
@@ -22,9 +23,7 @@ export interface ISystemState {
         events: any[],
         hits: number
     }[]
-    symbols: {
-        [symbolName: string]: ISymbol
-    }
+    symbols: ISymbol[]
     profitIndex?: number
     profit?: number
 }

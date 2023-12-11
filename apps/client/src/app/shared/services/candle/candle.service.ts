@@ -56,7 +56,7 @@ export class CandleService {
     return this.getSymbolByName(symbolName)?.baseAsset
   }
 
-  loadBySymbol(symbol: string, interval: string, count: number, setWatcher: boolean): Observable<any> {
+  loadBySymbol(symbol: string, interval: string, count: number, setWatcher = false): Observable<any> {
     // const promise = new Promise((resolve, reject) => {
     //   this.wsService.socket.emit(`get:/api/candles`, { symbol, interval, count, setWatcher }, ({result}: any) => resolve(result))
     // })

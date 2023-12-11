@@ -47,7 +47,7 @@ export class PageInsightComponent implements OnInit {
   orderColumns: string[] = ['index', 'side', 'price', 'profit', 'quantity', 'time', 'reason', 'text']
 
   dataSource$ = new BehaviorSubject([{}, {}])
-  dataSource = []
+  dataSource: IInsight[] = []
 
   constructor(
     private liveAnnouncer: LiveAnnouncer,

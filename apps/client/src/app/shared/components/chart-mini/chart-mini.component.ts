@@ -23,6 +23,7 @@ import { ConfigState } from '../../state/config/config.state'
 import 'anychart'
 import '../chart/anychart-theme-dark-custom'
 import { InsightsResult } from 'yahoo-finance2/dist/esm/src/modules/insights'
+import { CandleService } from '../../services/candle/candle.service'
 
 anychart.theme(anychart.theme['darkCustom'])
 
@@ -66,6 +67,7 @@ export class ChartMiniComponent implements OnInit, OnDestroy {
 
   constructor(
     private elementRef: ElementRef,
+    private candleService: CandleService,
     public configService: ConfigService,
     public dialog: MatDialog,
     private windowService: WindowService,
@@ -93,6 +95,11 @@ export class ChartMiniComponent implements OnInit, OnDestroy {
    */
   load(): void {
     if (!this.candles?.length) {
+      this.candleService.loadBySymbol(this.symbol.name, '1d', 100).subscribe((candles) => {
+        this.candles = candles
+        this.createChart()
+      })
+
       return
     }
 

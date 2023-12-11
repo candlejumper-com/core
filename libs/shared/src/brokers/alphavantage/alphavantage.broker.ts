@@ -1,4 +1,4 @@
-import { ICalendarItem, IOrder } from '@candlejumper/shared'
+import { CandleTickerCallback, ICalendarItem, ICandle, IOrder } from '@candlejumper/shared'
 import { Broker } from '../broker'
 import { OrderResponseACK, OrderResponseFull, OrderResponseResult } from 'binance'
 import alphavantage from 'alphavantage'
@@ -44,6 +44,18 @@ export class BrokerAlphavantage extends Broker {
     throw new Error('Method not implemented.')
   }
   override placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull> {
+    throw new Error('Method not implemented.')
+  }
+  override startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
+  override startCandleTicker(symbols: string[], intervals: string[], callback: CandleTickerCallback): void {
+    throw new Error('Method not implemented.')
+  }
+  override getCandlesFromTime(symbol: string, interval: string, startTime: number): Promise<ICandle[]> {
+    throw new Error('Method not implemented.')
+  }
+  override getCandlesFromCount(symbol: string, interval: string, count: number): Promise<ICandle[]> {
     throw new Error('Method not implemented.')
   }
 }

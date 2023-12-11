@@ -94,7 +94,7 @@ export class ApiServer {
             try {
                 res.send({
                     intervals: this.system.configManager.config.intervals,
-                    exchangeInfo: this.system.broker.exchangeInfo
+                    exchangeInfo: this.system.brokerManager.get().exchangeInfo
                 })
             } catch (error) {
                 console.error(error)
