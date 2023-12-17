@@ -1,24 +1,20 @@
 import { ApiServer } from '../api/api'
 import { CandleManager } from '../candle-manager/candle-manager'
-import { DB } from '../db/db'
 import { logger } from '../util/log'
-import { BrokerBinance, BrokerBitmart, BrokerYahoo, SYSTEM_ENV, SystemBase } from '@candlejumper/shared'
+import { BrokerEntity, BrokerYahoo, DB, InsightEntity, SYSTEM_ENV, System, createCandleEntity, getCandleEntityName } from '@candlejumper/shared'
 
-export class System extends SystemBase {
+export class SystemCandles extends System {
+  env = SYSTEM_ENV.CANDLES
   override readonly name = 'CANDLES'
 
-  readonly db = new DB(this)
   readonly candleManager = new CandleManager(this)
   readonly apiServer = new ApiServer(this)
 
   async onInit() {
-    const broker = await this.brokerManager.add(BrokerYahoo)
+    await this.brokerManager.add(BrokerYahoo)
 
-    // this.configManager.config.symbols = broker.exchangeInfo.symbols
-    //   .map((symbol) => symbol.name)
-    //   .filter((symbolName) => /^[^.=:]+$/.test(symbolName))
+    this.db = new DB(this, [BrokerEntity, InsightEntity, ...this.createCandleEntities()])
 
-    //   console.log(66666666666, this.configManager.config.symbols, broker.exchangeInfo.symbols, this.system.symbolManager.symbols)
     await this.db.init()
 
     await this.candleManager.sync()
@@ -44,7 +40,10 @@ export class System extends SystemBase {
     }
   }
 
-  async clean() {
-    await this.db.clean()
+  private createCandleEntities() {
+    const symbols = this.system.symbolManager.symbols
+    const intervals = this.system.configManager.config.intervals
+    const tableNames = symbols.map(symbol => intervals.map(interval => getCandleEntityName(this.system, symbol.name, interval))).flat()
+    return tableNames.map(tableName => createCandleEntity(tableName))
   }
 }

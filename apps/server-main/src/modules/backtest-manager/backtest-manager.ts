@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { System } from "../../system/system";
+import { SystemMain } from "../../system/system";
 import { pool, WorkerPool } from 'workerpool';
 import { logger, ISystemState, BrokerYahoo } from '@candlejumper/shared';
 import { IBacktestResult, IBacktestOptions, IWorkerData } from './backtest.interfaces';
@@ -17,7 +17,7 @@ export class BacktestManager {
 
     private pool: WorkerPool
 
-    constructor(public system: System, public maxWorker?: number) { }
+    constructor(public system: SystemMain, public maxWorker?: number) { }
 
     /**
      * start running a batch of backtests

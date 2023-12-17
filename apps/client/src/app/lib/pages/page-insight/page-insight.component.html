@@ -1,12 +1,3 @@
-<form>
-  <mat-form-field appearance="fill">
-    <mat-label>Fill form field</mat-label>
-    <input matInput placeholder="Placeholder" />
-    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-    <mat-hint>Hint</mat-hint>
-  </mat-form-field>
-</form>
-
 <table
   mat-table
   matSort
@@ -18,20 +9,20 @@
   <!-- INDEX -->
   <ng-container matColumnDef="index">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="index">#</th>
-    <td mat-cell *matCellDef="let element; let i = index">{{ i }}</td>
+    <td mat-cell *matCellDef="let element; let i = dataIndex">{{ i }}</td>
   </ng-container>
 
   <!-- SYMBOL -->
   <ng-container matColumnDef="symbol">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="symbol">Symbol</th>
-    <td mat-cell *matCellDef="let item">{{ item.symbol.name }}</td>
+    <td mat-cell *matCellDef="let item">{{ item.name }}</td>
   </ng-container>
 
   <!-- NAME -->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Name</th>
     <td mat-cell *matCellDef="let item">
-      <a [href]="'https://www.etoro.com/markets/' + item.symbol.name + '/chart'" target="_blank">{{ item.symbol.name }}</a>
+      <a [href]="'https://www.etoro.com/markets/' + item.name + '/chart'" target="_blank">{{ item.name }}</a>
     </td>
   </ng-container>
 
@@ -40,12 +31,12 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header="chart">Chart</th>
     <td mat-cell *matCellDef="let item" #row>
       @defer (on viewport(row)) {
-        <core-chart-mini
+        <!-- <core-chart-mini
           [insights]="item.insights"
           [interval$]="activeInterval$"
           [symbol]="item.symbol"
           [interval$]="activeInterval$"
-        ></core-chart-mini>
+        ></core-chart-mini> -->
       }
     </td>
   </ng-container>
@@ -133,7 +124,7 @@
   <!-- REPORT DATE -->
   <ng-container matColumnDef="reportDate">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="reportDate">Date</th>
-    <td mat-cell *matCellDef="let item">{{ item.reportDate | date: 'dd/MM/yyyy' }}</td>
+    <td mat-cell *matCellDef="let item">{{ item.calendar?.[0]?.reportDate | date: 'dd/MM/yyyy' }}</td>
   </ng-container>
 
   <ng-container matColumnDef="expandedDetail">

@@ -1,7 +1,7 @@
 import { logger, IOrder, ORDER_SIDE, IOrderOptions, IOrderData, countDecimals, SYSTEM_ENV, ISymbol, BrokerYahoo } from "@candlejumper/shared";
 import { join } from 'path';
 import * as fs from 'fs';
-import { System } from "../../system/system";
+import { SystemMain } from "../../system/system";
 
 const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../_data/snapshots/backtest')
 
@@ -15,7 +15,7 @@ export class OrderManager {
 
     readonly orders: { [key: string]: IOrder[] } = {}
 
-    constructor(public system: System) { }
+    constructor(public system: SystemMain) { }
 
     init(): void {
         // TODO - should not be needed

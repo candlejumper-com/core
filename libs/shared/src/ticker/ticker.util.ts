@@ -2,6 +2,7 @@ export enum TICKER_TYPE {
   'INDICATOR' = 'INDICATOR',
   'BOT' = 'BOT',
   'SYSTEM' = 'SYSTEM',
+  'MODULE' = 'MODULE',
 }
 
 export enum TICKER_EVENT_TYPE {

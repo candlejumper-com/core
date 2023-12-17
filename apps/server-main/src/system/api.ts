@@ -4,7 +4,7 @@ import { join } from 'path'
 import { Server as HttpServer, createServer as createServerHttp } from 'http'
 import { Server as HttpsServer, createServer as createServerHttps } from 'https'
 import * as cors from 'cors'
-import { System } from './system'
+import { SystemMain } from './system'
 import { logger, PATH_LOGS_COMBINED } from '@candlejumper/shared'
 import systemRoutes from './system.api'
 import deviceRoutes from '../modules/device-manager/device.api'
@@ -34,7 +34,7 @@ export class ApiServer {
 
   private cacheMaxAge = 1000 * 60 * 60 // 1 hour
 
-  constructor(private system: System) {}
+  constructor(private system: SystemMain) {}
 
   // create public server for web clients
   async start(): Promise<void> {

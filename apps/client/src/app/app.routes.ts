@@ -5,7 +5,7 @@ export const routes = [
   },
   {
     path: 'calendar',
-    loadComponent: () => import('./lib/pages/page-news/page-news.component').then((mod) => mod.PageNewsComponent),
+    loadComponent: () => import('./lib/pages/page-calendar/page-calendar.component').then((mod) => mod.PageNewsComponent),
   },
   {
     path: 'insight',

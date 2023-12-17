@@ -1,11 +1,11 @@
-import { SystemBase } from '../system/system'
+import { System } from '../system/system'
 
 export interface IExitHandlerOptions {
   cleanup?: boolean
   exit?: boolean
 }
 
-export function setProcessExitHandlers(system: SystemBase) {
+export function setProcessExitHandlers(system: System) {
   
   function exitHandler(options: IExitHandlerOptions, exitCode: number) {
     if (options.cleanup) {

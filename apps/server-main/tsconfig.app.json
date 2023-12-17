@@ -5,7 +5,6 @@
     "outDir": "../../dist/out-tsc",
     "module": "esnext",
     "types": ["node", "express"],
-    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true
   },

@@ -1,5 +1,5 @@
 import { join } from "path";
-import { SystemBase } from "../system/system";
+import { System } from "../system/system";
 import { ISystemConfig } from "./config.interfaces";
 import merge from 'deepmerge';
 import { readFileSync } from "fs";
@@ -14,7 +14,7 @@ export class ConfigManager {
 
     config: ISystemConfig
 
-    constructor(public system: SystemBase) {}
+    constructor(public system: System) {}
 
     async init() {
         return this.load()

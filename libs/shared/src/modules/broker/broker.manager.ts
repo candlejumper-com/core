@@ -1,6 +1,6 @@
 import { BrokerAlphavantage } from "../../brokers/alphavantage/alphavantage.broker";
 import { Broker } from "../../brokers/broker";
-import { SystemBase } from "../../system/system";
+import { System } from "../../system/system";
 
 export enum BROKER_PURPOSE {
   CANDLES = "CANDLES",
@@ -14,9 +14,9 @@ export class BrokerManager {
   // readonly brokers: {[key: string]: Broker} = {}
   readonly #brokers = new Map<typeof Broker, any>()
 
-  constructor(private system: SystemBase) {}
+  constructor(private system: System) {}
 
-  get<T extends Broker>(constructor?: new (...args: any[]) => T): Broker {
+  get<T extends Broker>(constructor?: new (...args: any[]) => T): T {
     if (!constructor) {
       return this.#brokers.values().next().value
     }
@@ -24,14 +24,14 @@ export class BrokerManager {
     return this.#brokers.get(constructor)
   }
 
-  async add<T extends Broker>(BrokerClass: new(system: SystemBase) => T, purpose?: BROKER_PURPOSE): Promise<T> {
+  async add<T extends Broker>(BrokerClass: new(system: System) => T, purpose?: BROKER_PURPOSE): Promise<T> {
     const broker = new BrokerClass(this.system)
     this.#brokers.set(BrokerClass, broker)
     await broker.init()
     return broker
   }
 
-  removeBroker(broker: any) {
+  remove(broker: any) {
     this.#brokers.delete(broker.id)
   }
 }

@@ -1,13 +1,10 @@
-import { System } from '../../system/system'
+import { SystemMain } from '../../system/system'
 import {
   BrokerAlphavantage,
-  BrokerYahoo,
   ICalendarItem,
-  ISymbol,
   filterCalendarItemsBySymbols,
   filterCalendarItemsInTimeRange,
 } from '@candlejumper/shared'
-import { getDiffInPercentage } from './calendar.util'
 
 export class CalendarManager {
   // all calendar items
@@ -16,8 +13,6 @@ export class CalendarManager {
   // calendar items within X days + trending
   calendarItems: ICalendarItem[] = []
 
-  // list of trending symbols
-  symbols: ISymbol[] = []
 
   // how many times per day to check
   private updateIntervalTime = 1000 * 60 * 60 * 4 // 4 hours
@@ -25,19 +20,13 @@ export class CalendarManager {
   // how much time from now until calender event
   private activeTimeWindow = 1000 * 60 * 60 * 24 * 7 * 3 // 7 * 3days
 
-  private brokerYahoo: BrokerYahoo
-  private brokerAlphavantage: BrokerAlphavantage
-
-  constructor(public system: System) {}
+  constructor(public system: SystemMain) {}
 
   /**
    * - load alphavantage and new instance of broker
    * - start interval
    */
   async init() {
-    this.brokerYahoo = new BrokerYahoo(this.system)
-    this.brokerAlphavantage = new BrokerAlphavantage(this.system)
-
     this.checkCalendarItems()
 
     setInterval(async () => this.checkCalendarItems(), this.updateIntervalTime)
@@ -46,25 +35,31 @@ export class CalendarManager {
   async checkCalendarItems() {
     try {
       // (re)load all calendar items
-      this.items = await this.brokerAlphavantage.getCalendarItems()
+      this.items = await this.system.brokerManager.get(BrokerAlphavantage).getCalendarItems()
+
+      this.items.forEach(item => {
+        const symbol = this.system.symbolManager.get(item.symbol)
+        if (symbol) {
+          symbol.calendar = [item]
+        }
+      })
 
       // filter calendar items that are between now and X days
-      const activeItems = filterCalendarItemsInTimeRange(this.items, this.activeTimeWindow)
-
-      // filter calendar items by trending symbols
-      this.calendarItems = filterCalendarItemsBySymbols(activeItems, this.symbols)
+      this.items = filterCalendarItemsInTimeRange(this.items, this.activeTimeWindow)
 
       // DEV ONLY
       // limit to 2 symbols
       if (this.system.configManager.config.dev) {
-        // this.selectedItems = this.selectedItems.slice(0, 2)
+        this.calendarItems = filterCalendarItemsBySymbols(this.items, this.system.symbolManager.symbols.slice(0, 2))
+      } else {
+        this.calendarItems = filterCalendarItemsBySymbols(this.items, this.system.symbolManager.symbols)
       }
 
       // set current price diff and other stuff
       await this.setItemsMetadata()
       
       // sort by reportDate
-      this.calendarItems.sort((a, b) => (a.reportDate as any) - (b.reportDate as any))
+      this.items.sort((a, b) => (a.reportDate as any) - (b.reportDate as any))
 
       // send push notification to clients
       await this.system.deviceManager.sendCalendarUpcomingNotifiction(this.calendarItems)

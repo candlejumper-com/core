@@ -1,10 +1,1165 @@
 {
-  "count": 1,
-  "quotes": [
-    {
-      "symbol": "BTC-USD"
-    }
-  ],
-  "jobTimestamp": 1702282008597,
-  "startInterval": 202312110700
+  "finance": {
+    "result": [
+      {
+        "count": 384,
+        "quotes": [
+          {
+            "symbol": "COST"
+          },
+          {
+            "symbol": "BA"
+          },
+          {
+            "symbol": "PLTR"
+          },
+          {
+            "symbol": "XPEV"
+          },
+          {
+            "symbol": "JD"
+          },
+          {
+            "symbol": "DOCU"
+          },
+          {
+            "symbol": "ZIM"
+          },
+          {
+            "symbol": "ROKU"
+          },
+          {
+            "symbol": "VRCA"
+          },
+          {
+            "symbol": "BVN"
+          },
+          {
+            "symbol": "GETR"
+          },
+          {
+            "symbol": "BABA"
+          },
+          {
+            "symbol": "ICCT"
+          },
+          {
+            "symbol": "ANET"
+          },
+          {
+            "symbol": "SE"
+          },
+          {
+            "symbol": "GNS"
+          },
+          {
+            "symbol": "GBCI"
+          },
+          {
+            "symbol": "CHSN"
+          },
+          {
+            "symbol": "SYM"
+          },
+          {
+            "symbol": "IOT"
+          },
+          {
+            "symbol": "CRWD"
+          },
+          {
+            "symbol": "MULN"
+          },
+          {
+            "symbol": "NAT"
+          },
+          {
+            "symbol": "FRO"
+          },
+          {
+            "symbol": "DFN.TO"
+          },
+          {
+            "symbol": "EXPI"
+          },
+          {
+            "symbol": "NVDA"
+          },
+          {
+            "symbol": "DGIN"
+          },
+          {
+            "symbol": "BETR"
+          },
+          {
+            "symbol": "BRSH"
+          },
+          {
+            "symbol": "AVGO"
+          },
+          {
+            "symbol": "RYTM"
+          },
+          {
+            "symbol": "KIND"
+          },
+          {
+            "symbol": "MSS"
+          },
+          {
+            "symbol": "RKLB"
+          },
+          {
+            "symbol": "EDU"
+          },
+          {
+            "symbol": "BCE.TO"
+          },
+          {
+            "symbol": "ATAK"
+          },
+          {
+            "symbol": "CRM"
+          },
+          {
+            "symbol": "BBIO"
+          },
+          {
+            "symbol": "OPEN"
+          },
+          {
+            "symbol": "GE"
+          },
+          {
+            "symbol": "BOIL"
+          },
+          {
+            "symbol": "AADI"
+          },
+          {
+            "symbol": "GLIN"
+          },
+          {
+            "symbol": "INDV"
+          },
+          {
+            "symbol": "CPE"
+          },
+          {
+            "symbol": "CYDY"
+          },
+          {
+            "symbol": "SHW"
+          },
+          {
+            "symbol": "FOUR"
+          },
+          {
+            "symbol": "UNG"
+          },
+          {
+            "symbol": "STLD"
+          },
+          {
+            "symbol": "AMKBY"
+          },
+          {
+            "symbol": "ZS"
+          },
+          {
+            "symbol": "ENGH.TO"
+          },
+          {
+            "symbol": "DDOG"
+          },
+          {
+            "symbol": "UBER"
+          },
+          {
+            "symbol": "INPX"
+          },
+          {
+            "symbol": "DRI"
+          },
+          {
+            "symbol": "HNU.TO"
+          },
+          {
+            "symbol": "ORCL"
+          },
+          {
+            "symbol": "ACRX"
+          },
+          {
+            "symbol": "NG=F"
+          },
+          {
+            "symbol": "NYMT"
+          },
+          {
+            "symbol": "IBM"
+          },
+          {
+            "symbol": "VLD"
+          },
+          {
+            "symbol": "BATL"
+          },
+          {
+            "symbol": "STNG"
+          },
+          {
+            "symbol": "NUMI.TO"
+          },
+          {
+            "symbol": "HUBC"
+          },
+          {
+            "symbol": "LRHC"
+          },
+          {
+            "symbol": "WM"
+          },
+          {
+            "symbol": "VRPX"
+          },
+          {
+            "symbol": "DHT"
+          },
+          {
+            "symbol": "LU"
+          },
+          {
+            "symbol": "CVAC"
+          },
+          {
+            "symbol": "TRKA"
+          },
+          {
+            "symbol": "LMND"
+          },
+          {
+            "symbol": "CART"
+          },
+          {
+            "symbol": "INDY"
+          },
+          {
+            "symbol": "INHD"
+          },
+          {
+            "symbol": "IEP"
+          },
+          {
+            "symbol": "NGL"
+          },
+          {
+            "symbol": "CHWY"
+          },
+          {
+            "symbol": "HLP"
+          },
+          {
+            "symbol": "GSAT"
+          },
+          {
+            "symbol": "FSLR"
+          },
+          {
+            "symbol": "TEAM"
+          },
+          {
+            "symbol": "CELH"
+          },
+          {
+            "symbol": "XCUR"
+          },
+          {
+            "symbol": "KOLD"
+          },
+          {
+            "symbol": "HSY"
+          },
+          {
+            "symbol": "SPR"
+          },
+          {
+            "symbol": "SNCR"
+          },
+          {
+            "symbol": "SENS"
+          },
+          {
+            "symbol": "TNK"
+          },
+          {
+            "symbol": "PAYO"
+          },
+          {
+            "symbol": "AUPH"
+          },
+          {
+            "symbol": "ALRN"
+          },
+          {
+            "symbol": "MAERSK-B.CO"
+          },
+          {
+            "symbol": "IMMP"
+          },
+          {
+            "symbol": "EOSE"
+          },
+          {
+            "symbol": "ABAT"
+          },
+          {
+            "symbol": "INDA"
+          },
+          {
+            "symbol": "ALT"
+          },
+          {
+            "symbol": "X"
+          },
+          {
+            "symbol": "HSCS"
+          },
+          {
+            "symbol": "CYTH"
+          },
+          {
+            "symbol": "SG"
+          },
+          {
+            "symbol": "KAP.IL"
+          },
+          {
+            "symbol": "BONK-USD"
+          },
+          {
+            "symbol": "GTLB"
+          },
+          {
+            "symbol": "STNE"
+          },
+          {
+            "symbol": "AMR"
+          },
+          {
+            "symbol": "COIN"
+          },
+          {
+            "symbol": "MYO"
+          },
+          {
+            "symbol": "SMH"
+          },
+          {
+            "symbol": "SBNY"
+          },
+          {
+            "symbol": "SING"
+          },
+          {
+            "symbol": "MGRX"
+          },
+          {
+            "symbol": "CDNA"
+          },
+          {
+            "symbol": "INO"
+          },
+          {
+            "symbol": "BIIB"
+          },
+          {
+            "symbol": "MTNB"
+          },
+          {
+            "symbol": "^GSPTSE"
+          },
+          {
+            "symbol": "JNJ"
+          },
+          {
+            "symbol": "UCAR"
+          },
+          {
+            "symbol": "RELY"
+          },
+          {
+            "symbol": "MCOM"
+          },
+          {
+            "symbol": "HND.TO"
+          },
+          {
+            "symbol": "LASE"
+          },
+          {
+            "symbol": "INAB"
+          },
+          {
+            "symbol": "SGMO"
+          },
+          {
+            "symbol": "RTX"
+          },
+          {
+            "symbol": "BAP"
+          },
+          {
+            "symbol": "JTAI"
+          },
+          {
+            "symbol": "ATER"
+          },
+          {
+            "symbol": "AAOI"
+          },
+          {
+            "symbol": "CAR-UN.TO"
+          },
+          {
+            "symbol": "QURE"
+          },
+          {
+            "symbol": "RYCEY"
+          },
+          {
+            "symbol": "BIDU"
+          },
+          {
+            "symbol": "ARES"
+          },
+          {
+            "symbol": "GPN"
+          },
+          {
+            "symbol": "ARQT"
+          },
+          {
+            "symbol": "UVXY"
+          },
+          {
+            "symbol": "BP"
+          },
+          {
+            "symbol": "MNSO"
+          },
+          {
+            "symbol": "CNQ.TO"
+          },
+          {
+            "symbol": "RC"
+          },
+          {
+            "symbol": "CLF"
+          },
+          {
+            "symbol": "YINN"
+          },
+          {
+            "symbol": "T.TO"
+          },
+          {
+            "symbol": "TSCO"
+          },
+          {
+            "symbol": "CDIO"
+          },
+          {
+            "symbol": "NGF24.NYM"
+          },
+          {
+            "symbol": "TRMD"
+          },
+          {
+            "symbol": "KO"
+          },
+          {
+            "symbol": "RNA"
+          },
+          {
+            "symbol": "VOD"
+          },
+          {
+            "symbol": "SOXL"
+          },
+          {
+            "symbol": "CFLT"
+          },
+          {
+            "symbol": "INCY"
+          },
+          {
+            "symbol": "NIR"
+          },
+          {
+            "symbol": "ADMA"
+          },
+          {
+            "symbol": "GMDA"
+          },
+          {
+            "symbol": "BIG"
+          },
+          {
+            "symbol": "HUT"
+          },
+          {
+            "symbol": "LNC"
+          },
+          {
+            "symbol": "NKTX"
+          },
+          {
+            "symbol": "RBLX"
+          },
+          {
+            "symbol": "HELE"
+          },
+          {
+            "symbol": "AMLI"
+          },
+          {
+            "symbol": "COKE"
+          },
+          {
+            "symbol": "ENZC"
+          },
+          {
+            "symbol": "NKE"
+          },
+          {
+            "symbol": "HNT-USD"
+          },
+          {
+            "symbol": "MDGL"
+          },
+          {
+            "symbol": "VUZI"
+          },
+          {
+            "symbol": "SIRC"
+          },
+          {
+            "symbol": "VERB"
+          },
+          {
+            "symbol": "INSW"
+          },
+          {
+            "symbol": "MPW"
+          },
+          {
+            "symbol": "KMB"
+          },
+          {
+            "symbol": "ARCC"
+          },
+          {
+            "symbol": "MHO"
+          },
+          {
+            "symbol": "AGEN"
+          },
+          {
+            "symbol": "LPG"
+          },
+          {
+            "symbol": "NAK"
+          },
+          {
+            "symbol": "MOMO"
+          },
+          {
+            "symbol": "GLXY.TO"
+          },
+          {
+            "symbol": "IMMX"
+          },
+          {
+            "symbol": "TRUP"
+          },
+          {
+            "symbol": "GSL"
+          },
+          {
+            "symbol": "BNS.TO"
+          },
+          {
+            "symbol": "FSR"
+          },
+          {
+            "symbol": "GIS"
+          },
+          {
+            "symbol": "TAST"
+          },
+          {
+            "symbol": "TNT-UN.TO"
+          },
+          {
+            "symbol": "GNK"
+          },
+          {
+            "symbol": "HOV"
+          },
+          {
+            "symbol": "SOXS"
+          },
+          {
+            "symbol": "QYLD"
+          },
+          {
+            "symbol": "TNP"
+          },
+          {
+            "symbol": "CKPT"
+          },
+          {
+            "symbol": "FXI"
+          },
+          {
+            "symbol": "LRCX"
+          },
+          {
+            "symbol": "TAK"
+          },
+          {
+            "symbol": "SCHL"
+          },
+          {
+            "symbol": "BTAI"
+          },
+          {
+            "symbol": "LKNCY"
+          },
+          {
+            "symbol": "RACE"
+          },
+          {
+            "symbol": "LDI"
+          },
+          {
+            "symbol": "ACN"
+          },
+          {
+            "symbol": "PDD"
+          },
+          {
+            "symbol": "MAIA"
+          },
+          {
+            "symbol": "HIMX"
+          },
+          {
+            "symbol": "MO"
+          },
+          {
+            "symbol": "GOGL"
+          },
+          {
+            "symbol": "TCEHY"
+          },
+          {
+            "symbol": "BOX"
+          },
+          {
+            "symbol": "RYLD"
+          },
+          {
+            "symbol": "DARE"
+          },
+          {
+            "symbol": "LWLG"
+          },
+          {
+            "symbol": "TRIN"
+          },
+          {
+            "symbol": "BCE"
+          },
+          {
+            "symbol": "ATNM"
+          },
+          {
+            "symbol": "NLOP"
+          },
+          {
+            "symbol": "ARVN"
+          },
+          {
+            "symbol": "UVIX"
+          },
+          {
+            "symbol": "BETS"
+          },
+          {
+            "symbol": "ABUS"
+          },
+          {
+            "symbol": "SOXX"
+          },
+          {
+            "symbol": "AIRE"
+          },
+          {
+            "symbol": "ASXC"
+          },
+          {
+            "symbol": "SBLK"
+          },
+          {
+            "symbol": "IOVA"
+          },
+          {
+            "symbol": "IWM"
+          },
+          {
+            "symbol": "GSK"
+          },
+          {
+            "symbol": "AIQ"
+          },
+          {
+            "symbol": "CI"
+          },
+          {
+            "symbol": "PBI"
+          },
+          {
+            "symbol": "BCYC"
+          },
+          {
+            "symbol": "LAC.TO"
+          },
+          {
+            "symbol": "APO"
+          },
+          {
+            "symbol": "MAA"
+          },
+          {
+            "symbol": "CIEN"
+          },
+          {
+            "symbol": "AP-UN.TO"
+          },
+          {
+            "symbol": "CIM"
+          },
+          {
+            "symbol": "BCRX"
+          },
+          {
+            "symbol": "EQNR"
+          },
+          {
+            "symbol": "KWEB"
+          },
+          {
+            "symbol": "XEI.TO"
+          },
+          {
+            "symbol": "CEG"
+          },
+          {
+            "symbol": "CENX"
+          },
+          {
+            "symbol": "CLX"
+          },
+          {
+            "symbol": "RCI-B.TO"
+          },
+          {
+            "symbol": "SYK"
+          },
+          {
+            "symbol": "PDSB"
+          },
+          {
+            "symbol": "BXMT"
+          },
+          {
+            "symbol": "FTS.TO"
+          },
+          {
+            "symbol": "LSCC"
+          },
+          {
+            "symbol": "BBAI"
+          },
+          {
+            "symbol": "VFS"
+          },
+          {
+            "symbol": "CRMD"
+          },
+          {
+            "symbol": "DIDIY"
+          },
+          {
+            "symbol": "CCJ"
+          },
+          {
+            "symbol": "NWBO"
+          },
+          {
+            "symbol": "SVOL"
+          },
+          {
+            "symbol": "WOOF"
+          },
+          {
+            "symbol": "EXTR"
+          },
+          {
+            "symbol": "AWK"
+          },
+          {
+            "symbol": "TSN"
+          },
+          {
+            "symbol": "MMAT"
+          },
+          {
+            "symbol": "AXON"
+          },
+          {
+            "symbol": "FDX"
+          },
+          {
+            "symbol": "TTE"
+          },
+          {
+            "symbol": "RECO.V"
+          },
+          {
+            "symbol": "PA=F"
+          },
+          {
+            "symbol": "AMSC"
+          },
+          {
+            "symbol": "CSCO"
+          },
+          {
+            "symbol": "BKKT"
+          },
+          {
+            "symbol": "UGI"
+          },
+          {
+            "symbol": "FBIO"
+          },
+          {
+            "symbol": "IREN"
+          },
+          {
+            "symbol": "WU"
+          },
+          {
+            "symbol": "DQ"
+          },
+          {
+            "symbol": "FFIE"
+          },
+          {
+            "symbol": "CTSH"
+          },
+          {
+            "symbol": "RICK"
+          },
+          {
+            "symbol": "NUE"
+          },
+          {
+            "symbol": "REGN"
+          },
+          {
+            "symbol": "AUR"
+          },
+          {
+            "symbol": "BKNG"
+          },
+          {
+            "symbol": "MXN=X"
+          },
+          {
+            "symbol": "LAZR"
+          },
+          {
+            "symbol": "O"
+          },
+          {
+            "symbol": "BIOR"
+          },
+          {
+            "symbol": "KHC"
+          },
+          {
+            "symbol": "CME"
+          },
+          {
+            "symbol": "SJT"
+          },
+          {
+            "symbol": "META"
+          },
+          {
+            "symbol": "HES"
+          },
+          {
+            "symbol": "AVAX-USD"
+          },
+          {
+            "symbol": "KSCP"
+          },
+          {
+            "symbol": "PEP"
+          },
+          {
+            "symbol": "INBS"
+          },
+          {
+            "symbol": "VXX"
+          },
+          {
+            "symbol": "PRCH"
+          },
+          {
+            "symbol": "MBI"
+          },
+          {
+            "symbol": "MKC"
+          },
+          {
+            "symbol": "UUUU"
+          },
+          {
+            "symbol": "MC.PA"
+          },
+          {
+            "symbol": "BEAM"
+          },
+          {
+            "symbol": "SONY"
+          },
+          {
+            "symbol": "PALL"
+          },
+          {
+            "symbol": "ARDX"
+          },
+          {
+            "symbol": "LI"
+          },
+          {
+            "symbol": "CRON"
+          },
+          {
+            "symbol": ":entitySlug"
+          },
+          {
+            "symbol": "AR"
+          },
+          {
+            "symbol": "NEGG"
+          },
+          {
+            "symbol": "9988.HK"
+          },
+          {
+            "symbol": "GRTS"
+          },
+          {
+            "symbol": "OGN"
+          },
+          {
+            "symbol": "CVS"
+          },
+          {
+            "symbol": "WMT"
+          },
+          {
+            "symbol": "SRNEQ"
+          },
+          {
+            "symbol": "CYBR"
+          },
+          {
+            "symbol": "LEN"
+          },
+          {
+            "symbol": "CHGG"
+          },
+          {
+            "symbol": "CCO.TO"
+          },
+          {
+            "symbol": "PSFE"
+          },
+          {
+            "symbol": "TZA"
+          },
+          {
+            "symbol": "MBLY"
+          },
+          {
+            "symbol": "LMT"
+          },
+          {
+            "symbol": "EBAY"
+          },
+          {
+            "symbol": "DEO"
+          },
+          {
+            "symbol": "GOEV"
+          },
+          {
+            "symbol": "LABD"
+          },
+          {
+            "symbol": "RGTI"
+          },
+          {
+            "symbol": "CLS"
+          },
+          {
+            "symbol": "NVS"
+          },
+          {
+            "symbol": "MSTR"
+          },
+          {
+            "symbol": "BROS"
+          },
+          {
+            "symbol": "JWN"
+          },
+          {
+            "symbol": "CSU.TO"
+          },
+          {
+            "symbol": "TNA"
+          },
+          {
+            "symbol": "PTLO"
+          },
+          {
+            "symbol": "FTEC"
+          },
+          {
+            "symbol": "AZN"
+          },
+          {
+            "symbol": "HKD"
+          },
+          {
+            "symbol": "CIFR"
+          },
+          {
+            "symbol": "BLDP.TO"
+          },
+          {
+            "symbol": "HOOD"
+          },
+          {
+            "symbol": "SWN"
+          },
+          {
+            "symbol": "BOTZ"
+          },
+          {
+            "symbol": "ONON"
+          },
+          {
+            "symbol": "FXAIX"
+          },
+          {
+            "symbol": "LHX"
+          },
+          {
+            "symbol": "DBX"
+          },
+          {
+            "symbol": "CAG"
+          },
+          {
+            "symbol": "CDE"
+          },
+          {
+            "symbol": "SHOT"
+          },
+          {
+            "symbol": "MRVL"
+          },
+          {
+            "symbol": "CVE"
+          },
+          {
+            "symbol": "DM"
+          },
+          {
+            "symbol": "GOF"
+          },
+          {
+            "symbol": "CSX"
+          },
+          {
+            "symbol": "LAC"
+          },
+          {
+            "symbol": "CCI"
+          },
+          {
+            "symbol": "HBI"
+          },
+          {
+            "symbol": "RVPH"
+          },
+          {
+            "symbol": "CP"
+          },
+          {
+            "symbol": "QLD"
+          },
+          {
+            "symbol": "^FTSE"
+          },
+          {
+            "symbol": "CPNG"
+          },
+          {
+            "symbol": "UL"
+          },
+          {
+            "symbol": "^HSI"
+          },
+          {
+            "symbol": "LXRX"
+          },
+          {
+            "symbol": "ED"
+          },
+          {
+            "symbol": "ADI"
+          },
+          {
+            "symbol": "FNMA"
+          },
+          {
+            "symbol": "CNQ"
+          }
+        ],
+        "jobTimestamp": 1702667368126,
+        "startInterval": 202312151800
+      }
+    ]
+  }
 }

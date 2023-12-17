@@ -1,10 +1,10 @@
-import passport from 'passport'
+import * as passport from 'passport'
 import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt'
 import { Strategy as LocalStrategy } from 'passport-local'
 import * as jwt from 'jsonwebtoken'
-import { System } from "../../system/system"
+import { SystemMain } from "../../system/system"
 import { logger } from "@candlejumper/shared"
-import { User } from "./user.entity"
+import { UserEntity } from "./user.entity"
 
 export interface IUser {
     id: number
@@ -17,9 +17,9 @@ export interface IUser {
 
 export class UserManager {
 
-    user: User
+    user: UserEntity
 
-    constructor(public system: System) { }
+    constructor(public system: SystemMain) { }
 
     async init(): Promise<void> {
         this.setPassportStrategies()
@@ -28,20 +28,20 @@ export class UserManager {
 
     // TODO: ??????
     async setActive() {
-        const UserRepo = this.system.db.connection.getRepository(User)
+        const UserRepo = this.system.db.connection.getRepository(UserEntity)
         this.user = await UserRepo.findOne({ where: { active: true } })
     }
 
-    async find(params: IUser): Promise<User> {
-        const UserRepo = this.system.db.connection.getRepository(User)
+    async find(params: IUser) {
+        const UserRepo = this.system.db.connection.getRepository(UserEntity)
         UserRepo.findOne({ where: { active: true } })
         return {} as any
     }
 
-    async create(params: IUser): Promise<User> {
+    async create(params: IUser) {
         delete params.id
 
-        const UserRepo = this.system.db.connection.getRepository(User)
+        const UserRepo = this.system.db.connection.getRepository(UserEntity)
         const user = UserRepo.create(params)
         const results = await UserRepo.save(user)
 
@@ -59,7 +59,7 @@ export class UserManager {
     }
 
     private setPassportStrategies(): void {
-        const UserRepo = this.system.db.connection.getRepository(User)
+        const UserRepo = this.system.db.connection.getRepository(UserEntity)
         const jwtSecret = this.system.configManager.config.security.jwtSecret
 
         // registrate login method

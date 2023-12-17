@@ -4,7 +4,7 @@ import { createServer, Server } from 'http'
 import cors from 'cors'
 import helmet from 'helmet'
 import * as bodyParser from 'body-parser'
-import { System } from '../system/system'
+import { SystemCandles } from '../system/system'
 import { logger } from '../util/log'
 
 export class ApiServer {
@@ -15,7 +15,7 @@ export class ApiServer {
 
     private connections: any[] = []
 
-    constructor(private system: System) { }
+    constructor(private system: SystemCandles) { }
 
     async start() {
         this.app = express()
@@ -61,12 +61,17 @@ export class ApiServer {
                 const data = {}
                 for (let i = 0, len = pairs.length; i < len; i++) {
                     const pair = pairs[i]
-                    const symbol = pair.symbol
+                    const symbol = this.system.symbolManager.get(pair.name)
+
+                    if (!symbol) {
+                        continue
+                    }
+                    
                     const interval = pair.interval
                     const candles = await this.system.candleManager.getFromDB(symbol, interval, count)
 
-                    data[symbol] = data[symbol] || {}
-                    data[symbol][interval] = candles
+                    data[symbol.name] = data[symbol.name] || {}
+                    data[symbol.name][interval] = candles
                 }
             
                 res.send(data)
@@ -82,7 +87,8 @@ export class ApiServer {
                 const query = req.query as any
                 const count = parseInt(query.count, 10) || 1000
                 // const candles = this.system.candleManager.get(params.symbol, params.interval, count)
-                const candles = await this.system.candleManager.getFromDB(params.symbol, params.interval, count)
+
+                const candles = await this.system.candleManager.getFromDB({name: params.symbol}, params.interval, count)
                 res.send(candles)
             } catch (error) {
                 console.error(error)

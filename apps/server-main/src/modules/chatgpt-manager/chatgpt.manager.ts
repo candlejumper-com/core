@@ -1,4 +1,4 @@
-import { System } from '../../system/system'
+import { SystemMain } from '../../system/system'
 import OpenAI from 'openai'
 import puppeteer from 'puppeteer'
 import axios from 'axios'
@@ -9,7 +9,7 @@ import { ReadableStream } from 'stream/web'
 export class ChatGPTManager {
   private brokerYahoo: BrokerYahoo
 
-  constructor(public system: System) {}
+  constructor(public system: SystemMain) {}
 
   /**
    * - load alphavantage and new instance of broker
@@ -64,7 +64,7 @@ export class ChatGPTManager {
   }
 
   async ask(cookies, token) {
-    const candles = await this.brokerYahoo.getCandlesFromCount('AMZN', '1d', 160)
+    const candles = await this.brokerYahoo.getCandlesFromCount({name: 'AMZN'}, '1d', 160)
     const normalized = candles.map((candle) => ({
       time: candle[0],
       close: candle[1],

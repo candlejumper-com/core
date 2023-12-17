@@ -11,6 +11,7 @@
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
+    "lib": ["dom", "ES2023"],	
     "paths": {
       "@candlejumper/shared": [
         "./libs/shared/src/index_client.ts",

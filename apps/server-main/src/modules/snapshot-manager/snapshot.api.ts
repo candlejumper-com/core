@@ -1,5 +1,5 @@
 import { Application } from 'express';
-import { System } from '../../system/system';
+import { SystemMain } from '../../system/system';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Socket } from 'socket.io';
@@ -9,7 +9,7 @@ const PATH_SNAPSHOT_BACKTEST = path.join(
   '../../../_data/snapshots/backtest'
 );
 
-export default function (system: System, app: Application, socket?: Socket) {
+export default function (system: SystemMain, app: Application, socket?: Socket) {
   if (app) {
     app.get('/api/snapshot/:symbol/:interval/:time', async (req, res) => {
       const symbol = req.params.symbol;

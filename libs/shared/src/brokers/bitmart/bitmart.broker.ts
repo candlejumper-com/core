@@ -8,6 +8,7 @@ import { ICandle, CANDLE_FIELD } from '../../candle'
 import { CandleTickerCallback, IBrokerInfo } from '../broker.interfaces'
 import { BitmartSpotAPI } from '@bitmartexchange/bitmart-node-sdk-api'
 import { IBrokerBitmartSymbols } from './bitmart.interfaces'
+import { ISymbol } from '../../modules/symbol/symbol.interfaces'
 
 export enum BROKER_BITMART_TIMEFRAMES {
   '1m' = 1,
@@ -95,31 +96,6 @@ export class BrokerBitmart extends Broker {
   /**
    * load broker data from candleServer (symbols, limits etc)
    */
-  async syncExchangeFromCandleServer(): Promise<void> {
-    logger.debug(`\u267F ${this.constructor.name} Sync exchange info`)
-    const now = Date.now()
-    const candleServerUrl = this.system.configManager.config.server.candles.url
-
-    try {
-      const { data } = await this.axios.get(`${candleServerUrl}/api/exchange/ig`, {
-        'axios-retry': {
-          retries: 10,
-        },
-      })
-
-      this.exchangeInfo = data.exchangeInfo
-      this.exchangeInfo.timezone = (this.exchangeInfo as any).timezone
-
-      logger.info(`\u2705 Sync exchange info (${Date.now() - now} ms)`)
-    } catch (error) {
-      // Throw an error indicating the failure to fetch broker config
-      throw new Error(`error fetching broker config from candle server`.red)
-    }
-  }
-
-  /**
-   * load broker data from candleServer (symbols, limits etc)
-   */
   async syncExchangeFromBroker(): Promise<void> {
     logger.debug(`\u267F ${this.constructor.name} Sync exchange info`)
 
@@ -177,7 +153,7 @@ export class BrokerBitmart extends Broker {
     return null
   }
 
-  async getCandlesFromTime(symbol: string, interval: string, startTime: number): Promise<ICandle[]> {
+  async getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]> {
     const limit = 1000
     const allCandles = []
     const maxLoops = 20
@@ -224,7 +200,7 @@ export class BrokerBitmart extends Broker {
   /**
    * load candles and normalize values (string to number)
    */
-  async getCandlesFromCount(symbol: string, interval: string, count = 1000): Promise<ICandle[]> {
+  async getCandlesFromCount(symbol: ISymbol, interval: string, count = 1000): Promise<ICandle[]> {
     const limit = 1000
     const loops = Math.ceil(count / limit)
     const allCandles = []
@@ -264,7 +240,7 @@ export class BrokerBitmart extends Broker {
     return allCandles
   }
 
-  startCandleTicker(symbols: string[], intervals: string[], callback: CandleTickerCallback) {
+  startCandleTicker(symbols: ISymbol[], intervals: string[], callback: CandleTickerCallback) {
     this.onCandleTickCallback = callback
     // const streamBinance = new WebSocket('wss://stream.binance.com:9443/ws')
 

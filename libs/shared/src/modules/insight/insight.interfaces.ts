@@ -2,6 +2,6 @@
 // import { ISymbol } from "../../candle"
 
 export interface IInsight {
-  symbol: any
-  insights: any
+  symbol?: any
+  insights?: any
 }

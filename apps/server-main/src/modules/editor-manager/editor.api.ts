@@ -1,7 +1,7 @@
 import { Application } from 'express'
-import { System } from "../../system/system"
+import { SystemMain } from "../../system/system"
 
-export default function (system: System, app: Application) {
+export default function (system: SystemMain, app: Application) {
 
     app.get('/api/editor/file-tree', (req, res) => {
         try {

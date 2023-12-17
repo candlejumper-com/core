@@ -1,5 +1,5 @@
 import { WorkerPool } from 'workerpool';
-import { System } from '../../system/system';
+import { SystemMain } from '../../system/system';
 import { BrokerYahoo, logger } from '@candlejumper/shared';
 import {
     ITensorflowOptions,
@@ -16,7 +16,7 @@ export class AIInstance {
 
   id = AIInstance.ID_COUNTER++;
 
-  constructor(public system: System, public container: AIContainer, public workerPool: WorkerPool, public options: ITensorflowOptions) {}
+  constructor(public system: SystemMain, public container: AIContainer, public workerPool: WorkerPool, public options: ITensorflowOptions) {}
 
   async run(): Promise<void> {
     const symbolName = this.options.symbol;

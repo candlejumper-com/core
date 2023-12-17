@@ -1,8 +1,8 @@
 import { join } from 'path'
 import { readFileSync, writeFileSync } from "fs"
 import watch from "node-watch"
-import dirTree, { DirectoryTree } from "directory-tree"
-import { System } from '../../system/system'
+import * as dirTreedirTree from "directory-tree"
+import { SystemMain } from '../../system/system'
 import { logger } from '@candlejumper/shared'
 import { pool, WorkerPool } from 'workerpool'
 import { IEditorCompileOptions } from './editor.worker'
@@ -22,13 +22,13 @@ const url = new URL(join(__dirname, 'editor.worker.js'), import.meta.url)
 
 export class EditorManager {
 
-    fileTree: DirectoryTree<any>[]
+    fileTree: dirTreedirTree.DirectoryTree<any>[]
     availableBots: Array<{ name: string }> = []
     availableIndicators: Array<{ name: string }> = []
 
     private pool: WorkerPool
 
-    constructor(public system: System) { }
+    constructor(public system: SystemMain) { }
 
     async init(): Promise<void> {
         this.pool = pool(url.toString().replace('file:///', '/'), { maxWorkers: 1 })
@@ -77,7 +77,7 @@ export class EditorManager {
 
     // TODO: make async (move filetree watcher to worker?)
     private async readAndUpdate(): Promise<void> {
-        const tree = dirTree(PATH_CUSTOM_SRC, { normalizePath: true }).children
+        const tree = dirTreedirTree(PATH_CUSTOM_SRC, { normalizePath: true }).children
         this.fileTree = tree
 
         this.setAvailableBots()

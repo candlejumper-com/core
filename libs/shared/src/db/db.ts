@@ -1,18 +1,16 @@
 import { join } from 'path';
-import { DataSource } from "typeorm"
+import { DataSource, Entity, EntitySchema } from "typeorm"
 import { System } from '../system/system';
-import { User } from '../modules/user-manager/user.entity';
 import { logger } from '@candlejumper/shared';
-import { Device } from '../modules/device-manager/device.entity';
 
-const PATH_DATA = join(__dirname, '../../../../_data/server')
-const PATH_ENTITIES = join(__dirname, '../user-manager/user.entity.ts')
+const PATH_DATA = join(__dirname, '../../../_data/server')
 
 export class DB {
 
     connection: DataSource;
 
-    constructor(public system: System) { }
+    constructor(public system: System, private entities: any[]) { }
+    // constructor(public system: System, private entities: EntitySchema<any>[]) { }
 
     async init() {
         logger.debug(`\u267F Connect DB`)
@@ -21,8 +19,7 @@ export class DB {
         const myDataSource = new DataSource({
             type: "sqlite",
             database: join(PATH_DATA, 'tradebot.db'),
-            entities: [User, Device],
-            // entities: [__dirname + '/../**/*.entity.{js,ts}'], // doesnt seem to work?
+            entities: this.entities,
             logging: false,
             synchronize: true,
         })

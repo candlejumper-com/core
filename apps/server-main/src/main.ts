@@ -1,8 +1,8 @@
 import { SYSTEM_ENV } from '@candlejumper/shared';
-import { System } from './system/system';
+import { SystemMain } from './system/system';
 
 // MAIN SYSTEM INSTANCE
-const system = new System(SYSTEM_ENV.MAIN)
+const system = new SystemMain()
 
 // start
 try {

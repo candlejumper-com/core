@@ -54,10 +54,10 @@ export default class BotBollinger<T> extends Bot<T> {
         const currentTrend = this.getTickerById('Trend').data
         const BBLatest = this.getTickerById('BB').data[0]
 
-        // const VolumeSMAIndicator = this.getIndicatorById('VOLUME_SMA')
-        // const VolumeSMALatest = VolumeSMAIndicator[0]
-        // const currentVolume = this.volume[0]
-        // const isVolumeAboveAverage = currentVolume > (VolumeSMALatest)
+        const VolumeSMAIndicator = this.getTickerById('VOLUME_SMA')
+        const VolumeSMALatest = VolumeSMAIndicator[0]
+        const currentVolume = VolumeSMALatest.data[0]
+        const isVolumeAboveAverage = currentVolume > (VolumeSMALatest)
 
         // if (this.price < BBLatest.lower && currentTrend === 'up') {
         if (currentTrend === 'up') {
@@ -74,11 +74,11 @@ export default class BotBollinger<T> extends Bot<T> {
             }
 
             if (!this.watchers.length) {
-                // this.addWatcher({dir: 'down', onTrigger: async () => {
-                // if (isVolumeAboveAverage) {
-                // await this.system.orderManager.placeMarketOrder(this.symbol, ORDER_SIDE.BUY)
-                // }
-                // }})
+                this.addWatcher({dir: 'down', onTrigger: async () => {
+                if (isVolumeAboveAverage) {
+                await this.system.orderManager.placeMarketOrder(this.symbol, ORDER_SIDE.BUY)
+                }
+                }})
             }
         }
 
@@ -111,7 +111,7 @@ export default class BotBollinger<T> extends Bot<T> {
             }
         }
 
-        // price is below bottom line 
+        // price is above upper line 
         if (this.price > BBLatest.upper && !this.crossedUpper) {
             this.crossedLower = false
             this.crossedUpper = true

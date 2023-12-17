@@ -1,4 +1,4 @@
-import { System } from '../../system/system';
+import { SystemMain } from '../../system/system';
 import { BACKTEST_TYPE } from './backtest-manager';
 import { Bot } from '../../tickers/bot/bot';
 import { CANDLE_FIELD } from '../candle-manager/candle-manager';
@@ -8,7 +8,7 @@ import { ICandle, ISymbol, ORDER_SIDE, IBalance, SYSTEM_ENV, BrokerYahoo } from 
 
 export class Backtest {
 
-    system = new System(SYSTEM_ENV.BACKTEST)
+    system = new SystemMain(SYSTEM_ENV.BACKTEST)
 
     private options: IWorkerData['options']
     private candles: ICandle[]

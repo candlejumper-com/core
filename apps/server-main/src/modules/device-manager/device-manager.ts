@@ -1,14 +1,14 @@
-import admin from 'firebase-admin'
-import { System } from '../../system/system'
+import * as admin from 'firebase-admin'
+import { SystemMain } from '../../system/system'
 import { logger, ICalendarItem } from '@candlejumper/shared'
 import FIREBASE_CERT from './../../../../../firebase-keys.json'
-import { Device } from './device.entity'
+import { DeviceEntity } from './device.entity'
 import { TokenMessage } from 'firebase-admin/lib/messaging/messaging-api'
 
 const ERROR_TOKEN_NOT_FOUND = 'messaging/registration-token-not-registered'
 
 export class DeviceManager {
-  constructor(public system: System) {}
+  constructor(public system: SystemMain) {}
 
   async init() {
     admin.initializeApp({
@@ -16,16 +16,16 @@ export class DeviceManager {
     })
   }
 
-  async get() {
-    const DeviceRepo = this.system.db.connection.getRepository(Device)
+  async get(): Promise<string[]> {
+    const DeviceRepo = this.system.db.connection.getRepository(DeviceEntity)
     const devices = await DeviceRepo.find()
 
-    const tokens = devices.map((device) => device.token)
+    const tokens = devices.map((device) => device.token) as string[]
     return [...new Set(tokens)]
   }
 
   async add(token: string) {
-    const DeviceRepo = this.system.db.connection.getRepository(Device)
+    const DeviceRepo = this.system.db.connection.getRepository(DeviceEntity)
     const device = DeviceRepo.create({ token })
     const results = await DeviceRepo.save(device)
 
@@ -33,7 +33,7 @@ export class DeviceManager {
   }
 
   async remove(token: string) {
-    const DeviceRepo = this.system.db.connection.getRepository(Device)
+    const DeviceRepo = this.system.db.connection.getRepository(DeviceEntity)
     await DeviceRepo.delete({ token })
   }
 

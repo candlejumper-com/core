@@ -26,7 +26,9 @@ export function normalizeCalendarData(data: ICalendarAlphaVantage[]): ICalendarI
 
 export function filterCalendarItemsInTimeRange(items: ICalendarItem[], timeWindow: number): ICalendarItem[] {
   const now = Date.now()
-  return items.filter(item => item.reportDate.getTime() - now < timeWindow)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return items.filter(item => item.reportDate > today && item.reportDate.getTime() - now < timeWindow)
 }
 
 export function filterCalendarItemsBySymbols(items: ICalendarItem[], symbols: ISymbol[]): ICalendarItem[] {

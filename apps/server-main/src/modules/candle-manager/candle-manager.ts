@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
 import { io, Socket } from 'socket.io-client'
-import { System } from '../../system/system'
+import { SystemMain } from '../../system/system'
 import { logger, ICandle, ISymbol, ICandleServerEvent, sleep } from '@candlejumper/shared'
 
 export const INTERVAL_MILLISECONDS = {
@@ -26,7 +26,7 @@ export class CandleManager {
 
   private candleWebsocket: Socket
 
-  constructor(public system: System) {}
+  constructor(public system: SystemMain) {}
 
   async init(): Promise<void> {
     // this.prepare()

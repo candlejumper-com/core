@@ -1,9 +1,9 @@
 import { Application } from 'express'
 import { Socket } from 'socket.io'
-import { System } from "../../system/system"
+import { SystemMain } from "../../system/system"
 import { IBacktestOptions } from './backtest.interfaces'
 
-export default function (system: System, app?: Application, socket?: Socket) {
+export default function (system: SystemMain, app?: Application, socket?: Socket) {
 
     if (socket) {
         socket.on('post:/api/backtest', async (options: IBacktestOptions) => {

@@ -9,8 +9,6 @@ export interface ICandle {
   [4]: number
 }
 
-
-
 export interface ICandleObject {
   time: number
   open: number

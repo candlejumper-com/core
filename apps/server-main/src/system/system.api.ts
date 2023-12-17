@@ -1,10 +1,10 @@
 import { Application } from 'express'
 import { readFileSync } from 'fs'
-import { System } from "./system"
+import { SystemMain } from "./system"
 import * as jwt from 'jsonwebtoken'
 import { logger, PATH_LOGS_COMBINED } from '@candlejumper/shared'
 
-export default function (system: System, app: Application) {
+export default function (system: SystemMain, app: Application) {
     
     // on client init (bootstrap)
     app.get('/api/app-init', (req, res) => {

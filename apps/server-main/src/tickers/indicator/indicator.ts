@@ -1,5 +1,5 @@
-import { ISymbol, ITickerSnapshot, TICKER_TYPE, Ticker } from "@candlejumper/shared";
-import { System } from "../../system/system";
+import { ISymbol, ITickerSnapshot, System, TICKER_TYPE, Ticker } from "@candlejumper/shared";
+import { SystemMain } from "../../system/system";
 
 export abstract class Indicator<T> extends Ticker<T> {
 

@@ -29,7 +29,6 @@ import { FormsModule } from '@angular/forms'
 })
 export class SymbolOverviewComponent implements OnInit, OnDestroy {
 
-
   // symbols$ = this.store.select(SymbolState.getFilteredByName(value)
   symbols$: any
   isVisible = window.document.body.clientWidth >= this.windowService.breakpoints.lg

@@ -1,3 +1,9 @@
+:host {
+  overflow-y: scroll;
+  height: 100%;
+  display: block;
+}
+
 table {
   // margin-top: 50px;
   // font-size: 10px;

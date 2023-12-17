@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core'
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { InsightService } from '../../../shared/services/insight/insight.service'
-import { ICalendarItem, IInsight } from '@candlejumper/shared'
+import { ICalendarItem, IInsight, ISymbol } from '@candlejumper/shared'
 import { Store } from '@ngxs/store'
 import { Observable, BehaviorSubject, combineLatest, filter, map, tap } from 'rxjs'
 import { PeriodicElement } from '../../../shared/components/footer-tabs/footer-tab-backtest/footer-tab-backtest.component'
@@ -12,6 +12,8 @@ import { SharedModule } from '../../../shared/shared.module'
 import { MatSort, Sort } from '@angular/material/sort'
 import { LiveAnnouncer } from '@angular/cdk/a11y'
 import { MatTableDataSource } from '@angular/material/table'
+import { SymbolSelectors } from '../../../shared/state/symbol/symbol.selectors'
+import { SymbolState } from '../../../shared/state/symbol/symbol.state'
 
 @Component({
   standalone: true,
@@ -47,68 +49,22 @@ export class PageInsightComponent implements OnInit {
   orderColumns: string[] = ['index', 'side', 'price', 'profit', 'quantity', 'time', 'reason', 'text']
 
   dataSource$ = new BehaviorSubject([{}, {}])
-  dataSource: IInsight[] = []
+  dataSource: ISymbol[]
 
   constructor(
-    private liveAnnouncer: LiveAnnouncer,
-    private calendarService: CalendarService,
     public insightService: InsightService,
     private store: Store,
     private changeDetectorRef: ChangeDetectorRef,
   ) {}
 
-  loadItems() {
-    return this.insightService.load().pipe(
-      // filter(([calendarItems]) => !!calendarItems.length),
-      // map(([calendarItems]) =>  Object.values(calendarItems)),
-      tap((calendarItems) => {
-        // this.dataSource = Object.values(calendarItems)
-        console.log(calendarItems)
-      }),
-    )
-  }
-
   ngOnInit() {
-    this.insightService
-      .load()
-      .pipe(
-        // filter(([calendarItems]) => !!calendarItems.length),
-        map((calendarItems) => Object.values(calendarItems)),
-        tap((calendarItems) => {
-          // this.dataSource = Object.values(calendarItems)
-          // console.log(this.dataSource)
-        }),
-      )
-      .subscribe((items) => {
-        console.log(items)
-        items.sort(function (a, b) {
+    this.dataSource = this.store.selectSnapshot(SymbolState.getAll)
 
-          if (!a.insights?.instrumentInfo || !b.insights?.instrumentInfo || (a.insights?.instrumentInfo?.technicalEvents.intermediateTermOutlook.score == b.insights?.instrumentInfo?.technicalEvents.intermediateTermOutlook.score))  {
-            return 0
-          }
-
-          console.log(222, parseInt(b.insights?.instrumentInfo?.technicalEvents.intermediateTermOutlook.score, 10) )
-          return (
-            parseInt(b.insights?.instrumentInfo?.technicalEvents.intermediateTermOutlook.score, 10) -
-            parseInt(a.insights?.instrumentInfo?.technicalEvents.intermediateTermOutlook.score, 10)
-          )
-        })
-
-        this.dataSource = items
-
-        // this.dataSource.sort = this.sort
-        this.changeDetectorRef.detectChanges()
-
-        console.log(this.dataSource)
-      })
-
-    console.log(this.dataSource$)
-
-    // this.calendarService.load().subscribe()
-  }
-
-  ngOnDestroy() {
-    this.store.dispatch(new CALENDAR_SET([]))
+    this.dataSource.forEach(symbol => {
+      if (symbol.insights) {
+        console.log(symbol)
+      }
+    })
   }
 
   /** Announce the change in sort state for assistive technology. */

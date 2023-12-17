@@ -37,8 +37,8 @@ export function initializeApp(appInitService: InitializeService) {
   imports: [
     BrowserModule,
     RouterModule.forRoot(routes, { useHash: true }),
-    // NoopAnimationsModule,
-    BrowserAnimationsModule,
+    NoopAnimationsModule,
+    // BrowserAnimationsModule,
     HttpClientModule,
     FlexLayoutModule,
     MatIconModule,

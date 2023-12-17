@@ -1,4 +1,4 @@
-import { CandleTickerCallback, ICandle, logger } from '@candlejumper/shared';
+import { CandleTickerCallback, ICandle, ISymbol, logger } from '@candlejumper/shared';
 import { OrderResponseFull, OrderResponseResult, WebsocketClient } from 'binance';
 import axios, { AxiosError } from 'axios';
 import rateLimit from 'axios-rate-limit';
@@ -117,31 +117,6 @@ export class BrokerIG extends Broker {
     logger.info(`\u2705 Sync balance (${Date.now() - now} ms)`);
   }
 
-  /**
-   * load broker data from candleServer (symbols, limits etc)
-   */
-  async syncExchangeFromCandleServer(): Promise<void> {
-    logger.debug(`\u267F Sync exchange info`);
-
-    const now = Date.now();
-    const candleServerUrl = this.system.configManager.config.server.candles.url;
-
-    try {
-      const { data } = await axios.get(`${candleServerUrl}/api/exchange/ig`, {
-        'axios-retry': {
-          retries: 10
-        },
-      });
-
-      this.exchangeInfo = data.exchangeInfo;
-
-      logger.info(`\u2705 Sync exchange info (${Date.now() - now} ms)`);
-    } catch (error) {
-      // Throw an error indicating the failure to fetch broker config
-      throw new Error(`error fetching broker config from candle server`.red);
-    }
-  }
-
   async syncExchangeFromBroker(): Promise<void> {
       
   }
@@ -180,11 +155,11 @@ export class BrokerIG extends Broker {
     return null;
   }
 
-  override startCandleTicker(symbols: string[], intervals: string[], callback: CandleTickerCallback): void {}
-  override getCandlesFromTime(symbol: string, interval: string, startTime: number): Promise<ICandle[]> {
+  override startCandleTicker(symbols: ISymbol[], intervals: string[], callback: CandleTickerCallback): void {}
+  override getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]> {
     throw new Error('Method not implemented.');
   }
-  override getCandlesFromCount(symbol: string, interval: string, count: number): Promise<ICandle[]> {
+  override getCandlesFromCount(symbol: ISymbol, interval: string, count: number): Promise<ICandle[]> {
     throw new Error('Method not implemented.');
   }
   // async get24HChanges(): Promise<IDailyStatsResult[]> {

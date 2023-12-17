@@ -3,13 +3,13 @@ import { Action, Selector, State, StateToken, createSelector } from '@ngxs/store
 import { SYMBOL_PRICE_SET, SYMBOL_SET } from './symbol.actions'
 import { ISymbol } from '@candlejumper/shared'
 
-export const BRUGOPENINGEN_STATE_TOKEN = new StateToken<string>(
+export const SYMBOLS_STATE_TOKEN = new StateToken<string>(
   'symbols'
 );
 
 export class SymbolSelectors {
 
-  @Selector([BRUGOPENINGEN_STATE_TOKEN])
+  @Selector([SYMBOLS_STATE_TOKEN])
   static entities(stateModel) {
     return stateModel.entities;
   }

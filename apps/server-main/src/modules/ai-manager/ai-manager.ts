@@ -6,7 +6,7 @@ import {
   ITensorflowRunResult,
 } from './ai.interfaces';
 import { join } from 'path';
-import { System } from '../../system/system';
+import { SystemMain } from '../../system/system';
 import { logger } from '@candlejumper/shared';
 import { WorkerPool, pool } from 'workerpool';
 import { TENSORFLOW_WORKER_ACTION } from './ai.util';
@@ -17,7 +17,7 @@ export class AIManager {
   private workerPool: WorkerPool;
   private containers: AIContainer[] = []
 
-  constructor(public system: System, public maxWorkers?: number) {}
+  constructor(public system: SystemMain, public maxWorkers?: number) {}
 
   run(options: ITensorflowOptions): AIContainer {
     if (!this.workerPool) {

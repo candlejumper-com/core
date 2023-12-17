@@ -1,22 +1,29 @@
-import { SystemBase } from "../../system/system";
-import { ISymbol } from "./symbol.interfaces";
+import { System } from '../../system/system'
+import { ISymbol, ISymbolInfo } from './symbol.interfaces'
+import { Symbol } from './symbol'
 
 export class SymbolManager {
+  symbols: Symbol[] = []
 
-  symbols: ISymbol[] = []
+  constructor(private system: System) {}
 
-  constructor(private system: SystemBase) {}
-
-  async init() {
-    
-  }
+  async init() {}
 
   add(symbol: ISymbol) {
-    symbol.candles = {}
-    this.symbols.push(symbol)
+    this.symbols.push(new Symbol(this.system, symbol))
   }
 
   get(symbolName: string): ISymbol {
     return this.symbols.find(symbol => symbol.name === symbolName)
+  }
+
+  getInfo(): ISymbolInfo[] {
+    return this.symbols.map(symbol => symbol.getInfo())
+  }
+
+  async update() {
+    for (const symbol of this.symbols) {
+      await symbol.update()
+    }
   }
 }

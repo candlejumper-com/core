@@ -1,6 +1,6 @@
 import "colors"
 import { logger } from '../util/log'
-import { TICKER_TYPE } from "@candlejumper/shared"
+import { DB, InsightManager, TICKER_TYPE } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
 import { ConfigManager } from "../config/config-manager"
 import { createAxiosRetryInstance } from "../util/axios-retry"
@@ -11,9 +11,10 @@ import { Ticker } from "../ticker/ticker"
 export enum SYSTEM_ENV {
   MAIN = "MAIN",
   BACKTEST = "BACKTEST",
+  CANDLES = "CANDLES",
 }
 
-export abstract class SystemBase extends Ticker<null> {
+export abstract class System extends Ticker<null> {
   abstract name?: string
   
   override id = "SYSTEM"
@@ -24,22 +25,28 @@ export abstract class SystemBase extends Ticker<null> {
   type = TICKER_TYPE.SYSTEM
 
   time: Date
+  
+  readonly abstract env: SYSTEM_ENV
 
+  db: DB
+  readonly insightManager = new InsightManager(this)
   readonly brokerManager = new BrokerManager(this)
   readonly configManager = new ConfigManager(this)
   readonly symbolManager = new SymbolManager(this)
+  readonly orderManager: any
 
   protected isRunning = false
 
-  constructor(public env: SYSTEM_ENV) {
-    super(null, null, null, null, null)
-
-    setProcessExitHandlers(this)
+  constructor() {
+    super(null, null, null, null)
   }
 
   override async init(): Promise<void> {
+    setProcessExitHandlers(this)
+
     await super.init()
     await this.configManager.init()
+    await this.symbolManager.init()
     await this.onInit?.()
   }
 

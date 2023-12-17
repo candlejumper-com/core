@@ -1,5 +1,5 @@
 import { Application } from 'express'
-import { System } from "../../system/system"
+import { SystemMain } from "../../system/system"
 import { logger, ORDER_SIDE } from '@candlejumper/shared'
 
 interface IOrderPostBody {
@@ -9,7 +9,7 @@ interface IOrderPostBody {
     data?: any
 }
 
-export default function (system: System, app: Application) {
+export default function (system: SystemMain, app: Application) {
     app.post('/api/order', async (req, res) => {
         try {
             const options: IOrderPostBody = req.body

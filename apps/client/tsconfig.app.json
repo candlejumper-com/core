@@ -2,8 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": [],
-    "lib": ["DOM", "ES2023"]
+    "types": []
   },
   "files": ["src/main.ts"],
   "include": ["src/**/*.d.ts"],

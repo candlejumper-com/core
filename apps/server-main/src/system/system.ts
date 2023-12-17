@@ -1,8 +1,7 @@
 import { join } from "path"
 import { Bot } from "../tickers/bot/bot"
-import { logger, setSystemEnvironment, ISystemState, SystemBase, BrokerBitmart, SYSTEM_ENV, BrokerYahoo } from "@candlejumper/shared"
+import { logger, setSystemEnvironment, ISystemState, System, SYSTEM_ENV, BrokerYahoo, DB, InsightEntity, InsightManager, BrokerAlphavantage } from "@candlejumper/shared"
 import { ApiServer } from "./api"
-import { DB } from "../db/db"
 import { CANDLE_FIELD, CandleManager } from "../modules/candle-manager/candle-manager"
 import { OrderManager } from "../modules/order-manager/order-manager"
 import { DeviceManager } from "../modules/device-manager/device-manager"
@@ -19,7 +18,8 @@ import { readFileSync } from "fs"
 import { NewsManager } from "../modules/news-manager/news.manager"
 import { CalendarManager } from "../modules/calendar-manager/calendar.manager"
 import { ChatGPTManager } from "../modules/chatgpt-manager/chatgpt.manager"
-import { InsightManager } from "../modules/insight-manager/insight.manager"
+import { DeviceEntity } from "../modules/device-manager/device.entity"
+import { UserEntity } from "../modules/user-manager/user.entity"
 
 // export class System {
 //   tick(...arg): any {
@@ -27,7 +27,8 @@ import { InsightManager } from "../modules/insight-manager/insight.manager"
 //   }
 // }
 
-export class System extends SystemBase {
+export class SystemMain extends System {
+  env = SYSTEM_ENV.MAIN
   override readonly name = 'MAIN'
 
   type = TICKER_TYPE.SYSTEM
@@ -42,7 +43,7 @@ export class System extends SystemBase {
 
   system = this
 
-  readonly db = new DB(this)
+  db = new DB(this, [UserEntity, DeviceEntity, InsightEntity])
   // readonly broker = new BrokerBinance(this)
   readonly aiManager = new AIManager(this)
   readonly candleManager = new CandleManager(this)
@@ -64,14 +65,13 @@ export class System extends SystemBase {
     }
 
     this.orderManager.init()
-
+    console.log(23, this.env)
     // MAIN instance
     if (this.env !== SYSTEM_ENV.MAIN) {
       return
     }
-
+    
     await this.initAsMain()
-
     // start public API server
     await this.apiServer.start()
 
@@ -95,6 +95,7 @@ export class System extends SystemBase {
    */
   private async initAsMain(): Promise<void> {
 
+    await this.brokerManager.add(BrokerAlphavantage)
     await this.brokerManager.add(BrokerYahoo)
 
     this.chatGPTManager = new ChatGPTManager(this)
@@ -120,7 +121,7 @@ export class System extends SystemBase {
 
     // load calendar
     // await this.chatGPTManager.init()
-    // await this.calendarManager.init()
+    await this.calendarManager.init()
 
     await Promise.all([
       // load broker (symbols, timezone, details etc)
@@ -139,6 +140,8 @@ export class System extends SystemBase {
 
     // open websocket to candle server
     await this.candleManager.openCandleServerSocket()
+
+    this.symbolManager.update()
 
     console.info(`--------------------------------------------------------------`)
   }
@@ -245,7 +248,7 @@ export class System extends SystemBase {
         balances: this.brokerManager.get(BrokerYahoo).account.balances,
         // balances: []
       },
-      symbols: this.symbolManager.symbols,
+      symbols: this.symbolManager.getInfo(),
       tickers: this.tickers.map((ticker) => ({
         env: this.env,
         config: {

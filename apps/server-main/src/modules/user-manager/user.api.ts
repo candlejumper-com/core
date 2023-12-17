@@ -1,10 +1,10 @@
 import { Application } from 'express'
 import { authenticate } from 'passport'
-import { System } from "../../system/system"
+import { SystemMain } from "../../system/system"
 import * as jwt from 'jsonwebtoken'
 import { IUser } from './user-manager'
 
-export default function (system: System, app: Application) {
+export default function (system: SystemMain, app: Application) {
 
     app.get('/api/user', async (req, res) => {
         try {

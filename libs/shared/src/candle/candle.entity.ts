@@ -5,7 +5,7 @@ import { System } from "../system/system"
 // base symbol table
 export const BaseCandleSchema: EntitySchemaOptions<ICandleObject> = {
     name: "temp",
-    columns: {
+    columns: {  
         time: {
             type: Number,
             primary: true,

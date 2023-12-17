@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PageNewsComponent } from './page-news.component';
+import { PageNewsComponent } from './page-calendar.component';
 import { NgxsModule } from '@ngxs/store';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';

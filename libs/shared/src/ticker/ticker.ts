@@ -1,5 +1,5 @@
 import { ICandle, ITickerEvent, ITickerParams, TICKER_EVENT_TYPE, TICKER_TYPE } from '@candlejumper/shared'
-import { SystemBase } from '../system/system'
+import { System } from '../system/system'
 import { CANDLE_FIELD } from '../candle/candle.util'
 import { logger } from '../util/log'
 import { sleep } from '../util/util'
@@ -62,7 +62,7 @@ export abstract class Ticker<T> {
   protected onDestroy?(): Promise<void>
 
   constructor(
-    public system: SystemBase,
+    public system: System,
     public parent: Ticker<any>,
     public symbol: ISymbol,
     public interval: string,

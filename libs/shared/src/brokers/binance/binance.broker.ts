@@ -12,6 +12,7 @@ import { CandleTickerCallback } from '../broker.interfaces'
 import { ICandle } from '../../candle/candle.interfaces'
 import { CANDLE_FIELD } from '../../candle/candle.util'
 import { QueueBinance } from './binance.queue'
+import { ISymbol } from '../../modules/symbol/symbol.interfaces'
 
 export class BrokerBinance extends Broker {
   id = 'BINANCE'
@@ -40,7 +41,7 @@ export class BrokerBinance extends Broker {
    * load candles from startime until now.
    * splits into multiple requests until end
    */
-    async getCandlesFromTime(symbol: string, interval: string, startTime: number): Promise<ICandle[]> {
+    async getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]> {
       const limit = 1000
       const allCandles = []
       const maxLoops = 20 
@@ -52,7 +53,7 @@ export class BrokerBinance extends Broker {
   
         const data =  await this.queue.add( async () =>  { 
           // const { data } = await http.get(url, {headers: {'X-MBX-APIKEY': this.system.configManager.config.brokers.binance.apiKey}})
-          const result = await this.instance.getKlines({symbol, interval: interval as any})
+          const result = await this.instance.getKlines({symbol: symbol.name, interval: interval as any})
           return result
           return data
         })
@@ -91,7 +92,7 @@ export class BrokerBinance extends Broker {
     ])) as ICandle[] // TEMP to fix typing
   }
 
-  async getCandlesFromCount(symbol: string, interval: string, count = 1000): Promise<ICandle[]> {
+  async getCandlesFromCount(symbol: ISymbol, interval: string, count = 1000): Promise<ICandle[]> {
     const limit = 1000
     const loops = Math.ceil(count / limit)
     const allCandles = []
@@ -104,7 +105,7 @@ export class BrokerBinance extends Broker {
       logger.debug(`\u231B Sync candles: ${symbol} ${interval} (${i + 1}/${loops}) ${new Date(endTime)}`)
 
       const rawCandles = await this.instance.getKlines({
-        symbol,
+        symbol: symbol.name,
         interval: interval as KlineInterval,
         limit,
         endTime
@@ -127,7 +128,7 @@ export class BrokerBinance extends Broker {
     return allCandles
   }
 
-  startCandleTicker(symbols: string[], intervals: string[], callback: CandleTickerCallback) {
+  startCandleTicker(symbols: ISymbol[], intervals: string[], callback: CandleTickerCallback) {
     this.onCandleTickCallback = callback
     // const streamBinance = new WebSocket('wss://stream.binance.com:9443/ws')
 
@@ -147,7 +148,7 @@ export class BrokerBinance extends Broker {
 
     for (let k = 0, lenk = symbols.length; k < lenk; k++) {
         for (let i = 0, len = intervals.length; i < len; i++) {
-        this.websocket.subscribeSpotKline(symbols[k], intervals[i] as any)
+        this.websocket.subscribeSpotKline(symbols[k].name, intervals[i] as any)
       }
     }
   }
@@ -192,38 +193,6 @@ export class BrokerBinance extends Broker {
     }
 
     logger.info(`\u2705 Sync balance (${Date.now() - now} ms)`)
-  }
-
-  /**
-   * load broker data from candleServer (symbols, limits etc)
-   */
-  async syncExchangeFromCandleServer(): Promise<void> {
-    logger.debug(`\u267F Sync exchange info`)
-
-    const now = Date.now()
-    const candleServerUrl = this.system.configManager.config.server.candles.url
-
-    try {
-      const { data } = await axios.get(`${candleServerUrl}/api/exchange/binance`)
-      this.exchangeInfo = data.exchangeInfo
-      this.exchangeInfo.timezone = (this.exchangeInfo as any).timezone
-    } catch (error: any) {
-      if (error.cause) {
-        logger.error(error.cause)
-      }
-      else if (error.status) {
-        console.error(error.status)
-        console.error(error.data)
-      }
-
-      else {
-        console.error(error)
-      }
-
-      throw new Error(`error fetching broker config from candle server`.red)
-    }
-
-    logger.info(`\u2705 Sync exchange info (${Date.now() - now} ms)`)
   }
 
   async syncExchangeFromBroker(): Promise<void> {
