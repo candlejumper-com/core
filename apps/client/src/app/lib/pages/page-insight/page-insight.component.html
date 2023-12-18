@@ -50,22 +50,6 @@
   </ng-container>
 
   <!-- instrumentInfo -->
-  <ng-container matColumnDef="intermediate">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>I.</th>
-    <td mat-cell *matCellDef="let item">
-      <ng-container
-        *ngTemplateOutlet="
-          scoreArrow;
-          context: {
-            score: item.insights?.instrumentInfo?.technicalEvents.intermediateTermOutlook.score,
-            direction: item.insights?.instrumentInfo?.technicalEvents.intermediateTermOutlook.direction
-          }
-        "
-      ></ng-container>
-    </td>
-  </ng-container>
-
-  <!-- instrumentInfo -->
   <ng-container matColumnDef="short">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="short">S.</th>
     <td mat-cell *matCellDef="let item">
@@ -73,8 +57,22 @@
         *ngTemplateOutlet="
           scoreArrow;
           context: {
-            score: item.insights?.instrumentInfo?.technicalEvents.shortTermOutlook.score,
-            direction: item.insights?.instrumentInfo?.technicalEvents.shortTermOutlook.direction
+            score: item.insights?.short
+          }
+        "
+      ></ng-container>
+    </td>
+  </ng-container>
+
+  <!-- instrumentInfo -->
+  <ng-container matColumnDef="intermediate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="intermediate">I.</th>
+    <td mat-cell *matCellDef="let item">
+      <ng-container
+        *ngTemplateOutlet="
+          scoreArrow;
+          context: {
+            score: item.insights?.mid
           }
         "
       ></ng-container>
@@ -89,8 +87,7 @@
         *ngTemplateOutlet="
           scoreArrow;
           context: {
-            score: item.insights?.instrumentInfo?.technicalEvents.longTermOutlook.score,
-            direction: item.insights?.instrumentInfo?.technicalEvents.longTermOutlook.direction
+            score: item.insights?.long
           }
         "
       ></ng-container>
@@ -153,15 +150,16 @@
   <tr mat-row *matRowDef="let i = index; let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 </table>
 
+
 <ng-template #scoreArrow let-score="score" let-direction="direction">
   <div style="display: flex; align-items: center; justify-content: center">
     <span [class]="'score-' + score">{{ score }}</span>
     <div class="arrow-direction">
-      <mat-icon *ngIf="direction === 'Bullish'" class="very-strong-bullish2">arrow_upward</mat-icon>
+      <mat-icon *ngIf="score > 0" class="very-strong-bullish2">arrow_upward</mat-icon>
       <!-- <mat-icon *ngIf="score === 3 && direction === 'Bullish'" class="strong-bullish">arrow_upward</mat-icon>
     <mat-icon *ngIf="score === 2 && direction === 'Bullish'" class="bullish">arrow_upward</mat-icon>
     <mat-icon *ngIf="score === 1 && direction === 'Bullish'" class="weak-bullish">arrow_upward</mat-icon> -->
-      <mat-icon *ngIf="direction === 'Bearish'" class="very-strong-bearish">arrow_upward</mat-icon>
+      <mat-icon *ngIf="score < 0" class="very-strong-bearish">arrow_upward</mat-icon>
       <!-- <mat-icon *ngIf="score === 3 && direction === 'Bearish'" class="strong-bearish">arrow_upward</mat-icon>
     <mat-icon *ngIf="score === 2 && direction === 'Bearish'" class="strong-bearish">arrow_upward</mat-icon>
     <mat-icon *ngIf="score === 1 && direction === 'Bearish'" class="strong-bearish">arrow_upward</mat-icon> -->

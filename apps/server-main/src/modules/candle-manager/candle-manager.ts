@@ -22,8 +22,6 @@ export enum CANDLE_FIELD {
 }
 
 export class CandleManager {
-  // symbols: { [symbolName: string]: ISymbol } = {}
-
   private candleWebsocket: Socket
 
   constructor(public system: SystemMain) {}
@@ -73,22 +71,11 @@ export class CandleManager {
     count: number,
   ): Promise<{ [symbol: string]: { [interval: string]: ICandle[] } }> {
     try {
-      const result = await axios.post(`http://127.0.0.1:3001/api/candles/?count=${count}`, params, {
-        'axios-retry': {
-            retries: 10,
-          }
-      })
-
-      return result?.data
+      const { host, port } = this.system.configManager.config.server.candles
+      const { data } = await axios.post(`http://${host}:${port}/api/candles/?count=${count}`, params)
+      return data
     } catch (error) {
-      if (error.response) {
-        console.log(error.response.data)
-        console.log(error.response.status)
-      } else {
-        console.error(error.status)
-      }
-
-      console.error(error)
+      logger.error(error)
       throw new Error('Error fetching candles from candle server')
     }
   }
@@ -97,7 +84,7 @@ export class CandleManager {
    * load all candles from all symbols on all intervals
    */
   async sync(): Promise<void> {
-    logger.debug(`\u267F Sync candles`)
+    logger.info(`\u267F Sync candles`)
 
     const now = Date.now()
     const config = this.system.configManager.config
@@ -107,7 +94,9 @@ export class CandleManager {
      * flatten nested array
      * [{symbol: 'BTCUSDT', interval: '15m'}, {symbol: 'BNBUSDT', interval: '1h'}]
      */
-    const loadParams = this.system.symbolManager.symbols.map((symbol) => config.intervals.map((interval) => ({ symbol: symbol.name, interval }))).flat()
+    const loadParams = this.system.symbolManager.symbols
+      .map(symbol => config.intervals.map(interval => ({ symbol: symbol.name, interval })))
+      .flat()
 
     try {
       const data = await this.load(loadParams, +config.preloadAmount || 500)
@@ -133,33 +122,40 @@ export class CandleManager {
       throw new Error('Error fetching candles from candle server')
     }
 
-    logger.info(`\u2705 Sync candles (${(Date.now() - now).toString().gray}ms)`)
+    logger.info(`\u2705 Sync candles (${(Date.now() - now)}ms)`)
   }
-
-  // getSymbolByPair(symbolName: string): ISymbol {
-  //   return this.symbols[symbolName]
-  // }
 
   /**
    * start listening for candle updates from candle server
    */
   async openCandleServerSocket(): Promise<void> {
-    // return new Promise(resolve => {
-    const candleServerUrl = this.system.configManager.config.server.candles.url
+    const promise = new Promise((resolve, reject) => {
+      let isResolved = false
+      const { host, port } = this.system.configManager.config.server.candles
 
-    this.candleWebsocket = io(candleServerUrl)
+      this.candleWebsocket = io(`http://${host}:${port}`)
 
-    // this.candleWebsocket.on('connection', resolve)
+      this.candleWebsocket.on('connect', () => {
+        if (!isResolved) {
+          isResolved = true
+          resolve(null)
+        }
+      })
+      this.candleWebsocket.on('error', error => {
+        if (!isResolved) {
+          isResolved = true
+          reject(error)
+        }
+      })
 
-    this.candleWebsocket.on('candles', (event: ICandleServerEvent) => this.onCandleServerTick(event))
-    // })
+      this.candleWebsocket.on('candles', (event: ICandleServerEvent) => this.onCandleServerTick(event))
+    })
   }
 
   /**
    * handle tick from candle server
    */
   private async onCandleServerTick(event: ICandleServerEvent): Promise<void> {
-
     // loop over every symbol
     for (let symbolName in event) {
       const symbol = this.system.symbolManager.get(symbolName)
@@ -181,7 +177,7 @@ export class CandleManager {
 
         console.log(2323333, symbolIntervalRef)
         // check if new time < last time
-        const isNewCandle =  symbolIntervalRef.candles[0][CANDLE_FIELD.TIME] < candle[CANDLE_FIELD.TIME]
+        const isNewCandle = symbolIntervalRef.candles[0][CANDLE_FIELD.TIME] < candle[CANDLE_FIELD.TIME]
 
         // new candle
         // add to candle array

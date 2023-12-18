@@ -1,5 +1,4 @@
 import { TICKER_TYPE } from "@candlejumper/shared"
-import { SYSTEM_ENV } from "./system"
 import { ISymbol } from "../modules/symbol/symbol.interfaces"
 
 export interface ISystemState {
@@ -8,7 +7,6 @@ export interface ISystemState {
     }
     account: any
     tickers: {
-        env: SYSTEM_ENV,
         config: {
             // indicators: JSON.parse(JSON.stringify(bot.getIndicatorConfigs()))
         },

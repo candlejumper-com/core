@@ -1,6 +1,6 @@
 import { createLogger, format, transports } from 'winston'
 import * as path from 'path'
-import { SYSTEM_ENV } from '../system/system'
+import { TICKER_TYPE } from '../ticker/ticker.util'
 
 export const PATH_LOGS = path.join(__dirname, '../../../../_logs/')
 export const PATH_LOGS_COMBINED = path.join(PATH_LOGS, 'combined.log')
@@ -30,16 +30,18 @@ const customFormat = printf(({ level, message, label, timestamp }) => {
   return `${timestamp} [${systemEnvironment}] ${minLengthString(level, 20)}: ${message}`
 })
 
-let systemEnvironment = 'SYSTEM'
+let systemEnvironment: TICKER_TYPE | string = 'SYSTEM'
 
-export function setSystemEnvironment(env: SYSTEM_ENV) {
-
+export function setLogSystemEnvironment(env: TICKER_TYPE) {
   switch (env) {
-    case SYSTEM_ENV.MAIN:
+    case TICKER_TYPE.SYSTEM_MAIN:
       systemEnvironment = env.magenta
       break
-    case SYSTEM_ENV.BACKTEST:
+    case TICKER_TYPE.SYSTEM_BACKTEST:
       systemEnvironment = env.gray
+      break
+    case TICKER_TYPE.SYSTEM_CANDLES:
+      systemEnvironment = env.yellow
       break
     default:
       throw new Error(`unkown environment: ${env}`)

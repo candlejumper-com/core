@@ -2,7 +2,22 @@ import axios, { AxiosError } from 'axios'
 import axiosRetry from 'axios-retry'
 import { logger } from './log'
 
-export function createAxiosRetryInstance(statusCodes = [404], retries = 10) {
+export function createAxiosRetryInstance(name = 'axios-retry', statusCodes = [404], retries = 10) {
+  const retryDelay = (retryCount: number): number => {
+    const maxDelay = 60000
+    const delayMultiplier = 1000
+
+    return Math.min(maxDelay, retryCount * delayMultiplier)
+  }
+
+  const onRetry = (retryCount: number, error: AxiosError) => {
+    if (error.response) {
+      logger.info(error.response.data)
+      logger.info(error.response.status)
+    } else if (error.cause) {
+      logger.error(`[${name}] ${error.cause}`)
+    }
+  }
 
   function retryCondition(error: AxiosError) {
     if (error.code === 'ECONNREFUSED') {
@@ -17,20 +32,4 @@ export function createAxiosRetryInstance(statusCodes = [404], retries = 10) {
   axiosRetry(axiosInstance, { retries, retryDelay, onRetry, retryCondition })
 
   return axiosInstance
-}
-
-const onRetry = (retryCount: number, error: AxiosError) => {
-  if (error.response) {
-    logger.info(error.response.data)
-    logger.info(error.response.status)
-  } else if (error.cause) {
-    logger.error(error.cause)
-  }
-}
-
-const retryDelay = (retryCount: number): number => {
-  const maxDelay = 60000
-  const delayMultiplier = 1000
-
-  return Math.min(maxDelay, retryCount * delayMultiplier)
 }

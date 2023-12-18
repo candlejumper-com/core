@@ -13,7 +13,7 @@ export class DB {
     // constructor(public system: System, private entities: EntitySchema<any>[]) { }
 
     async init() {
-        logger.debug(`\u267F Connect DB`)
+        logger.info(`\u267F Connect DB`)
 
         const now = Date.now()
         const myDataSource = new DataSource({

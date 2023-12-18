@@ -11,7 +11,6 @@ export interface ISystemConfig {
             apiKey: string
         }
     }
-    symbols2?: string[]
     intervals?: string[]
     bots?: string[]
     quantityPercentage?: number
@@ -51,7 +50,6 @@ export interface ISystemConfig {
         candles?: {
             host: string
             port: number
-            url?: string
         }
     }
     production?: {

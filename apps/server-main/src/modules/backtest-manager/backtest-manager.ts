@@ -87,7 +87,7 @@ export class BacktestManager {
     }
 
     stop() {
-        console.log('TODO - stop')
+        console.log('BacktestManager - TODO - stop')
     }
 
     getData(systems: ISystemState[], options: IBacktestOptions) {        

@@ -1,5 +1,5 @@
 import "colors"
-import { logger } from '../util/log'
+import { logger, setLogSystemEnvironment } from '../util/log'
 import { DB, InsightManager, TICKER_TYPE } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
 import { ConfigManager } from "../config/config-manager"
@@ -8,25 +8,20 @@ import { SymbolManager } from "../modules/symbol/symbol.manager"
 import { BrokerManager } from "../modules/broker/broker.manager"
 import { Ticker } from "../ticker/ticker"
 
-export enum SYSTEM_ENV {
-  MAIN = "MAIN",
-  BACKTEST = "BACKTEST",
-  CANDLES = "CANDLES",
-}
+// export enum SYSTEM_ENV {
+//   BASE = "BASE",
+//   MAIN = "MAIN",
+//   BACKTEST = "BACKTEST",
+//   CANDLES = "CANDLES",
+// }
 
 export abstract class System extends Ticker<null> {
-  abstract name?: string
-  
   override id = "SYSTEM"
   override system = this
 
-  axios = createAxiosRetryInstance()
-
-  type = TICKER_TYPE.SYSTEM
+  // axios = createAxiosRetryInstance()
 
   time: Date
-  
-  readonly abstract env: SYSTEM_ENV
 
   db: DB
   readonly insightManager = new InsightManager(this)
@@ -37,24 +32,31 @@ export abstract class System extends Ticker<null> {
 
   protected isRunning = false
 
-  constructor() {
+  constructor(public type?: TICKER_TYPE) {
     super(null, null, null, null)
+
+    setProcessExitHandlers(this)
   }
 
   override async init(): Promise<void> {
-    setProcessExitHandlers(this)
+    setLogSystemEnvironment(this.type)
+
+    const now = Date.now()
+    logger.info(`\u267F Initialize system \n-------------------------------------------------------------`)
 
     await super.init()
     await this.configManager.init()
     await this.symbolManager.init()
     await this.onInit?.()
+
+    logger.info(
+      `\u2705 Initialize system (${Date.now() - now}ms)\n-------------------------------------------------------------`
+    )
+
+    this.isInitialized = true
   }
 
   async start() {
-    logger.info(
-      `\u231B Initialize system \n--------------------------------------------------------------`
-    );
-
     if (this.isRunning) {
       throw new Error("Already running")
     }
@@ -64,6 +66,10 @@ export abstract class System extends Ticker<null> {
     }
 
     this.isRunning = true
+
+    logger.info(
+      `\u2705 Started system \n--------------------------------------------------------------`
+    );
   }
 
   stop() {

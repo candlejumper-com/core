@@ -34,8 +34,8 @@ export class PageNewsComponent implements OnInit {
     'chart',
     'rating',
     'target',
-    'intermediate',
     'short',
+    'intermediate',
     'long',
     'estimate',
     'diffInPercent',
@@ -70,8 +70,8 @@ export class PageNewsComponent implements OnInit {
     }
   }
 
-  private normalizeData(data) {
-    return data.map(item => {
+  private normalizeData(data: ISymbol[]) {
+    return data.map((item: any) => {
       const data = {
         ...item,
       }

@@ -1,4 +1,4 @@
-import { logger, IOrder, ORDER_SIDE, IOrderOptions, IOrderData, countDecimals, SYSTEM_ENV, ISymbol, BrokerYahoo } from "@candlejumper/shared";
+import { logger, IOrder, ORDER_SIDE, IOrderOptions, IOrderData, countDecimals, ISymbol, BrokerYahoo, TICKER_TYPE } from "@candlejumper/shared";
 import { join } from 'path';
 import * as fs from 'fs';
 import { SystemMain } from "../../system/system";
@@ -50,7 +50,7 @@ export class OrderManager {
         }
 
         // unless forced, check if order is not same side as last order
-        if (!options.force && ((this.system.env === SYSTEM_ENV.MAIN && !isProduction) || !this.checkIsNotSameOrderSide(symbol, side))) {
+        if (!options.force && ((this.system.type === TICKER_TYPE.SYSTEM_MAIN && !isProduction) || !this.checkIsNotSameOrderSide(symbol, side))) {
             return
         }
 
@@ -87,7 +87,7 @@ export class OrderManager {
         })
 
         // REAL ORDER
-        if (this.system.env === SYSTEM_ENV.MAIN) {
+        if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
             try {
                 await this.placeOrderReal(order, orderEvent)
             } catch (error) {
@@ -247,7 +247,7 @@ export class OrderManager {
         }
 
         // emit to client
-        if (this.system.env === SYSTEM_ENV.MAIN) {
+        if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
             this.system.apiServer.io.emit('order', order)
         }
     }
@@ -258,7 +258,7 @@ export class OrderManager {
     private getToSpendAmount(symbol: ISymbol): number {
         const quoteAssetBalance = this.system.brokerManager.get(BrokerYahoo).getBalance(symbol.quoteAsset)
 
-        if (this.system.env === SYSTEM_ENV.BACKTEST) {
+        if (this.system.type === TICKER_TYPE.SYSTEM_BACKTEST) {
             return quoteAssetBalance
         }
 
@@ -368,14 +368,14 @@ export class OrderManager {
 
         // check if this trade is different side then previous trade
         if (lastOrder?.side === side) {
-            if (this.system.env === SYSTEM_ENV.MAIN) {
+            if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
                 // logger.info('will not trade same side twice. Set allowOrderSideRepeat: true in bot config to enable')
             }
             return false
         }
 
         if (lastOrder?.time - minTimeBetweenOrders > currentTime) {
-            if (this.system.env === SYSTEM_ENV.MAIN) {
+            if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
                 logger.info(`Last trade happend ${(currentTime - lastOrder.time) / 1000} seconds ago. Min delay is ${minTimeBetweenOrders / 1000} seconds`)
             }
             return false

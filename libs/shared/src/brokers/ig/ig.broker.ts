@@ -1,12 +1,11 @@
-import { CandleTickerCallback, ICandle, ISymbol, logger } from '@candlejumper/shared';
+import { CandleTickerCallback, ICandle, ISymbol, TICKER_TYPE, logger } from '@candlejumper/shared';
 import { OrderResponseFull, OrderResponseResult, WebsocketClient } from 'binance';
 import axios, { AxiosError } from 'axios';
 import rateLimit from 'axios-rate-limit';
 import IG, { API_BASE_URL } from 'ig-node-api';
-import { QueueBinance } from '../binance/binance.queue';
 import { IOrder } from '../../order/order.interfaces';
-import { Broker } from '../broker';
-import { SYSTEM_ENV } from '../../system/system';
+import { Broker } from '../../modules/broker/broker';
+import { SimpleQueue } from '../../util/queue';
 
 const defaultOptions = {
   baseURL: API_BASE_URL.PROD,
@@ -40,13 +39,13 @@ export class BrokerIG extends Broker {
   instance: IG;
   websocket: WebsocketClient;
 
-  queue: QueueBinance;
+  queue: SimpleQueue;
 
   http = rateLimit(axios.create(defaultOptions), { maxRequests: 5, perMilliseconds: 1000 });
 
   override async onInit() {
-    if (this.system.env === SYSTEM_ENV.BACKTEST) {
-      throw new Error('System env BACKTEST should not execute broker.onInit()');
+    if (this.system.type === TICKER_TYPE.SYSTEM_BACKTEST) {
+      throw new Error('System env BACKTEST should not execute broker.onInit()')
     }
 
     // this.queue = new QueueBinance(this.system)

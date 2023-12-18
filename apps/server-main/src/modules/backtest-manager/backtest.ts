@@ -4,11 +4,11 @@ import { Bot } from '../../tickers/bot/bot';
 import { CANDLE_FIELD } from '../candle-manager/candle-manager';
 import { ORDER_TYPE } from '../order-manager/order-manager';
 import { IWorkerData } from './backtest.interfaces';
-import { ICandle, ISymbol, ORDER_SIDE, IBalance, SYSTEM_ENV, BrokerYahoo } from '@candlejumper/shared';
+import { ICandle, ISymbol, ORDER_SIDE, IBalance, BrokerYahoo, TICKER_TYPE, Symbol } from '@candlejumper/shared';
 
 export class Backtest {
 
-    system = new SystemMain(SYSTEM_ENV.BACKTEST)
+    system = new SystemMain(TICKER_TYPE.SYSTEM_BACKTEST)
 
     private options: IWorkerData['options']
     private candles: ICandle[]
@@ -166,7 +166,7 @@ export class Backtest {
     private async setupSystem(): Promise<void> {
         const now = Date.now()
         const system = this.system
-        const symbol = this.options.symbol
+        const symbol = new Symbol(system, this.options.symbol)
         const interval = this.options.interval
         const warmupAmount = system.configManager.config.warmupAmount
         const exchangeInfoSymbol = system.brokerManager.get(BrokerYahoo).getExchangeInfoBySymbol(symbol.name)

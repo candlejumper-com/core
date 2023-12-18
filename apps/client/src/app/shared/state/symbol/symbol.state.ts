@@ -59,6 +59,6 @@ export class SymbolState {
 
   @Action(SYMBOL_PRICE_SET)
   symbolPriceSet({ patchState: patchState }, action: SYMBOL_PRICE_SET) {
-    patchState({ [`${action.symbol.name}`]: { ...action.symbol, price: action.price } })
+    // patchState({ [`${action.symbol.name}`]: { ...action.symbol, price: action.price } })
   }
 }

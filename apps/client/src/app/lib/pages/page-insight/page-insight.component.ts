@@ -59,12 +59,6 @@ export class PageInsightComponent implements OnInit {
 
   ngOnInit() {
     this.dataSource = this.store.selectSnapshot(SymbolState.getAll)
-
-    this.dataSource.forEach(symbol => {
-      if (symbol.insights) {
-        console.log(symbol)
-      }
-    })
   }
 
   /** Announce the change in sort state for assistive technology. */

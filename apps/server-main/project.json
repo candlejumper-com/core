@@ -29,7 +29,6 @@
         ],
         "isolatedConfig": true,
         "webpackConfig": "apps/server-main/webpack.config.js",
-        "generatePackageJson": true,
         "additionalEntryPoints": [
           {
             "entryName": "ai-worker",
@@ -47,7 +46,9 @@
       },
       "configurations": {
         "development": {},
-        "production": {}
+        "production": {
+          "generatePackageJson": true
+        }
       }
     },
     "serve": {

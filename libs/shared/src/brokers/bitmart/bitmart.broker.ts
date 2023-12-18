@@ -1,14 +1,13 @@
 import { logger } from '../../util/log'
-import { Broker } from '../broker'
+import { Broker } from '../../modules/broker/broker'
 import { Kline, KlineInterval, OrderResponseFull, OrderResponseResult, WebsocketClient } from 'binance'
-import { QueueBinance } from '../binance/binance.queue'
-import { SYSTEM_ENV } from '../../system/system'
 import { IOrder } from '../../order/order.interfaces'
 import { ICandle, CANDLE_FIELD } from '../../candle'
-import { CandleTickerCallback, IBrokerInfo } from '../broker.interfaces'
+import { CandleTickerCallback, IBrokerInfo } from '../../modules/broker/broker.interfaces'
 import { BitmartSpotAPI } from '@bitmartexchange/bitmart-node-sdk-api'
 import { IBrokerBitmartSymbols } from './bitmart.interfaces'
 import { ISymbol } from '../../modules/symbol/symbol.interfaces'
+import { SimpleQueue } from '../../util/queue'
 
 export enum BROKER_BITMART_TIMEFRAMES {
   '1m' = 1,
@@ -35,14 +34,10 @@ export class BrokerBitmart extends Broker {
   instance: BitmartSpotAPI
   websocket: WebsocketClient
 
-  queue: QueueBinance
+  queue: SimpleQueue
 
   override async onInit() {
-    if (this.system.env === SYSTEM_ENV.BACKTEST) {
-      throw new Error('System env BACKTEST should not execute broker.onInit()')
-    }
-
-    this.queue = new QueueBinance(this.system)
+    this.queue = new SimpleQueue(this.system)
 
     const { name, apiKey, apiSecret } = this.system.configManager.config.brokers.bitmart
 

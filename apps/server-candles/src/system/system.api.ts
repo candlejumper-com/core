@@ -4,8 +4,8 @@ import { createServer, Server } from 'http'
 import cors from 'cors'
 import helmet from 'helmet'
 import * as bodyParser from 'body-parser'
-import { SystemCandles } from '../system/system'
-import { logger } from '../util/log'
+import { SystemCandles } from './system'
+import { logger } from '@candlejumper/shared'
 
 export class ApiServer {
 
@@ -33,7 +33,7 @@ export class ApiServer {
             const { host, port } = this.system.configManager.config.server?.candles
 
             this.server.listen(port, host, () => {
-                logger.info(`API started on http://${host}:${port}`)
+                logger.info(`\u2705 Public API started on http://${host}:${port}`)
                 resolve(null)
             })
 
@@ -45,7 +45,7 @@ export class ApiServer {
 
     private bindRoutes() {
         this.io.on('connection', () => {
-            console.log('IO connection from client')
+            logger.info('IO connection from client')
         });
 
         // return OK
@@ -66,7 +66,7 @@ export class ApiServer {
                     if (!symbol) {
                         continue
                     }
-                    
+
                     const interval = pair.interval
                     const candles = await this.system.candleManager.getFromDB(symbol, interval, count)
 

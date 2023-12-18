@@ -8,9 +8,9 @@
 import 'color'
 import { worker } from 'workerpool';
 import { Backtest } from './backtest'
-import { SYSTEM_ENV, setSystemEnvironment } from '@candlejumper/shared'
+// import { setSystemEnvironment } from '@candlejumper/shared'
 
-setSystemEnvironment(SYSTEM_ENV.BACKTEST)
+// setSystemEnvironment(SYSTEM_ENV.BACKTEST)
 
 worker({
     run: async function (workerOptions) {

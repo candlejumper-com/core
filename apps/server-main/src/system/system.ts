@@ -1,37 +1,39 @@
-import { join } from "path"
-import { Bot } from "../tickers/bot/bot"
-import { logger, setSystemEnvironment, ISystemState, System, SYSTEM_ENV, BrokerYahoo, DB, InsightEntity, InsightManager, BrokerAlphavantage } from "@candlejumper/shared"
-import { ApiServer } from "./api"
-import { CANDLE_FIELD, CandleManager } from "../modules/candle-manager/candle-manager"
-import { OrderManager } from "../modules/order-manager/order-manager"
-import { DeviceManager } from "../modules/device-manager/device-manager"
-import { BacktestManager } from "../modules/backtest-manager/backtest-manager"
+import { join } from 'path'
+import { Bot } from '../tickers/bot/bot'
 import {
-  EditorManager,
-  PATH_CUSTOM_DIST_BOTS,
-  PATH_CUSTOM_DIST_INDICATORS,
-} from "../modules/editor-manager/editor-manager"
-import { UserManager } from "../modules/user-manager/user-manager"
-import { AIManager } from "../modules/ai-manager/ai-manager"
-import { ISymbol, TICKER_TYPE, BrokerIG } from "@candlejumper/shared"
-import { readFileSync } from "fs"
-import { NewsManager } from "../modules/news-manager/news.manager"
-import { CalendarManager } from "../modules/calendar-manager/calendar.manager"
-import { ChatGPTManager } from "../modules/chatgpt-manager/chatgpt.manager"
-import { DeviceEntity } from "../modules/device-manager/device.entity"
-import { UserEntity } from "../modules/user-manager/user.entity"
+  logger,
+  ISystemState,
+  System,
+  BrokerYahoo,
+  DB,
+  InsightEntity,
+  InsightManager,
+  BrokerAlphavantage,
+} from '@candlejumper/shared'
+import { ApiServer } from './api'
+import { CANDLE_FIELD, CandleManager } from '../modules/candle-manager/candle-manager'
+import { OrderManager } from '../modules/order-manager/order-manager'
+import { DeviceManager } from '../modules/device-manager/device-manager'
+import { BacktestManager } from '../modules/backtest-manager/backtest-manager'
+import { EditorManager, PATH_CUSTOM_DIST_BOTS, PATH_CUSTOM_DIST_INDICATORS } from '../modules/editor-manager/editor-manager'
+import { UserManager } from '../modules/user-manager/user-manager'
+import { AIManager } from '../modules/ai-manager/ai-manager'
+import { ISymbol, TICKER_TYPE, BrokerIG } from '@candlejumper/shared'
+import { readFileSync } from 'fs'
+import { NewsManager } from '../modules/news-manager/news.manager'
+import { CalendarManager } from '../modules/calendar-manager/calendar.manager'
+import { ChatGPTManager } from '../modules/chatgpt-manager/chatgpt.manager'
+import { DeviceEntity } from '../modules/device-manager/device.entity'
+import { UserEntity } from '../modules/user-manager/user.entity'
 
 // export class System {
 //   tick(...arg): any {
-    
+
 //   }
 // }
 
 export class SystemMain extends System {
-  env = SYSTEM_ENV.MAIN
-  override readonly name = 'MAIN'
-
-  type = TICKER_TYPE.SYSTEM
+  type = TICKER_TYPE.SYSTEM_MAIN
 
   apiServer: ApiServer
   deviceManager: DeviceManager
@@ -41,9 +43,10 @@ export class SystemMain extends System {
   calendarManager: CalendarManager
   chatGPTManager: ChatGPTManager
 
-  system = this
+  // system = this
 
   db = new DB(this, [UserEntity, DeviceEntity, InsightEntity])
+
   // readonly broker = new BrokerBinance(this)
   readonly aiManager = new AIManager(this)
   readonly candleManager = new CandleManager(this)
@@ -51,33 +54,13 @@ export class SystemMain extends System {
   readonly userManager = new UserManager(this)
   readonly insightManager = new InsightManager(this)
 
-  async init(): Promise<void> {
-    await super.init()
-
-    setSystemEnvironment(SYSTEM_ENV.MAIN)
-
-    await this.configManager.init()
-
-    const now = Date.now()
-
-    if (this.env === SYSTEM_ENV.MAIN) {
-      logger.info(`\u231B Initialize system \n--------------------------------------------------------------`)
-    }
-
+  async onInit() {
     this.orderManager.init()
-    console.log(23, this.env)
-    // MAIN instance
-    if (this.env !== SYSTEM_ENV.MAIN) {
-      return
-    }
-    
-    await this.initAsMain()
-    // start public API server
-    await this.apiServer.start()
 
-    logger.info(
-      `\u2705 Initialize system (${Date.now() - now}ms)\n-------------------------------------------------------------`
-    )
+    // BACKTEST instance
+    if (this.type === TICKER_TYPE.SYSTEM_MAIN) {
+      await this.initAsMain()
+    }
   }
 
   toggleProductionMode(state: boolean): void {
@@ -94,9 +77,10 @@ export class SystemMain extends System {
    * only executed on MAIN system (not a backtest)
    */
   private async initAsMain(): Promise<void> {
-
     await this.brokerManager.add(BrokerAlphavantage)
     await this.brokerManager.add(BrokerYahoo)
+
+    this.symbolManager.syncSymbolsWithBroker()
 
     this.chatGPTManager = new ChatGPTManager(this)
     this.newsManager = new NewsManager(this)
@@ -109,10 +93,8 @@ export class SystemMain extends System {
     // connect database
     await this.db.init()
 
-    console.info(`--------------------------------------------------------------`)
-
     // await this.deviceManager.init()
-    
+
     // load current user
     await this.userManager.init()
 
@@ -133,17 +115,23 @@ export class SystemMain extends System {
       this.loadAsValidUser(),
     ])
 
-    console.info(`--------------------------------------------------------------`)
-
     // initialize default bots / indicators
     // await this.addDefaultTickers()
 
     // open websocket to candle server
     await this.candleManager.openCandleServerSocket()
 
+    // trigger update one to set symbol details
+    // TODO: should be sooner
+    this.symbolManager.startUpdateInterval()
     this.symbolManager.update()
 
+    // start public API server
+    await this.apiServer.start()
+
     console.info(`--------------------------------------------------------------`)
+
+    // console.info(`--------------------------------------------------------------`)
   }
 
   // TEMP
@@ -162,31 +150,6 @@ export class SystemMain extends System {
 
   async reload(): Promise<void> {
     console.log('RELOAD')
-  }
-
-  /**
-   * start running
-   */
-  async start(): Promise<void> {
-    await super.start()
-
-    if (this.env === SYSTEM_ENV.MAIN) {
-      logger.info(`${this.env} - ${"READY".green}`)
-      console.info(`--------------------------------------------------------------`)
-    }
-  }
-
-  /**
-   * stop running
-   */
-  async stop(): Promise<void> {
-    super.stop()
-
-    // make sure backtests & custom bots code compilers are stopt
-    // await this.backtestManager.destroy()
-    // await this.editorManager.destroy()
-
-    logger.debug(`${this.env} - Stopped`)
   }
 
   /**
@@ -210,7 +173,7 @@ export class SystemMain extends System {
         // TEMP = IMPORTANT - ensure candle direction if forward
         // TODO - should not be needed
         if (ticker.candles.length && ticker.candles[0][CANDLE_FIELD.TIME] >= ticker.candles[1][CANDLE_FIELD.TIME]) {
-          throw new Error(`${this.env} - candles not linear!`)
+          throw new Error(`candles not linear!`)
         }
 
         await ticker.tick()
@@ -249,8 +212,8 @@ export class SystemMain extends System {
         // balances: []
       },
       symbols: this.symbolManager.getInfo(),
-      tickers: this.tickers.map((ticker) => ({
-        env: this.env,
+      tickers: this.tickers.map(ticker => ({
+        env: this.type,
         config: {
           // indicators: JSON.parse(JSON.stringify(bot.getIndicatorConfigs()))
         },
@@ -267,8 +230,8 @@ export class SystemMain extends System {
             return 0
           }
 
-          const orders = this.orderManager.orders[ticker.symbol.name]?.filter((order) => order.side === "SELL") || []
-          const hits = orders.filter((order) => order.profit > 0)
+          const orders = this.orderManager.orders[ticker.symbol.name]?.filter(order => order.side === 'SELL') || []
+          const hits = orders.filter(order => order.profit > 0)
           return parseFloat(((hits.length / orders.length) * 100).toFixed(2)) || 0
         })(),
       })),
@@ -316,7 +279,7 @@ export class SystemMain extends System {
       // delete require.cache[require.resolve(botPath)]
 
       // load file
-      const file = readFileSync(botPath + ".js", "utf8")
+      const file = readFileSync(botPath + '.js', 'utf8')
       console.log(234, file)
       // const TickerClass = require('../../../../custom/dist/bots/bollinger/bot_bollinger').default as new () => Bot<Ticker<any>>
       // const TickerClass = require(botPath).default as new () => Bot<Ticker<any>>
@@ -344,7 +307,7 @@ export class SystemMain extends System {
 
     for (let i = 0, len = tickers.length; i < len; i++) {
       const ticker = tickers[i]
-      const { 0: type, 1: name } = ticker.split("/")
+      const { 0: type, 1: name } = ticker.split('/')
 
       for (const symbolName in symbols) {
         const symbol = symbols[symbolName]
@@ -353,10 +316,10 @@ export class SystemMain extends System {
           let tickerPath: string
 
           switch (type) {
-            case "@indicator":
+            case '@indicator':
               tickerPath = join(PATH_CUSTOM_DIST_INDICATORS, `${name}/${name}.indicator`)
               break
-            case "@bot":
+            case '@bot':
               tickerPath = join(PATH_CUSTOM_DIST_BOTS, `${name}/bot_${name}`)
           }
 

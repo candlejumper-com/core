@@ -96,7 +96,6 @@ export class ApiServer {
     this.io.on('connection', (socket) => {
       // remove socket from list
       socket.on('disconnect', () => {
-        this.system.backtestManager.stop()
         this.sockets.splice(this.sockets.indexOf(socket), 1)
       })
 

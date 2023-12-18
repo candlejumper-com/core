@@ -1,8 +1,6 @@
 import { Repository } from "typeorm"
-import { SystemCandles } from "../system/system"
-import { logger } from "../util/log"
-import { showProgressBar } from "../util/util"
-import { CANDLE_FIELD, isForwardCandleArray, ICandle, ISymbol, ICandleObject, getCandleEntityName } from "@candlejumper/shared"
+import { SystemCandles } from "../../system/system"
+import { CANDLE_FIELD, isForwardCandleArray, ICandle, ISymbol, ICandleObject, getCandleEntityName, showProgressBar, logger } from "@candlejumper/shared"
 
 export class CandleManager {
   private outTickIntervalTime = 200
@@ -88,7 +86,7 @@ export class CandleManager {
    * sync candles between database and broker
    */
   async sync(): Promise<void> {
-    logger.info(`\u231B Sync all candles`)
+    logger.info(`\u267F Sync candles`)
 
     const now = Date.now()
     const config = this.system.configManager.config

@@ -53,14 +53,4 @@ export class SymbolSelectors {
       return Object.values(state).filter((symbol: ISymbol) => symbol.name.includes(name.toUpperCase()))
     })
   }
-
-  @Action(SYMBOL_SET)
-  symbolSet({ setState: setState }, action: SYMBOL_SET) {
-    setState(action.symbols)
-  }
-
-  @Action(SYMBOL_PRICE_SET)
-  symbolPriceSet({ patchState: patchState, setState: setState, getState: getState }, action: SYMBOL_PRICE_SET) {
-    patchState({ [`${action.symbol.name}`]: { ...action.symbol, price: action.price } })
-  }
 }

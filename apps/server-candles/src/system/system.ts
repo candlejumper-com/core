@@ -1,17 +1,24 @@
-import { ApiServer } from '../api/api'
-import { CandleManager } from '../candle-manager/candle-manager'
-import { logger } from '../util/log'
-import { BrokerEntity, BrokerYahoo, DB, InsightEntity, SYSTEM_ENV, System, createCandleEntity, getCandleEntityName } from '@candlejumper/shared'
+import { ApiServer } from './system.api'
+import { CandleManager } from '../modules/candle-manager/candle-manager'
+import {
+  BrokerEntity,
+  BrokerYahoo,
+  DB,
+  InsightEntity,
+  System,
+  TICKER_TYPE,
+  createCandleEntity,
+  getCandleEntityName
+} from '@candlejumper/shared'
 
 export class SystemCandles extends System {
-  env = SYSTEM_ENV.CANDLES
-  override readonly name = 'CANDLES'
-
+  readonly type = TICKER_TYPE.SYSTEM_CANDLES
   readonly candleManager = new CandleManager(this)
   readonly apiServer = new ApiServer(this)
 
   async onInit() {
     await this.brokerManager.add(BrokerYahoo)
+    this.symbolManager.syncSymbolsWithBroker()
 
     this.db = new DB(this, [BrokerEntity, InsightEntity, ...this.createCandleEntities()])
 
@@ -22,24 +29,12 @@ export class SystemCandles extends System {
 
     this.candleManager.startWebsocketListener()
     this.candleManager.startOutTickInterval()
-
-    logger.info(`\u2705 Initialize system \n-------------------------------------------------------------`)
-
-    this.isInitialized = true
   }
 
   /**
-   * start running
+   * 
+   * create candle entities for each symbol and interval
    */
-  async start(): Promise<void> {
-    await super.start()
-
-    if (this.env === SYSTEM_ENV.MAIN) {
-      logger.info(`${this.env} - ${'READY'.green}`)
-      console.info(`--------------------------------------------------------------`)
-    }
-  }
-
   private createCandleEntities() {
     const symbols = this.system.symbolManager.symbols
     const intervals = this.system.configManager.config.intervals

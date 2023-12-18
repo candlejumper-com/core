@@ -5,26 +5,22 @@ import { IOrder, ORDER_SIDE } from '../../order/order.interfaces'
 import renewListenKey from './external/lib/helpers/renewListenKey'
 import getUserDataStream from './external/lib/services/getUserDataStream'
 import SocketClient from './external/lib/socketClient'
-import { Broker } from '../broker'
-import { SYSTEM_ENV } from '../../system/system'
+import { Broker } from '../../modules/broker/broker'
 import { logger } from '../../util/log';
-import { CandleTickerCallback } from '../broker.interfaces'
+import { CandleTickerCallback } from '../../modules/broker/broker.interfaces'
 import { ICandle } from '../../candle/candle.interfaces'
 import { CANDLE_FIELD } from '../../candle/candle.util'
-import { QueueBinance } from './binance.queue'
 import { ISymbol } from '../../modules/symbol/symbol.interfaces'
+import { SimpleQueue } from '../../util/queue'
+import { TICKER_TYPE } from '../../ticker/ticker.util'
 
 export class BrokerBinance extends Broker {
   id = 'BINANCE'
   instance: MainClient
   websocket: WebsocketClient
-  queue: QueueBinance
+  queue: SimpleQueue
 
   override async onInit() {
-    if (this.system.env === SYSTEM_ENV.BACKTEST) {
-      throw new Error('System env BACKTEST should not execute broker.onInit()')
-    }
-
     const apiKey = this.system.configManager.config.brokers.binance.apiKey
     const apiSecret = this.system.configManager.config.brokers.binance.apiSecret
 

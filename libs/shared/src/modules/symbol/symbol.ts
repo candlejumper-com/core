@@ -1,3 +1,4 @@
+import ProgressBar from "progress"
 import { ICandle } from "../../candle/candle.interfaces"
 import { ICalendarItem } from "../../index_client"
 import { INewsItem } from "../../news/news.interfaces"
@@ -6,8 +7,7 @@ import { System } from "../../system/system"
 import { INTERVAL } from "../../util/util"
 import { IInsight } from "../insight/insight.interfaces"
 import { ISymbol, ISymbolInfo } from "./symbol.interfaces"
-
-let counter = 0
+import { InsightEntity } from "../insight/insight.entity"
 
 export class Symbol implements ISymbol {
   name: string
@@ -27,8 +27,13 @@ export class Symbol implements ISymbol {
   }
 
   async update() {
-    if (this.name === 'COST') {
-      console.log(223232322323)
+    const minUpdatedAtDiff = 1000 * 60 * 60 // 1 hour
+
+    const UserRepo = this.system.db.connection.getRepository(InsightEntity)
+    const lastInsight = await UserRepo.findOne({ where: { symbol: this.name }, order: { createdAt: "DESC" } })
+
+    if (lastInsight?.updatedAt.getTime() + minUpdatedAtDiff < Date.now()) {
+      console.log(lastInsight.updatedAt)
       this.insights = await this.system.insightManager.loadPredictionsBySymbol(this)
     }
   }
