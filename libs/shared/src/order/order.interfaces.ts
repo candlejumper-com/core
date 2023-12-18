@@ -1,4 +1,4 @@
-import { ICandle } from '../candle/candle.interfaces'
+import { ICandle } from '../modules/candle/candle.interfaces'
 import { ISymbol } from '../modules/symbol/symbol.interfaces'
 import { ITickerSnapshot } from '../ticker/ticker.interfaces'
 

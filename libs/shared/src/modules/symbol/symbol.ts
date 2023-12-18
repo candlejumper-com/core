@@ -1,7 +1,5 @@
 import ProgressBar from "progress"
-import { ICandle } from "../../candle/candle.interfaces"
-import { ICalendarItem } from "../../index_client"
-import { INewsItem } from "../../news/news.interfaces"
+import { INewsItem } from "../news/news.interfaces"
 import { IOrder } from "../../order/order.interfaces"
 import { System } from "../../system/system"
 import { INTERVAL } from "../../util/util"
@@ -9,6 +7,8 @@ import { IInsight } from "../insight/insight.interfaces"
 import { ISymbol, ISymbolInfo } from "./symbol.interfaces"
 import { InsightEntity } from "../insight/insight.entity"
 import { logger } from "../../util/log"
+import { ICalendarItem } from "../calendar/calendar.interfaces"
+import { ICandle } from "../candle"
 
 export class Symbol implements ISymbol {
   name: string

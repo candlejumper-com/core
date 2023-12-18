@@ -1,5 +1,5 @@
 import { join } from "path";
-import { System } from "../system/system";
+import { System } from "../../system/system";
 import { ISystemConfig } from "./config.interfaces";
 import merge from 'deepmerge';
 import { readFileSync } from "fs";

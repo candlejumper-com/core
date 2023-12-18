@@ -2,7 +2,7 @@ import "colors"
 import { logger, setLogSystemEnvironment } from '../util/log'
 import { DB, InsightManager, TICKER_TYPE } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
-import { ConfigManager } from "../config/config-manager"
+import { ConfigManager } from "../modules/config/config-manager"
 import { createAxiosRetryInstance } from "../util/axios-retry"
 import { SymbolManager } from "../modules/symbol/symbol.manager"
 import { BrokerManager } from "../modules/broker/broker.manager"

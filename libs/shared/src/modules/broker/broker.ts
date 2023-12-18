@@ -3,10 +3,10 @@ import { IOrder } from '../../order/order.interfaces'
 import { OrderResponseACK, OrderResponseResult, OrderResponseFull } from 'binance'
 import { CandleTickerCallback, IAccount, IBrokerInfo } from './broker.interfaces'
 import { logger } from '../../util/log'
-import { ICandle } from '../../candle'
+import { ICandle } from '../../modules/candle'
 import { createAxiosRetryInstance } from '../../util/axios-retry'
-import { ISymbol } from '../../index_client'
 import { TICKER_TYPE } from '../../ticker/ticker.util'
+import { ISymbol } from '../symbol/symbol.interfaces'
 
 export abstract class Broker {
   abstract id: string

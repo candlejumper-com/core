@@ -1,6 +1,6 @@
 import { ICandle, ITickerEvent, ITickerParams, TICKER_EVENT_TYPE, TICKER_TYPE } from '@candlejumper/shared'
 import { System } from '../system/system'
-import { CANDLE_FIELD } from '../candle/candle.util'
+import { CANDLE_FIELD } from '../modules/candle/candle.util'
 import { logger } from '../util/log'
 import { sleep } from '../util/util'
 import { join } from 'path'

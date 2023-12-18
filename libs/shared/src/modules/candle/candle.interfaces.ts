@@ -1,6 +1,3 @@
-import { ICalendarItem, IInsight } from "../index_client"
-import { INTERVAL } from "../util/util"
-
 export interface ICandle {
   [0]: number
   [1]: number

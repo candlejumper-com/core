@@ -1,6 +1,6 @@
 import { EntitySchema, EntitySchemaOptions } from "typeorm"
 import { ICandleObject } from "./candle.interfaces"
-import { System } from "../system/system"
+import { System } from "../../system/system"
 
 // base symbol table
 export const BaseCandleSchema: EntitySchemaOptions<ICandleObject> = {

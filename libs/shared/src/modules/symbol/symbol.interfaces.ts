@@ -1,8 +1,7 @@
-import { ICalendarItem } from "../../calendar/calendar.interfaces"
-import { ICandle } from "../../candle/candle.interfaces"
 import { INTERVAL } from "../../util/util"
+import { ICalendarItem } from "../calendar/calendar.interfaces"
+import { ICandle } from "../candle/candle.interfaces"
 import { IInsight } from "../insight/insight.interfaces"
-
 
 export interface ISymbol extends ISymbolInfo {
   candles?: {
