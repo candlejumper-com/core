@@ -54,8 +54,12 @@ export class BrokerYahoo extends Broker {
 
   async getTrendingSymbols(count = 500): Promise<ISymbol[]> {
     const result = await this.queue.add(() => yahooFinance.trendingSymbols('US', { count }))
+    const gainers = await this.queue.add(() => yahooFinance.dailyGainers())
+    const gainersFiltered = gainers.quotes.map((gainer: any) => ({symbol: gainer.symbol}))
+    // console.log(33434, gainers)
 
-    const symbols: ISymbol[] = result.quotes
+
+    const symbols: ISymbol[] = [...gainersFiltered, ...result.quotes]
 
       // remove strange symbol names
       .filter(symbol => /^[^.=:]+$/.test(symbol.symbol))
@@ -70,17 +74,9 @@ export class BrokerYahoo extends Broker {
     return this.queue.add(() => yahooFinance.insights(symbol.name))
   }
 
-  async placeOrder(order: IOrder): Promise<OrderResponseResult | OrderResponseFull> {
-    // return this.system.broker.instance.submitNewOrder(order as any) as Promise<OrderResponseResult>
-    return null
-  }
-
-  async getOrdersByMarket(symbol: string): Promise<IOrder[]> {
-    return []
-  }
 
   async syncExchangeFromBroker(): Promise<void> {
-    const symbols = await this.getTrendingSymbols(500)
+    const symbols = await this.getTrendingSymbols()
 
     this.exchangeInfo = {
       symbols: symbols,
@@ -96,17 +92,6 @@ export class BrokerYahoo extends Broker {
     logger.info(`\u2705 Sync balance (${Date.now() - now} ms)`)
   }
 
-  protected async loadConfig(): Promise<IBrokerInfo> {
-    // protected async loadConfig(): Promise<{accounts: Account[]}> {
-    // return this.instance.getAccountDetails()
-    const exchangeInfo = structuredClone(TEMP_BROKER_INFO)
-
-    exchangeInfo.symbols.forEach((symbol: ISymbol) => {
-      symbol.baseAsset = 'AUD'
-    })
-
-    return exchangeInfo as IBrokerInfo
-  }
   async getCandlesFromTime(symbol: ISymbol, interval: string, fromTime: number): Promise<ICandle[]> {
     const fromTimeDate = new Date(fromTime)
     const startTime = format(fromTimeDate, 'yyyy-MM-dd')
@@ -135,6 +120,15 @@ export class BrokerYahoo extends Broker {
     // console.log(parse(candles[0].snapshotTime, "yyyy:MM:dd-HH:mm:ss", new Date()))
 
     return candles.map(candle => [new Date(candle.date).getTime(), candle.open, candle.high, candle.low, candle.close, candle.volume])
+  }
+
+  async placeOrder(order: IOrder): Promise<OrderResponseResult | OrderResponseFull> {
+    // return this.system.broker.instance.submitNewOrder(order as any) as Promise<OrderResponseResult>
+    return null
+  }
+
+  async getOrdersByMarket(symbol: string): Promise<IOrder[]> {
+    return []
   }
 
   override async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void): Promise<void> {

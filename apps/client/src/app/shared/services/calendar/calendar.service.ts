@@ -16,6 +16,7 @@ export class CalendarService {
   ) {}
 
   load() {
+    alert(2)
     return this.httpClient.get<ICalendarItem[]>('/api/calendar').pipe(
       tap(items => {
         this.store.dispatch(new CALENDAR_SET(items))

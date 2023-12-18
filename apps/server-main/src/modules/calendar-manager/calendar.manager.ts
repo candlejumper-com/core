@@ -27,7 +27,7 @@ export class CalendarManager {
    * - start interval
    */
   async init() {
-    this.checkCalendarItems()
+    await this.checkCalendarItems()
 
     setInterval(async () => this.checkCalendarItems(), this.updateIntervalTime)
   }
@@ -41,6 +41,8 @@ export class CalendarManager {
         const symbol = this.system.symbolManager.get(item.symbol)
         if (symbol) {
           symbol.calendar = [item]
+        } else{
+          this.system.symbolManager.add({ name: item.symbol, calendar: [item] })
         }
       })
 

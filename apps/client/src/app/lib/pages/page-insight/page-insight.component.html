@@ -1,10 +1,10 @@
 <table
   mat-table
   matSort
-  [dataSource]="dataSource"
+  [dataSource]="sortedData"
   multiTemplateDataRows
   class="mat-elevation-z8"
-  (matSortChange)="announceSortChange($event)"
+  (matSortChange)="sortData($event)"
 >
   <!-- INDEX -->
   <ng-container matColumnDef="index">
@@ -65,8 +65,8 @@
   </ng-container>
 
   <!-- instrumentInfo -->
-  <ng-container matColumnDef="intermediate">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header="intermediate">I.</th>
+  <ng-container matColumnDef="mid">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="mid">M.</th>
     <td mat-cell *matCellDef="let item">
       <ng-container
         *ngTemplateOutlet="

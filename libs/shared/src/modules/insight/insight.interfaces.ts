@@ -4,4 +4,9 @@
 export interface IInsight {
   symbol?: any
   insights?: any
+  updatedAt?: Date
+  short?: number
+  mid?: number
+  long?: number
+  skip?: boolean
 }

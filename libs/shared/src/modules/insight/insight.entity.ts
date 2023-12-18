@@ -17,6 +17,9 @@ export class InsightEntity {
   @Column({ nullable: true })
   long: number
 
+  @Column({ default: false })
+  skip: boolean
+
   @CreateDateColumn({ nullable: false })
   createdAt: Date
 

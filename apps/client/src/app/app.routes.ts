@@ -4,10 +4,6 @@ export const routes = [
     loadComponent: () => import('./lib/pages/page-home/page-home.component').then((mod) => mod.PageHomeComponent),
   },
   {
-    path: 'calendar',
-    loadComponent: () => import('./lib/pages/page-calendar/page-calendar.component').then((mod) => mod.PageNewsComponent),
-  },
-  {
     path: 'insight',
     loadComponent: () => import('./lib/pages/page-insight/page-insight.component').then((mod) => mod.PageInsightComponent),
   },

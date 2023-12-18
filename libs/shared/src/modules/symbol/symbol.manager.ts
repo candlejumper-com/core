@@ -19,7 +19,8 @@ export class SymbolManager {
     const existing = this.get(data.name)
 
     if (existing) {
-      throw new Error(`Symbol already exists with that name: ${data.name}`)
+      // throw new Error(`Symbol already exists with that name: ${data.name}`)
+      return null
     }
 
     const symbol = new Symbol(this.system, data)
@@ -39,6 +40,7 @@ export class SymbolManager {
     // TODO - using import gives circular dependency error?
     const { BrokerYahoo } = require('../../brokers/yahoo/yahoo.broker')
     const symbols = this.system.brokerManager.get(BrokerYahoo).exchangeInfo.symbols
+    console.log(symbols.length, 333)
     symbols.forEach(symbol => this.add(symbol))
   }
 
@@ -46,8 +48,12 @@ export class SymbolManager {
     const progressBar = showProgressBar(this.symbols.length, 'Updating symbols')
 
     for (const symbol of this.symbols) {
-      if (symbol.name === 'EXAS') {
+      try {
+        // if (symbol.name === 'EXAS') {
         await symbol.update()
+        // }
+      } catch (error) {
+        logger.error(error)
       }
 
       progressBar.tick()

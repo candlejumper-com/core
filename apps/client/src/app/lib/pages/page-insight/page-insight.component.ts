@@ -1,18 +1,12 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { Component, OnInit, ViewChild } from '@angular/core'
 import { InsightService } from '../../../shared/services/insight/insight.service'
 import { ICalendarItem, IInsight, ISymbol } from '@candlejumper/shared'
 import { Store } from '@ngxs/store'
-import { Observable, BehaviorSubject, combineLatest, filter, map, tap } from 'rxjs'
+import { Observable, BehaviorSubject } from 'rxjs'
 import { PeriodicElement } from '../../../shared/components/footer-tabs/footer-tab-backtest/footer-tab-backtest.component'
-import { CalendarService } from '../../../shared/services/calendar/calendar.service'
-import { CALENDAR_SET } from '../../../shared/state/calendar/calendar.actions'
-import { CalendarState } from '../../../shared/state/calendar/calendar.state'
 import { ChartMiniComponent } from '../../../shared/components/chart-mini/chart-mini.component'
 import { SharedModule } from '../../../shared/shared.module'
 import { MatSort, Sort } from '@angular/material/sort'
-import { LiveAnnouncer } from '@angular/cdk/a11y'
-import { MatTableDataSource } from '@angular/material/table'
-import { SymbolSelectors } from '../../../shared/state/symbol/symbol.selectors'
 import { SymbolState } from '../../../shared/state/symbol/symbol.state'
 
 @Component({
@@ -38,8 +32,8 @@ export class PageInsightComponent implements OnInit {
     'chart',
     'rating',
     'target',
-    'intermediate',
     'short',
+    'mid',
     'long',
     'estimate',
     'diffInPercent',
@@ -48,64 +42,49 @@ export class PageInsightComponent implements OnInit {
 
   orderColumns: string[] = ['index', 'side', 'price', 'profit', 'quantity', 'time', 'reason', 'text']
 
-  dataSource$ = new BehaviorSubject([{}, {}])
   dataSource: ISymbol[]
+  sortedData: ISymbol[];
 
   constructor(
     public insightService: InsightService,
-    private store: Store,
-    private changeDetectorRef: ChangeDetectorRef,
+    private store: Store
   ) {}
 
   ngOnInit() {
     this.dataSource = this.store.selectSnapshot(SymbolState.getAll)
+    this.sortData({active: 'short', direction: 'desc'})
   }
 
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
+  sortData(sort: Sort) {
+    const data = this.dataSource.slice();
+    if (!sort.active || sort.direction === '') {
+      this.sortedData = data;
+      return;
+    }
 
-    // switch (sortState.active) {
-    //   case 'intermediate':
-    //     this.dataSource.data.sort(function compareByName(a, b) {
-    //       return (
-    //         parseInt(a.insights?.instrumentInfo?.technicalEvents.intermediateTermOutlook.score, 10) -
-    //         parseInt(b.insights?.instrumentInfo?.technicalEvents.intermediateTermOutlook.score, 10)
-    //       )
-    //     })
-    //     break
-    //   case 'short':
-    //     this.dataSource.data.sort(function compareByName(a, b) {
-    //       return (
-    //         a.insights?.instrumentInfo?.technicalEvents.shortTermOutlook.score -
-    //         b.insights?.instrumentInfo?.technicalEvents.shortTermOutlook.score
-    //       )
-    //     })
-    //     break
-    //   case 'long':
-    //     this.dataSource.data.sort(function compareByName(a, b) {
-    //       return (
-    //         a.insights?.instrumentInfo?.technicalEvents.longTermOutlook.score -
-    //         b.insights?.instrumentInfo?.technicalEvents.longTermOutlook.score
-    //       )
-    //     })
-    //     break
-    // }
+    function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+      
+      // return !Number.isFinite(a) as any - (!Number.isFinite(b) as any) || (a as any) - (b as any)
+      return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+    }
 
-    // if (sortState.direction === 'asc') {
-    //   this.dataSource.data.reverse()
-    // }
-
-    // this.dataSource = new MatTableDataSource(this.dataSource.data)
-    this.changeDetectorRef.detectChanges()
-    // if (sortState.direction) {
-    //   this.liveAnnouncer.announce(`Sorted ${sortState.direction}ending`)
-    // } else {
-    //   this.liveAnnouncer.announce('Sorting cleared')
-    // }
+    this.sortedData = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'name':
+          return compare(a.name, b.name, isAsc);
+        case 'short':
+          return compare(a.insights?.short || 0, b.insights?.short || 0, isAsc);
+        case 'mid':
+          return compare(a.insights?.mid || 0, b.insights?.mid || 0, isAsc);
+        case 'long':
+          return compare(a.insights?.long || 0, b.insights?.long || 0, isAsc);
+        case 'reportDate':
+          return compare(b.calendar?.[0]?.reportDate || 0, a.calendar?.[0]?.reportDate || 0, isAsc);
+        default:
+          return 0;
+      }
+    });
   }
 
   toggleDetails(element) {

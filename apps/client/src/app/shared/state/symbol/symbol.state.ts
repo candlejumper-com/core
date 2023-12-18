@@ -54,6 +54,11 @@ export class SymbolState {
 
   @Action(SYMBOL_SET)
   symbolSet({ setState: setState }, action: SYMBOL_SET) {
+    action.symbols.forEach(symbol => {
+      if ( symbol.calendar?.[0]?.reportDate) {
+        symbol.calendar[0].reportDate = new Date(symbol.calendar[0].reportDate)
+      }
+    })
     setState(action.symbols)
   }
 

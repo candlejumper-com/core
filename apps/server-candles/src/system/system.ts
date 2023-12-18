@@ -18,6 +18,7 @@ export class SystemCandles extends System {
 
   async onInit() {
     await this.brokerManager.add(BrokerYahoo)
+    
     this.symbolManager.syncSymbolsWithBroker()
 
     this.db = new DB(this, [BrokerEntity, InsightEntity, ...this.createCandleEntities()])

@@ -15,12 +15,16 @@ export class InsightManager {
     const InsightsRepo = this.system.db.connection.getRepository(InsightEntity)
     const lastRecord = await InsightsRepo.findOne({ where: { updatedAt: MoreThan(minLastUpdateTime) } })
 
-    // if (lastRecord) {
-    //   console.log('[red ', lastRecord)
-    //   return lastRecord
-    // }
     const insightsData = await this.system.brokerManager.get(BrokerYahoo).getSymbolInsights(symbol)
     if (!insightsData.instrumentInfo) {
+      const insightObject = {
+        symbol: symbol.name,
+        skip: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+      const insightsRecord = InsightsRepo.create(insightObject)
+      const insights = await InsightsRepo.save(insightsRecord)
       return null
     }
     

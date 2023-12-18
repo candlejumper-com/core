@@ -33,8 +33,7 @@ export class BrokerAlphavantage extends Broker {
     const { apiKey } = this.system.configManager.config.thirdParty.alphavantage
     const { data } = await axios.get(`https://www.alphavantage.co/query?function=EARNINGS_CALENDAR&horizon=3month&apikey=${apiKey}`)
     const items = data
-    // const items = await parseCSV(data)
-    // writeFileSync('./data3.json', JSON.stringify(items, null, 2))
+    console.log(2222222, items.length)
     return normalizeCalendarData(items)
   }
 

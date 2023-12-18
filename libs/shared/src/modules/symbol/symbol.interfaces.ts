@@ -10,7 +10,6 @@ export interface ISymbol extends ISymbolInfo {
   }
 
   orders?: any[]
-
 }
 
 export interface ISymbolInfo {
