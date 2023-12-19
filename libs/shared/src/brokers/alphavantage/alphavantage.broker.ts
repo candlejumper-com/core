@@ -4,10 +4,9 @@ import { OrderResponseACK, OrderResponseFull, OrderResponseResult } from 'binanc
 import alphavantage from 'alphavantage'
 import { normalizeCalendarData, parseCSV } from './alphavantage.util'
 import axios from 'axios'
-import { readFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
 import nock from 'nock'
 import { join } from 'path'
-
 
 export class BrokerAlphavantage extends Broker {
   id = 'alphavantage'
@@ -18,22 +17,21 @@ export class BrokerAlphavantage extends Broker {
     this.instance = alphavantage({ key: apiKey })
 
     if (this.system.configManager.config.dev) {
-
-      const PATH_MOCK_CALENDAR_ITEMS = join(__dirname, '../../../mock/calendar.json')
+      const PATH_MOCK_CALENDAR_ITEMS = join(__dirname, '../../../mock/calendar.csv')
 
       // calendar items
       nock('https://www.alphavantage.co')
         .get('/query')
         .query(true)
-        .reply(200, JSON.parse(readFileSync(PATH_MOCK_CALENDAR_ITEMS, { encoding: 'utf-8' })))
+        .reply(200, readFileSync(PATH_MOCK_CALENDAR_ITEMS, { encoding: 'utf-8' }))
     }
   }
 
   async getCalendarItems(mock = true): Promise<ICalendarItem[]> {
     const { apiKey } = this.system.configManager.config.thirdParty.alphavantage
     const { data } = await axios.get(`https://www.alphavantage.co/query?function=EARNINGS_CALENDAR&horizon=3month&apikey=${apiKey}`)
-    const items = data
-    console.log(2222222, items.length)
+    const items = await parseCSV(data)
+    // writeFileSync(join(__dirname, '../../../mock/calendar.csv'), data)
     return normalizeCalendarData(items)
   }
 

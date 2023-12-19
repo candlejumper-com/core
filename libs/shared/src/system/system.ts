@@ -3,23 +3,13 @@ import { logger, setLogSystemEnvironment } from '../util/log'
 import { DB, InsightManager, TICKER_TYPE } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
 import { ConfigManager } from "../modules/config/config-manager"
-import { createAxiosRetryInstance } from "../util/axios-retry"
 import { SymbolManager } from "../modules/symbol/symbol.manager"
 import { BrokerManager } from "../modules/broker/broker.manager"
 import { Ticker } from "../ticker/ticker"
 
-// export enum SYSTEM_ENV {
-//   BASE = "BASE",
-//   MAIN = "MAIN",
-//   BACKTEST = "BACKTEST",
-//   CANDLES = "CANDLES",
-// }
-
 export abstract class System extends Ticker<null> {
   override id = "SYSTEM"
   override system = this
-
-  // axios = createAxiosRetryInstance()
 
   time: Date
 
