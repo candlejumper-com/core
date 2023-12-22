@@ -39,7 +39,7 @@ export class BrokerBitmart extends Broker {
   override async onInit() {
     this.queue = new SimpleQueue(this.system)
 
-    const { name, apiKey, apiSecret } = this.system.configManager.config.brokers.bitmart
+    const { name, apiKey, apiSecret } = this.configManager.config.brokers.bitmart
 
     this.instance = new BitmartSpotAPI({
       apiKey,

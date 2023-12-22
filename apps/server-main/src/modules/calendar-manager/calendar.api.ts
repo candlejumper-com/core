@@ -1,14 +1,25 @@
 import { Application } from 'express'
 import { SystemMain } from "../../system/system"
+import { Routes, SymbolManager } from '@candlejumper/shared'
+import { OrderManager } from '../order-manager/order-manager'
+import { CalendarManager } from './calendar.manager'
 
-export default function (system: SystemMain, app: Application) {
+@Routes({})
+export class OrderApi {
+  constructor(
+    private app: Application,
+    private symbolManager: SymbolManager,
+    private calendarManager: CalendarManager,
+  ) {}
 
-    app.get('/api/calendar', (req, res) => {
+  init() {
+    this.app.get('/api/calendar', (req, res) => {
         try {
-            res.send(system.calendarManager.items)
+            res.send(this.calendarManager.items)
         } catch (error) {
             console.error(error)
             res.status(500).send(error)
         }
     })
+}
 }

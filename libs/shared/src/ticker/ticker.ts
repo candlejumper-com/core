@@ -10,7 +10,7 @@ export abstract class Ticker<T> {
   static eventId = 0
 
   // type of ticker (BOT / INDICATOR / SYSTEM)
-  abstract type?: TICKER_TYPE
+  type?: TICKER_TYPE
 
   // unique ID (read: unique to parent)
   id: string | number

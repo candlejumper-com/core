@@ -1,6 +1,6 @@
-import { BrokerAlphavantage } from "../../brokers/alphavantage/alphavantage.broker";
 import { Broker } from "./broker";
-import { System } from "../../system/system";
+import { Service } from "../../decorators/service.decorator";
+import { ConfigManager } from "../config/config.manager";
 
 export enum BROKER_PURPOSE {
   CANDLES = "CANDLES",
@@ -9,12 +9,13 @@ export enum BROKER_PURPOSE {
   PREDICTION = "PREDICTION"
 }
 
+@Service({})
 export class BrokerManager {
+
+  constructor(private configManager: ConfigManager) {}
 
   // readonly brokers: {[key: string]: Broker} = {}
   private readonly brokers = new Map<typeof Broker, any>()
-
-  constructor(private system: System) {}
 
   get<T extends Broker>(constructor?: new (...args: any[]) => T): T {
     if (!constructor) {
@@ -24,8 +25,9 @@ export class BrokerManager {
     return this.brokers.get(constructor)
   }
 
-  async add<T extends Broker>(BrokerClass: new(system: System) => T, purpose?: BROKER_PURPOSE): Promise<T> {
-    const broker = new BrokerClass(this.system)
+  async add<T extends Broker>(BrokerClass: any, purpose?: BROKER_PURPOSE): Promise<T> {
+  // async add<T extends Broker>(BrokerClass: new (...args: any[]) => T, purpose?: BROKER_PURPOSE): Promise<T> {
+    const broker = new BrokerClass(this.configManager)
     this.brokers.set(BrokerClass, broker)
     await broker.init()
     return broker

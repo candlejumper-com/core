@@ -3,8 +3,9 @@ import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt'
 import { Strategy as LocalStrategy } from 'passport-local'
 import * as jwt from 'jsonwebtoken'
 import { SystemMain } from "../../system/system"
-import { logger } from "@candlejumper/shared"
+import { ConfigManager, DB, Service, logger } from "@candlejumper/shared"
 import { UserEntity } from "./user.entity"
+import { UserApi } from './user.api'
 
 export interface IUser {
     id: number
@@ -15,11 +16,16 @@ export interface IUser {
     production?: boolean
 }   
 
+@Service({
+    routes: [
+       UserApi
+    ]
+})
 export class UserManager {
 
     user: UserEntity
 
-    constructor(public system: SystemMain) { }
+    constructor(private db: DB, private configManager: ConfigManager) { }
 
     async init(): Promise<void> {
         this.setPassportStrategies()
@@ -28,12 +34,12 @@ export class UserManager {
 
     // TODO: ??????
     async setActive() {
-        const UserRepo = this.system.db.connection.getRepository(UserEntity)
+        const UserRepo = this.db.connection.getRepository(UserEntity)
         this.user = await UserRepo.findOne({ where: { active: true } })
     }
 
     async find(params: IUser) {
-        const UserRepo = this.system.db.connection.getRepository(UserEntity)
+        const UserRepo = this.db.connection.getRepository(UserEntity)
         UserRepo.findOne({ where: { active: true } })
         return {} as any
     }
@@ -41,7 +47,7 @@ export class UserManager {
     async create(params: IUser) {
         delete params.id
 
-        const UserRepo = this.system.db.connection.getRepository(UserEntity)
+        const UserRepo = this.db.connection.getRepository(UserEntity)
         const user = UserRepo.create(params)
         const results = await UserRepo.save(user)
 
@@ -53,14 +59,14 @@ export class UserManager {
     }
 
     getUserFromToken(token: string): any {
-        const jwtSecret = this.system.configManager.config.security.jwtSecret
+        const jwtSecret = this.configManager.config.security.jwtSecret
         const result = jwt.verify(token, jwtSecret)
         return result
     }
 
     private setPassportStrategies(): void {
-        const UserRepo = this.system.db.connection.getRepository(UserEntity)
-        const jwtSecret = this.system.configManager.config.security.jwtSecret
+        const UserRepo = this.db.connection.getRepository(UserEntity)
+        const jwtSecret = this.configManager.config.security.jwtSecret
 
         // registrate login method
         passport.use(new LocalStrategy(async (username: string, password: string, next: Function) => {

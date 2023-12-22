@@ -21,8 +21,8 @@ export class BrokerBinance extends Broker {
   queue: SimpleQueue
 
   override async onInit() {
-    const apiKey = this.system.configManager.config.brokers.binance.apiKey
-    const apiSecret = this.system.configManager.config.brokers.binance.apiSecret
+    const apiKey = this.configManager.config.brokers.binance.apiKey
+    const apiSecret = this.configManager.config.brokers.binance.apiSecret
 
     this.instance = new MainClient({
       api_key: apiKey,
@@ -150,7 +150,7 @@ export class BrokerBinance extends Broker {
   }
 
   override async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void) {
-    const APIKEY = this.system.configManager.config.brokers.binance.apiKey
+    const APIKEY = this.configManager.config.brokers.binance.apiKey
 
     const listenKey = await getUserDataStream(APIKEY)
     const socketApi = new SocketClient(`ws/${listenKey}`)

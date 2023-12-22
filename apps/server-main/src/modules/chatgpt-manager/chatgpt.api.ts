@@ -1,15 +1,24 @@
 import { Application } from 'express'
 import { SystemMain } from "../../system/system"
+import { ChatGPTManager } from './chatgpt.manager'
 
-export default function (system: SystemMain, app: Application) {
+export class OrderApi {
+    constructor(
+      private system: SystemMain,
+      private app: Application,
+      private chatGPTManager: ChatGPTManager,
+    ) {}
+  
+    init() {
 
-    app.get('/api/chatgpt', async (req, res) => {
+    this.app.get('/api/chatgpt', async (req, res) => {
         try {
-            const result = await system.chatGPTManager.test()
+            const result = await this.chatGPTManager.test()
             res.send(result)
         } catch (error) {
             console.error(error)
             res.status(500).send(error)
         }
     })
+}
 }

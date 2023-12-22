@@ -1,11 +1,17 @@
+import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
 import { SystemMain } from '../../system/system'
 import {
   BrokerAlphavantage,
+  ConfigManager,
   ICalendarItem,
+  Service,
+  SymbolManager,
   filterCalendarItemsBySymbols,
   filterCalendarItemsInTimeRange,
 } from '@candlejumper/shared'
+import { DeviceManager } from '../device-manager/device-manager'
 
+@Service({})
 export class CalendarManager {
   // all calendar items
   items: ICalendarItem[] = []
@@ -20,8 +26,12 @@ export class CalendarManager {
   // how much time from now until calender event
   private activeTimeWindow = 1000 * 60 * 60 * 24 * 7 * 3 // 7 * 3days
 
-  constructor(public system: SystemMain) {}
-
+  constructor(
+    public symbolManager: SymbolManager,
+    private configManager: ConfigManager,
+    private brokerManager: BrokerManager,
+    private deviceManager: DeviceManager,
+  ) {}
   /**
    * - load alphavantage and new instance of broker
    * - start interval
@@ -35,14 +45,14 @@ export class CalendarManager {
   async checkCalendarItems() {
     try {
       // (re)load all calendar items
-      this.items = await this.system.brokerManager.get(BrokerAlphavantage).getCalendarItems()
+      this.items = await this.brokerManager.get(BrokerAlphavantage).getCalendarItems()
 
       this.items.forEach(item => {
-        const symbol = this.system.symbolManager.get(item.symbol)
+        const symbol = this.symbolManager.get(item.symbol)
         if (symbol) {
           symbol.calendar = [item]
         } else{
-          this.system.symbolManager.add({ name: item.symbol, calendar: [item] })
+          this.symbolManager.add({ name: item.symbol, calendar: [item] })
         }
       })
 
@@ -51,10 +61,10 @@ export class CalendarManager {
 
       // DEV ONLY
       // limit to 2 symbols
-      if (this.system.configManager.config.dev) {
-        this.calendarItems = filterCalendarItemsBySymbols(this.items, this.system.symbolManager.symbols.slice(0, 2))
+      if (this.configManager.config.dev) {
+        this.calendarItems = filterCalendarItemsBySymbols(this.items, this.symbolManager.symbols.slice(0, 2))
       } else {
-        this.calendarItems = filterCalendarItemsBySymbols(this.items, this.system.symbolManager.symbols)
+        this.calendarItems = filterCalendarItemsBySymbols(this.items, this.symbolManager.symbols)
       }
 
       // set current price diff and other stuff
@@ -64,7 +74,7 @@ export class CalendarManager {
       this.items.sort((a, b) => (a.reportDate as any) - (b.reportDate as any))
 
       // send push notification to clients
-      await this.system.deviceManager.sendCalendarUpcomingNotifiction(this.calendarItems)
+      await this.deviceManager.sendCalendarUpcomingNotifiction(this.calendarItems)
     } catch (error) {
       console.error(error)
     }

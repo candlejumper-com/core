@@ -1,7 +1,7 @@
-import { SystemCandles } from './system/system';
+import 'reflect-metadata'
+import { ModuleCandles } from './system/system.module';
 
-const system = new SystemCandles()
+const app = new ModuleCandles()
 
-system.start()
-// system.start().catch(console.error)
+app.start()
 

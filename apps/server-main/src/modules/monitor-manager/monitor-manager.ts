@@ -1,10 +1,10 @@
-import { System } from "../../system/system"
+import { SystemMain } from "../../system/system"
 
 export class MonitorManager {
 
     private intervalCheckTime = 60000
 
-    constructor(public system: System) {
+    constructor(public system: SystemMain) {
 
     }
 

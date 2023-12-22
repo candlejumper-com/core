@@ -3,10 +3,11 @@ import { readFileSync, writeFileSync } from "fs"
 import watch from "node-watch"
 import * as dirTreedirTree from "directory-tree"
 import { SystemMain } from '../../system/system'
-import { logger } from '@candlejumper/shared'
+import { ConfigManager, Service, logger } from '@candlejumper/shared'
 import { pool, WorkerPool } from 'workerpool'
 import { IEditorCompileOptions } from './editor.worker'
 import { readFile, writeFile } from 'fs/promises'
+import { ApiServer } from '../../system/api'
 
 export const PATH_ROOT = join(__dirname, '../../..')
 export const PATH_CUSTOM = join(PATH_ROOT, 'custom')
@@ -20,6 +21,7 @@ export const PATH_TSCONFIG = join(PATH_CUSTOM, 'tsconfig.json')
 
 const url = new URL(join(__dirname, 'editor.worker.js'), import.meta.url)
 
+@Service({})
 export class EditorManager {
 
     fileTree: dirTreedirTree.DirectoryTree<any>[]
@@ -28,7 +30,7 @@ export class EditorManager {
 
     private pool: WorkerPool
 
-    constructor(public system: SystemMain) { }
+    constructor(private configManager: ConfigManager, private apiServer: ApiServer) { }
 
     async init(): Promise<void> {
         this.pool = pool(url.toString().replace('file:///', '/'), { maxWorkers: 1 })
@@ -38,7 +40,7 @@ export class EditorManager {
 
         this.setAvailableBots()
 
-        if (!this.system.configManager.config.production.enabled) {
+        if (!this.configManager.config.production.enabled) {
             setTimeout(() => this.startWatcher(), 5000)
         }
     }
@@ -93,7 +95,7 @@ export class EditorManager {
     private startWatcher(): void {
         watch(PATH_CUSTOM_SRC, { recursive: true }, (evt: string, name: string) => {
             this.readAndUpdate()
-            this.system.apiServer.io.emit('editor/file-tree', this.fileTree)
+            this.apiServer.io.emit('editor/file-tree', this.fileTree)
             // this.compile()
         });
     }

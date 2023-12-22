@@ -9,6 +9,9 @@ import {
   InsightEntity,
   InsightManager,
   BrokerAlphavantage,
+  ConfigManager,
+  SystemDecorator,
+  SymbolManager,
 } from '@candlejumper/shared'
 import { ApiServer } from './api'
 import { CANDLE_FIELD, CandleManager } from '../modules/candle-manager/candle-manager'
@@ -20,39 +23,48 @@ import { UserManager } from '../modules/user-manager/user-manager'
 import { AIManager } from '../modules/ai-manager/ai-manager'
 import { ISymbol, TICKER_TYPE, BrokerIG } from '@candlejumper/shared'
 import { readFileSync } from 'fs'
-import { NewsManager } from '../modules/news-manager/news.manager'
 import { CalendarManager } from '../modules/calendar-manager/calendar.manager'
 import { ChatGPTManager } from '../modules/chatgpt-manager/chatgpt.manager'
 import { DeviceEntity } from '../modules/device-manager/device.entity'
 import { UserEntity } from '../modules/user-manager/user.entity'
+import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
+import { SystemApi } from './system.api'
 
-// export class System {
-//   tick(...arg): any {
-
-//   }
-// }
-
+@SystemDecorator({
+  type: TICKER_TYPE.SYSTEM_MAIN,
+  brokers: [
+    {
+      class: BrokerAlphavantage,
+    },
+    {
+      class: BrokerYahoo,
+    },
+  ],
+  // routes: [SystemApi]
+})
 export class SystemMain extends System {
-  type = TICKER_TYPE.SYSTEM_MAIN
-
-  apiServer: ApiServer
-  deviceManager: DeviceManager
-  editorManager: EditorManager
-  backtestManager: BacktestManager
-  newsManager: NewsManager
-  calendarManager: CalendarManager
-  chatGPTManager: ChatGPTManager
 
   // system = this
 
-  db = new DB(this, [UserEntity, DeviceEntity, InsightEntity])
-
   // readonly broker = new BrokerBinance(this)
   readonly aiManager = new AIManager(this)
-  readonly candleManager = new CandleManager(this)
-  readonly orderManager = new OrderManager(this)
-  readonly userManager = new UserManager(this)
-  readonly insightManager = new InsightManager(this)
+
+  constructor(
+    private candleManager: CandleManager,
+    private db: DB,
+    private configManager: ConfigManager,
+    private symbolManager: SymbolManager,
+    private calendarManager: CalendarManager,
+    private orderManager: OrderManager,
+    private insightManager: InsightManager,
+    private brokerManager: BrokerManager,
+    private userManager: UserManager,
+    private apiServer: ApiServer,
+
+
+  ) {
+    super(null, null, null, null)
+  }
 
   async onInit() {
     this.orderManager.init()
@@ -63,35 +75,14 @@ export class SystemMain extends System {
     }
   }
 
-  toggleProductionMode(state: boolean): void {
-    const prevMode = this.configManager.config.production.enabled
-
-    if (prevMode === state) {
-      return
-    }
-
-    this.configManager.config.production.enabled = state
-  }
-
   /**
    * only executed on MAIN system (not a backtest)
    */
   private async initAsMain(): Promise<void> {
-    await this.brokerManager.add(BrokerAlphavantage)
-    await this.brokerManager.add(BrokerYahoo)
-
     this.symbolManager.syncSymbolsWithBroker()
 
-    this.chatGPTManager = new ChatGPTManager(this)
-    this.newsManager = new NewsManager(this)
-    this.calendarManager = new CalendarManager(this)
-    this.backtestManager = new BacktestManager(this)
-    this.editorManager = new EditorManager(this)
-    this.deviceManager = new DeviceManager(this)
-    this.apiServer = new ApiServer(this)
-
     // connect database
-    await this.db.init()
+    await this.db.init([UserEntity, DeviceEntity, InsightEntity])
 
     // await this.deviceManager.init()
 

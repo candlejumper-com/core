@@ -19,42 +19,42 @@ export class AIInstance {
   constructor(public system: SystemMain, public container: AIContainer, public workerPool: WorkerPool, public options: ITensorflowOptions) {}
 
   async run(): Promise<void> {
-    const symbolName = this.options.symbol;
-    const brokerSymbol = this.system.brokerManager.get(BrokerYahoo).getExchangeInfoBySymbol(symbolName);
-    const symbol = this.system.symbolManager.get(symbolName);
+  //   const symbolName = this.options.symbol;
+  //   const brokerSymbol = this.system..get(BrokerYahoo).getExchangeInfoBySymbol(symbolName);
+  //   const symbol = this.system.symbolManager.get(symbolName);
 
-    // check if symbol is recognized (currently in use / cached)
-    if (!brokerSymbol || !symbol) {
-      logger.error(`BACKTEST - Symbol ${symbolName} is not valid`);
-    }
+  //   // check if symbol is recognized (currently in use / cached)
+  //   if (!brokerSymbol || !symbol) {
+  //     logger.error(`BACKTEST - Symbol ${symbolName} is not valid`);
+  //   }
 
-    // loop over all intervals
-    const workerData: ITensorFlowWorkerData = {
-      id: this.id,
-      options: this.options,
-      candles: await this.system.candleManager.getCandles(symbolName, '1d', this.options.count),
-    };
+  //   // loop over all intervals
+  //   const workerData: ITensorFlowWorkerData = {
+  //     id: this.id,
+  //     options: this.options,
+  //     candles: await this.system.candleManager.getCandles(symbolName, '1d', this.options.count),
+  //   };
 
-    console.log(222333, workerData.candles.length);
+  //   console.log(222333, workerData.candles.length);
 
-    this.workerPool.exec('run', [workerData], {
-      on: ({ data, action }: ITensorFlowWorkerMessage<ITensorFlowWorkerMessageProgress>) => {
-        if (action === TENSORFLOW_WORKER_ACTION.PROGRESS) {
-          this.system.apiServer.io.emit('AI_JOB_PROGRESS', {
-            container: this.container.id,
-            id: this.id,
-            data
-          });
-        }
+  //   this.workerPool.exec('run', [workerData], {
+  //     on: ({ data, action }: ITensorFlowWorkerMessage<ITensorFlowWorkerMessageProgress>) => {
+  //       if (action === TENSORFLOW_WORKER_ACTION.PROGRESS) {
+  //         this.system.apiServer.io.emit('AI_JOB_PROGRESS', {
+  //           container: this.container.id,
+  //           id: this.id,
+  //           data
+  //         });
+  //       }
 
-        if (action === TENSORFLOW_WORKER_ACTION.FINISHED) {
-          this.system.apiServer.io.emit('AI_JOB_FINISHED', {
-            container: this.container.id,
-            id: this.id,
-            data
-          });
-        }
-      },
-    })
+  //       if (action === TENSORFLOW_WORKER_ACTION.FINISHED) {
+  //         this.system.apiServer.io.emit('AI_JOB_FINISHED', {
+  //           container: this.container.id,
+  //           id: this.id,
+  //           data
+  //         });
+  //       }
+  //     },
+  //   })
   }
 }

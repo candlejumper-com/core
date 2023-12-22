@@ -38,7 +38,7 @@ export function createCandleEntity(tableName: string) {
     })
 }
 
-export function getCandleEntityName(system: System, symbolName: string, interval: string): string {
+export function getCandleEntityName(symbolName: string, interval: string): string {
     symbolName = symbolName.replace('CS.D.', '').replace('.CFD.IP', '').replace('/', '').replace(' ', '')
     return `SYMBOL_${symbolName}_${interval.toUpperCase()}`
 }

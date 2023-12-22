@@ -3,15 +3,16 @@ import { ISymbol, ISymbolInfo } from './symbol.interfaces'
 import { Symbol } from './symbol'
 import { logger } from '../../util/log'
 import { showProgressBar } from '../../util/progress-bar'
+import { BrokerYahoo } from '../../brokers/yahoo/yahoo.broker'
+import { Service } from '../../decorators/service.decorator'
 // import { BrokerYahoo } from '../../brokers/yahoo/yahoo.broker'
 
+@Service({})
 export class SymbolManager {
   private intervalRef: NodeJS.Timeout
   private intervalTimeout = 1000 * 60 * 60
 
   symbols: Symbol[] = []
-
-  constructor(private system: System) {}
 
   async init() {}
 
@@ -23,9 +24,9 @@ export class SymbolManager {
       return null
     }
 
-    const symbol = new Symbol(this.system, data)
-    this.symbols.push(symbol)
-    return symbol
+    // const symbol = new Symbol(this.system, data)
+    // this.symbols.push(symbol)
+    // return symbol
   }
 
   get(symbolName: string): ISymbol {
@@ -38,10 +39,10 @@ export class SymbolManager {
 
   syncSymbolsWithBroker() {
     // TODO - using import gives circular dependency error?
-    const { BrokerYahoo } = require('../../brokers/yahoo/yahoo.broker')
-    const symbols = this.system.brokerManager.get(BrokerYahoo).exchangeInfo.symbols
-    console.log(symbols.length, 333)
-    symbols.forEach(symbol => this.add(symbol))
+    // const { BrokerYahoo } = require('../../brokers/yahoo/yahoo.broker')
+    // const symbols = this.system.brokerManager.get(BrokerYahoo).exchangeInfo.symbols
+    // console.log(symbols.length, 333)
+    // symbols.forEach(symbol => this.add(symbol))
   }
 
   async update() {

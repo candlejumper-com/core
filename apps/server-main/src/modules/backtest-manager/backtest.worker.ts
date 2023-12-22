@@ -17,7 +17,7 @@ worker({
         try {
             const backtestWorker = new Backtest(workerOptions)
             await backtestWorker.run()
-            return backtestWorker.system.getData(true)
+            // return backtestWorker.system.getData(true)
         } catch (error) {
             console.error(error)
         }

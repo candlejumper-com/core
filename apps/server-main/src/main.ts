@@ -1,5 +1,7 @@
-import { SystemMain } from './system/system';
+import 'reflect-metadata'
+import { ModuleCandles } from './system/system.module';
 
-const system = new SystemMain()
+const app = new ModuleCandles()
 
-await system.start()
+app.start()
+

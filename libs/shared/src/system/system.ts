@@ -1,32 +1,34 @@
+import 'reflect-metadata'
 import "colors"
 import { logger, setLogSystemEnvironment } from '../util/log'
-import { DB, InsightManager, TICKER_TYPE } from "@candlejumper/shared"
+import { DB, InsightManager, SystemDecorator, TICKER_TYPE } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
-import { ConfigManager } from "../modules/config/config-manager"
+import { ConfigManager } from "../modules/config/config.manager"
 import { SymbolManager } from "../modules/symbol/symbol.manager"
 import { BrokerManager } from "../modules/broker/broker.manager"
 import { Ticker } from "../ticker/ticker"
 
+@SystemDecorator({
+  type: TICKER_TYPE.SYSTEM_BASE
+})
 export abstract class System extends Ticker<null> {
   override id = "SYSTEM"
   override system = this
 
+  modules: any
+
   time: Date
 
-  db: DB
-  readonly insightManager = new InsightManager(this)
-  readonly brokerManager = new BrokerManager(this)
-  readonly configManager = new ConfigManager(this)
-  readonly symbolManager = new SymbolManager(this)
-  readonly orderManager: any
+  // readonly orderManager: any
 
   protected isRunning = false
 
-  constructor(public type?: TICKER_TYPE) {
-    super(null, null, null, null)
+  // constructor(public configManager: ConfigManager) {
+  //   console.log(2222, configManager)
+  //   super(null, null, null, null)
 
-    setProcessExitHandlers(this)
-  }
+  //   setProcessExitHandlers(this)
+  // }
 
   override async init(): Promise<void> {
     setLogSystemEnvironment(this.type)
@@ -35,8 +37,8 @@ export abstract class System extends Ticker<null> {
     logger.info(`\u267F Initialize system \n-------------------------------------------------------------`)
 
     await super.init()
-    await this.configManager.init()
-    await this.symbolManager.init()
+    await this.modules.get(ConfigManager).init()
+    await this.modules.get(SymbolManager).init()
     await this.onInit?.()
 
     logger.info(
@@ -70,4 +72,15 @@ export abstract class System extends Ticker<null> {
 
     this.isRunning = false
   }
+
+  toggleProductionMode(state: boolean): void {
+    // const prevMode = this.configManager.config.production.enabled
+
+    // if (prevMode === state) {
+    //   return
+    // }
+
+    // this.configManager.config.production.enabled = state
+  }
+
 }

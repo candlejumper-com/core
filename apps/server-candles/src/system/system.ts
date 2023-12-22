@@ -4,42 +4,35 @@ import {
   BrokerEntity,
   BrokerYahoo,
   DB,
-  InsightEntity,
   System,
   TICKER_TYPE,
-  createCandleEntity,
-  getCandleEntityName
+  SystemDecorator,
 } from '@candlejumper/shared'
 
+@SystemDecorator({
+  type: TICKER_TYPE.SYSTEM_CANDLES,
+  brokers: [
+    {
+      class: BrokerYahoo
+    }
+  ]
+})
 export class SystemCandles extends System {
-  readonly type = TICKER_TYPE.SYSTEM_CANDLES
-  readonly candleManager = new CandleManager(this)
-  readonly apiServer = new ApiServer(this)
+  constructor(
+    private db: DB,
+    private candleManager: CandleManager,
+    private apiServer: ApiServer,
+  ) {
+    super(null, null, null, null)
+  }
 
   async onInit() {
-    await this.brokerManager.add(BrokerYahoo)
-    
-    this.symbolManager.syncSymbolsWithBroker()
-
-    this.db = new DB(this, [BrokerEntity, InsightEntity, ...this.createCandleEntities()])
-
-    await this.db.init()
+    await this.db.init([BrokerEntity, ...this.candleManager.createCandleEntities()])
 
     await this.candleManager.sync()
     await this.apiServer.start()
 
     this.candleManager.startWebsocketListener()
     this.candleManager.startOutTickInterval()
-  }
-
-  /**
-   * 
-   * create candle entities for each symbol and interval
-   */
-  private createCandleEntities() {
-    const symbols = this.system.symbolManager.symbols
-    const intervals = this.system.configManager.config.intervals
-    const tableNames = symbols.map(symbol => intervals.map(interval => getCandleEntityName(this.system, symbol.name, interval))).flat()
-    return tableNames.map(tableName => createCandleEntity(tableName))
   }
 }

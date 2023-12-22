@@ -2,21 +2,21 @@ import { SystemMain } from '../../system/system'
 import OpenAI from 'openai'
 import puppeteer from 'puppeteer'
 import axios from 'axios'
-import { BrokerYahoo, CANDLE_FIELD } from '@candlejumper/shared'
+import { BrokerYahoo, CANDLE_FIELD, Service } from '@candlejumper/shared'
 import { readFileSync } from 'fs'
 import { ReadableStream } from 'stream/web'
 
+@Service({})
 export class ChatGPTManager {
   private brokerYahoo: BrokerYahoo
 
-  constructor(public system: SystemMain) {}
 
   /**
    * - load alphavantage and new instance of broker
    * - start interval
    */
   async init() {
-    this.brokerYahoo = new BrokerYahoo(this.system)
+    // this.brokerYahoo = new BrokerYahoo(this.system)
 
     // await this.headlessQuery()
     // console.log(this.system.configManager.config.thirdParty.openAI.apiKey)

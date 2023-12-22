@@ -1,8 +1,9 @@
 import { join } from 'path';
 import { SystemMain } from "../../system/system";
 import { pool, WorkerPool } from 'workerpool';
-import { logger, ISystemState, BrokerYahoo } from '@candlejumper/shared';
+import { logger, ISystemState, BrokerYahoo, Service, ConfigManager, SymbolManager } from '@candlejumper/shared';
 import { IBacktestResult, IBacktestOptions, IWorkerData } from './backtest.interfaces';
+import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager';
 
 const PATH_WORKER = new URL(join(__dirname, 'backtest.worker.js'), import.meta.url)
 
@@ -11,13 +12,20 @@ export enum BACKTEST_TYPE {
     'OHLC_TICKS' = 'OHLC_TICKS'
 }
 
+@Service({})
 export class BacktestManager {
 
     latest: IBacktestResult
 
     private pool: WorkerPool
-
-    constructor(public system: SystemMain, public maxWorker?: number) { }
+    
+    constructor(
+        private maxWorker: number = 2,
+        public symbolManager: SymbolManager,
+        private configManager: ConfigManager,
+        private brokerManager: BrokerManager,
+        private system: SystemMain
+      ) {}
 
     /**
      * start running a batch of backtests
@@ -39,8 +47,8 @@ export class BacktestManager {
         // loop over all symbols
         for (let i = 0, len = options.symbols.length; i < len; ++i) {
             const symbolName = options.symbols[i]
-            const brokerSymbol = this.system.brokerManager.get(BrokerYahoo).getExchangeInfoBySymbol(symbolName)
-            const symbol = this.system.symbolManager.get(symbolName)
+            const brokerSymbol = this.brokerManager.get(BrokerYahoo).getExchangeInfoBySymbol(symbolName)
+            const symbol = this.symbolManager.get(symbolName)
 
             // check if symbol is recognized (currently in use / cached)
             if (!brokerSymbol || !symbol) {

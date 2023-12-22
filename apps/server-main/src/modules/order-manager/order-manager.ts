@@ -1,388 +1,419 @@
-import { logger, IOrder, ORDER_SIDE, IOrderOptions, IOrderData, countDecimals, ISymbol, BrokerYahoo, TICKER_TYPE } from "@candlejumper/shared";
-import { join } from 'path';
-import * as fs from 'fs';
-import { SystemMain } from "../../system/system";
+import {
+  logger,
+  IOrder,
+  ORDER_SIDE,
+  IOrderOptions,
+  IOrderData,
+  countDecimals,
+  ISymbol,
+  BrokerYahoo,
+  TICKER_TYPE,
+  Service,
+  SymbolManager,
+  ConfigManager,
+} from '@candlejumper/shared'
+import { join } from 'path'
+import * as fs from 'fs'
+import { SystemMain } from '../../system/system'
+import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
+import { OrderApi } from './order.api'
+import { ApiServer } from '../../system/api'
 
 const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../_data/snapshots/backtest')
 
 export enum ORDER_TYPE {
-    STOP_LOSS_LIMIT = 'STOP_LOSS_LIMIT',
-    STOP_LOSS = 'STOP_LOSS',
-    MARKET = 'MARKET'
+  STOP_LOSS_LIMIT = 'STOP_LOSS_LIMIT',
+  STOP_LOSS = 'STOP_LOSS',
+  MARKET = 'MARKET',
 }
 
+@Service({
+//   routes: [OrderApi],
+})
 export class OrderManager {
+  readonly orders: { [key: string]: IOrder[] } = {}
 
-    readonly orders: { [key: string]: IOrder[] } = {}
+  constructor(
+    public apiServer: ApiServer,
+    public symbolManager: SymbolManager,
+    private configManager: ConfigManager,
+    private brokerManager: BrokerManager,
+    private system = {type: null, time: new Date}
+  ) {}
 
-    constructor(public system: SystemMain) { }
+  init(): void {
+    // TODO - should not be needed
+    this.symbolManager.symbols.forEach(symbol => {
+      this.orders[symbol.name] = this.orders[symbol.name] || []
+    })
+  }
 
-    init(): void {
-        // TODO - should not be needed
-        this.system.symbolManager.symbols.forEach(symbol => {
-            this.orders[symbol.name] = this.orders[symbol.name] || []
-        })
+  // async placeStopLossLimitOrder(symbol: ISymbol, side: ORDER_SIDE, stopPrice: number, data?: IOrderData): Promise<void> {
+  //     const spread = this.system.configManager.config.spread
+  //     const spreadMultiplier = 1 + (side === 'BUY' ? -spread : spread)
+  //     const orderOptions: any = {
+  //         type: ORDER_TYPE.STOP_LOSS_LIMIT,
+  //         timeInForce: 'GTC',
+  //         stopPrice
+  //     }
+
+  //     await this.placeOrder(symbol, side, orderOptions, data)
+  // }
+
+  /**
+   * place a new order
+   */
+  async placeOrder(options: IOrderOptions, data: IOrderData): Promise<void> {
+    const isProduction = !!this.configManager.config.production.enabled
+    const price = options.symbol.price
+    const symbol = options.symbol
+    const side = options.side
+
+    if (!symbol) {
+      throw 'Unkown symbol to system: ' + symbol.name
     }
 
-    // async placeStopLossLimitOrder(symbol: ISymbol, side: ORDER_SIDE, stopPrice: number, data?: IOrderData): Promise<void> {
-    //     const spread = this.system.configManager.config.spread
-    //     const spreadMultiplier = 1 + (side === 'BUY' ? -spread : spread)
-    //     const orderOptions: any = {
-    //         type: ORDER_TYPE.STOP_LOSS_LIMIT,
-    //         timeInForce: 'GTC',
-    //         stopPrice
-    //     }
-
-    //     await this.placeOrder(symbol, side, orderOptions, data)
-    // }
-
-    /**
-     * place a new order
-     */
-    async placeOrder(options: IOrderOptions, data: IOrderData): Promise<void> {
-        const isProduction = !!this.system.configManager.config.production.enabled
-        const price = options.symbol.price
-        const symbol = options.symbol
-        const side = options.side
-
-        if (!symbol) {
-            throw 'Unkown symbol to system: ' + symbol.name
-        }
-
-        // unless forced, check if order is not same side as last order
-        if (!options.force && ((this.system.type === TICKER_TYPE.SYSTEM_MAIN && !isProduction) || !this.checkIsNotSameOrderSide(symbol, side))) {
-            return
-        }
-
-        // how much can we spend on this order
-        const quantity = options.quantity || this.calculateQuantity(symbol, side)
-
-        // only process when quantity is higher then zero
-        if (!quantity) {
-            return
-        }
-
-        // used for binance
-        const order: IOrder = {
-            ...options,
-            quantity,
-            symbol: symbol.name,
-        }
-
-        // stoploss orders need a price field
-        if (options.stopLoss) {
-            order.price = price
-        }
-
-        // as stored in orders array
-        const orderEvent = Object.assign({}, order, {
-            data,
-            price,
-            commission: 0,
-            symbol,
-            time: this.system.time.getTime(),
-            state: 'PENDING',
-            profit: 0,
-            result: {}
-        })
-
-        // REAL ORDER
-        if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
-            try {
-                await this.placeOrderReal(order, orderEvent)
-            } catch (error) {
-                console.error(error)
-                throw new Error(error)
-            }
-
-        }
-        // BACKTEST
-        else {
-            this.placeOrderBacktest(order, orderEvent, symbol)
-        }
-
-        this.orders[symbol.name] = this.orders[symbol.name] || []
-        this.orders[symbol.name].push(orderEvent)
+    // unless forced, check if order is not same side as last order
+    if (
+      !options.force &&
+      ((this.system.type === TICKER_TYPE.SYSTEM_MAIN && !isProduction) || !this.checkIsNotSameOrderSide(symbol, side))
+    ) {
+      return
     }
 
-    /**
-     * execute order on binance
-     */
-    private async placeOrderReal(order, orderEvent): Promise<void> {
-        const eventLog = `${orderEvent.symbol} ${order.side} ${order.type} ${order.quantity} ${order.price}`
+    // how much can we spend on this order
+    const quantity = options.quantity || this.calculateQuantity(symbol, side)
 
-        try {
-            const orderResult = await this.system.brokerManager.get(BrokerYahoo).placeOrder(order)
-
-            orderEvent.id = orderResult.orderId
-            orderEvent.price = orderResult['price']
-            console.log('order result', orderResult)
-            // orderEvent.commission = parseFloat(orderResult.commission)
-
-            logger.info(`TRADE SUCCCESS: ${eventLog}`)
-
-            orderEvent.state = 'SUCCESS'
-
-            // await this.system.deviceManager.sendTradeNotification(orderEvent)
-        } catch (error: any) {
-            logger.error(`TRADE ERROR: ${eventLog}`)
-
-            orderEvent.state = 'ERROR'
-            orderEvent.result.stateReason = error?.message || error || 'Uknown'
-
-            throw error
-        }
+    // only process when quantity is higher then zero
+    if (!quantity) {
+      return
     }
 
-    /**
-     * fake order execute + update balances
-     */
-    private placeOrderBacktest(order: IOrder, orderEvent, symbol: ISymbol): void {
-        const balances = this.system.brokerManager.get(BrokerYahoo).account.balances
-        const totalPrice = order.quantity * orderEvent.price
-
-        orderEvent.state = 'SUCCESS'
-
-        // update balances
-        if (order.side === ORDER_SIDE.BUY) {
-            balances.find(balance => balance.asset === symbol.baseAsset).free += order.quantity
-            balances.find(balance => balance.asset === symbol.quoteAsset).free -= totalPrice
-        }
-
-        else {
-            balances.find(balance => balance.asset === symbol.baseAsset).free -= order.quantity
-
-            // find last BUY order
-            const prevOrder = this.orders[order.symbol]?.findLast(order => order.side === ORDER_SIDE.BUY)
-            console.log(order.symbol)
-            if (prevOrder) {
-                balances.find(balance => balance.asset === symbol.quoteAsset).free += totalPrice
-                console.log(totalPrice - (order.quantity * prevOrder.price))
-                orderEvent.profit = totalPrice - (order.quantity * prevOrder.price)
-            }
-        }
-
-        // save snapshot
-        if (orderEvent.data?.snapshot) {
-            fs.writeFileSync(`${PATH_SNAPSHOT_BACKTEST}/${symbol.name}-${orderEvent.data.interval}-${orderEvent.time}.json`, JSON.stringify(orderEvent.data.snapshot))
-        }
+    // used for binance
+    const order: IOrder = {
+      ...options,
+      quantity,
+      symbol: symbol.name,
     }
 
-    
-    /**
-     * listen to binance 'userData' stream (order + balances)
-     */
-    async startWebSocket(): Promise<void> {
-        await this.system.brokerManager.get(BrokerYahoo).startWebsocket(reason => {
-            console.error('Websocket error: ' + reason)
-        }, event => {
-            switch (event.eventType) {
-                case 'outboundAccountPosition':
-                    this.onBalanceUpdate(event)
-                    break
-                case 'executionReport':
-                    this.onOrderExecuted(event)
-                    break
-            }
-        })
+    // stoploss orders need a price field
+    if (options.stopLoss) {
+      order.price = price
     }
 
-    /**
-     * triggered when broker updated balances
-     */
-    private onBalanceUpdate(event) {
-        event.balances.forEach(balance => {
-            const accountAsset = this.system.brokerManager.get(BrokerYahoo).account.balances.find(_balance => _balance.asset.toLowerCase() === balance.asset.toLowerCase())
+    // as stored in orders array
+    const orderEvent = Object.assign({}, order, {
+      data,
+      price,
+      commission: 0,
+      symbol,
+      time: this.system.time.getTime(),
+      state: 'PENDING',
+      profit: 0,
+      result: {},
+    })
 
-            if (accountAsset) {
-                accountAsset.free = parseFloat(balance.free)
-            }
-        })
+    // REAL ORDER
+    if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
+      try {
+        await this.placeOrderReal(order, orderEvent)
+      } catch (error) {
+        console.error(error)
+        throw new Error(error)
+      }
+    }
+    // BACKTEST
+    else {
+      this.placeOrderBacktest(order, orderEvent, symbol)
     }
 
-    /**
-     * triggered when broker received new order (request)
-     */
-    private onOrderExecuted(event) {
-        if (event.orderStatus !== 'FILLED') {
-            return
-        }
+    this.orders[symbol.name] = this.orders[symbol.name] || []
+    this.orders[symbol.name].push(orderEvent)
+  }
 
-        // create new order data
-        const order: IOrder = {
-            type: event.orderType,
-            symbol: event.symbol,
-            time: event.eventTime,
-            id: event.orderId,
-            side: event.side as ORDER_SIDE,
-            commission: parseFloat(event.commission),
-            commissionAsset: event.commissionAsset,
-            quantity: parseFloat(event.quantity),
-            price: parseFloat(event.priceLastTrade),
-            profit: 0,
-            commissionUSDT: 0,
-            stopPrice: parseFloat(event.stopPrice)
-        }
+  /**
+   * execute order on binance
+   */
+  private async placeOrderReal(order, orderEvent): Promise<void> {
+    const eventLog = `${orderEvent.symbol} ${order.side} ${order.type} ${order.quantity} ${order.price}`
 
-        order.commissionUSDT = order.commission * order.price
+    try {
+      const orderResult = await this.brokerManager.get(BrokerYahoo).placeOrder(order)
 
-        // check if we already know this order
-        const existingOrder = this.orders[order.symbol]?.find(_order => _order.id === order.id)
+      orderEvent.id = orderResult.orderId
+      orderEvent.price = orderResult['price']
+      console.log('order result', orderResult)
+      // orderEvent.commission = parseFloat(orderResult.commission)
 
-        this.setOrderProfit(order)
+      logger.info(`TRADE SUCCCESS: ${eventLog}`)
 
-        // merge order with existing
-        // TODO - should this be done? b 
-        if (existingOrder) {
-            console.log('EXISTING ORDER ORDER', order)
-            if (!order.price && existingOrder.price) {
-                order.price = existingOrder.price
-            }
-            Object.assign(existingOrder, order)
-        }
-        // or push as new order (done from outside this running instance)
-        else {
-            this.orders[order.symbol] = this.orders[order.symbol] || []
-            this.orders[order.symbol].push(order)
-        }
+      orderEvent.state = 'SUCCESS'
 
-        // emit to client
-        if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
-            this.system.apiServer.io.emit('order', order)
-        }
+      // await this.system.deviceManager.sendTradeNotification(orderEvent)
+    } catch (error: any) {
+      logger.error(`TRADE ERROR: ${eventLog}`)
+
+      orderEvent.state = 'ERROR'
+      orderEvent.result.stateReason = error?.message || error || 'Uknown'
+
+      throw error
+    }
+  }
+
+  /**
+   * fake order execute + update balances
+   */
+  private placeOrderBacktest(order: IOrder, orderEvent, symbol: ISymbol): void {
+    const balances = this.brokerManager.get(BrokerYahoo).account.balances
+    const totalPrice = order.quantity * orderEvent.price
+
+    orderEvent.state = 'SUCCESS'
+
+    // update balances
+    if (order.side === ORDER_SIDE.BUY) {
+      balances.find(balance => balance.asset === symbol.baseAsset).free += order.quantity
+      balances.find(balance => balance.asset === symbol.quoteAsset).free -= totalPrice
+    } else {
+      balances.find(balance => balance.asset === symbol.baseAsset).free -= order.quantity
+
+      // find last BUY order
+      const prevOrder = this.orders[order.symbol]?.findLast(order => order.side === ORDER_SIDE.BUY)
+      console.log(order.symbol)
+      if (prevOrder) {
+        balances.find(balance => balance.asset === symbol.quoteAsset).free += totalPrice
+        console.log(totalPrice - order.quantity * prevOrder.price)
+        orderEvent.profit = totalPrice - order.quantity * prevOrder.price
+      }
     }
 
-    /**
-     * calculate the amount to spend on this order (USDT)
-     */
-    private getToSpendAmount(symbol: ISymbol): number {
-        const quoteAssetBalance = this.system.brokerManager.get(BrokerYahoo).getBalance(symbol.quoteAsset)
+    // save snapshot
+    if (orderEvent.data?.snapshot) {
+      fs.writeFileSync(
+        `${PATH_SNAPSHOT_BACKTEST}/${symbol.name}-${orderEvent.data.interval}-${orderEvent.time}.json`,
+        JSON.stringify(orderEvent.data.snapshot),
+      )
+    }
+  }
 
-        if (this.system.type === TICKER_TYPE.SYSTEM_BACKTEST) {
-            return quoteAssetBalance
+  /**
+   * listen to binance 'userData' stream (order + balances)
+   */
+  async startWebSocket(): Promise<void> {
+    await this.brokerManager.get(BrokerYahoo).startWebsocket(
+      reason => {
+        console.error('Websocket error: ' + reason)
+      },
+      event => {
+        switch (event.eventType) {
+          case 'outboundAccountPosition':
+            this.onBalanceUpdate(event)
+            break
+          case 'executionReport':
+            this.onOrderExecuted(event)
+            break
         }
+      },
+    )
+  }
 
-        const maxTradingAmount = this.system.configManager.config.production.maxTradingAmount
-        return Math.min(maxTradingAmount, quoteAssetBalance)
+  /**
+   * triggered when broker updated balances
+   */
+  private onBalanceUpdate(event) {
+    event.balances.forEach(balance => {
+      const accountAsset = this.brokerManager
+        .get(BrokerYahoo)
+        .account.balances.find(_balance => _balance.asset.toLowerCase() === balance.asset.toLowerCase())
+
+      if (accountAsset) {
+        accountAsset.free = parseFloat(balance.free)
+      }
+    })
+  }
+
+  /**
+   * triggered when broker received new order (request)
+   */
+  private onOrderExecuted(event) {
+    if (event.orderStatus !== 'FILLED') {
+      return
     }
 
-    /**
-     * calculate order quantity
-     */
-    private calculateQuantity(symbol: ISymbol, side: ORDER_SIDE): number {
-        const toSpend = this.getToSpendAmount(symbol)
-        const broker = this.system.brokerManager.get(BrokerYahoo)
-        const baseAssetBalance = broker.getBalance(symbol.baseAsset)
-        const price = this.system.symbolManager.symbols[symbol.name].price //  TODO - reuse symbol object, also used above
-        const marketData = broker.getExchangeInfoBySymbol(symbol.name)
-        const lotSize = (marketData.filters.find(filter => filter.filterType === 'LOT_SIZE') as any)
-        const lotStepSize = parseFloat(lotSize.stepSize)
-
-        // TODO - binance API seems to be updated and the npm package does not reflect correct types
-        const minNotional = parseFloat((marketData.filters.find(filter => filter.filterType === 'NOTIONAL' as any) as any)?.minNotional)
-        const lotSizeMin = parseFloat(lotSize.minQty)
-        const lotSizePrecision = countDecimals(parseFloat(lotSize.stepSize))
-
-        let quantity = 0
-
-        // BUY
-        if (side === ORDER_SIDE.BUY) {
-            // quantity = +(toSpend / price - lotStepSize).toFixed(lotSizePrecision)
-            quantity = +((toSpend * 0.999) / price - lotStepSize).toFixed(lotSizePrecision)
-        }
-        // SELL
-        // TODO: check if wallet has BNB, if so, no * 0.99 needed for commission
-        else {
-            quantity = +(baseAssetBalance - lotStepSize).toFixed(lotSizePrecision)
-            // quantity = +((baseAssetBalance * 0.99) - lotStepSize).toFixed(lotSizePrecision)
-        }
-
-        // MIN_LOT_SIZE (minimal amount)
-        if (quantity < lotSizeMin) {
-            quantity = 0
-        }
-
-        // MIN_NOTIONAL (minimal total value)
-        if (quantity * price < minNotional) {
-            quantity = 0
-        }
-
-        return Math.max(0, quantity)
+    // create new order data
+    const order: IOrder = {
+      type: event.orderType,
+      symbol: event.symbol,
+      time: event.eventTime,
+      id: event.orderId,
+      side: event.side as ORDER_SIDE,
+      commission: parseFloat(event.commission),
+      commissionAsset: event.commissionAsset,
+      quantity: parseFloat(event.quantity),
+      price: parseFloat(event.priceLastTrade),
+      profit: 0,
+      commissionUSDT: 0,
+      stopPrice: parseFloat(event.stopPrice),
     }
 
-    private validate() {
+    order.commissionUSDT = order.commission * order.price
 
+    // check if we already know this order
+    const existingOrder = this.orders[order.symbol]?.find(_order => _order.id === order.id)
+
+    this.setOrderProfit(order)
+
+    // merge order with existing
+    // TODO - should this be done? b
+    if (existingOrder) {
+      console.log('EXISTING ORDER ORDER', order)
+      if (!order.price && existingOrder.price) {
+        order.price = existingOrder.price
+      }
+      Object.assign(existingOrder, order)
+    }
+    // or push as new order (done from outside this running instance)
+    else {
+      this.orders[order.symbol] = this.orders[order.symbol] || []
+      this.orders[order.symbol].push(order)
     }
 
-    /**
-     * load all orders for binance for every symbol that is used
-     * WARNING: this is fucking heavy regarding weight limit to Binance, because every symbol must be separatly requested
-     * TODO: store in database or something and | or sync only symbols needed
-     */
-    async sync(): Promise<void> {
-        // return
-        logger.info(`Sync orders`)
+    // emit to client
+    if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
+      this.apiServer.io.emit('order', order)
+    }
+  }
 
-        const now = Date.now()
-        const promises = this.system.symbolManager.symbols.map(async symbol => {
-            this.orders[symbol.name] = await this.system.brokerManager.get(BrokerYahoo).getOrdersByMarket(symbol.name)
+  /**
+   * calculate the amount to spend on this order (USDT)
+   */
+  private getToSpendAmount(symbol: ISymbol): number {
+    const quoteAssetBalance = this.brokerManager.get(BrokerYahoo).getBalance(symbol.quoteAsset)
 
-            // add profit to each order
-            this.orders[symbol.name].forEach(order => this.setOrderProfit(order))
-        })
-
-        await Promise.all(promises)
-
-        logger.info(`Synced orders in ${Date.now() - now}ms`)
+    if (this.system.type === TICKER_TYPE.SYSTEM_BACKTEST) {
+      return quoteAssetBalance
     }
 
-    /**
-     * calculate how much profit was made on this sell order
-     */
-    private setOrderProfit(order: IOrder): void {
-        if (order.side === ORDER_SIDE.SELL) {
-            // find last BUY order
-            const prevOrder = this.orders[order.symbol]?.findLast(order => order.side === ORDER_SIDE.BUY)
+    const maxTradingAmount = this.configManager.config.production.maxTradingAmount
+    return Math.min(maxTradingAmount, quoteAssetBalance)
+  }
 
-            if (prevOrder) {
-                order.profit = (order.quantity * order.price) - (order.quantity * prevOrder.price)
-            }
-        }
+  /**
+   * calculate order quantity
+   */
+  private calculateQuantity(symbol: ISymbol, side: ORDER_SIDE): number {
+    const toSpend = this.getToSpendAmount(symbol)
+    const broker = this.brokerManager.get(BrokerYahoo)
+    const baseAssetBalance = broker.getBalance(symbol.baseAsset)
+    const price = this.symbolManager.symbols[symbol.name].price //  TODO - reuse symbol object, also used above
+    const marketData = broker.getExchangeInfoBySymbol(symbol.name)
+    const lotSize = marketData.filters.find(filter => filter.filterType === 'LOT_SIZE') as any
+    const lotStepSize = parseFloat(lotSize.stepSize)
+
+    // TODO - binance API seems to be updated and the npm package does not reflect correct types
+    const minNotional = parseFloat((marketData.filters.find(filter => filter.filterType === ('NOTIONAL' as any)) as any)?.minNotional)
+    const lotSizeMin = parseFloat(lotSize.minQty)
+    const lotSizePrecision = countDecimals(parseFloat(lotSize.stepSize))
+
+    let quantity = 0
+
+    // BUY
+    if (side === ORDER_SIDE.BUY) {
+      // quantity = +(toSpend / price - lotStepSize).toFixed(lotSizePrecision)
+      quantity = +((toSpend * 0.999) / price - lotStepSize).toFixed(lotSizePrecision)
+    }
+    // SELL
+    // TODO: check if wallet has BNB, if so, no * 0.99 needed for commission
+    else {
+      quantity = +(baseAssetBalance - lotStepSize).toFixed(lotSizePrecision)
+      // quantity = +((baseAssetBalance * 0.99) - lotStepSize).toFixed(lotSizePrecision)
     }
 
-    /**
-     * get last order
-     * TODO: still needed?? seems a bit useless
-     */
-    private getLast(symbol: ISymbol): IOrder {
-        return this.orders[symbol.name]?.at(-1)
+    // MIN_LOT_SIZE (minimal amount)
+    if (quantity < lotSizeMin) {
+      quantity = 0
     }
 
-    /**
-     * 
-     */
-    private checkIsNotSameOrderSide(symbol: ISymbol, side: ORDER_SIDE): boolean {
-        const lastOrder = this.getLast(symbol)
-        const minTimeBetweenOrders = this.system.configManager.config.minTimeBetweenOrders
-        const currentTime = this.system.time.getTime()
-
-        // check if this trade is different side then previous trade
-        if (lastOrder?.side === side) {
-            if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
-                // logger.info('will not trade same side twice. Set allowOrderSideRepeat: true in bot config to enable')
-            }
-            return false
-        }
-
-        if (lastOrder?.time - minTimeBetweenOrders > currentTime) {
-            if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
-                logger.info(`Last trade happend ${(currentTime - lastOrder.time) / 1000} seconds ago. Min delay is ${minTimeBetweenOrders / 1000} seconds`)
-            }
-            return false
-        }
-
-        return true
+    // MIN_NOTIONAL (minimal total value)
+    if (quantity * price < minNotional) {
+      quantity = 0
     }
+
+    return Math.max(0, quantity)
+  }
+
+  private validate() {}
+
+  /**
+   * load all orders for binance for every symbol that is used
+   * WARNING: this is fucking heavy regarding weight limit to Binance, because every symbol must be separatly requested
+   * TODO: store in database or something and | or sync only symbols needed
+   */
+  async sync(): Promise<void> {
+    // return
+    logger.info(`Sync orders`)
+
+    const now = Date.now()
+    const promises = this.symbolManager.symbols.map(async symbol => {
+      this.orders[symbol.name] = await this.brokerManager.get(BrokerYahoo).getOrdersByMarket(symbol.name)
+
+      // add profit to each order
+      this.orders[symbol.name].forEach(order => this.setOrderProfit(order))
+    })
+
+    await Promise.all(promises)
+
+    logger.info(`Synced orders in ${Date.now() - now}ms`)
+  }
+
+  /**
+   * calculate how much profit was made on this sell order
+   */
+  private setOrderProfit(order: IOrder): void {
+    if (order.side === ORDER_SIDE.SELL) {
+      // find last BUY order
+      const prevOrder = this.orders[order.symbol]?.findLast(order => order.side === ORDER_SIDE.BUY)
+
+      if (prevOrder) {
+        order.profit = order.quantity * order.price - order.quantity * prevOrder.price
+      }
+    }
+  }
+
+  /**
+   * get last order
+   * TODO: still needed?? seems a bit useless
+   */
+  private getLast(symbol: ISymbol): IOrder {
+    return this.orders[symbol.name]?.at(-1)
+  }
+
+  /**
+   *
+   */
+  private checkIsNotSameOrderSide(symbol: ISymbol, side: ORDER_SIDE): boolean {
+    const lastOrder = this.getLast(symbol)
+    const minTimeBetweenOrders = this.configManager.config.minTimeBetweenOrders
+    const currentTime = this.system.time.getTime()
+
+    // check if this trade is different side then previous trade
+    if (lastOrder?.side === side) {
+      if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
+        // logger.info('will not trade same side twice. Set allowOrderSideRepeat: true in bot config to enable')
+      }
+      return false
+    }
+
+    if (lastOrder?.time - minTimeBetweenOrders > currentTime) {
+      if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
+        logger.info(
+          `Last trade happend ${(currentTime - lastOrder.time) / 1000} seconds ago. Min delay is ${minTimeBetweenOrders / 1000} seconds`,
+        )
+      }
+      return false
+    }
+
+    return true
+  }
 }
 // {
 //     eventType: 'executionReport',

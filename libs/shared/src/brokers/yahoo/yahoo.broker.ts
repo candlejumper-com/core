@@ -1,5 +1,5 @@
 import { HistoricalHistoryResult } from 'yahoo-finance2/dist/esm/src/modules/historical'
-import { logger, ICandle, IOrder } from '@candlejumper/shared'
+import { logger, ICandle, IOrder, ConfigManager } from '@candlejumper/shared'
 import { Broker } from '../../modules/broker/broker'
 import { IBrokerInfo, CandleTickerCallback } from '../../modules/broker/broker.interfaces'
 import yahooFinance from 'yahoo-finance2'
@@ -39,7 +39,7 @@ export class BrokerYahoo extends Broker {
 
   override async onInit() {
     // prepare mock data
-    if (this.system.configManager.config.dev) {
+    if (this.configManager.config.dev) {
       const PATH_MOCK_TRENDING_SYMBOLS = join(__dirname, '../../../mock/symbols-trending.json')
       const PATH_MOCK_SYMBOL_INSIGHTS = join(__dirname, '../../../mock/symbols-insights.json')
 

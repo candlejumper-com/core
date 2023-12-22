@@ -13,10 +13,10 @@ export class BrokerAlphavantage extends Broker {
   instance: any
 
   override async onInit(): Promise<void> {
-    const { apiKey } = this.system.configManager.config.thirdParty.alphavantage
+    const { apiKey } = this.configManager.config.thirdParty.alphavantage
     this.instance = alphavantage({ key: apiKey })
 
-    if (this.system.configManager.config.dev) {
+    if (this.configManager.config.dev) {
       const PATH_MOCK_CALENDAR_ITEMS = join(__dirname, '../../../mock/calendar.csv')
 
       // calendar items
@@ -28,7 +28,7 @@ export class BrokerAlphavantage extends Broker {
   }
 
   async getCalendarItems(mock = true): Promise<ICalendarItem[]> {
-    const { apiKey } = this.system.configManager.config.thirdParty.alphavantage
+    const { apiKey } = this.configManager.config.thirdParty.alphavantage
     const { data } = await axios.get(`https://www.alphavantage.co/query?function=EARNINGS_CALENDAR&horizon=3month&apikey=${apiKey}`)
     const items = await parseCSV(data)
     // writeFileSync(join(__dirname, '../../../mock/calendar.csv'), data)

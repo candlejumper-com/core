@@ -1,4 +1,4 @@
-import { CandleTickerCallback, ICandle, ISymbol, TICKER_TYPE, logger } from '@candlejumper/shared';
+import { CandleTickerCallback, ICandle, ISymbol, System, TICKER_TYPE, logger } from '@candlejumper/shared';
 import { OrderResponseFull, OrderResponseResult, WebsocketClient } from 'binance';
 import axios, { AxiosError } from 'axios';
 import rateLimit from 'axios-rate-limit';
@@ -50,9 +50,9 @@ export class BrokerIG extends Broker {
 
     // this.queue = new QueueBinance(this.system)
 
-    const apiKey = this.system.configManager.config.brokers.ig.apiKey;
-    const username = this.system.configManager.config.brokers.ig.username;
-    const password = this.system.configManager.config.brokers.ig.password;
+    const apiKey = this.configManager.config.brokers.ig.apiKey;
+    const username = this.configManager.config.brokers.ig.username;
+    const password = this.configManager.config.brokers.ig.password;
 
     // set default headers
     this.http.defaults.headers['X-IG-API-KEY'] = apiKey;

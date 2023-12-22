@@ -1,7 +1,9 @@
 import axios, { AxiosError } from 'axios'
 import { io, Socket } from 'socket.io-client'
 import { SystemMain } from '../../system/system'
-import { logger, ICandle, ISymbol, ICandleServerEvent, sleep } from '@candlejumper/shared'
+import { logger, ICandle, ISymbol, ICandleServerEvent, sleep, Service, ConfigManager, SymbolManager } from '@candlejumper/shared'
+import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
+import { CandleApi } from './candle.api'
 
 export const INTERVAL_MILLISECONDS = {
   '1m': 60000,
@@ -21,10 +23,16 @@ export enum CANDLE_FIELD {
   'VOLUME',
 }
 
+@Service({
+  routes: [CandleApi]
+})
 export class CandleManager {
   private candleWebsocket: Socket
 
-  constructor(public system: SystemMain) {}
+  constructor(
+    public symbolManager: SymbolManager,
+    private configManager: ConfigManager
+  ) {}
 
   async init(): Promise<void> {
     // this.prepare()
@@ -71,7 +79,7 @@ export class CandleManager {
     count: number,
   ): Promise<{ [symbol: string]: { [interval: string]: ICandle[] } }> {
     try {
-      const { host, port } = this.system.configManager.config.server.candles
+      const { host, port } = this.configManager.config.server.candles
       const { data } = await axios.post(`http://${host}:${port}/api/candles/?count=${count}`, params)
       return data
     } catch (error) {
@@ -87,14 +95,14 @@ export class CandleManager {
     logger.info(`\u267F Sync candles`)
 
     const now = Date.now()
-    const config = this.system.configManager.config
+    const config = this.configManager.config
 
     /*
      * loop over each symbol => loop over each interval => return {symbol, interval}
      * flatten nested array
      * [{symbol: 'BTCUSDT', interval: '15m'}, {symbol: 'BNBUSDT', interval: '1h'}]
      */
-    const loadParams = this.system.symbolManager.symbols
+    const loadParams = this.symbolManager.symbols
       .map(symbol => config.intervals.map(interval => ({ symbol: symbol.name, interval })))
       .flat()
 
@@ -106,7 +114,7 @@ export class CandleManager {
         // loop over each interval
         for (let interval in data[symbol]) {
           // set candles
-          this.system.symbolManager.get(symbol).candles[interval] = data[symbol][interval]
+          this.symbolManager.get(symbol).candles[interval] = data[symbol][interval]
 
           // set volumes
           // this.candles[symbol][interval].volume = data[symbol][interval].map((candle) => candle[CANDLE_FIELD.VOLUME])
@@ -131,7 +139,7 @@ export class CandleManager {
   async openCandleServerSocket(): Promise<void> {
     const promise = new Promise((resolve, reject) => {
       let isResolved = false
-      const { host, port } = this.system.configManager.config.server.candles
+      const { host, port } = this.configManager.config.server.candles
 
       this.candleWebsocket = io(`http://${host}:${port}`)
 
@@ -158,7 +166,7 @@ export class CandleManager {
   private async onCandleServerTick(event: ICandleServerEvent): Promise<void> {
     // loop over every symbol
     for (let symbolName in event) {
-      const symbol = this.system.symbolManager.get(symbolName)
+      const symbol = this.symbolManager.get(symbolName)
 
       // bot server does not recognize this symbol
       if (!symbol) {
@@ -169,7 +177,7 @@ export class CandleManager {
       // loop over each interval
       for (let interval in event[symbolName]) {
         const candle = event[symbolName][interval]
-        const symbolIntervalRef = this.system.symbolManager.get(symbolName).candles[interval]
+        const symbolIntervalRef = this.symbolManager.get(symbolName).candles[interval]
 
         if (!symbolIntervalRef) {
           continue
@@ -206,7 +214,7 @@ export class CandleManager {
         // }
       }
 
-      this.system.tick(new Date(), symbol)
+      // this.system.tick(new Date(), symbol)
     }
 
     this.sendOutbountIOTick()

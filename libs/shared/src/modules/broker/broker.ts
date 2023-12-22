@@ -7,6 +7,8 @@ import { ICandle } from '../../modules/candle'
 import { createAxiosRetryInstance } from '../../util/axios-retry'
 import { TICKER_TYPE } from '../../ticker/ticker.util'
 import { ISymbol } from '../symbol/symbol.interfaces'
+import { Service } from '../../decorators/service.decorator'
+import { ConfigManager } from '../config/config.manager'
 
 export abstract class Broker {
   abstract id: string
@@ -25,30 +27,31 @@ export abstract class Broker {
   account = { balances: [] } as IAccount
   exchangeInfo: IBrokerInfo
   axios = createAxiosRetryInstance()
+  system: System
 
-  constructor(public system: System) {}
+  constructor(public configManager: ConfigManager) {}
 
   async init() {
-    if (this.system.type !== TICKER_TYPE.SYSTEM_BACKTEST) {
-      await this.onInit?.()
-    }
+    // if (this.system.type !== TICKER_TYPE.SYSTEM_BACKTEST) {
+    //   await this.onInit?.()
+    // }
 
-    if (this.system.type === TICKER_TYPE.SYSTEM_CANDLES) {
-      const now = Date.now()
-      logger.info(`\u267F [${this.id}] Sync exchange info from broker`)
-      await this.syncExchangeFromBroker()
-      logger.info(`\u2705 [${this.id}] Sync exchange info from broker (${Date.now() - now} ms)`)
-    } else {
-      await this.syncExchangeFromCandleServer()
-    }
+    // if (this.system.type === TICKER_TYPE.SYSTEM_CANDLES) {
+    //   const now = Date.now()
+    //   logger.info(`\u267F [${this.id}] Sync exchange info from broker`)
+    //   await this.syncExchangeFromBroker()
+    //   logger.info(`\u2705 [${this.id}] Sync exchange info from broker (${Date.now() - now} ms)`)
+    // } else {
+    //   await this.syncExchangeFromCandleServer()
+    // }
 
-    if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
-      if (!this.exchangeInfo.timezone) {
-        throw new Error('Missing broker timezone')
-      }
+    // if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
+    //   if (!this.exchangeInfo.timezone) {
+    //     throw new Error('Missing broker timezone')
+    //   }
 
-      process.env.TZ = this.exchangeInfo.timezone
-    }
+    //   process.env.TZ = this.exchangeInfo.timezone
+    // }
   }
 
   getBalance(asset: string): number {
@@ -75,7 +78,7 @@ export abstract class Broker {
     logger.info(`\u267F [${this.id}] Sync exchange info from candle server`)
 
     const now = Date.now()
-    const {host, port} = this.system.configManager.config.server.candles
+    const {host, port} = this.configManager.config.server.candles
 
     try {
       const { data: { exchangeInfo} } = await this.axios.get(`http://${host}:${port}/api/exchange/${this.id}`)
