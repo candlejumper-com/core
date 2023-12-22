@@ -9,6 +9,7 @@ import {
   InsightEntity,
   InsightManager,
   BrokerAlphavantage,
+  XtbBroker
 } from '@candlejumper/shared'
 import { ApiServer } from './api'
 import { CANDLE_FIELD, CandleManager } from '../modules/candle-manager/candle-manager'
@@ -79,6 +80,7 @@ export class SystemMain extends System {
   private async initAsMain(): Promise<void> {
     await this.brokerManager.add(BrokerAlphavantage)
     await this.brokerManager.add(BrokerYahoo)
+    await this.brokerManager.add(XtbBroker)
 
     this.symbolManager.syncSymbolsWithBroker()
 
