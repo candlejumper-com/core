@@ -40,6 +40,12 @@ export interface ISystemConfig {
             name: string
             apiKey: string
             apiSecret: string
+        },
+        xtb?: {
+            type: 'demo' | 'real'
+            accountId: string
+            username: string
+            password: string
         }
     }
     server?: {
