@@ -38,8 +38,9 @@ export class SymbolManager {
 
   syncSymbolsWithBroker() {
     // TODO - using import gives circular dependency error?
-    const { BrokerYahoo } = require('../../brokers/yahoo/yahoo.broker')
-    const symbols = this.system.brokerManager.get(BrokerYahoo).exchangeInfo.symbols
+    // const { BrokerYahoo } = require('../../brokers/yahoo/yahoo.broker')
+    const { XtbBroker } = require('../../brokers/xtb/xtb.broker')
+    const symbols = this.system.brokerManager.get(XtbBroker).exchangeInfo.symbols
     console.log(symbols.length, 333)
     symbols.forEach(symbol => this.add(symbol))
   }

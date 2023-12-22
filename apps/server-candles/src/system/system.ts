@@ -7,6 +7,7 @@ import {
   InsightEntity,
   System,
   TICKER_TYPE,
+  XtbBroker,
   createCandleEntity,
   getCandleEntityName
 } from '@candlejumper/shared'
@@ -17,7 +18,8 @@ export class SystemCandles extends System {
   readonly apiServer = new ApiServer(this)
 
   async onInit() {
-    await this.brokerManager.add(BrokerYahoo)
+    // await this.brokerManager.add(BrokerYahoo)
+    await this.brokerManager.add(XtbBroker)
     
     this.symbolManager.syncSymbolsWithBroker()
 
