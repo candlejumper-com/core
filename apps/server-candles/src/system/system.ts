@@ -13,7 +13,8 @@ import {
   type: TICKER_TYPE.SYSTEM_CANDLES,
   brokers: [
     {
-      class: BrokerYahoo
+      class: BrokerYahoo,
+      type: 'candes'
     }
   ]
 })
