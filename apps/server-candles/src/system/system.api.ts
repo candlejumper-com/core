@@ -4,8 +4,7 @@ import { createServer, Server } from 'http'
 import cors from 'cors'
 import helmet from 'helmet'
 import * as bodyParser from 'body-parser'
-import { ConfigManager, logger, Service } from '@candlejumper/shared'
-import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
+import { BrokerService, ConfigService, logger, Service } from '@candlejumper/shared'
 
 @Service({ name: 'ApiServer' })
 export class ApiServer {
@@ -14,11 +13,11 @@ export class ApiServer {
   io: IOServer
 
   constructor(
-    private configManager: ConfigManager,
-    private brokerManager: BrokerManager,
+    // private configManager: ConfigService,
+    // private brokerService: BrokerService,
   ) {}
 
-  async start() {
+  onInit() {
     this.app = express()
     this.app.use(cors())
     this.app.use(helmet())
@@ -30,18 +29,18 @@ export class ApiServer {
 
     this.bindRoutes()
 
-    return new Promise((resolve, reject) => {
-      const { host, port } = this.configManager.config.server?.candles
+    // return new Promise((resolve, reject) => {
+    //   const { host, port } = this.configManager.config.server?.candles
 
-      this.server.listen(port, host, () => {
-        logger.info(`\u2705 Public API started on http://${host}:${port}`)
-        resolve(null)
-      })
+    //   this.server.listen(port, host, () => {
+    //     logger.info(`\u2705 Public API started on http://${host}:${port}`)
+    //     resolve(null)
+    //   })
 
-      this.server.on('error', error => {
-        logger.error(error)
-      })
-    })
+    //   this.server.on('error', error => {
+    //     logger.error(error)
+    //   })
+    // })
   }
 
   private bindRoutes() {
@@ -55,15 +54,15 @@ export class ApiServer {
     // get candles
     
     this.app.get('/api/exchange/:broker', async (req, res) => {
-      try {
-        res.send({
-          intervals: this.configManager.config.intervals,
-          exchangeInfo: this.brokerManager.get().exchangeInfo,
-        })
-      } catch (error) {
-        console.error(error)
-        res.sendStatus(500)
-      }
+      // try {
+      //   res.send({
+      //     intervals: this.configManager.config.intervals,
+      //     exchangeInfo: this.brokerService.get().exchangeInfo,
+      //   })
+      // } catch (error) {
+      //   console.error(error)
+      //   res.sendStatus(500)
+      // }
     })
   }
 }

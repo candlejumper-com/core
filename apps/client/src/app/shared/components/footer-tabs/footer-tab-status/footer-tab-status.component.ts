@@ -42,7 +42,6 @@ export class FooterTabStatusComponent {
     const dialogRef = this.dialog.open(DialogAuthRegistrateComponent)
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed')
       alert(2)
     });
   }

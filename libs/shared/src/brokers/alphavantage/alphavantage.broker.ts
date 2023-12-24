@@ -41,8 +41,11 @@ export class BrokerAlphavantage extends Broker {
   // override async syncExchangeFromCandleServer(): Promise<void> {
   //   logger.info('Method not implemented.')
   // }
-  override syncExchangeFromBroker(): Promise<void> {
-    throw new Error('Method not implemented.')
+  override async syncExchangeFromBroker(): Promise<void> {
+    this.exchangeInfo = {
+      symbols: [],
+      timezone: 'Europe/London',
+  }
   }
   override getOrdersByMarket(market: string): Promise<IOrder[]> {
     throw new Error('Method not implemented.')

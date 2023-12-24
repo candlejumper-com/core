@@ -84,7 +84,7 @@ export class EditorFooterComponent {
   }
 
   onResize(event) {
-    // console.log(event)
+
   }
 
   onResizeEnd(event: ResizeEvent) {

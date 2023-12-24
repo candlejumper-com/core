@@ -3,9 +3,7 @@ import "colors"
 import { logger, setLogSystemEnvironment } from '../util/log'
 import { DB, InsightManager, SystemDecorator, TICKER_TYPE } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
-import { ConfigManager } from "../modules/config/config.manager"
-import { SymbolManager } from "../modules/symbol/symbol.manager"
-import { BrokerManager } from "../modules/broker/broker.manager"
+import { ConfigService } from "../modules/config/config.service"
 import { Ticker } from "../ticker/ticker"
 
 @SystemDecorator({
@@ -23,7 +21,7 @@ export abstract class System extends Ticker<null> {
 
   protected isRunning = false
 
-  // constructor(public configManager: ConfigManager) {
+  // constructor(public configManager: ConfigService) {
   //   console.log(2222, configManager)
   //   super(null, null, null, null)
 
@@ -37,8 +35,7 @@ export abstract class System extends Ticker<null> {
     logger.info(`\u267F Initialize system \n-------------------------------------------------------------`)
 
     await super.init()
-    await this.modules.get(ConfigManager).init()
-    await this.modules.get(SymbolManager).init()
+    await this.modules.get(ConfigService).onInit()
     await this.onInit?.()
 
     logger.info(

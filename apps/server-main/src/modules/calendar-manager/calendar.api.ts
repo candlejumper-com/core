@@ -1,7 +1,6 @@
 import { Application } from 'express'
 import { SystemMain } from "../../system/system"
 import { Routes, SymbolManager } from '@candlejumper/shared'
-import { OrderManager } from '../order-manager/order-manager'
 import { CalendarManager } from './calendar.manager'
 
 @Routes({})

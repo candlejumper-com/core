@@ -19,8 +19,23 @@ export function ComponentModule(options: IComponentModuleDecoratorOptions): any 
         super()
 
         this.system = args[0]
-        const service = new options.service(this.system)
-        this.system.modules.set(options.service, service)
+
+        setTimeout(() => {
+          const service = new options.service(this.system)
+          service.onInit?.()
+        })
+
+
+        // if (!this.system.modules.get(options.service)) {
+        //   this.system.modules.set(options.service, service)
+        // }
+
+        // if (options.routes?.length) {
+        //   for (let i = 0; i < options.routes.length; i++) {
+        //     const route = new options.routes[i](this.system)
+        //     route.onInit()
+        //   }
+        // }
       }
     }
   }

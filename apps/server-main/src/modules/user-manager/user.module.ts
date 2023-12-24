@@ -1,14 +1,13 @@
-import { ComponentModule, Module, ModuleBase } from "@candlejumper/shared";
+import { ComponentModule, ModuleBase } from "@candlejumper/shared";
+import { UserApi } from "./user.api";
+import { UserService } from "./user.service";
+import { ApiServer } from "../../system/system.api";
 
 @ComponentModule({
-  type: TICKER_TYPE.SYSTEM_MAIN,
-  modules: [
-   
-  ],
-  system: SystemMain,
+  service: UserService,
+  routes: [UserApi],
+  modules: [],
 })
-export class ModuleCandles extends ModuleBase {
-  start() {
-    return this.system.start()
-  }
+export class UserModule extends ModuleBase {
+
 }

@@ -3,7 +3,7 @@ import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt'
 import { Strategy as LocalStrategy } from 'passport-local'
 import * as jwt from 'jsonwebtoken'
 import { SystemMain } from "../../system/system"
-import { ConfigManager, DB, Service, logger } from "@candlejumper/shared"
+import { ConfigService, DB, Service, logger } from "@candlejumper/shared"
 import { UserEntity } from "./user.entity"
 import { UserApi } from './user.api'
 
@@ -16,16 +16,12 @@ export interface IUser {
     production?: boolean
 }   
 
-@Service({
-    routes: [
-       UserApi
-    ]
-})
-export class UserManager {
+@Service({})
+export class UserService {
 
     user: UserEntity
 
-    constructor(private db: DB, private configManager: ConfigManager) { }
+    constructor(private db: DB, private configManager: ConfigService) { }
 
     async init(): Promise<void> {
         this.setPassportStrategies()

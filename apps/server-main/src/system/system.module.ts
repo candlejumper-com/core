@@ -1,33 +1,32 @@
-import { ConfigManager, DB, InsightManager, SystemModule, ModuleBase, SymbolManager, TICKER_TYPE } from '@candlejumper/shared'
+import { ConfigService, DB, InsightManager, SystemModule, ModuleBase, SymbolManager, TICKER_TYPE, BrokerModule, SymbolModule } from '@candlejumper/shared'
 import { CandleManager } from '../modules/candle-manager/candle-manager'
-import { ApiServer } from './api'
 import { SystemMain } from './system'
-import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
-import { UserManager } from '../modules/user-manager/user-manager'
-import { OrderManager } from '../modules/order-manager/order-manager'
+import { UserModule } from '../modules/user-manager/user.module'
+import { OrderService } from '../modules/order-manager/order.service'
 import { EditorManager } from '../modules/editor-manager/editor-manager'
 import { DeviceManager } from '../modules/device-manager/device-manager'
 import { ChatGPTManager } from '../modules/chatgpt-manager/chatgpt.manager'
 import { CalendarManager } from '../modules/calendar-manager/calendar.manager'
+import { ApiServer } from './system.api'
 
 @SystemModule({
   type: TICKER_TYPE.SYSTEM_MAIN,
   modules: [
     DB,
-    ConfigManager,
-    UserManager,
-    BrokerManager,
+
+    ConfigService,
     ApiServer,
-    DeviceManager,
-    SymbolManager,
-    CandleManager,
-    CalendarManager,
-    InsightManager,
-
-    OrderManager,
-    EditorManager,
-
-    ChatGPTManager
+    UserModule,
+    BrokerModule,
+    SymbolModule,
+    // DeviceManager,
+    // SymbolManager,
+    // CandleManager,
+    // CalendarManager,
+    // InsightManager,
+    // OrderService,
+    // EditorManager,
+    // ChatGPTManager
   ],
   system: SystemMain,
 })

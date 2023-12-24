@@ -8,14 +8,14 @@ import {
   getCandleEntityName,
   showProgressBar,
   logger,
-  SymbolManager,
   Service,
-  ConfigManager,
+  ConfigService,
   DB,
   createCandleEntity,
+  BrokerService,
+  SymbolService,
 } from '@candlejumper/shared'
 import { ApiServer } from '../../system/system.api'
-import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
 
 @Service({})
 export class CandleService {
@@ -24,42 +24,42 @@ export class CandleService {
 
   constructor(
     private db: DB,
-    private apiServer: ApiServer,
-    private symbolManager: SymbolManager,
-    private configManager: ConfigManager,
-    private brokerManager: BrokerManager
+    // private apiServer: ApiServer,
+    // // private symbolService: SymbolService,
+    // private configManager: ConfigService,
+    // private brokerService: BrokerService
   ) {}
 
   /**
    * open websockets for all symbols + intervals
    */
   startWebsocketListener(): void {
-    const intervals = this.configManager.config.intervals
-    const symbols = this.symbolManager.symbols
+    // const intervals = this.configManager.config.intervals
+    // const symbols = this.symbolService.symbols
 
-    this.brokerManager.get().startCandleTicker(symbols, intervals, async (symbol, interval, candle, isFinal) => {
-      if (isFinal) {
-        await this.saveToDB(symbol, interval, [candle])
-      }
-    })
+    // this.brokerService.get().startCandleTicker(symbols, intervals, async (symbol, interval, candle, isFinal) => {
+    //   if (isFinal) {
+    //     await this.saveToDB(symbol, interval, [candle])
+    //   }
+    // })
   }
 
   startOutTickInterval(): void {
     this.outTickInterval = setInterval(() => {
       const candles = {}
 
-      this.symbolManager.symbols.forEach(symbol => {
-        for (const interval in symbol) {
-          if (!candles[symbol.name]) {
-            candles[symbol.name] = {}
-          }
-          if (symbol.candles[interval]?.[0]) {
-            candles[symbol.name][interval] = symbol.candles[interval][0]
-          }
-        }
-      })
+      // this.symbolService.symbols.forEach(symbol => {
+      //   for (const interval in symbol) {
+      //     if (!candles[symbol.name]) {
+      //       candles[symbol.name] = {}
+      //     }
+      //     if (symbol.candles[interval]?.[0]) {
+      //       candles[symbol.name][interval] = symbol.candles[interval][0]
+      //     }
+      //   }
+      // })
 
-      this.apiServer.io.emit('candles', candles)
+      // this.apiServer.io.emit('candles', candles)
     }, this.outTickIntervalTime)
   }
 
@@ -104,10 +104,11 @@ export class CandleService {
   }
 
   createCandleEntities() {
-    const symbols = this.symbolManager.symbols
-    const intervals = this.configManager.config.intervals
-    const tableNames = symbols.map(symbol => intervals.map(interval => getCandleEntityName(symbol.name, interval))).flat()
-    return tableNames.map(tableName => createCandleEntity(tableName))
+    // const symbols = this.symbolService.symbols
+    // const intervals = this.configManager.config.intervals
+    // const tableNames = symbols.map(symbol => intervals.map(interval => getCandleEntityName(symbol.name, interval))).flat()
+    // return tableNames.map(tableName => createCandleEntity(tableName))
+    return []
   }
 
   /**BNBN
@@ -117,22 +118,28 @@ export class CandleService {
     logger.info(`\u267F Sync candles`)
 
     const now = Date.now()
-    const config = this.configManager.config
-    const symbols = this.symbolManager.symbols
-    const intervals = config.intervals
-    const preloadAmount = config.preloadAmount
-    const promises = []
-    const progressBar = showProgressBar(symbols.length * intervals.length, 'candles')
+    // const config = this.configManager.config
+    // // const symbols = this.symbolService.symbols
+    // const intervals = config.intervals
+    // const preloadAmount = config.preloadAmount
+    // const promises = []
+    // const progressBar = showProgressBar(symbols.length * intervals.length, 'candles')
 
-    for (let i = 0, len = symbols.length; i < len; ++i) {
-      const symbol = symbols[i]
-      for (let k = 0, lenk = Object.keys(symbol.candles).length; k < lenk; k++) {
-        const interval = intervals[k]
-        await this.syncSymbol(symbol, interval, preloadAmount).then(() => progressBar.tick())
-      }
-    }
+    // console.log(symbols, ' symbols');
+    
 
-    await Promise.all(promises)
+    // for (let i = 0, len = symbols.length; i < len; ++i) {
+    //   const symbol = symbols[i]
+    //   if (!symbol.name.startsWith('HALO.US_4')) {
+    //     continue
+    //   }
+    //   for (let k = 0, lenk = Object.keys(symbol.candles).length; k < lenk; k++) {
+    //     const interval = intervals[k]
+    //     await this.syncSymbol(symbol, interval, preloadAmount).then(() => progressBar.tick())
+    //   }
+    // }
+
+    // await Promise.all(promises)
 
     logger.info(`\u2705 Sync candles (${Date.now() - now}ms)`)
   }
@@ -146,23 +153,23 @@ export class CandleService {
    * preload data from broker and store in DB
    */
   private async syncSymbol(symbol: ISymbol, interval: string, count: number): Promise<void> {
-    const broker = this.brokerManager.get()
+    // const broker = this.brokerService.get()
 
-    // get last candle
-    const [lastCandle] = await this.getFromDB(symbol, interval, 1)
-    let candles: ICandle[]
+    // // get last candle
+    // const [lastCandle] = await this.getFromDB(symbol, interval, 1)
+    // let candles: ICandle[]
 
-    // start from last candle time
-    if (lastCandle) {
-      candles = await this.brokerManager.get().getCandlesFromTime(symbol, interval, lastCandle[CANDLE_FIELD.TIME])
-    }
+    // // start from last candle time
+    // if (lastCandle) {
+    //   candles = await this.brokerService.get().getCandlesFromTime(symbol, interval, lastCandle[CANDLE_FIELD.TIME])
+    // }
 
-    // load the full preload amount
-    else {
-      candles = await this.brokerManager.get().getCandlesFromCount(symbol, interval, count)
-    }
+    // // load the full preload amount
+    // else {
+    //   candles = await this.brokerService.get().getCandlesFromCount(symbol, interval, count)
+    // }
 
-    // store new candles in database
-    await this.saveToDB(symbol, interval, candles)
+    // // store new candles in database
+    // await this.saveToDB(symbol, interval, candles)
   }
 }

@@ -3,8 +3,7 @@ import { System } from '../system/system'
 import { TICKER_TYPE } from '../ticker/ticker.util'
 import { Broker } from '../modules/broker/broker'
 import { ModuleBase } from '../module'
-import { BrokerManager } from '../modules/broker/broker.manager'
-import { SymbolManager } from '../modules/symbol/symbol.manager'
+import { BrokerService } from '../modules/broker/broker.service'
 
 export interface ISystemDecoratorOptions {
   type: TICKER_TYPE,
@@ -50,14 +49,14 @@ export function SystemDecorator(options: ISystemDecoratorOptions): any {
         // }
       }
 
-      private addBrokers(root: ModuleBase) {
-        const brokerManager = root.get<BrokerManager>(BrokerManager)
-        for (let i = 0; i < options.brokers.length; i++) {
-          const broker = options.brokers[i]
-          brokerManager.add(broker.class)
-        }
+      private async addBrokers(root: ModuleBase) {
+        // const brokerService = root.get<BrokerService>(BrokerService)
+        // for (let i = 0; i < options.brokers.length; i++) {
+        //   const broker = options.brokers[i]
+        //   await brokerService.add(this as any, broker.class)
+        // }
 
-        root.get<SymbolManager>(SymbolManager).syncSymbolsWithBroker()
+        // root.get<SymbolManager>(SymbolManager).syncSymbolsWithBroker()
       }
     }
 

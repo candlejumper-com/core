@@ -33,7 +33,6 @@ export class DeviceService {
   }
 
   async installPWA(): Promise<void> {
-    console.log(window.app.pwa)
     if (!window.app.pwa?.promptEvent) {
       alert(2)
       return;

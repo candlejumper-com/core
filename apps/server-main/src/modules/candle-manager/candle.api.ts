@@ -1,17 +1,17 @@
 import { Application } from 'express'
 import { SystemMain } from "../../system/system"
-import { ConfigManager, Routes, SymbolManager } from '@candlejumper/shared'
-import { OrderManager } from '../order-manager/order-manager'
+import { ConfigService, Routes, SymbolManager } from '@candlejumper/shared'
+import { OrderService } from '../order-manager/order.service'
 import { CandleManager } from './candle-manager'
-import { ApiServer } from '../../system/api'
-import { UserManager } from '../user-manager/user-manager'
+import { UserService } from '../user-manager/user.service'
 import { readFileSync } from 'fs'
+import { ApiServer } from '../../system/system.api'
 
 @Routes({})
 export class CandleApi {
   constructor(
-    private configManager: ConfigManager,
-    private userManager: UserManager,
+    private configManager: ConfigService,
+    private userService: UserService,
     // private candleManager: CandleManager,
     private apiServer: ApiServer,
   ) {}
@@ -20,7 +20,7 @@ export class CandleApi {
   init() {
     this.apiServer.app.get('/api/app-init', (req, res) => {
         const jwtToken = req.headers['authorization']?.split(' ')[1]
-        const user = jwtToken ? this.userManager.getUserFromToken(jwtToken) : undefined
+        const user = jwtToken ? this.userService.getUserFromToken(jwtToken) : undefined
   
         const data: any = {
           user,

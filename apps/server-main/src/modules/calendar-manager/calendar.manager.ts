@@ -1,11 +1,11 @@
-import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
 import { SystemMain } from '../../system/system'
 import {
   BrokerAlphavantage,
-  ConfigManager,
+  BrokerService,
+  ConfigService,
   ICalendarItem,
   Service,
-  SymbolManager,
+  SymbolService,
   filterCalendarItemsBySymbols,
   filterCalendarItemsInTimeRange,
 } from '@candlejumper/shared'
@@ -27,9 +27,9 @@ export class CalendarManager {
   private activeTimeWindow = 1000 * 60 * 60 * 24 * 7 * 3 // 7 * 3days
 
   constructor(
-    public symbolManager: SymbolManager,
-    private configManager: ConfigManager,
-    private brokerManager: BrokerManager,
+    public symbolService: SymbolService,
+    private configManager: ConfigService,
+    private brokerService: BrokerService,
     private deviceManager: DeviceManager,
   ) {}
   /**
@@ -45,14 +45,14 @@ export class CalendarManager {
   async checkCalendarItems() {
     try {
       // (re)load all calendar items
-      this.items = await this.brokerManager.get(BrokerAlphavantage).getCalendarItems()
+      this.items = await this.brokerService.get(BrokerAlphavantage).getCalendarItems()
 
       this.items.forEach(item => {
-        const symbol = this.symbolManager.get(item.symbol)
+        const symbol = this.symbolService.get(item.symbol)
         if (symbol) {
           symbol.calendar = [item]
         } else{
-          this.symbolManager.add({ name: item.symbol, calendar: [item] })
+          this.symbolService.add({ name: item.symbol, calendar: [item] })
         }
       })
 
@@ -62,9 +62,9 @@ export class CalendarManager {
       // DEV ONLY
       // limit to 2 symbols
       if (this.configManager.config.dev) {
-        this.calendarItems = filterCalendarItemsBySymbols(this.items, this.symbolManager.symbols.slice(0, 2))
+        this.calendarItems = filterCalendarItemsBySymbols(this.items, this.symbolService.symbols.slice(0, 2))
       } else {
-        this.calendarItems = filterCalendarItemsBySymbols(this.items, this.symbolManager.symbols)
+        this.calendarItems = filterCalendarItemsBySymbols(this.items, this.symbolService.symbols)
       }
 
       // set current price diff and other stuff

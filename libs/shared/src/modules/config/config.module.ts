@@ -1,11 +1,8 @@
-import { ComponentModule, ConfigManager, DB, ModuleBase, SymbolManager, TICKER_TYPE } from '@candlejumper/shared'
-import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
-import { CandleService } from './candle.service'
-import { CandleApi } from './candle.api'
+import { ComponentModule, ModuleBase } from '@candlejumper/shared'
+import { ConfigService } from './config.service'
 
 @ComponentModule({
-  service: CandleService,
-  routes: [CandleApi],
-  modules: [ConfigManager, DB, BrokerManager, SymbolManager],
+  service: ConfigService,
+  modules: [],
 })
-export class CandleModule extends ModuleBase {}
+export class ConfigModule extends ModuleBase {}

@@ -12,7 +12,7 @@ export interface IServiceDecoratorOptions {
 }
 
 type Constructor<T = {}> = new (...args: any[]) => T
-export function Service(options: IServiceDecoratorOptions): any {
+export function Service(options: IServiceDecoratorOptions = {}): any {
 
   return function <T extends Constructor>(Base: any): any {
     const paramTypes = Reflect.getMetadata('design:paramtypes', Base)
@@ -39,13 +39,6 @@ export function Service(options: IServiceDecoratorOptions): any {
         super(...args)
 
         this.system = system
-
-        if (options.routes?.length) {
-          for (let i = 0; i < options.routes.length; i++) {
-            const route = new options.routes[i](system)
-            route.init()
-          }
-        }
       }
     }
 

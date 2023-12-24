@@ -2,32 +2,31 @@ import { Application } from 'express'
 import { authenticate } from 'passport'
 import { SystemMain } from '../../system/system'
 import * as jwt from 'jsonwebtoken'
-import { IUser, UserManager } from './user-manager'
-import { ConfigManager, Routes, System } from '@candlejumper/shared'
-import { ApiServer } from '../../system/api'
+import { IUser, UserService } from './user.service'
+import { ConfigService, RouteBase, Routes, System } from '@candlejumper/shared'
+import { Z_ASCII } from 'zlib'
+import { ApiServer } from '../../system/system.api'
 
 @Routes({})
 export class UserApi extends RouteBase {
   constructor(
-    private userManager: UserManager,
+    // private userService: UserService,
     private apiServer: ApiServer,
-    private configManager: ConfigManager,
+    private configManager: ConfigService,
   ) {
     super()
   }
 
-  async init() {
-    // this.userManager.init()
-
+  async onInit() {
     this.apiServer.app.get('/api/user', async (req, res) => {
       try {
-        const user = await this.userManager.find(req.body)
+        // const user = await this.userService.find(req.body)
 
-        if (user) {
-          res.send(user)
-        } else {
-          res.sendStatus(404)
-        }
+        // if (user) {
+        //   res.send(user)
+        // } else {
+        //   res.sendStatus(404)
+        // }
       } catch (error) {
         console.error(error)
         res.sendStatus(500)
@@ -36,7 +35,7 @@ export class UserApi extends RouteBase {
 
     this.apiServer.app.post('/api/user', async (req, res) => {
       try {
-        await this.userManager.create(req.body)
+        // await this.userService.create(req.body)
         res.sendStatus(204)
       } catch (error) {
         console.error(error)

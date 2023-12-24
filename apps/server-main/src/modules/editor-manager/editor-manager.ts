@@ -3,11 +3,11 @@ import { readFileSync, writeFileSync } from "fs"
 import watch from "node-watch"
 import * as dirTreedirTree from "directory-tree"
 import { SystemMain } from '../../system/system'
-import { ConfigManager, Service, logger } from '@candlejumper/shared'
+import { ConfigService, Service, logger } from '@candlejumper/shared'
 import { pool, WorkerPool } from 'workerpool'
 import { IEditorCompileOptions } from './editor.worker'
 import { readFile, writeFile } from 'fs/promises'
-import { ApiServer } from '../../system/api'
+import { ApiServer } from '../../system/system.api'
 
 export const PATH_ROOT = join(__dirname, '../../..')
 export const PATH_CUSTOM = join(PATH_ROOT, 'custom')
@@ -30,7 +30,7 @@ export class EditorManager {
 
     private pool: WorkerPool
 
-    constructor(private configManager: ConfigManager, private apiServer: ApiServer) { }
+    constructor(private configManager: ConfigService, private apiServer: ApiServer) { }
 
     async init(): Promise<void> {
         this.pool = pool(url.toString().replace('file:///', '/'), { maxWorkers: 1 })

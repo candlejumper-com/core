@@ -50,7 +50,7 @@ export class FileTreeComponent {
   }
 
   onResize(event) {
-    // console.log(event)
+
   }
 
   onResizeEnd(event: ResizeEvent) {

@@ -58,7 +58,6 @@ export class ChatGPTManager {
       const askResult = await this.ask(cookies, session.accessToken)
       return askResult
     } catch (error) {
-      console.error(2323)
       console.error(error)
     }
   }

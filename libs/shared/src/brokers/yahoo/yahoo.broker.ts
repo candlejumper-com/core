@@ -1,5 +1,5 @@
 import { HistoricalHistoryResult } from 'yahoo-finance2/dist/esm/src/modules/historical'
-import { logger, ICandle, IOrder, ConfigManager } from '@candlejumper/shared'
+import { logger, ICandle, IOrder, ConfigService } from '@candlejumper/shared'
 import { Broker } from '../../modules/broker/broker'
 import { IBrokerInfo, CandleTickerCallback } from '../../modules/broker/broker.interfaces'
 import yahooFinance from 'yahoo-finance2'

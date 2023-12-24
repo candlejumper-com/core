@@ -1,5 +1,4 @@
 import { join } from "path";
-import { System } from "../../system/system";
 import { ISystemConfig } from "./config.interfaces";
 import merge from 'deepmerge';
 import { readFileSync } from "fs";
@@ -14,11 +13,11 @@ const PATH_CONFIG_CUSTOM_FILE = join(PATH_BASE, 'config.json')
 @Service({
     
 })
-export class ConfigManager {
+export class ConfigService {
 
     config: ISystemConfig
 
-    async init() {
+    onInit() {
         return this.load()
     }
 
@@ -27,7 +26,7 @@ export class ConfigManager {
      * COMMENT - not using require() or import(), because it seems to 'lock' the file, giving watcher/tsc problems
      * also, this way it will never cache the config file and always reload it from disk
      */
-    private async load(): Promise<void> {
+    private load(): void {
         const configDefault = JSON.parse(readFileSync(PATH_CONFIG_DEFAULT_FILE, 'utf8')) as ISystemConfig
         const configCustom = JSON.parse(readFileSync(PATH_CONFIG_CUSTOM_FILE, 'utf8')) as ISystemConfig
         this.config = merge(configDefault, configCustom)

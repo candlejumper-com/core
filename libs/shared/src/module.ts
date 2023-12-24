@@ -6,7 +6,12 @@ export class ModuleBase {
 
   system: System
 
-  get<T extends any>(Module: any): T {
-    return this.modules.get(Module) as T
+  get<T>(Module: any): T {
+    const module = this.modules.get(Module)
+
+    if (!module) {
+      // throw new Error('Module not found: ' + Module)
+    }
+    return module
   }
 }

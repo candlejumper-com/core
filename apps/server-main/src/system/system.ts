@@ -9,26 +9,22 @@ import {
   InsightEntity,
   InsightManager,
   BrokerAlphavantage,
-  ConfigManager,
+  ConfigService,
   SystemDecorator,
-  SymbolManager,
+  XtbBroker,
+  BrokerService,
+  SymbolService
 } from '@candlejumper/shared'
-import { ApiServer } from './api'
 import { CANDLE_FIELD, CandleManager } from '../modules/candle-manager/candle-manager'
-import { OrderManager } from '../modules/order-manager/order-manager'
-import { DeviceManager } from '../modules/device-manager/device-manager'
-import { BacktestManager } from '../modules/backtest-manager/backtest-manager'
-import { EditorManager, PATH_CUSTOM_DIST_BOTS, PATH_CUSTOM_DIST_INDICATORS } from '../modules/editor-manager/editor-manager'
-import { UserManager } from '../modules/user-manager/user-manager'
+import { OrderService } from '../modules/order-manager/order.service'
+import { PATH_CUSTOM_DIST_BOTS, PATH_CUSTOM_DIST_INDICATORS } from '../modules/editor-manager/editor-manager'
 import { AIManager } from '../modules/ai-manager/ai-manager'
-import { ISymbol, TICKER_TYPE, BrokerIG } from '@candlejumper/shared'
+import { ISymbol, TICKER_TYPE } from '@candlejumper/shared'
 import { readFileSync } from 'fs'
 import { CalendarManager } from '../modules/calendar-manager/calendar.manager'
-import { ChatGPTManager } from '../modules/chatgpt-manager/chatgpt.manager'
 import { DeviceEntity } from '../modules/device-manager/device.entity'
 import { UserEntity } from '../modules/user-manager/user.entity'
-import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
-import { SystemApi } from './system.api'
+import { ApiServer } from './system.api'
 
 @SystemDecorator({
   type: TICKER_TYPE.SYSTEM_MAIN,
@@ -39,6 +35,9 @@ import { SystemApi } from './system.api'
     {
       class: BrokerYahoo,
     },
+    {
+      class: XtbBroker
+    }
   ],
   // routes: [SystemApi]
 })
@@ -48,16 +47,16 @@ export class SystemMain extends System {
   readonly aiManager = new AIManager(this)
 
   constructor(
-    private candleManager: CandleManager,
+
     private db: DB,
-    private configManager: ConfigManager,
-    private symbolManager: SymbolManager,
+    private configManager: ConfigService,
+    // private symbolService: SymbolService,
+    private candleManager: CandleManager,
     private calendarManager: CalendarManager,
-    private orderManager: OrderManager,
+    private orderService: OrderService,
     private insightManager: InsightManager,
-    private brokerManager: BrokerManager,
-    private userManager: UserManager,
-    private apiServer: ApiServer,
+    private brokerService: BrokerService,
+    // private userManager: UserService,
 
 
   ) {
@@ -65,7 +64,7 @@ export class SystemMain extends System {
   }
 
   async onInit() {
-    this.orderManager.init()
+    // this.orderService.init()
 
     // BACKTEST instance
     if (this.type === TICKER_TYPE.SYSTEM_MAIN) {
@@ -77,7 +76,7 @@ export class SystemMain extends System {
    * only executed on MAIN system (not a backtest)
    */
   private async initAsMain(): Promise<void> {
-    this.symbolManager.syncSymbolsWithBroker()
+    this.symbolService.syncSymbolsWithBroker()
 
     // connect database
     await this.db.init([UserEntity, DeviceEntity, InsightEntity])
@@ -85,7 +84,7 @@ export class SystemMain extends System {
     // await this.deviceManager.init()
 
     // load current user
-    await this.userManager.init()
+    // await this.userManager.init()
 
     // load generic insights
     await this.insightManager.init()
@@ -112,11 +111,11 @@ export class SystemMain extends System {
 
     // trigger update one to set symbol details
     // TODO: should be sooner
-    this.symbolManager.startUpdateInterval()
-    this.symbolManager.update()
+    this.symbolService.startUpdateInterval()
+    this.symbolService.update()
 
     // start public API server
-    await this.apiServer.start()
+    // await this.apiServer.start()
 
     console.info(`--------------------------------------------------------------`)
 
@@ -130,15 +129,11 @@ export class SystemMain extends System {
     // only sync orders in production
     // very heavy!
     if (this.configManager.config.production.enabled) {
-      await this.orderManager.sync()
+      await this.orderService.sync()
     }
 
     // open websockets for realtime orders and balance
-    await this.orderManager.startWebSocket()
-  }
-
-  async reload(): Promise<void> {
-    console.log('RELOAD')
+    await this.orderService.startWebSocket()
   }
 
   /**
@@ -194,13 +189,13 @@ export class SystemMain extends System {
 
     const data: ISystemState = {
       config: {
-        symbols: this.symbolManager.symbols.map(symbol => symbol.name),
+        symbols: this.symbolService.symbols.map(symbol => symbol.name),
       },
       account: {
-        balances: this.brokerManager.get(BrokerYahoo).account.balances,
+        balances: this.brokerService.get(BrokerYahoo).account.balances,
         // balances: []
       },
-      symbols: this.symbolManager.getInfo(),
+      symbols: this.symbolService.getInfo(),
       tickers: this.tickers.map(ticker => ({
         env: this.type,
         config: {
@@ -219,7 +214,7 @@ export class SystemMain extends System {
             return 0
           }
 
-          const orders = this.orderManager.orders[ticker.symbol.name]?.filter(order => order.side === 'SELL') || []
+          const orders = this.orderService.orders[ticker.symbol.name]?.filter(order => order.side === 'SELL') || []
           const hits = orders.filter(order => order.profit > 0)
           return parseFloat(((hits.length / orders.length) * 100).toFixed(2)) || 0
         })(),
@@ -291,7 +286,7 @@ export class SystemMain extends System {
 
     const now = Date.now()
     const tickers = this.configManager.config.tickers?.default
-    const symbols = this.symbolManager.symbols
+    const symbols = this.symbolService.symbols
     const intervals = this.configManager.config.intervals
 
     for (let i = 0, len = tickers.length; i < len; i++) {

@@ -39,6 +39,6 @@ export function createCandleEntity(tableName: string) {
 }
 
 export function getCandleEntityName(symbolName: string, interval: string): string {
-    symbolName = symbolName.replace('CS.D.', '').replace('.CFD.IP', '').replace('/', '').replace(' ', '')
+    symbolName = symbolName.replace('CS.D.', '').replace('.CFD.IP', '').replace('/', '').replace(' ', '').replaceAll('.', '-')
     return `SYMBOL_${symbolName}_${interval.toUpperCase()}`
 }

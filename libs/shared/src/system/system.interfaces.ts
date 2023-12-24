@@ -1,5 +1,5 @@
-import { TICKER_TYPE } from "@candlejumper/shared"
 import { ISymbol } from "../modules/symbol/symbol.interfaces"
+import { TICKER_TYPE } from "../ticker/ticker.util"
 
 export interface ISystemState {
     config: {

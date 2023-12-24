@@ -2,14 +2,14 @@ import { BrokerYahoo } from '../../brokers/yahoo/yahoo.broker'
 import { DB } from '../../db/db'
 import { Service } from '../../decorators/service.decorator'
 import { System } from '../../system/system'
-import { BrokerManager } from '../broker/broker.manager'
+import { BrokerService } from '../broker/broker.service'
 import { ISymbol } from '../symbol/symbol.interfaces'
 import { InsightEntity } from './insight.entity'
 import { LessThan, Equal, MoreThan } from 'typeorm'
 
 @Service({})
 export class InsightManager {
-  constructor(private db: DB, private brokerManager: BrokerManager) {}
+  constructor(private db: DB, private brokerService: BrokerService) {}
 
   init() {}
 
@@ -20,7 +20,7 @@ export class InsightManager {
     const InsightsRepo = this.db.connection.getRepository(InsightEntity)
     const lastRecord = await InsightsRepo.findOne({ where: { updatedAt: MoreThan(minLastUpdateTime) } })
 
-    const insightsData = await this.brokerManager.get(BrokerYahoo).getSymbolInsights(symbol)
+    const insightsData = await this.brokerService.get(BrokerYahoo).getSymbolInsights(symbol)
     if (!insightsData.instrumentInfo) {
       const insightObject = {
         symbol: symbol.name,

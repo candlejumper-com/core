@@ -2,7 +2,7 @@ import { SystemMain } from '../../system/system';
 import { BACKTEST_TYPE } from './backtest-manager';
 import { Bot } from '../../tickers/bot/bot';
 import { CANDLE_FIELD } from '../candle-manager/candle-manager';
-import { ORDER_TYPE } from '../order-manager/order-manager';
+import { ORDER_TYPE } from '../order-manager/order.service';
 import { IWorkerData } from './backtest.interfaces';
 import { ICandle, ISymbol, ORDER_SIDE, IBalance, BrokerYahoo, TICKER_TYPE, Symbol } from '@candlejumper/shared';
 

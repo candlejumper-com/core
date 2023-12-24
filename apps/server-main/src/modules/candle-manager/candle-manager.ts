@@ -1,8 +1,6 @@
 import axios, { AxiosError } from 'axios'
 import { io, Socket } from 'socket.io-client'
-import { SystemMain } from '../../system/system'
-import { logger, ICandle, ISymbol, ICandleServerEvent, sleep, Service, ConfigManager, SymbolManager } from '@candlejumper/shared'
-import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
+import { logger, ICandle, ISymbol, ICandleServerEvent, sleep, Service, ConfigService, SymbolService } from '@candlejumper/shared'
 import { CandleApi } from './candle.api'
 
 export const INTERVAL_MILLISECONDS = {
@@ -30,8 +28,8 @@ export class CandleManager {
   private candleWebsocket: Socket
 
   constructor(
-    public symbolManager: SymbolManager,
-    private configManager: ConfigManager
+    private symbolService: SymbolService,
+    private configManager: ConfigService
   ) {}
 
   async init(): Promise<void> {
@@ -102,7 +100,7 @@ export class CandleManager {
      * flatten nested array
      * [{symbol: 'BTCUSDT', interval: '15m'}, {symbol: 'BNBUSDT', interval: '1h'}]
      */
-    const loadParams = this.symbolManager.symbols
+    const loadParams = this.symbolService.symbols
       .map(symbol => config.intervals.map(interval => ({ symbol: symbol.name, interval })))
       .flat()
 
@@ -114,7 +112,7 @@ export class CandleManager {
         // loop over each interval
         for (let interval in data[symbol]) {
           // set candles
-          this.symbolManager.get(symbol).candles[interval] = data[symbol][interval]
+          this.symbolService.get(symbol).candles[interval] = data[symbol][interval]
 
           // set volumes
           // this.candles[symbol][interval].volume = data[symbol][interval].map((candle) => candle[CANDLE_FIELD.VOLUME])
@@ -166,7 +164,7 @@ export class CandleManager {
   private async onCandleServerTick(event: ICandleServerEvent): Promise<void> {
     // loop over every symbol
     for (let symbolName in event) {
-      const symbol = this.symbolManager.get(symbolName)
+      const symbol = this.symbolService.get(symbolName)
 
       // bot server does not recognize this symbol
       if (!symbol) {
@@ -177,7 +175,7 @@ export class CandleManager {
       // loop over each interval
       for (let interval in event[symbolName]) {
         const candle = event[symbolName][interval]
-        const symbolIntervalRef = this.symbolManager.get(symbolName).candles[interval]
+        const symbolIntervalRef = this.symbolService.get(symbolName).candles[interval]
 
         if (!symbolIntervalRef) {
           continue

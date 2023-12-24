@@ -1,9 +1,8 @@
 import { join } from 'path';
 import { SystemMain } from "../../system/system";
 import { pool, WorkerPool } from 'workerpool';
-import { logger, ISystemState, BrokerYahoo, Service, ConfigManager, SymbolManager } from '@candlejumper/shared';
+import { logger, ISystemState, BrokerYahoo, Service, ConfigService, SymbolService, BrokerService } from '@candlejumper/shared';
 import { IBacktestResult, IBacktestOptions, IWorkerData } from './backtest.interfaces';
-import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager';
 
 const PATH_WORKER = new URL(join(__dirname, 'backtest.worker.js'), import.meta.url)
 
@@ -21,9 +20,9 @@ export class BacktestManager {
     
     constructor(
         private maxWorker: number = 2,
-        public symbolManager: SymbolManager,
-        private configManager: ConfigManager,
-        private brokerManager: BrokerManager,
+        public symbolService: SymbolService,
+        private configManager: ConfigService,
+        private brokerService: BrokerService,
         private system: SystemMain
       ) {}
 
@@ -47,8 +46,8 @@ export class BacktestManager {
         // loop over all symbols
         for (let i = 0, len = options.symbols.length; i < len; ++i) {
             const symbolName = options.symbols[i]
-            const brokerSymbol = this.brokerManager.get(BrokerYahoo).getExchangeInfoBySymbol(symbolName)
-            const symbol = this.symbolManager.get(symbolName)
+            const brokerSymbol = this.brokerService.get(BrokerYahoo).getExchangeInfoBySymbol(symbolName)
+            const symbol = this.symbolService.get(symbolName)
 
             // check if symbol is recognized (currently in use / cached)
             if (!brokerSymbol || !symbol) {

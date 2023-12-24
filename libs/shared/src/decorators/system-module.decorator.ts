@@ -5,7 +5,7 @@ import { ModuleBase } from "../module";
 
 export interface ISystemModuleDecoratorOptions {
   type: TICKER_TYPE
-  modules: any[],
+  modules?: any[],
   system: new (...args: any[]) => System
 }
 
@@ -15,12 +15,15 @@ export function SystemModule(options: ISystemModuleDecoratorOptions): any {
       type = options.type
 
       constructor() {
-        super()
+        super();
 
         options.modules.forEach(Module => {
-          const module = new Module(this)
-          module.module = this
-          this.modules.set(Module, module)
+          if (!this.modules.get(Module)) {
+            const module = new Module(this)
+            module.module = this
+            this.modules.set(Module, module)
+            module.onInit?.()
+          }
         })
 
         this.system = new options.system(this)

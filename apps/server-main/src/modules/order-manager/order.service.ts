@@ -10,14 +10,14 @@ import {
   TICKER_TYPE,
   Service,
   SymbolManager,
-  ConfigManager,
+  ConfigService,
+  BrokerService,
 } from '@candlejumper/shared'
 import { join } from 'path'
 import * as fs from 'fs'
 import { SystemMain } from '../../system/system'
-import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
 import { OrderApi } from './order.api'
-import { ApiServer } from '../../system/api'
+import { ApiServer } from '../../system/system.api'
 
 const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../_data/snapshots/backtest')
 
@@ -30,14 +30,14 @@ export enum ORDER_TYPE {
 @Service({
 //   routes: [OrderApi],
 })
-export class OrderManager {
+export class OrderService {
   readonly orders: { [key: string]: IOrder[] } = {}
 
   constructor(
     public apiServer: ApiServer,
     public symbolManager: SymbolManager,
-    private configManager: ConfigManager,
-    private brokerManager: BrokerManager,
+    private configManager: ConfigService,
+    private brokerService: BrokerService,
     private system = {type: null, time: new Date}
   ) {}
 
@@ -138,7 +138,7 @@ export class OrderManager {
     const eventLog = `${orderEvent.symbol} ${order.side} ${order.type} ${order.quantity} ${order.price}`
 
     try {
-      const orderResult = await this.brokerManager.get(BrokerYahoo).placeOrder(order)
+      const orderResult = await this.brokerService.get(BrokerYahoo).placeOrder(order)
 
       orderEvent.id = orderResult.orderId
       orderEvent.price = orderResult['price']
@@ -164,7 +164,7 @@ export class OrderManager {
    * fake order execute + update balances
    */
   private placeOrderBacktest(order: IOrder, orderEvent, symbol: ISymbol): void {
-    const balances = this.brokerManager.get(BrokerYahoo).account.balances
+    const balances = this.brokerService.get(BrokerYahoo).account.balances
     const totalPrice = order.quantity * orderEvent.price
 
     orderEvent.state = 'SUCCESS'
@@ -199,7 +199,7 @@ export class OrderManager {
    * listen to binance 'userData' stream (order + balances)
    */
   async startWebSocket(): Promise<void> {
-    await this.brokerManager.get(BrokerYahoo).startWebsocket(
+    await this.brokerService.get(BrokerYahoo).startWebsocket(
       reason => {
         console.error('Websocket error: ' + reason)
       },
@@ -221,7 +221,7 @@ export class OrderManager {
    */
   private onBalanceUpdate(event) {
     event.balances.forEach(balance => {
-      const accountAsset = this.brokerManager
+      const accountAsset = this.brokerService
         .get(BrokerYahoo)
         .account.balances.find(_balance => _balance.asset.toLowerCase() === balance.asset.toLowerCase())
 
@@ -287,7 +287,7 @@ export class OrderManager {
    * calculate the amount to spend on this order (USDT)
    */
   private getToSpendAmount(symbol: ISymbol): number {
-    const quoteAssetBalance = this.brokerManager.get(BrokerYahoo).getBalance(symbol.quoteAsset)
+    const quoteAssetBalance = this.brokerService.get(BrokerYahoo).getBalance(symbol.quoteAsset)
 
     if (this.system.type === TICKER_TYPE.SYSTEM_BACKTEST) {
       return quoteAssetBalance
@@ -302,7 +302,7 @@ export class OrderManager {
    */
   private calculateQuantity(symbol: ISymbol, side: ORDER_SIDE): number {
     const toSpend = this.getToSpendAmount(symbol)
-    const broker = this.brokerManager.get(BrokerYahoo)
+    const broker = this.brokerService.get(BrokerYahoo)
     const baseAssetBalance = broker.getBalance(symbol.baseAsset)
     const price = this.symbolManager.symbols[symbol.name].price //  TODO - reuse symbol object, also used above
     const marketData = broker.getExchangeInfoBySymbol(symbol.name)
@@ -354,7 +354,7 @@ export class OrderManager {
 
     const now = Date.now()
     const promises = this.symbolManager.symbols.map(async symbol => {
-      this.orders[symbol.name] = await this.brokerManager.get(BrokerYahoo).getOrdersByMarket(symbol.name)
+      this.orders[symbol.name] = await this.brokerService.get(BrokerYahoo).getOrdersByMarket(symbol.name)
 
       // add profit to each order
       this.orders[symbol.name].forEach(order => this.setOrderProfit(order))

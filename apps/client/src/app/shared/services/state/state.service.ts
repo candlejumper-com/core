@@ -70,7 +70,6 @@ export class StateService {
   main: State
 
   loadMain(state: State): void {
-    console.log(state)
     this.main = new State()
     this.main.tickers = state.tickers
 
