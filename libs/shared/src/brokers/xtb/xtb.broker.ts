@@ -6,6 +6,7 @@ import { IOrder } from '../../order/order.interfaces';
 import XAPI, { CHART_RANGE_INFO_RECORD, RATE_INFO_RECORD, SYMBOL_RECORD } from 'xapi-node'
 import { logger } from '@candlejumper/shared';
 import { format } from 'date-fns';
+import { log } from 'console';
 
 // https://xstation5.xtb.com/#/demo/loggedIn
 // http://developers.xstore.pro/documentation/
@@ -59,29 +60,47 @@ export class XtbBroker extends Broker {
     override async getCandlesFromTime(symbol: ISymbol, interval: string, fromTime: number): Promise<ICandle[]> {
         const fromTimeDate = new Date(fromTime)
         const startTime = format(fromTimeDate, 'yyyy-MM-dd')
-        const query = symbol.name.includes('/') ? `${symbol.name.split('/')[0]}=X` : symbol.name
-        const queryOptions: {info: CHART_RANGE_INFO_RECORD} = { info: {
+        const queryOptions: CHART_RANGE_INFO_RECORD = {
             end: new Date().getTime(),
             period: 1440, // 1 day
             start: fromTime,
-            symbol: "EURUSD",
-            ticks: 0
-        } }
+            symbol: symbol.name,
+            ticks: 1000
+        }
 
         logger.debug(`\u267F Sync from time: ${symbol} ${interval} ${startTime}`)
 
-        const candles = (await this.instance.Socket.send.getChartRangeRequest(query, queryOptions)).data.returnData
+        let candles;
+        try {
+            candles = (await this.instance.Socket.send.getChartRangeRequest(...Object.values(queryOptions))).data.returnData
+        } catch (error) {
+            console.log(error, 'error');
+            
+        }
         return this.normalizeCandles(candles.rateInfos)
     }
 
     override async getCandlesFromCount(symbol: ISymbol, interval: string, count: number): Promise<ICandle[]> {
         const now = new Date()
-        now.setDate(now.getDate() - count)
-        const period1 = format(now, 'yyyy-MM-dd')
-        const query = symbol.name.includes('/') ? `${symbol.name.split('/')[0]}=X` : symbol.name
-        const queryOptions = { period1, interval: interval as any }
-        const candles = (await this.instance.Socket.send.getChartRangeRequest(query, queryOptions)).data.returnData
-        return this.normalizeCandles(candles)
+        const queryOptions: CHART_RANGE_INFO_RECORD = { 
+            end: new Date().getTime(),
+            period: 1440, // 1 day
+            start: now.getTime() - (count * 1440 * 1000),
+            symbol: symbol.name,
+            ticks: 1000
+        }
+
+        logger.debug(`\u267F Sync from time: ${symbol} ${interval} ${now}`)
+
+        let candles;
+        try {
+            candles = (await this.instance.Socket.send.getChartRangeRequest(...Object.values(queryOptions))).data.returnData
+        } catch (error) {
+            console.log(error, 'error');
+            
+        }
+
+        return this.normalizeCandles(candles.rateInfos)
     }
 
     private async getTrendingSymbols(): Promise<ISymbol[]> {
@@ -99,7 +118,12 @@ export class XtbBroker extends Broker {
                 change24HString: '0',
                 changedSinceLastClientTick: false,
                 totalOrders: 0,
-                candles: {}
+                candles: {
+                    '1d': {
+                        candles: [],
+                        volume: [],
+                    },
+                }
             }
         });
         return symbols;
@@ -108,7 +132,7 @@ export class XtbBroker extends Broker {
     private normalizeCandles(candles: RATE_INFO_RECORD[]): ICandle[] {
         // console.log(parse(candles[0].snapshotTime, "yyyy:MM:dd-HH:mm:ss", new Date()))
     
-        return candles.map(candle => [new Date(candle.ctm).getTime(), candle.open, candle.high, candle.low, candle.close, candle.vol])
+        return (candles || []).map(candle => [new Date(candle.ctm).getTime(), candle.open, candle.open + candle.high, candle.open + candle.low, candle.open + candle.close, candle.vol])
       }
 
 }

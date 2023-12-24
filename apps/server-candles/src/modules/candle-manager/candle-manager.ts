@@ -96,8 +96,14 @@ export class CandleManager {
     const promises = []
     const progressBar = showProgressBar(symbols.length * intervals.length, "candles")
 
+    // console.log(symbols, ' symbols');
+    
+
     for (let i = 0, len = symbols.length; i < len; ++i) {
       const symbol = symbols[i]
+      if (!symbol.name.startsWith('HALO.US_4')) {
+        continue
+      }
       for (let k = 0, lenk = Object.keys(symbol.candles).length; k < lenk; k++) {
         const interval = intervals[k]
         await this.syncSymbol(symbol, interval, preloadAmount).then(() => progressBar.tick())
