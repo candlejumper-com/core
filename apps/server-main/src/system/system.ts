@@ -44,8 +44,6 @@ import { SystemApi } from './system.api'
 })
 export class SystemMain extends System {
 
-  // system = this
-
   // readonly broker = new BrokerBinance(this)
   readonly aiManager = new AIManager(this)
 

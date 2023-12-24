@@ -3,6 +3,7 @@ import { System } from '../system/system'
 import { TICKER_TYPE } from '../ticker/ticker.util'
 import { ModuleBase } from '../module'
 import { RouteBase } from '../route'
+import { injectModules } from './decorator.util'
 
 export interface IRoutesDecoratorOptions {}
 type Constructor<T = {}> = new (...args: any[]) => T
@@ -16,7 +17,6 @@ export function Routes(options: IRoutesDecoratorOptions): any {
 
       constructor(...args: any[]) {
         const system: System = args[0]
-        // console.log('system', args, options)
 
         if (paramTypes?.length) {
           for (let i = 0; i < paramTypes.length; i++) {
@@ -28,7 +28,8 @@ export function Routes(options: IRoutesDecoratorOptions): any {
           }
         }
 
-        // super()
+        //         injectModules(args, paramTypes, system)
+
         super(...args)
 
         // this.system = system

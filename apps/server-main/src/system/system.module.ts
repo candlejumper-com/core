@@ -1,4 +1,4 @@
-import { ConfigManager, DB, InsightManager, Module, ModuleBase, SymbolManager, TICKER_TYPE } from '@candlejumper/shared'
+import { ConfigManager, DB, InsightManager, SystemModule, ModuleBase, SymbolManager, TICKER_TYPE } from '@candlejumper/shared'
 import { CandleManager } from '../modules/candle-manager/candle-manager'
 import { ApiServer } from './api'
 import { SystemMain } from './system'
@@ -10,7 +10,7 @@ import { DeviceManager } from '../modules/device-manager/device-manager'
 import { ChatGPTManager } from '../modules/chatgpt-manager/chatgpt.manager'
 import { CalendarManager } from '../modules/calendar-manager/calendar.manager'
 
-@Module({
+@SystemModule({
   type: TICKER_TYPE.SYSTEM_MAIN,
   modules: [
     DB,

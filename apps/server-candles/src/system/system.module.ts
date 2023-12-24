@@ -1,12 +1,12 @@
-import { ConfigManager, DB, Module, ModuleBase, SymbolManager, TICKER_TYPE } from '@candlejumper/shared'
-import { CandleManager } from '../modules/candle-manager/candle-manager'
+import { ConfigManager, DB, SystemModule, ModuleBase, SymbolManager, TICKER_TYPE } from '@candlejumper/shared'
 import { ApiServer } from './system.api'
 import { SystemCandles } from './system'
 import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
+import { CandleModule } from '../modules/candle/candle.module'
 
-@Module({
+@SystemModule({
   type: TICKER_TYPE.SYSTEM_CANDLES,
-  modules: [ConfigManager, DB, BrokerManager, ApiServer, SymbolManager, CandleManager],
+  modules: [ConfigManager, DB, BrokerManager, ApiServer, SymbolManager, CandleModule],
   system: SystemCandles,
 })
 export class ModuleCandles extends ModuleBase {

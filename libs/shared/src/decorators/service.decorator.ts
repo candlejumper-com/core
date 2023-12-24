@@ -1,12 +1,14 @@
 import { ModuleBase } from '../module'
 import { RouteBase } from '../route'
 import { System } from '../system/system'
+import { injectModules } from './decorator.util'
 import { IRoutesDecoratorOptions } from './routes.decorator'
 
 export interface IServiceDecoratorOptions {
   name?: string
   // routes?: typeof RouteBase[]
-  routes?: [new (...args: any[]) => any]
+  // routes?: [new (...args: any[]) => any]
+  routes?: any[]
 }
 
 type Constructor<T = {}> = new (...args: any[]) => T
@@ -21,7 +23,6 @@ export function Service(options: IServiceDecoratorOptions): any {
 
       constructor(...args: any[]) {
         const system: System = args[0]
-        // console.log('system', args, options)
 
         if (paramTypes?.length) {
           for (let i = 0; i < paramTypes.length; i++) {
@@ -33,15 +34,15 @@ export function Service(options: IServiceDecoratorOptions): any {
           }
         }
 
+        // injectModules(args, paramTypes, system)
+
         super(...args)
 
         this.system = system
 
         if (options.routes?.length) {
           for (let i = 0; i < options.routes.length; i++) {
-            console.log(222, options.routes[i])
-            const route = new options.routes[i]()
-            route.system = system
+            const route = new options.routes[i](system)
             route.init()
           }
         }
@@ -49,9 +50,5 @@ export function Service(options: IServiceDecoratorOptions): any {
     }
 
     return Service
-  }
-
-  function inject() {
-    
   }
 }

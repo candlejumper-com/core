@@ -3,13 +3,13 @@ import { System } from '../system/system'
 import { TICKER_TYPE } from "../ticker/ticker.util";
 import { ModuleBase } from "../module";
 
-export interface IModuleDecoratorOptions {
+export interface ISystemModuleDecoratorOptions {
   type: TICKER_TYPE
   modules: any[],
   system: new (...args: any[]) => System
 }
 
-export function Module(options: IModuleDecoratorOptions): any {
+export function SystemModule(options: ISystemModuleDecoratorOptions): any {
   return function<T extends { new (...args: any[]): {} }>(Base: typeof ModuleBase, key): typeof ModuleBase {
     return class extends Base {
       type = options.type

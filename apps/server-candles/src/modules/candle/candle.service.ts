@@ -1,5 +1,4 @@
 import { Repository } from 'typeorm'
-import { SystemCandles } from '../../system/system'
 import {
   CANDLE_FIELD,
   isForwardCandleArray,
@@ -18,8 +17,8 @@ import {
 import { ApiServer } from '../../system/system.api'
 import { BrokerManager } from 'libs/shared/src/modules/broker/broker.manager'
 
-@Service({ name: 'CandleManager' })
-export class CandleManager {
+@Service({})
+export class CandleService {
   private outTickIntervalTime = 200
   private outTickInterval: NodeJS.Timer
 
@@ -55,7 +54,6 @@ export class CandleManager {
             candles[symbol.name] = {}
           }
           if (symbol.candles[interval]?.[0]) {
-            console.log(232, symbol.candles[interval][0])
             candles[symbol.name][interval] = symbol.candles[interval][0]
           }
         }

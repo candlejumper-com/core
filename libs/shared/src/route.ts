@@ -6,5 +6,5 @@ export class RouteBase {
     
   }
 
-  init?(): void
+  onInit?(): void
 }

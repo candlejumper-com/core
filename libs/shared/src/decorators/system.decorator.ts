@@ -31,6 +31,8 @@ export function SystemDecorator(options: ISystemDecoratorOptions): any {
             const existingModule = rootModule.modules.get(arg)
             if (existingModule) {
               args[i] = existingModule
+            } else {
+              // throw new Error('Module not found: ' + arg)
             }
           }
         }

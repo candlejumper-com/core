@@ -1,5 +1,6 @@
 import { ApiServer } from './system.api'
-import { CandleManager } from '../modules/candle-manager/candle-manager'
+import { CandleService } from '../modules/candle/candle.service'
+
 import {
   BrokerEntity,
   BrokerYahoo,
@@ -14,26 +15,25 @@ import {
   brokers: [
     {
       class: BrokerYahoo,
-      type: 'candes'
     }
   ]
 })
 export class SystemCandles extends System {
   constructor(
     private db: DB,
-    private candleManager: CandleManager,
+    private candleService: CandleService,
     private apiServer: ApiServer,
   ) {
     super(null, null, null, null)
   }
 
   async onInit() {
-    await this.db.init([BrokerEntity, ...this.candleManager.createCandleEntities()])
+    await this.db.init([BrokerEntity, ...this.candleService.createCandleEntities()])
 
-    await this.candleManager.sync()
+    await this.candleService.sync()
     await this.apiServer.start()
 
-    this.candleManager.startWebsocketListener()
-    this.candleManager.startOutTickInterval()
+    this.candleService.startWebsocketListener()
+    this.candleService.startOutTickInterval()
   }
 }
