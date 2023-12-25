@@ -1,7 +1,6 @@
 import { Kline, KlineInterval, MainClient, OrderResponseFull, OrderResponseResult, WebsocketClient } from 'binance'
 import axios, { } from 'axios'
 import { userTransforms } from './binance.tranformers'
-import { IOrder, ORDER_SIDE } from '../../order/order.interfaces'
 import renewListenKey from './external/lib/helpers/renewListenKey'
 import getUserDataStream from './external/lib/services/getUserDataStream'
 import SocketClient from './external/lib/socketClient'
@@ -13,6 +12,7 @@ import { CANDLE_FIELD } from '../../modules/candle/candle.util'
 import { ISymbol } from '../../modules/symbol/symbol.interfaces'
 import { SimpleQueue } from '../../util/queue'
 import { TICKER_TYPE } from '../../ticker/ticker.util'
+import { IOrder, ORDER_SIDE } from '../../modules/order/order.interfaces'
 
 export class BrokerBinance extends Broker {
   id = 'BINANCE'
@@ -193,6 +193,10 @@ export class BrokerBinance extends Broker {
 
   async syncExchangeFromBroker(): Promise<void> {
       
+  }
+
+  override async getOrders(): Promise<void> {
+    return null
   }
 
   async getOrdersByMarket(symbol: string): Promise<IOrder[]> {

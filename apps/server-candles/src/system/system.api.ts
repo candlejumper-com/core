@@ -5,17 +5,13 @@ import cors from 'cors'
 import helmet from 'helmet'
 import * as bodyParser from 'body-parser'
 import { SystemCandles } from './system'
-import { logger } from '@candlejumper/shared'
+import { ApiServerBase, logger } from '@candlejumper/shared'
 
-export class ApiServer {
+export class ApiServer extends ApiServerBase {
 
-    app: express.Application
-    server: Server
-    io: IOServer
-
-    private connections: any[] = []
-
-    constructor(private system: SystemCandles) { }
+    constructor(private system: SystemCandles) { 
+        super()
+    }
 
     async start() {
         this.app = express()

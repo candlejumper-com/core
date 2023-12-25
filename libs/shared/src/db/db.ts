@@ -17,7 +17,7 @@ export class DB {
 
         const now = Date.now()
         const myDataSource = new DataSource({
-            type: "sqlite",
+            type: "better-sqlite3",
             database: join(PATH_DATA, 'tradebot.db'),
             entities: this.entities,
             logging: false,

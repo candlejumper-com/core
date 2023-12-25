@@ -1,6 +1,6 @@
-import { ICandle } from '../modules/candle/candle.interfaces'
-import { ISymbol } from '../modules/symbol/symbol.interfaces'
-import { ITickerSnapshot } from '../ticker/ticker.interfaces'
+import { ITickerSnapshot } from "../../ticker/ticker.interfaces"
+import { ICandle } from "../candle"
+import { ISymbol } from "../symbol/symbol.interfaces"
 
 export const enum ORDER_SIDE {
     'BUY' = 'BUY',

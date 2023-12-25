@@ -36,7 +36,6 @@ import { UserEntity } from '../modules/user-manager/user.entity'
 export class SystemMain extends System {
   type = TICKER_TYPE.SYSTEM_MAIN
 
-  apiServer: ApiServer
   deviceManager: DeviceManager
   editorManager: EditorManager
   backtestManager: BacktestManager
@@ -123,10 +122,11 @@ export class SystemMain extends System {
     // open websocket to candle server
     await this.candleManager.openCandleServerSocket()
 
+    this.symbolManager.update()
+
     // trigger update one to set symbol details
     // TODO: should be sooner
     this.symbolManager.startUpdateInterval()
-    this.symbolManager.update()
 
     // start public API server
     await this.apiServer.start()

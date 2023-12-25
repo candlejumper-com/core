@@ -5,7 +5,7 @@ import { Server as HttpServer, createServer as createServerHttp } from 'http'
 import { Server as HttpsServer, createServer as createServerHttps } from 'https'
 import * as cors from 'cors'
 import { SystemMain } from './system'
-import { logger, PATH_LOGS_COMBINED } from '@candlejumper/shared'
+import { ApiServerBase, logger, PATH_LOGS_COMBINED } from '@candlejumper/shared'
 import systemRoutes from './system.api'
 import deviceRoutes from '../modules/device-manager/device.api'
 import backtestRoutes from '../modules/backtest-manager/backtest.api'
@@ -26,15 +26,13 @@ import { readFileSync } from 'fs'
 
 const PATH_PUBLIC = join(__dirname, '../../../dist/apps/client')
 
-export class ApiServer {
-  app: express.Application
-  server: HttpServer
-  io: SocketServer
-  sockets: Socket[] = []
+export class ApiServer extends ApiServerBase {
 
   private cacheMaxAge = 1000 * 60 * 60 // 1 hour
 
-  constructor(private system: SystemMain) {}
+  constructor(private system: SystemMain) {
+    super()
+  }
 
   // create public server for web clients
   async start(): Promise<void> {

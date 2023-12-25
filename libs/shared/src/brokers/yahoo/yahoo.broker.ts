@@ -127,6 +127,10 @@ export class BrokerYahoo extends Broker {
     return null
   }
 
+  override async getOrders(): Promise<void> {
+    return null
+  }
+
   async getOrdersByMarket(symbol: string): Promise<IOrder[]> {
     return []
   }

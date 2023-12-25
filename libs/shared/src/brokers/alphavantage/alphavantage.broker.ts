@@ -44,6 +44,9 @@ export class BrokerAlphavantage extends Broker {
   override syncExchangeFromBroker(): Promise<void> {
     throw new Error('Method not implemented.')
   }
+  override async getOrders(): Promise<void> {
+    return null
+  }
   override getOrdersByMarket(market: string): Promise<IOrder[]> {
     throw new Error('Method not implemented.')
   }

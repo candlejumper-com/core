@@ -1,13 +1,13 @@
 import { logger } from '../../util/log'
 import { Broker } from '../../modules/broker/broker'
 import { Kline, KlineInterval, OrderResponseFull, OrderResponseResult, WebsocketClient } from 'binance'
-import { IOrder } from '../../order/order.interfaces'
 import { ICandle, CANDLE_FIELD } from '../../modules/candle'
 import { CandleTickerCallback, IBrokerInfo } from '../../modules/broker/broker.interfaces'
 import { BitmartSpotAPI } from '@bitmartexchange/bitmart-node-sdk-api'
 import { IBrokerBitmartSymbols } from './bitmart.interfaces'
 import { ISymbol } from '../../modules/symbol/symbol.interfaces'
 import { SimpleQueue } from '../../util/queue'
+import { IOrder } from '../../modules/order/order.interfaces'
 
 export enum BROKER_BITMART_TIMEFRAMES {
   '1m' = 1,
@@ -112,6 +112,10 @@ export class BrokerBitmart extends Broker {
     }
 
     this.exchangeInfo = exchangeInfo
+  }
+
+  override async getOrders(): Promise<void> {
+    return null
   }
 
   async getOrdersByMarket(symbol: string): Promise<IOrder[]> {

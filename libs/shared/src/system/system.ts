@@ -1,11 +1,12 @@
 import "colors"
 import { logger, setLogSystemEnvironment } from '../util/log'
-import { DB, InsightManager, TICKER_TYPE } from "@candlejumper/shared"
+import { ApiServerBase, DB, InsightManager, TICKER_TYPE } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
 import { ConfigManager } from "../modules/config/config-manager"
 import { SymbolManager } from "../modules/symbol/symbol.manager"
 import { BrokerManager } from "../modules/broker/broker.manager"
 import { Ticker } from "../ticker/ticker"
+import { OrderManager } from "../modules/order/order-manager"
 
 export abstract class System extends Ticker<null> {
   override id = "SYSTEM"
@@ -18,7 +19,8 @@ export abstract class System extends Ticker<null> {
   readonly brokerManager = new BrokerManager(this)
   readonly configManager = new ConfigManager(this)
   readonly symbolManager = new SymbolManager(this)
-  readonly orderManager: any
+  readonly orderManager: OrderManager
+  apiServer: ApiServerBase
 
   protected isRunning = false
 

@@ -15,7 +15,7 @@ import {
 export class SystemCandles extends System {
   readonly type = TICKER_TYPE.SYSTEM_CANDLES
   readonly candleManager = new CandleManager(this)
-  readonly apiServer = new ApiServer(this)
+  apiServer = new ApiServer(this)
 
   async onInit() {
     // await this.brokerManager.add(BrokerYahoo)

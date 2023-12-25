@@ -1,11 +1,14 @@
-import { CandleTickerCallback, ICandle, ISymbol, TICKER_TYPE, logger } from '@candlejumper/shared';
 import { OrderResponseFull, OrderResponseResult, WebsocketClient } from 'binance';
 import axios, { AxiosError } from 'axios';
 import rateLimit from 'axios-rate-limit';
 import IG, { API_BASE_URL } from 'ig-node-api';
-import { IOrder } from '../../order/order.interfaces';
 import { Broker } from '../../modules/broker/broker';
 import { SimpleQueue } from '../../util/queue';
+import { ISymbol, ICandle } from '../../index_client';
+import { CandleTickerCallback } from '../../modules/broker/broker.interfaces';
+import { IOrder } from '../../modules/order/order.interfaces';
+import { TICKER_TYPE } from '../../ticker/ticker.util';
+import { logger } from '../../util/log';
 
 const defaultOptions = {
   baseURL: API_BASE_URL.PROD,
@@ -160,6 +163,10 @@ export class BrokerIG extends Broker {
   }
   override getCandlesFromCount(symbol: ISymbol, interval: string, count: number): Promise<ICandle[]> {
     throw new Error('Method not implemented.');
+  }
+
+  override async getOrders(): Promise<void> {
+    return null
   }
   // async get24HChanges(): Promise<IDailyStatsResult[]> {
   //   const results = await this.instance.get24hrChangeStatististics() as DailyChangeStatistic[]

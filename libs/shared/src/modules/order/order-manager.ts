@@ -1,7 +1,12 @@
-import { logger, IOrder, ORDER_SIDE, IOrderOptions, IOrderData, countDecimals, ISymbol, BrokerYahoo, TICKER_TYPE, XtbBroker, System } from "@candlejumper/shared";
 import { join } from 'path';
 import * as fs from 'fs';
-import { SystemMain } from "../../system/system";
+import { System } from '../../system/system';
+import { BrokerYahoo } from '../../brokers/yahoo/yahoo.broker';
+import { countDecimals } from '../../index_client';
+import { TICKER_TYPE } from '../../ticker/ticker.util';
+import { logger } from '../../util/log';
+import { ISymbol } from '../symbol/symbol.interfaces';
+import { IOrder, IOrderOptions, IOrderData, ORDER_SIDE } from './order.interfaces';
 
 const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../_data/snapshots/backtest')
 
@@ -87,7 +92,7 @@ export class OrderManager {
         if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
             try {
                 await this.placeOrderReal(order, orderEvent)
-            } catch (error) {
+            } catch (error: any) {
                 console.error(error)
                 throw new Error(error)
             }
@@ -245,7 +250,7 @@ export class OrderManager {
 
         // emit to client
         if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
-            this.system.apiServer.io.emit('order', order)
+            // this.system.apiServer.io.emit('order', order)
         }
     }
 

@@ -1,5 +1,4 @@
 import { System } from '../../system/system'
-import { IOrder } from '../../order/order.interfaces'
 import { OrderResponseACK, OrderResponseResult, OrderResponseFull } from 'binance'
 import { CandleTickerCallback, IAccount, IBrokerInfo } from './broker.interfaces'
 import { logger } from '../../util/log'
@@ -7,11 +6,13 @@ import { ICandle } from '../../modules/candle'
 import { createAxiosRetryInstance } from '../../util/axios-retry'
 import { TICKER_TYPE } from '../../ticker/ticker.util'
 import { ISymbol } from '../symbol/symbol.interfaces'
+import { IOrder } from '../order/order.interfaces'
 
 export abstract class Broker {
   abstract id: string
   abstract syncAccount(): Promise<void>
   abstract syncExchangeFromBroker(): Promise<void>
+  abstract getOrders(): Promise<void>
   abstract getOrdersByMarket(market: string): Promise<IOrder[]>
   abstract placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull>
   abstract startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void): Promise<void>
@@ -49,6 +50,8 @@ export abstract class Broker {
 
       process.env.TZ = this.exchangeInfo.timezone
     }
+
+    await this.getOrders()
   }
 
   getBalance(asset: string): number {

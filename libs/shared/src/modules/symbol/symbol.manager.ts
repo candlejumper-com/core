@@ -60,7 +60,7 @@ export class SymbolManager {
     }
   }
 
-  startUpdateInterval() {
+  startUpdateInterval(preUpdate = true) {
     logger.info('\u231B Starting symbol update interval')
     this.intervalRef = setInterval(() => this.update(), this.intervalTimeout)
   }

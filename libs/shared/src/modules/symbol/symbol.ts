@@ -1,6 +1,5 @@
 import ProgressBar from "progress"
 import { INewsItem } from "../news/news.interfaces"
-import { IOrder } from "../../order/order.interfaces"
 import { System } from "../../system/system"
 import { INTERVAL } from "../../util/util"
 import { IInsight } from "../insight/insight.interfaces"
@@ -9,6 +8,8 @@ import { InsightEntity } from "../insight/insight.entity"
 import { logger } from "../../util/log"
 import { ICalendarItem } from "../calendar/calendar.interfaces"
 import { ICandle } from "../candle"
+import { Ticker } from "../../ticker/ticker"
+import { IOrder, ORDER_SIDE } from "../order/order.interfaces"
 
 export class Symbol implements ISymbol {
   name: string
@@ -40,8 +41,26 @@ export class Symbol implements ISymbol {
 
     const allowUpdate = this.insights?.updatedAt.getTime() + minUpdatedAtDiff < Date.now()
     if (!this.insights || allowUpdate) {
-      logger.debug(`Updating ${this.name} symbol`)
-      this.insights = await this.system.insightManager.loadPredictionsBySymbol(this)
+      if (!this.name.includes('.')) {
+        logger.debug(`Updating ${this.name} symbol`)
+        this.insights = await this.system.insightManager.loadPredictionsBySymbol(this)
+      }
+    }
+
+    this.runTickers()
+  }
+
+  runTickers() {
+    if (this.insights) {
+      console.log(2232323, this.orders)
+
+      if (this.orders.length === 0) {
+        this.system.orderManager.placeOrder({
+         side: ORDER_SIDE.BUY,
+         symbol: this
+        }, {})
+      }
+      // console.log(this.insights.short)
     }
   }
 

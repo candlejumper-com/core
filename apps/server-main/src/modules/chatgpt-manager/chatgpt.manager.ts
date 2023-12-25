@@ -7,7 +7,7 @@ import { readFileSync } from 'fs'
 import { ReadableStream } from 'stream/web'
 
 export class ChatGPTManager {
-  private brokerYahoo: BrokerYahoo
+  // private brokerYahoo: BrokerYahoo
 
   constructor(public system: SystemMain) {}
 
@@ -16,7 +16,7 @@ export class ChatGPTManager {
    * - start interval
    */
   async init() {
-    this.brokerYahoo = new BrokerYahoo(this.system)
+    // this.brokerYahoo = new BrokerYahoo(this.system)
 
     // await this.headlessQuery()
     // console.log(this.system.configManager.config.thirdParty.openAI.apiKey)
@@ -64,7 +64,7 @@ export class ChatGPTManager {
   }
 
   async ask(cookies, token) {
-    const candles = await this.brokerYahoo.getCandlesFromCount({name: 'AMZN'}, '1d', 160)
+    const candles = await this.system.brokerManager.get(BrokerYahoo).getCandlesFromCount({name: 'AMZN'}, '1d', 160)
     const normalized = candles.map((candle) => ({
       time: candle[0],
       close: candle[1],
