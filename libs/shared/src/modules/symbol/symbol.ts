@@ -12,6 +12,7 @@ import { Ticker } from '../../ticker/ticker'
 import { IOrder, ORDER_SIDE } from '../order/order.interfaces'
 import { Broker } from '../broker/broker'
 import { BrokerYahoo } from '../../brokers/yahoo/yahoo.broker'
+import { XtbBroker } from '../../brokers/xtb/xtb.broker'
 
 let counter = 0
 export class Symbol implements ISymbol {
@@ -25,7 +26,7 @@ export class Symbol implements ISymbol {
   calendar: ICalendarItem[] = []
   news: INewsItem[] = []
   orders: IOrder[] = []
-
+  price: number
   updatedAt: Date
 
   constructor(
@@ -46,7 +47,8 @@ export class Symbol implements ISymbol {
       const allowUpdate = this.insights?.updatedAt.getTime() + minUpdatedAtDiff < Date.now()
 
       if (!this.insights || allowUpdate) {
-        if (!this.name.includes('.') && this.broker instanceof BrokerYahoo) {
+        // console.log(this.broker instanceof XtbBroker)
+        if (!this.name.includes('.') && this.broker instanceof XtbBroker) {
           logger.debug(`Updating ${this.name} symbol`)
           // this.insights = await this.system.insightManager.loadPredictionsBySymbol(this)
         }
@@ -61,13 +63,12 @@ export class Symbol implements ISymbol {
   }
 
   async runTickers() {
-       if (this.name !== 'OIL') {
-        return
-      }
-    const symbols = this.system.symbolManager.symbols.filter(symbol => symbol.name === 'OIL')
-    console.log(23223, symbols.length)
-    if (this.insights) {
+    if (this.name !== 'AAPL') {
+      return
+    }
+    const symbols = this.system.symbolManager.symbols.find(symbol => symbol.name === 'AAPL')
 
+    if (this.insights) {
       console.log(this.insights)
 
       return
@@ -75,15 +76,15 @@ export class Symbol implements ISymbol {
       if (this.orders.length === 0) {
         // if (this.insights.short === 4) {
 
-          await this.system.orderManager.placeOrder(
-            {
-              force: true,
-              side: ORDER_SIDE.BUY,
-              symbol: this,
-              quantity: 2500,
-            },
-            {},
-          )
+        await this.system.orderManager.placeOrder(
+          {
+            force: true,
+            side: ORDER_SIDE.BUY,
+            symbol: this,
+            quantity: 2500,
+          },
+          {},
+        )
         // }
       }
       // console.log(this.insights.short)

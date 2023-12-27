@@ -10,9 +10,12 @@ import { CandleTickerCallback } from '../../modules/broker/broker.interfaces'
 import { ICandle } from '../../modules/candle/candle.interfaces'
 import { CANDLE_FIELD } from '../../modules/candle/candle.util'
 import { ISymbol } from '../../modules/symbol/symbol.interfaces'
+import { Symbol } from '../../modules/symbol/symbol'
 import { SimpleQueue } from '../../util/queue'
 import { TICKER_TYPE } from '../../ticker/ticker.util'
 import { IOrder, ORDER_SIDE } from '../../modules/order/order.interfaces'
+import { ICalendarItem } from '../../modules/calendar/calendar.interfaces'
+import { INTERVAL } from '../../index_client'
 
 export class BrokerBinance extends Broker {
   id = 'BINANCE'
@@ -37,13 +40,13 @@ export class BrokerBinance extends Broker {
    * load candles from startime until now.
    * splits into multiple requests until end
    */
-    async getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]> {
+    override async getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]> {
       const limit = 1000
       const allCandles = []
       const maxLoops = 20 
   
       for (let i = 0; i < maxLoops; i++) {
-        // logger.debug(`\u267F Sync from time: ${symbol} ${interval} ${startTime}`)
+        // logger.debug(`♿ Sync from time: ${symbol} ${interval} ${startTime}`)
   
         const url = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&startTime=${startTime}`
   
@@ -88,7 +91,7 @@ export class BrokerBinance extends Broker {
     ])) as ICandle[] // TEMP to fix typing
   }
 
-  async getCandlesFromCount(symbol: ISymbol, interval: string, count = 1000): Promise<ICandle[]> {
+  override async getCandlesFromCount(symbol: ISymbol, interval: string, count = 1000): Promise<ICandle[]> {
     const limit = 1000
     const loops = Math.ceil(count / limit)
     const allCandles = []
@@ -124,7 +127,7 @@ export class BrokerBinance extends Broker {
     return allCandles
   }
 
-  startCandleTicker(symbols: ISymbol[], intervals: string[], callback: CandleTickerCallback) {
+  override async startCandleTicker(symbols: ISymbol[], intervals: INTERVAL[], callback: CandleTickerCallback) {
     this.onCandleTickCallback = callback
     // const streamBinance = new WebSocket('wss://stream.binance.com:9443/ws')
 
@@ -164,8 +167,8 @@ export class BrokerBinance extends Broker {
   /**
    * load account balances
    */
-  async syncAccount(): Promise<void> {
-    logger.debug(`\u267F Sync balance`)
+  override async syncAccount(): Promise<void> {
+    logger.debug(`♿ Sync balance`)
 
     const now = Date.now()
 
@@ -191,16 +194,8 @@ export class BrokerBinance extends Broker {
     logger.info(`✅ Sync balance (${Date.now() - now} ms)`)
   }
 
-  async syncExchangeFromBroker(): Promise<void> {
-      
-  }
-
-  override async getOrders(): Promise<void> {
-    return null
-  }
-
-  async getOrdersByMarket(symbol: string): Promise<IOrder[]> {
-    const orders = await this.instance.getAccountTradeList({ symbol, limit: 50 })
+  override async getOrdersBySymbol(symbol: Symbol): Promise<IOrder[]> {
+    const orders = await this.instance.getAccountTradeList({ symbol: symbol.name, limit: 50 })
 
     // normalize
     return orders.map(order => {
@@ -212,7 +207,7 @@ export class BrokerBinance extends Broker {
         time: order.time,
         price: parseFloat(order.price as string),
         side: order.isBuyer ? ORDER_SIDE.BUY : ORDER_SIDE.SELL,
-        symbol: order.symbol,
+        symbolName: order.symbol,
         quantity: parseFloat(order.qty as string),
         profit: 0,
         commission: parseFloat(order.commission as string),
@@ -227,8 +222,12 @@ export class BrokerBinance extends Broker {
   }
 
   // TODO: check typings
-  async placeOrder(order: IOrder): Promise<OrderResponseResult | OrderResponseFull> {
+  override async placeOrder(order: IOrder): Promise<OrderResponseResult | OrderResponseFull> {
     return this.instance.submitNewOrder(order as any) as Promise<OrderResponseResult>
+  }
+
+  override getCalendarItems(): Promise<ICalendarItem[]> {
+    throw new Error('Method not implemented.')
   }
 
   // async get24HChanges(): Promise<IDailyStatsResult[]> {

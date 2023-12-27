@@ -1,15 +1,15 @@
 import { ApiServer } from './system.api'
 import { CandleManager } from '../modules/candle-manager/candle-manager'
-import { BrokerEntity, DB, InsightEntity, System, TICKER_TYPE, XtbBroker, createCandleEntities } from '@candlejumper/shared'
+import { BROKER_PURPOSE, BrokerEntity, DB, InsightEntity, System, TICKER_TYPE, XtbBroker, createCandleEntities } from '@candlejumper/shared'
 
 export class SystemCandles extends System {
-  readonly type = TICKER_TYPE.SYSTEM_CANDLES
+  override type = TICKER_TYPE.SYSTEM_CANDLES
+
+  readonly apiServer = new ApiServer(this)
   readonly candleManager = new CandleManager(this)
-  apiServer = new ApiServer(this)
 
   async onInit() {
-    // await this.brokerManager.add(BrokerYahoo)
-    await this.brokerManager.add(XtbBroker)
+    await this.brokerManager.add(XtbBroker, [BROKER_PURPOSE.CANDLES])
 
     this.db = new DB(this, [BrokerEntity, InsightEntity, ...createCandleEntities(this.system)])
 

@@ -83,7 +83,7 @@ export class CandleManager {
    * load all candles from all symbols on all intervals
    */
   async sync(): Promise<void> {
-    logger.info(`\u267F Sync candles`)
+    logger.info(`♿ Sync candles`)
 
     const now = Date.now()
     const config = this.system.configManager.config

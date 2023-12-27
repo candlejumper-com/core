@@ -3,10 +3,10 @@ import { Broker } from '../../modules/broker/broker'
 import { CandleTickerCallback } from '../../modules/broker/broker.interfaces'
 import XAPI, { CHART_RANGE_INFO_RECORD, RATE_INFO_RECORD, SYMBOL_RECORD } from 'xapi-node'
 import { format } from 'date-fns'
-import { log } from 'console'
 import { ICalendarItem } from '../../modules/calendar/calendar.interfaces'
 import { logger } from '../../util/log'
 import { ISymbol } from '../../modules/symbol/symbol.interfaces'
+import { Symbol } from '../../modules/symbol/symbol'
 import { ICandle } from '../../modules/candle'
 import { SimpleQueue } from '../../util/queue'
 import { IOrder, ORDER_SIDE } from '../../modules/order/order.interfaces'
@@ -30,7 +30,7 @@ export class XtbBroker extends Broker {
     await this.instance.connect()
   }
 
-  async getCalendarItems(mock = true): Promise<ICalendarItem[]> {
+  override async getCalendarItems(mock = true): Promise<ICalendarItem[]> {
     // console.log(' GET T ITEMS')
     return []
     // const items = await this.instance.getCalendarItems()
@@ -38,13 +38,8 @@ export class XtbBroker extends Broker {
     // return items
   }
 
-  async getSymbolInsights(symbol: ISymbol): Promise<any> {
-    return null
-    // return this.queue.add(() => yahooFinance.insights(symbol.name))
-  }
-
   override async syncAccount(): Promise<void> {
-    logger.debug(`\u267F Sync balance`)
+    logger.debug(`♿ Sync balance`)
 
     const now = Date.now()
 
@@ -63,13 +58,13 @@ export class XtbBroker extends Broker {
     return null
   }
 
-  override async getOrdersByMarket(market: string): Promise<IOrder[]> {
+  override async getOrdersBySymbol(symbol: Symbol): Promise<IOrder[]> {
     return []
   }
 
   override async placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull> {
     if (order.side === ORDER_SIDE.BUY) {
-      console.log(23223, order)
+      console.log(33333, order)
       const result = await this.instance.trading.buy({symbol: order.symbol, volume: order.quantity})
       const result2 = await result.transaction
       return result2
@@ -97,7 +92,7 @@ export class XtbBroker extends Broker {
       ticks: 1000,
     }
 
-    logger.debug(`\u267F Sync from time: ${symbol} ${interval} ${startTime}`)
+    logger.debug(`♿ Sync from time: ${symbol} ${interval} ${startTime}`)
 
     let candles
     try {
@@ -119,7 +114,7 @@ export class XtbBroker extends Broker {
       ticks: 1000,
     }
 
-    logger.debug(`\u267F Sync from time: ${symbol} ${interval} ${now}`)
+    logger.debug(`♿ Sync from time: ${symbol} ${interval} ${now}`)
 
     let candles
     try {

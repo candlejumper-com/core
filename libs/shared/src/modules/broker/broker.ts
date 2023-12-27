@@ -6,29 +6,24 @@ import { ICandle } from '../../modules/candle'
 import { createAxiosRetryInstance } from '../../util/axios-retry'
 import { TICKER_TYPE } from '../../ticker/ticker.util'
 import { ISymbol } from '../symbol/symbol.interfaces'
+import { Symbol } from '../symbol/symbol'
 import { IOrder } from '../order/order.interfaces'
 import { INTERVAL } from '../../index_client'
+import { ICalendarItem } from '../calendar/calendar.interfaces'
+import { InsightsResult } from 'yahoo-finance2/dist/esm/src/modules/insights'
+import { BROKER_PURPOSE } from './broker.util'
 
 export abstract class Broker {
   abstract id: string
-  abstract syncAccount(): Promise<void>
-  abstract syncExchangeFromBroker(): Promise<void>
-  abstract getOrders(): Promise<void>
-  abstract getOrdersByMarket(market: string): Promise<IOrder[]>
-  abstract placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull>
-  abstract startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void): Promise<void>
-  abstract startCandleTicker(symbols: ISymbol[], intervals: INTERVAL[], callback: CandleTickerCallback): void
-  abstract getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]>
-  abstract getCandlesFromCount(symbol: ISymbol, interval: string, count: number): Promise<ICandle[]>
 
-  onCandleTickCallback: (symbol: ISymbol, interval: string, candle: ICandle, isFinal: boolean) => Promise<void>
+  onCandleTickCallback: (symbol: ISymbol, interval: INTERVAL, candle: ICandle, isFinal: boolean) => Promise<void>
   onInit?(): Promise<void>
 
   account = { balances: [] } as IAccount
   exchangeInfo: IBrokerInfo
   axios = createAxiosRetryInstance()
 
-  constructor(public system: System) {}
+  constructor(public system: System, public purposes: BROKER_PURPOSE[]) {}
 
   async init() {
     if (this.system.type !== TICKER_TYPE.SYSTEM_BACKTEST) {
@@ -37,7 +32,7 @@ export abstract class Broker {
 
     if (this.system.type === TICKER_TYPE.SYSTEM_CANDLES) {
       const now = Date.now()
-      logger.info(`\u267F [${this.id}] Sync exchange info from broker`)
+      logger.info(`♿ [${this.id}] Sync exchange info from broker`)
       await this.syncExchangeFromBroker()
       logger.info(`✅ [${this.id}] Sync exchange info from broker (${Date.now() - now} ms)`)
     } else {
@@ -52,7 +47,7 @@ export abstract class Broker {
       process.env.TZ = this.exchangeInfo.timezone
     }
     
-    this.exchangeInfo.symbols.forEach(symbol => this.system.symbolManager.add(this, symbol))
+    this.exchangeInfo.symbols.forEach(async symbol => this.system.symbolManager.add(this, symbol))
 
     await this.getOrders()
   }
@@ -78,7 +73,7 @@ export abstract class Broker {
   }
 
   async syncExchangeFromCandleServer(): Promise<void> {
-    logger.info(`\u267F [${this.id}] Sync exchange info from candle server`)
+    logger.info(`♿ [${this.id}] Sync exchange info from candle server`)
 
     const now = Date.now()
     const {host, port} = this.system.configManager.config.server.candles
@@ -100,5 +95,43 @@ export abstract class Broker {
 
       throw new Error(`error fetching broker config from candle server`.red)
     }
+  }
+
+  async getOrders(): Promise<void> {
+    logger.warn(`⚠️ [${this.id}] Method not implemented: getOrders`)
+    return null
+  }
+
+  async getSymbolInsights(symbol: ISymbol): Promise<InsightsResult> {
+    throw new Error('Method not implemented: ' + 'getSymbolInsights')
+  }
+  
+  async syncAccount(): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
+
+  async syncExchangeFromBroker(): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
+  async getOrdersBySymbol(symbol: Symbol): Promise<IOrder[]> {
+    throw new Error('Method not implemented.')
+  }
+  async placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull> {
+    throw new Error('Method not implemented.')
+  }
+  async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
+  async startCandleTicker(symbols: ISymbol[], intervals: string[], callback: CandleTickerCallback): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
+  async getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]> {
+    throw new Error('Method not implemented.')
+  }
+  async getCandlesFromCount(symbol: ISymbol, interval: string, count: number): Promise<ICandle[]> {
+    throw new Error('Method not implemented.')
+  }
+  async getCalendarItems(): Promise<ICalendarItem[]> {
+    throw new Error('Method not implemented.')
   }
 }

@@ -1,31 +1,35 @@
-import { BrokerAlphavantage } from "../../brokers/alphavantage/alphavantage.broker";
-import { Broker } from "./broker";
-import { System } from "../../system/system";
-
-export enum BROKER_PURPOSE {
-  CANDLES = "CANDLES",
-  ORDERS = "ORDERS",
-  CALENDAR = "CALENDAR",
-  PREDICTION = "PREDICTION"
-}
+import { Broker } from './broker'
+import { System } from '../../system/system'
+import { BROKER_PURPOSE } from './broker.util'
 
 export class BrokerManager {
-
   // readonly brokers: {[key: string]: Broker} = {}
-  private readonly brokers = new Map<typeof Broker, any>()
+  private readonly brokers = new Map<typeof Broker, Broker>()
 
   constructor(private system: System) {}
 
-  get<T extends Broker>(constructor?: new (...args: any[]) => T): T {
+  getByClass<T extends typeof Broker>(constructor?: T): InstanceType<T> {
     if (!constructor) {
       return this.brokers.values().next().value
     }
-    
-    return this.brokers.get(constructor)
+
+    return this.brokers.get(constructor) as InstanceType<T>
   }
 
-  async add<T extends Broker>(BrokerClass: new(system: System) => T, purpose?: BROKER_PURPOSE): Promise<T> {
-    const broker = new BrokerClass(this.system)
+  getByPurpose(purpose: BROKER_PURPOSE): Broker {
+    const broker = Array.from(this.brokers.values()).find((broker: Broker) => {
+      return broker.purposes.includes(purpose)
+    })
+
+    if (!broker) {
+      throw new Error('Broker with purpose ' + purpose + ' not found')
+    }
+
+    return broker
+  }
+
+  async add<T extends Broker>(BrokerClass: new (system: System, purposes: BROKER_PURPOSE[]) => T, purposes: BROKER_PURPOSE[]): Promise<T> {
+    const broker = new BrokerClass(this.system, purposes)
     this.brokers.set(BrokerClass, broker)
     await broker.init()
 

@@ -99,7 +99,7 @@ export class EditorManager {
     }
 
     private async compile(): Promise<void> {
-        logger.info(`\u267F Compiling bots & indicators`)
+        logger.info(`♿ Compiling bots & indicators`)
 
         const now = Date.now()
 

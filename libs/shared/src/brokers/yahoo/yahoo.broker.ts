@@ -1,15 +1,11 @@
 import { HistoricalHistoryResult } from 'yahoo-finance2/dist/esm/src/modules/historical'
-import { logger, ICandle, IOrder } from '@candlejumper/shared'
+import { logger, ICandle, ICalendarItem } from '@candlejumper/shared'
 import { Broker } from '../../modules/broker/broker'
-import { IBrokerInfo, CandleTickerCallback } from '../../modules/broker/broker.interfaces'
 import yahooFinance from 'yahoo-finance2'
 import { format } from 'date-fns'
-import { OrderResponseFull, OrderResponseResult } from 'binance'
-import TEMP_BROKER_INFO from './broker-yahoo.json'
 import { InsightsResult } from 'yahoo-finance2/dist/esm/src/modules/insights'
 import { ISymbol } from '../../modules/symbol/symbol.interfaces'
 // import nock from 'nock'
-import { readFileSync } from 'fs'
 import { join } from 'path'
 import { SimpleQueue } from '../../util/queue'
 
@@ -31,6 +27,7 @@ const PATH_MOCK_TRENDING_SYMBOLS = join(__dirname, '../../../mock/symbols-trendi
 
 
 export class BrokerYahoo extends Broker {
+
   id = 'yahoo'
   instance: any
   websocket = null
@@ -70,12 +67,12 @@ export class BrokerYahoo extends Broker {
     return symbols
   }
 
-  getSymbolInsights(symbol: ISymbol): Promise<InsightsResult> {
+  override getSymbolInsights(symbol: ISymbol): Promise<InsightsResult> {
     return this.queue.add(() => yahooFinance.insights(symbol.name))
   }
 
 
-  async syncExchangeFromBroker(): Promise<void> {
+  override async syncExchangeFromBroker(): Promise<void> {
     const symbols = await this.getTrendingSymbols()
 
     this.exchangeInfo = {
@@ -84,27 +81,19 @@ export class BrokerYahoo extends Broker {
     }
   }
 
-  async syncAccount(): Promise<void> {
-    logger.debug(`\u267F Sync balance`)
-
-    const now = Date.now()
-
-    logger.info(`✅ Sync balance (${Date.now() - now} ms)`)
-  }
-
-  async getCandlesFromTime(symbol: ISymbol, interval: string, fromTime: number): Promise<ICandle[]> {
+  override async getCandlesFromTime(symbol: ISymbol, interval: string, fromTime: number): Promise<ICandle[]> {
     const fromTimeDate = new Date(fromTime)
     const startTime = format(fromTimeDate, 'yyyy-MM-dd')
     const query = symbol.name.includes('/') ? `${symbol.name.split('/')[0]}=X` : symbol.name
     const queryOptions = { period1: startTime, interval: interval as any }
 
-    logger.debug(`\u267F Sync from time: ${symbol} ${interval} ${startTime}`)
+    logger.debug(`♿ Sync from time: ${symbol} ${interval} ${startTime}`)
 
     const candles = await yahooFinance.historical(query, queryOptions)
     return this.normalizeCandles(candles)
   }
 
-  async getCandlesFromCount(symbol: ISymbol, interval: string, count: number): Promise<ICandle[]> {
+  override async getCandlesFromCount(symbol: ISymbol, interval: string, count: number): Promise<ICandle[]> {
     const now = new Date()
     now.setDate(now.getDate() - count)
     const period1 = format(now, 'yyyy-MM-dd')
@@ -114,28 +103,17 @@ export class BrokerYahoo extends Broker {
     return this.normalizeCandles(candles)
   }
 
-  startCandleTicker(symbols: ISymbol[], intervals: string[], callback: CandleTickerCallback): void {}
-
   private normalizeCandles(candles: HistoricalHistoryResult): ICandle[] {
     // console.log(parse(candles[0].snapshotTime, "yyyy:MM:dd-HH:mm:ss", new Date()))
 
     return candles.map(candle => [new Date(candle.date).getTime(), candle.open, candle.high, candle.low, candle.close, candle.volume])
   }
 
-  async placeOrder(order: IOrder): Promise<OrderResponseResult | OrderResponseFull> {
-    // return this.system.broker.instance.submitNewOrder(order as any) as Promise<OrderResponseResult>
-    return null
-  }
-
-  override async getOrders(): Promise<void> {
-    return null
-  }
-
-  async getOrdersByMarket(symbol: string): Promise<IOrder[]> {
-    return []
-  }
-
   override async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void): Promise<void> {
     // throw new Error('Method not implemented.')
+  }
+
+  override getCalendarItems(): Promise<ICalendarItem[]> {
+    throw new Error('Method not implemented.')
   }
 }

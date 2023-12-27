@@ -10,7 +10,8 @@ import {
   InsightManager,
   BrokerAlphavantage,
   XtbBroker,
-  OrderManager
+  OrderManager,
+  BROKER_PURPOSE
 } from '@candlejumper/shared'
 import { ApiServer } from './api'
 import { CANDLE_FIELD, CandleManager } from '../modules/candle-manager/candle-manager'
@@ -34,7 +35,8 @@ import { UserEntity } from '../modules/user-manager/user.entity'
 // }
 
 export class SystemMain extends System {
-  type = TICKER_TYPE.SYSTEM_MAIN
+  override system = this
+  override type = TICKER_TYPE.SYSTEM_MAIN
 
   deviceManager: DeviceManager
   editorManager: EditorManager
@@ -77,9 +79,9 @@ export class SystemMain extends System {
    * only executed on MAIN system (not a backtest)
    */
   private async initAsMain(): Promise<void> {
-    await this.brokerManager.add(BrokerAlphavantage)
-    await this.brokerManager.add(BrokerYahoo)
-    await this.brokerManager.add(XtbBroker)
+    await this.brokerManager.add(XtbBroker, [BROKER_PURPOSE.CANDLES])
+    await this.brokerManager.add(BrokerAlphavantage, [BROKER_PURPOSE.CALENDAR])
+    await this.brokerManager.add(BrokerYahoo, [BROKER_PURPOSE.INSIGHT])
 
     this.chatGPTManager = new ChatGPTManager(this)
     this.newsManager = new NewsManager(this)
@@ -96,9 +98,6 @@ export class SystemMain extends System {
 
     // load current user
     await this.userManager.init()
-
-    // load generic insights
-    await this.insightManager.init()
 
     // load calendar
     // await this.chatGPTManager.init()
@@ -204,7 +203,7 @@ export class SystemMain extends System {
         symbols: this.symbolManager.symbols.map(symbol => symbol.name),
       },
       account: {
-        balances: this.brokerManager.get(BrokerYahoo).account.balances,
+        balances: this.brokerManager.getByClass(BrokerYahoo).account.balances,
         // balances: []
       },
       symbols: this.symbolManager.getInfo(),

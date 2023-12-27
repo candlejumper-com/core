@@ -2,6 +2,7 @@ import { INTERVAL } from "../../util/util"
 
 export interface ISystemConfig {
     dev: boolean,
+    logLevel: 'debug' | 'info' | 'warn' | 'error' | 'silent',
     security?: {
         jwtSecret?: string
     }

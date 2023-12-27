@@ -39,7 +39,7 @@ export class BacktestManager {
         // loop over all symbols
         for (let i = 0, len = options.symbols.length; i < len; ++i) {
             const symbolName = options.symbols[i]
-            const brokerSymbol = this.system.brokerManager.get(BrokerYahoo).getExchangeInfoBySymbol(symbolName)
+            const brokerSymbol = this.system.brokerManager.getByClass(BrokerYahoo).getExchangeInfoBySymbol(symbolName)
             const symbol = this.system.symbolManager.get(symbolName)
 
             // check if symbol is recognized (currently in use / cached)

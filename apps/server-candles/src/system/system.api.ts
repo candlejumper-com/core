@@ -94,9 +94,12 @@ export class ApiServer extends ApiServerBase {
 
         this.app.get('/api/exchange/:broker', async (req, res) => {
             try {
+                // TODO - use broker name
+                const brokerName = req.params.broker
+
                 res.send({
                     intervals: this.system.configManager.config.intervals,
-                    exchangeInfo: this.system.brokerManager.get().exchangeInfo
+                    exchangeInfo: this.system.brokerManager.getByClass().exchangeInfo
                 })
             } catch (error) {
                 console.error(error)

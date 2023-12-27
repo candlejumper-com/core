@@ -6,15 +6,13 @@ import { LessThan, Equal, MoreThan } from 'typeorm'
 export class InsightManager {
   constructor(public system: System) {}
 
-  init() {}
-
   async loadPredictionsBySymbol(symbol: ISymbol) {
     const minLastUpdateTime = new Date()
     minLastUpdateTime.setHours(minLastUpdateTime.getHours() - 4)
 
     const InsightsRepo = this.system.db.connection.getRepository(InsightEntity)
     const lastRecord = await InsightsRepo.findOne({ where: { updatedAt: MoreThan(minLastUpdateTime) } })
-    const broker = this.system.brokerManager.get(BrokerYahoo)
+    const broker = this.system.brokerManager.getByClass(BrokerYahoo)
     const insightsData = await broker.getSymbolInsights(symbol)
 
     if (!insightsData?.instrumentInfo) {

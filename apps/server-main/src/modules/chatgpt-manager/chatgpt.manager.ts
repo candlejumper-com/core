@@ -2,7 +2,7 @@ import { SystemMain } from '../../system/system'
 import OpenAI from 'openai'
 import puppeteer from 'puppeteer'
 import axios from 'axios'
-import { BrokerYahoo, CANDLE_FIELD } from '@candlejumper/shared'
+import { BROKER_PURPOSE, BrokerYahoo, CANDLE_FIELD } from '@candlejumper/shared'
 import { readFileSync } from 'fs'
 import { ReadableStream } from 'stream/web'
 
@@ -64,7 +64,7 @@ export class ChatGPTManager {
   }
 
   async ask(cookies, token) {
-    const candles = await this.system.brokerManager.get(BrokerYahoo).getCandlesFromCount({name: 'AMZN'}, '1d', 160)
+    const candles = await this.system.brokerManager.getByPurpose(BROKER_PURPOSE.CANDLES).getCandlesFromCount({name: 'AMZN'}, '1d', 160)
     const normalized = candles.map((candle) => ({
       time: candle[0],
       close: candle[1],

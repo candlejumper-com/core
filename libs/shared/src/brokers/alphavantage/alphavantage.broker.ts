@@ -1,10 +1,9 @@
-import { CandleTickerCallback, ICalendarItem, ICandle, IOrder, ISymbol, logger } from '@candlejumper/shared'
+import { ICalendarItem } from '@candlejumper/shared'
 import { Broker } from '../../modules/broker/broker'
-import { OrderResponseACK, OrderResponseFull, OrderResponseResult } from 'binance'
 import alphavantage from 'alphavantage'
 import { normalizeCalendarData, parseCSV } from './alphavantage.util'
 import axios from 'axios'
-import { readFileSync, writeFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import nock from 'nock'
 import { join } from 'path'
 
@@ -27,42 +26,11 @@ export class BrokerAlphavantage extends Broker {
     }
   }
 
-  async getCalendarItems(mock = true): Promise<ICalendarItem[]> {
+  override async getCalendarItems(): Promise<ICalendarItem[]> {
     const { apiKey } = this.system.configManager.config.thirdParty.alphavantage
     const { data } = await axios.get(`https://www.alphavantage.co/query?function=EARNINGS_CALENDAR&horizon=3month&apikey=${apiKey}`)
     const items = await parseCSV(data)
     // writeFileSync(join(__dirname, '../../../mock/calendar.csv'), data)
     return normalizeCalendarData(items)
-  }
-
-  override syncAccount(): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
-  // override async syncExchangeFromCandleServer(): Promise<void> {
-  //   logger.info('Method not implemented.')
-  // }
-  override syncExchangeFromBroker(): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
-  override async getOrders(): Promise<void> {
-    return null
-  }
-  override getOrdersByMarket(market: string): Promise<IOrder[]> {
-    throw new Error('Method not implemented.')
-  }
-  override placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull> {
-    throw new Error('Method not implemented.')
-  }
-  override startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
-  override startCandleTicker(symbols: ISymbol[], intervals: string[], callback: CandleTickerCallback): void {
-    throw new Error('Method not implemented.')
-  }
-  override getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]> {
-    throw new Error('Method not implemented.')
-  }
-  override getCandlesFromCount(symbol: ISymbol, interval: string, count: number): Promise<ICandle[]> {
-    throw new Error('Method not implemented.')
   }
 }

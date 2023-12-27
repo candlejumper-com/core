@@ -1,5 +1,6 @@
 {
   "dev": true,
+  "logLevel": "debug",
   "security": {
     "jwtSecret": "98345jksdfnklsv kl8329rosdnvkjdv"
   },

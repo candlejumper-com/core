@@ -20,7 +20,7 @@ export class AIInstance {
 
   async run(): Promise<void> {
     const symbolName = this.options.symbol;
-    const brokerSymbol = this.system.brokerManager.get(BrokerYahoo).getExchangeInfoBySymbol(symbolName);
+    const brokerSymbol = this.system.brokerManager.getByClass(BrokerYahoo).getExchangeInfoBySymbol(symbolName);
     const symbol = this.system.symbolManager.get(symbolName);
 
     // check if symbol is recognized (currently in use / cached)

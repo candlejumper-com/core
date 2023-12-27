@@ -1,22 +1,19 @@
 import { ISymbol, ITickerSnapshot, System, TICKER_TYPE, Ticker } from "@candlejumper/shared";
-import { SystemMain } from "../../system/system";
 
 export abstract class Indicator<T> extends Ticker<T> {
 
-    readonly type = TICKER_TYPE.INDICATOR
-
     constructor(
-        system: System,
+        public system: System,
         parent: Ticker<any>,
         symbol: ISymbol,
         interval: string,
         config: any
     ) {
-        super(system, parent, symbol, interval, config)
+        super(parent, symbol, interval, config)
     }
 
     async init(): Promise<void> {
-        await super.init()
+        super.init()
 
         await this.onInit?.()
 

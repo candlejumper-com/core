@@ -10,10 +10,11 @@ export abstract class Ticker<T> {
   static eventId = 0
 
   // type of ticker (BOT / INDICATOR / SYSTEM)
-  abstract type?: TICKER_TYPE
+  abstract type: TICKER_TYPE
+  abstract system: System
 
   // unique ID (read: unique to parent)
-  id: string | number
+  abstract id: string | number
 
   // list of child tickers
   tickers: Ticker<T>[] = []
@@ -62,20 +63,17 @@ export abstract class Ticker<T> {
   protected onDestroy?(): Promise<void>
 
   constructor(
-    public system: System,
+    // public type: TICKER_TYPE,
+    // public system: System,
     public parent: Ticker<any>,
     public symbol: ISymbol,
     public interval: string,
     public config: any = {},
   ) {}
 
-  async init(): Promise<void> {
+  init(): void {
     if (this.isInitialized) {
       throw 'Already initialized'
-    }
-
-    if (!this.id) {
-      throw 'Missing id ' + this.constructor.name
     }
   }
 

@@ -1,10 +1,11 @@
 import { createLogger, format, transports } from 'winston'
 import * as path from 'path'
 import { TICKER_TYPE } from '../ticker/ticker.util'
+import { System } from '../system/system'
 
-export const PATH_LOGS = path.join(__dirname, '../../../../_logs/')
+const PATH_LOGS = path.join(__dirname, '../../../../_logs/')
+const PATH_LOGS_ERROR = path.join(PATH_LOGS, 'error.log')
 export const PATH_LOGS_COMBINED = path.join(PATH_LOGS, 'combined.log')
-export const PATH_LOGS_ERROR = path.join(PATH_LOGS, 'error.log')
 
 const { combine, timestamp, label, printf, colorize, simple, errors, prettyPrint, json } = format
 
@@ -12,7 +13,7 @@ const errorStackFormat = format(info => {
   if (info instanceof Error) {
     return Object.assign({}, info, {
       stack: info.stack,
-      message: info.message
+      message: info.message,
     })
   }
   return info
@@ -32,19 +33,39 @@ const customFormat = printf(({ level, message, label, timestamp }) => {
 
 let systemEnvironment: TICKER_TYPE | string = 'SYSTEM'
 
-export function setLogSystemEnvironment(env: TICKER_TYPE) {
-  switch (env) {
+export function setLogSystemEnvironment(system: System) {
+  switch (system.type) {
     case TICKER_TYPE.SYSTEM_MAIN:
-      systemEnvironment = env.magenta
+      systemEnvironment = system.type.magenta
       break
     case TICKER_TYPE.SYSTEM_BACKTEST:
-      systemEnvironment = env.gray
+      systemEnvironment = system.type.gray
       break
     case TICKER_TYPE.SYSTEM_CANDLES:
-      systemEnvironment = env.yellow
+      systemEnvironment = system.type.yellow
       break
     default:
-      throw new Error(`unkown environment: ${env}`)
+      throw new Error(`unkown environment: ${system.type}`)
+  }
+
+  // If we're not in production then log to the `console` with the format:
+  // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
+  if (process.env['NODE_ENV'] !== 'production') {
+    logger.add(
+      new transports.Console({
+        level: 'info',
+        handleExceptions: true,
+        format: combine(
+          label({ label: systemEnvironment }),
+          customFormat,
+          timestamp({
+            format: 'DD-MM-YYYY HH:mm:ss',
+          }),
+          errorStackFormat(),
+          // prettyPrint()
+        ),
+      }),
+    )
   }
 }
 
@@ -53,7 +74,7 @@ export const logger = createLogger({
   format: combine(
     label({ label: systemEnvironment }),
     timestamp({
-      format: "DD-MM-YYYY HH:mm:ss",
+      format: 'DD-MM-YYYY HH:mm:ss',
     }),
     // customFormat,
     errorStackFormat(),
@@ -75,25 +96,3 @@ export const logger = createLogger({
     new transports.File({ filename: PATH_LOGS_COMBINED, maxFiles: 10, maxsize: 1000 * 1000 }),
   ],
 })
-
-//
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-//
-if (process.env['NODE_ENV'] !== 'production') {
-  logger.add(new transports.Console({
-    level: 'debug',
-    handleExceptions: true,
-    format: combine(
-      label({ label: systemEnvironment }),
-      customFormat,
-      timestamp({
-        format: "DD-MM-YYYY HH:mm:ss",
-      }),
-      errorStackFormat(),
-      // prettyPrint()
-    ),
-  }))
-} else {
-
-}

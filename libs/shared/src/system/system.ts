@@ -9,35 +9,38 @@ import { Ticker } from "../ticker/ticker"
 import { OrderManager } from "../modules/order/order-manager"
 
 export abstract class System extends Ticker<null> {
-  override id = "SYSTEM"
   override system = this
+  override id = "SYSTEM"
 
   time: Date
+  isRunning = false
+  production = process.env['NODE_ENV'] !== 'production'
 
   db: DB
-  readonly insightManager = new InsightManager(this)
+  apiServer: ApiServerBase
+  orderManager: OrderManager
+  // insightManager: InsightManager
+
   readonly brokerManager = new BrokerManager(this)
   readonly configManager = new ConfigManager(this)
   readonly symbolManager = new SymbolManager(this)
-  readonly orderManager: OrderManager
-  apiServer: ApiServerBase
 
-  protected isRunning = false
-
-  constructor(public type?: TICKER_TYPE) {
+  constructor() {
     super(null, null, null, null)
 
     setProcessExitHandlers(this)
   }
 
   override async init(): Promise<void> {
-    setLogSystemEnvironment(this.type)
+    super.init()
+
+    this.configManager.init()
+
+    setLogSystemEnvironment(this)
 
     const now = Date.now()
-    logger.info(`\u267F Initialize system \n-------------------------------------------------------------`)
+    logger.info(`♿ Initialize system \n-------------------------------------------------------------`)
 
-    await super.init()
-    await this.configManager.init()
     await this.symbolManager.init()
     await this.onInit?.()
 

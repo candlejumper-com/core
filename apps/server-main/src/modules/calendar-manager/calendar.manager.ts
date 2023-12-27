@@ -1,11 +1,10 @@
 import { SystemMain } from '../../system/system'
 import {
-  BrokerAlphavantage,
   ICalendarItem,
   filterCalendarItemsBySymbols,
   filterCalendarItemsInTimeRange,
   Symbol,
-  BrokerYahoo
+  BROKER_PURPOSE
 } from '@candlejumper/shared'
 
 export class CalendarManager {
@@ -37,9 +36,10 @@ export class CalendarManager {
   async checkCalendarItems() {
     try {
       // (re)load all calendar items
-      const broker = this.system.brokerManager.get(BrokerAlphavantage)
+      const broker = this.system.brokerManager.getByPurpose(BROKER_PURPOSE.CALENDAR)
       this.items = await broker.getCalendarItems()
 
+      // update symbols with calendar data
       this.items.forEach(async (item, index) => {
         let symbol = this.system.symbolManager.get(item.symbol)
         if (symbol) {
@@ -79,7 +79,7 @@ export class CalendarManager {
    * TODO - make batches to not hit request limit
    */
   private async setItemsMetadata(symbol: Symbol) {
-    symbol.insights = await this.system.brokerManager.get(BrokerYahoo).getSymbolInsights(symbol)
+    // symbol.insights = await this.system.brokerManager.getByPurpose(BROKER_PURPOSE.INSIGHT).getSymbolInsights(symbol)
     // console.log(symbol.insights)
   }
 }

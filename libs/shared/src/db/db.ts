@@ -14,7 +14,7 @@ export class DB {
   ) {}
 
   async init() {
-    logger.info(`\u267F Connect DB`)
+    logger.info(`♿ Connect DB`)
     const now = Date.now()
 
     // first time setup, expect all tables to exist

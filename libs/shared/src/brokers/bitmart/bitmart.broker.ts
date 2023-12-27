@@ -8,6 +8,9 @@ import { IBrokerBitmartSymbols } from './bitmart.interfaces'
 import { ISymbol } from '../../modules/symbol/symbol.interfaces'
 import { SimpleQueue } from '../../util/queue'
 import { IOrder } from '../../modules/order/order.interfaces'
+import { ICalendarItem } from '../../index_client'
+import yahooFinance from 'yahoo-finance2'
+import { InsightsResult } from 'yahoo-finance2/dist/esm/src/modules/insights'
 
 export enum BROKER_BITMART_TIMEFRAMES {
   '1m' = 1,
@@ -30,6 +33,7 @@ export enum BROKER_BITMART_TIMEFRAMES {
 
 // @param {Int} options.step - K-Line step, default is 1 minute. step: 1, 3, 5, 15, 30, 60, 120, 240, 360, 720, 1440, 4320, 10080
 export class BrokerBitmart extends Broker {
+
   id = 'BitMart'
   instance: BitmartSpotAPI
   websocket: WebsocketClient
@@ -59,40 +63,10 @@ export class BrokerBitmart extends Broker {
   }
 
   /**
-   * load account balances
-   */
-  async syncAccount(): Promise<void> {
-    logger.debug(`\u267F Sync balance`)
-
-    const now = Date.now()
-
-    // try {
-    //   const balances = await this.instance.getBalances()
-
-    //   this.account.balances = balances.map(balance => ({
-    //     free: parseFloat(balance.free as string),
-    //     locked: parseFloat(balance.locked as string),
-    //     asset: balance.coin
-    //   }))
-    // } catch (error) {
-    //   if (error.status) {
-    //     console.error(error.status)
-    //     console.error(error.data)
-    //   } else {
-    //     console.error(error)
-    //   }
-
-    //   throw new Error(`Error Sync account balance`)
-    // }
-
-    logger.info(`✅ Sync balance (${Date.now() - now} ms)`)
-  }
-
-  /**
    * load broker data from candleServer (symbols, limits etc)
    */
-  async syncExchangeFromBroker(): Promise<void> {
-    logger.debug(`\u267F ${this.constructor.name} Sync exchange info`)
+  override async syncExchangeFromBroker(): Promise<void> {
+    logger.debug(`♿ ${this.constructor.name} Sync exchange info`)
 
     // TODO - use somewhere?
     const time = await this.instance.getSystemTime()
@@ -114,51 +88,13 @@ export class BrokerBitmart extends Broker {
     this.exchangeInfo = exchangeInfo
   }
 
-  override async getOrders(): Promise<void> {
-    return null
-  }
-
-  async getOrdersByMarket(symbol: string): Promise<IOrder[]> {
-    // const orders = await this.system.broker.instance.getAccountTradeList({ symbol, limit: 50 })
-
-    // // normalize
-    // return orders.map(order => {
-    //   const commissionAssetPrice = this.system.candleManager.getSymbolByPair(order.commissionAsset + 'USDT')?.price || 1
-
-    //   const cleanOrder: IOrder = {
-    //     id: order.id,
-    //     type: 'MARKET',
-    //     time: order.time,
-    //     price: parseFloat(order.price as string),
-    //     side: order.isBuyer ? ORDER_SIDE.BUY : ORDER_SIDE.SELL,
-    //     symbol: order.symbol,
-    //     quantity: parseFloat(order.qty as string),
-    //     profit: 0,
-    //     commission: parseFloat(order.commission as string),
-    //     commissionAsset: order.commissionAsset,
-    //     commissionUSDT: 0
-    //   }
-
-    //   cleanOrder.commissionUSDT = cleanOrder.commission * commissionAssetPrice
-
-    //   return cleanOrder
-    // })
-    return []
-  }
-
-  // TODO: check typings
-  async placeOrder(order: IOrder): Promise<OrderResponseResult | OrderResponseFull> {
-    // return this.system.broker.instance.submitNewOrder(order as any) as Promise<OrderResponseResult>
-    return null
-  }
-
-  async getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]> {
+  override async getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]> {
     const limit = 1000
     const allCandles = []
     const maxLoops = 20
 
     for (let i = 0; i < maxLoops; i++) {
-      // logger.debug(`\u267F Sync from time: ${symbol} ${interval} ${startTime}`)
+      // logger.debug(`♿ Sync from time: ${symbol} ${interval} ${startTime}`)
 
       const data = await this.queue.add(async () => {
         const candlesRaw = (
@@ -199,7 +135,7 @@ export class BrokerBitmart extends Broker {
   /**
    * load candles and normalize values (string to number)
    */
-  async getCandlesFromCount(symbol: ISymbol, interval: string, count = 1000): Promise<ICandle[]> {
+  override async getCandlesFromCount(symbol: ISymbol, interval: string, count = 1000): Promise<ICandle[]> {
     const limit = 1000
     const loops = Math.ceil(count / limit)
     const allCandles = []
@@ -239,31 +175,6 @@ export class BrokerBitmart extends Broker {
     return allCandles
   }
 
-  startCandleTicker(symbols: ISymbol[], intervals: string[], callback: CandleTickerCallback) {
-    this.onCandleTickCallback = callback
-    // const streamBinance = new WebSocket('wss://stream.binance.com:9443/ws')
-
-    // streamBinance.on('open', () => {
-    //   console.log('stream opened')
-
-    //   for (let i = 0, len = intervals.length; i < len; i++) {
-    //     console.log('SUBSCRIBE', symbols.map((symbol) => `${symbol}@kline_${intervals[i]}`))
-    //     const subs = {
-    //       method: 'SUBSCRIBE',
-    //       params: symbols.map((symbol) => `${symbol}@kline_${intervals[i]}`),
-    //       id: i,
-    //     }
-    //     streamBinance.send(JSON.stringify(subs))
-    //   }
-    // })
-
-    for (let k = 0, lenk = symbols.length; k < lenk; k++) {
-      for (let i = 0, len = intervals.length; i < len; i++) {
-        // this.system.broker.websocket.subscribeSpotKline(symbols[k], intervals[i] as any)
-      }
-    }
-  }
-
   private normalizeCandles(candles: Kline[]): ICandle[] {
     return candles.map((candle) => [
       candle[0] * 1000,
@@ -277,6 +188,10 @@ export class BrokerBitmart extends Broker {
       // candle.baseAssetVolume = parseFloat(candle.baseAssetVolume)
       // candle.quoteAssetVolume = parseFloat(candle.quoteAssetVolume)
     ]) as ICandle[] // TEMP to fix typing
+  }
+
+  override getCalendarItems(): Promise<ICalendarItem[]> {
+    throw new Error('Method not implemented.')
   }
 
   // async get24HChanges(): Promise<IDailyStatsResult[]> {

@@ -7,7 +7,7 @@ import { TICKER_TYPE } from '../../ticker/ticker.util';
 import { logger } from '../../util/log';
 import { ISymbol } from '../symbol/symbol.interfaces';
 import { IOrder, IOrderOptions, IOrderData, ORDER_SIDE } from './order.interfaces';
-import { XtbBroker } from '../../brokers/xtb/xtb.broker';
+// import { XtbBroker } from '../../brokers/xtb/xtb.broker';
 
 const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../_data/snapshots/backtest')
 
@@ -71,7 +71,7 @@ export class OrderManager {
         const order: IOrder = {
             ...options,
             quantity,
-            symbol: symbol.name,
+            symbol: symbol,
         }
 
         // stoploss orders need a price field
@@ -113,11 +113,11 @@ export class OrderManager {
     /**
      * execute order on binance
      */
-    private async placeOrderReal(order, orderEvent): Promise<void> {
+    private async placeOrderReal(order: IOrder, orderEvent): Promise<void> {
         const eventLog = `${orderEvent.symbol.name} ${order.side} ${order.type} ${order.quantity} ${order.price}`
 
         try {
-            const orderResult = await this.system.brokerManager.get(XtbBroker).placeOrder(order)
+            const orderResult = await order.symbol.broker.placeOrder(order)
 
             orderEvent.id = orderResult.orderId
             orderEvent.price = orderResult['price']
@@ -143,7 +143,7 @@ export class OrderManager {
      * fake order execute + update balances
      */
     private placeOrderBacktest(order: IOrder, orderEvent, symbol: ISymbol): void {
-        const balances = this.system.brokerManager.get(BrokerYahoo).account.balances
+        const balances = this.system.brokerManager.getByClass(BrokerYahoo).account.balances
         const totalPrice = order.quantity * orderEvent.price
 
         orderEvent.state = 'SUCCESS'
@@ -158,7 +158,7 @@ export class OrderManager {
             balances.find(balance => balance.asset === symbol.baseAsset).free -= order.quantity
 
             // find last BUY order
-            const prevOrder = this.orders[order.symbol]?.findLast(order => order.side === ORDER_SIDE.BUY)
+            const prevOrder = this.orders[order.symbol.name]?.findLast(order => order.side === ORDER_SIDE.BUY)
             console.log(order.symbol)
             if (prevOrder) {
                 balances.find(balance => balance.asset === symbol.quoteAsset).free += totalPrice
@@ -178,7 +178,7 @@ export class OrderManager {
      * listen to binance 'userData' stream (order + balances)
      */
     async startWebSocket(): Promise<void> {
-        await this.system.brokerManager.get(BrokerYahoo).startWebsocket(reason => {
+        await this.system.brokerManager.getByClass(BrokerYahoo).startWebsocket(reason => {
             console.error('Websocket error: ' + reason)
         }, event => {
             switch (event.eventType) {
@@ -197,7 +197,7 @@ export class OrderManager {
      */
     private onBalanceUpdate(event) {
         event.balances.forEach(balance => {
-            const accountAsset = this.system.brokerManager.get(BrokerYahoo).account.balances.find(_balance => _balance.asset.toLowerCase() === balance.asset.toLowerCase())
+            const accountAsset = this.system.brokerManager.getByClass(BrokerYahoo).account.balances.find(_balance => _balance.asset.toLowerCase() === balance.asset.toLowerCase())
 
             if (accountAsset) {
                 accountAsset.free = parseFloat(balance.free)
@@ -232,7 +232,7 @@ export class OrderManager {
         order.commissionUSDT = order.commission * order.price
 
         // check if we already know this order
-        const existingOrder = this.orders[order.symbol]?.find(_order => _order.id === order.id)
+        const existingOrder = this.orders[order.symbol.name]?.find(_order => _order.id === order.id)
 
         this.setOrderProfit(order)
 
@@ -247,8 +247,8 @@ export class OrderManager {
         }
         // or push as new order (done from outside this running instance)
         else {
-            this.orders[order.symbol] = this.orders[order.symbol] || []
-            this.orders[order.symbol].push(order)
+            this.orders[order.symbol.name] = this.orders[order.symbol.name] || []
+            this.orders[order.symbol.name].push(order)
         }
 
         // emit to client
@@ -261,7 +261,7 @@ export class OrderManager {
      * calculate the amount to spend on this order (USDT)
      */
     private getToSpendAmount(symbol: ISymbol): number {
-        const quoteAssetBalance = this.system.brokerManager.get(BrokerYahoo).getBalance(symbol.quoteAsset)
+        const quoteAssetBalance = this.system.brokerManager.getByClass(BrokerYahoo).getBalance(symbol.quoteAsset)
 
         if (this.system.type === TICKER_TYPE.SYSTEM_BACKTEST) {
             return quoteAssetBalance
@@ -276,7 +276,7 @@ export class OrderManager {
      */
     private calculateQuantity(symbol: ISymbol, side: ORDER_SIDE): number {
         const toSpend = this.getToSpendAmount(symbol)
-        const broker = this.system.brokerManager.get(BrokerYahoo)
+        const broker = this.system.brokerManager.getByClass(BrokerYahoo)
         const baseAssetBalance = broker.getBalance(symbol.baseAsset)
         const price = this.system.symbolManager.symbols[symbol.name].price //  TODO - reuse symbol object, also used above
         const marketData = broker.getExchangeInfoBySymbol(symbol.name)
@@ -348,7 +348,7 @@ export class OrderManager {
     private setOrderProfit(order: IOrder): void {
         if (order.side === ORDER_SIDE.SELL) {
             // find last BUY order
-            const prevOrder = this.orders[order.symbol]?.findLast(order => order.side === ORDER_SIDE.BUY)
+            const prevOrder = this.orders[order.symbol.name]?.findLast(order => order.side === ORDER_SIDE.BUY)
 
             if (prevOrder) {
                 order.profit = (order.quantity * order.price) - (order.quantity * prevOrder.price)
