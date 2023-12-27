@@ -4,6 +4,8 @@ import {
   ICalendarItem,
   filterCalendarItemsBySymbols,
   filterCalendarItemsInTimeRange,
+  Symbol,
+  BrokerYahoo
 } from '@candlejumper/shared'
 
 export class CalendarManager {
@@ -38,13 +40,16 @@ export class CalendarManager {
       const broker = this.system.brokerManager.get(BrokerAlphavantage)
       this.items = await broker.getCalendarItems()
 
-      this.items.forEach(item => {
-        const symbol = this.system.symbolManager.get(item.symbol)
+      this.items.forEach(async (item, index) => {
+        let symbol = this.system.symbolManager.get(item.symbol)
         if (symbol) {
           symbol.calendar = [item]
         } else{
-          this.system.symbolManager.add(broker, { name: item.symbol, calendar: [item] })
+          symbol = this.system.symbolManager.add(broker, { name: item.symbol, calendar: [item] })
         }
+
+        // set current price diff and other stuff
+        await this.setItemsMetadata(symbol)
       })
 
       // filter calendar items that are between now and X days
@@ -58,8 +63,7 @@ export class CalendarManager {
         this.calendarItems = filterCalendarItemsBySymbols(this.items, this.system.symbolManager.symbols)
       }
 
-      // set current price diff and other stuff
-      await this.setItemsMetadata()
+
       
       // sort by reportDate
       this.items.sort((a, b) => (a.reportDate as any) - (b.reportDate as any))
@@ -74,16 +78,8 @@ export class CalendarManager {
   /**
    * TODO - make batches to not hit request limit
    */
-  private async setItemsMetadata() {
-    for (const item of this.calendarItems) {
-      // load candles of symbol
-      // item.candles = await this.brokerYahoo.getCandlesFromCount(item.symbol, '1d', 100)
-
-      // set diff from oldest to newest
-      // item.diffInPercent = getDiffInPercentage(item.candles.at(0), item.candles.at(-1))
-      
-      // set extra data
-      // item.insights = await this.brokerYahoo.getSymbolInsights(item.symbol)
-    }
+  private async setItemsMetadata(symbol: Symbol) {
+    symbol.insights = await this.system.brokerManager.get(BrokerYahoo).getSymbolInsights(symbol)
+    // console.log(symbol.insights)
   }
 }

@@ -22,7 +22,7 @@ export class SymbolManager {
     return symbol
   }
 
-  get(symbolName: string): ISymbol {
+  get(symbolName: string): Symbol {
     return this.symbols.find(symbol => symbol.name === symbolName)
   }
 

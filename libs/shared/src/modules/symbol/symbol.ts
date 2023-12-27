@@ -61,11 +61,16 @@ export class Symbol implements ISymbol {
   }
 
   async runTickers() {
-   
-    // if (this.insights) {
-      if (!this.name.includes('TRON')) {
+       if (this.name !== 'OIL') {
         return
       }
+    const symbols = this.system.symbolManager.symbols.filter(symbol => symbol.name === 'OIL')
+    console.log(23223, symbols.length)
+    if (this.insights) {
+
+      console.log(this.insights)
+
+      return
 
       if (this.orders.length === 0) {
         // if (this.insights.short === 4) {
@@ -82,7 +87,7 @@ export class Symbol implements ISymbol {
         // }
       }
       // console.log(this.insights.short)
-    // }
+    }
   }
 
   getInfo(): ISymbolInfo {
