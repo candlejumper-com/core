@@ -1,32 +1,78 @@
-import { join } from 'path';
-import { DataSource, Entity, EntitySchema } from "typeorm"
-import { System } from '../system/system';
-import { logger } from '@candlejumper/shared';
+import { join } from 'path'
+import { DataSource, MixedList, EntitySchema, getMetadataArgsStorage } from 'typeorm'
+import { System } from '../system/system'
+import { logger } from '@candlejumper/shared'
 
 const PATH_DATA = join(__dirname, '../../../_data/server')
 
 export class DB {
+  connection: DataSource
 
-    connection: DataSource;
+  constructor(
+    public system: System,
+    private entities: EntitySchema<any>[] | MixedList<any>,
+  ) {}
 
-    constructor(public system: System, private entities: any[]) { }
-    // constructor(public system: System, private entities: EntitySchema<any>[]) { }
+  async init() {
+    logger.info(`\u267F Connect DB`)
+    const now = Date.now()
 
-    async init() {
-        logger.info(`\u267F Connect DB`)
+    // first time setup, expect all tables to exist
+    await this.setup()
 
-        const now = Date.now()
-        const myDataSource = new DataSource({
-            type: "better-sqlite3",
-            database: join(PATH_DATA, 'tradebot.db'),
-            entities: this.entities,
-            logging: false,
-            synchronize: true,
-        })
-
-        this.connection = await myDataSource.initialize()
-
-        logger.info(`\u2705 Connect DB (${Date.now() - now}ms)`)
+    // if there are tables missing, synchronize
+    if (await this.shouldSynchronize()) {
+      await this.setup(true)
     }
-}
 
+    logger.info(`✅ Connect DB (${Date.now() - now}ms)`)
+  }
+
+  private async setup(synchronize = false) {
+    // if existing connection, destroy
+    if (this.connection) {
+      await this.connection.destroy()
+    }
+
+    const myDataSource = new DataSource({
+      type: 'better-sqlite3',
+      database: join(PATH_DATA, 'tradebot.db'),
+      entities: this.entities,
+      logging: false,
+      synchronize,
+    })
+
+    this.connection = await myDataSource.initialize()
+  }
+
+  // check if all tables exist
+  private async shouldSynchronize() {
+    const tableNames = await this.getAllTableNames()
+    const enitityNames = getMetadataArgsStorage().tables.map(enitity => enitity.name)
+
+    return enitityNames.some(name => !tableNames.includes(name))
+  }
+
+  private async getAllTableNames() {
+    const queryRunner = this.connection.createQueryRunner()
+
+    // Fetch all table names from the information schema
+    const tables = await queryRunner.query(`
+        SELECT 
+            name
+        FROM 
+            sqlite_schema
+        WHERE 
+            type ='table' AND 
+            name NOT LIKE 'sqlite_%';
+        `)
+
+    // Extract table names from the result
+    const tableNames = tables.map((table: { name: string }) => table.name)
+
+    // Release the query runner
+    await queryRunner.release()
+
+    return tableNames
+  }
+}

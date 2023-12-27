@@ -14,8 +14,7 @@ export class InsightManager {
 
     const InsightsRepo = this.system.db.connection.getRepository(InsightEntity)
     const lastRecord = await InsightsRepo.findOne({ where: { updatedAt: MoreThan(minLastUpdateTime) } })
-    const broker = this.system.brokerManager.get(XtbBroker)
-
+    const broker = this.system.brokerManager.get(BrokerYahoo)
     const insightsData = await broker.getSymbolInsights(symbol)
 
     if (!insightsData?.instrumentInfo) {

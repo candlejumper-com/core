@@ -37,7 +37,6 @@ export class CandleManager {
    * TEMP - Changed to fetching remote from candle server
    */
   async getCandles(symbol: string, interval: string, count?: number): Promise<ICandle[]> {
-    console.log('gendcandles', symbol)
     const candles = await this.load([{ symbol, interval }], count)
     return candles[symbol][interval]
 
@@ -122,7 +121,7 @@ export class CandleManager {
       throw new Error('Error fetching candles from candle server')
     }
 
-    logger.info(`\u2705 Sync candles (${(Date.now() - now)}ms)`)
+    logger.info(`✅ Sync candles (${(Date.now() - now)}ms)`)
   }
 
   /**
@@ -175,7 +174,6 @@ export class CandleManager {
           continue
         }
 
-        console.log(2323333, symbolIntervalRef)
         // check if new time < last time
         const isNewCandle = symbolIntervalRef.candles[0][CANDLE_FIELD.TIME] < candle[CANDLE_FIELD.TIME]
 

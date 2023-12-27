@@ -116,7 +116,7 @@ export class BrokerIG extends Broker {
     //   throw new Error(`Error Sync account balance`)
     // }
 
-    logger.info(`\u2705 Sync balance (${Date.now() - now} ms)`);
+    logger.info(`✅ Sync balance (${Date.now() - now} ms)`);
   }
 
   async syncExchangeFromBroker(): Promise<void> {

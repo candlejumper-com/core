@@ -3,6 +3,7 @@ import { ISymbol, ISymbolInfo } from './symbol.interfaces'
 import { Symbol } from './symbol'
 import { logger } from '../../util/log'
 import { showProgressBar } from '../../util/progress-bar'
+import { Broker } from '../broker/broker'
 // import { BrokerYahoo } from '../../brokers/yahoo/yahoo.broker'
 
 export class SymbolManager {
@@ -15,15 +16,8 @@ export class SymbolManager {
 
   async init() {}
 
-  add(data: ISymbol) {
-    const existing = this.get(data.name)
-
-    if (existing) {
-      // throw new Error(`Symbol already exists with that name: ${data.name}`)
-      return null
-    }
-
-    const symbol = new Symbol(this.system, data)
+  add(broker: Broker, data: ISymbol) {
+    const symbol = new Symbol(this.system, broker, data)
     this.symbols.push(symbol)
     return symbol
   }
@@ -36,18 +30,10 @@ export class SymbolManager {
     return this.symbols.map(symbol => symbol.getInfo())
   }
 
-  syncSymbolsWithBroker() {
-    // TODO - using import gives circular dependency error?
-    // const { BrokerYahoo } = require('../../brokers/yahoo/yahoo.broker')
-    const { XtbBroker } = require('../../brokers/xtb/xtb.broker')
-    const symbols = this.system.brokerManager.get(XtbBroker).exchangeInfo.symbols
-    symbols.forEach(symbol => this.add(symbol))
-  }
-
   async update() {
     const progressBar = showProgressBar(this.symbols.length, 'Updating symbols')
-
-    for (const symbol of this.symbols) {
+    for (let i = 0, len = this.symbols.length; i < len; i++) {
+      const symbol = this.symbols[i]
       try {
         // if (symbol.name === 'EXAS') {
         await symbol.update()
@@ -61,7 +47,7 @@ export class SymbolManager {
   }
 
   startUpdateInterval(preUpdate = true) {
-    logger.info('\u231B Starting symbol update interval')
+    logger.info('⏳ Starting symbol update interval')
     this.intervalRef = setInterval(() => this.update(), this.intervalTimeout)
   }
 

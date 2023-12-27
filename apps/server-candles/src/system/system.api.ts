@@ -5,7 +5,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import * as bodyParser from 'body-parser'
 import { SystemCandles } from './system'
-import { ApiServerBase, logger } from '@candlejumper/shared'
+import { ApiServerBase, INTERVAL, logger } from '@candlejumper/shared'
 
 export class ApiServer extends ApiServerBase {
 
@@ -29,7 +29,7 @@ export class ApiServer extends ApiServerBase {
             const { host, port } = this.system.configManager.config.server?.candles
 
             this.server.listen(port, host, () => {
-                logger.info(`\u2705 Public API started on http://${host}:${port}`)
+                logger.info(`✅ Public API started on http://${host}:${port}`)
                 resolve(null)
             })
 
@@ -84,7 +84,7 @@ export class ApiServer extends ApiServerBase {
                 const count = parseInt(query.count, 10) || 1000
                 // const candles = this.system.candleManager.get(params.symbol, params.interval, count)
 
-                const candles = await this.system.candleManager.getFromDB({name: params.symbol}, params.interval, count)
+                const candles = await this.system.candleManager.getFromDB({name: params.symbol}, params.interval as INTERVAL, count)
                 res.send(candles)
             } catch (error) {
                 console.error(error)

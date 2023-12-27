@@ -9,11 +9,11 @@ import {
   InsightEntity,
   InsightManager,
   BrokerAlphavantage,
-  XtbBroker
+  XtbBroker,
+  OrderManager
 } from '@candlejumper/shared'
 import { ApiServer } from './api'
 import { CANDLE_FIELD, CandleManager } from '../modules/candle-manager/candle-manager'
-import { OrderManager } from '../modules/order-manager/order-manager'
 import { DeviceManager } from '../modules/device-manager/device-manager'
 import { BacktestManager } from '../modules/backtest-manager/backtest-manager'
 import { EditorManager, PATH_CUSTOM_DIST_BOTS, PATH_CUSTOM_DIST_INDICATORS } from '../modules/editor-manager/editor-manager'
@@ -81,8 +81,6 @@ export class SystemMain extends System {
     await this.brokerManager.add(BrokerYahoo)
     await this.brokerManager.add(XtbBroker)
 
-    this.symbolManager.syncSymbolsWithBroker()
-
     this.chatGPTManager = new ChatGPTManager(this)
     this.newsManager = new NewsManager(this)
     this.calendarManager = new CalendarManager(this)
@@ -148,10 +146,6 @@ export class SystemMain extends System {
 
     // open websockets for realtime orders and balance
     await this.orderManager.startWebSocket()
-  }
-
-  async reload(): Promise<void> {
-    console.log('RELOAD')
   }
 
   /**
@@ -296,7 +290,7 @@ export class SystemMain extends System {
       // })
     }
 
-    logger.info(`\u2705 Add bots from config ${Date.now() - now}ms)`)
+    logger.info(`✅ Add bots from config ${Date.now() - now}ms)`)
   }
 
   async addDefaultTickers(): Promise<void> {
@@ -336,6 +330,6 @@ export class SystemMain extends System {
       }
     }
 
-    logger.info(`\u2705 Add default tickers (${Date.now() - now}ms)`)
+    logger.info(`✅ Add default tickers (${Date.now() - now}ms)`)
   }
 }

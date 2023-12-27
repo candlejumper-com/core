@@ -1,3 +1,5 @@
+import { INTERVAL } from "../../util/util"
+
 export interface ISystemConfig {
     dev: boolean,
     security?: {
@@ -11,7 +13,7 @@ export interface ISystemConfig {
             apiKey: string
         }
     }
-    intervals?: string[]
+    intervals?: INTERVAL[]
     bots?: string[]
     quantityPercentage?: number
     spread?: number

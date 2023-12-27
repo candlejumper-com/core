@@ -1,6 +1,6 @@
 import { Repository } from "typeorm"
 import { SystemCandles } from "../../system/system"
-import { CANDLE_FIELD, isForwardCandleArray, ICandle, ISymbol, ICandleObject, getCandleEntityName, showProgressBar, logger } from "@candlejumper/shared"
+import { CANDLE_FIELD, isForwardCandleArray, ICandle, ISymbol, ICandleObject, getCandleEntityName, showProgressBar, logger, INTERVAL } from "@candlejumper/shared"
 
 export class CandleManager {
   private outTickIntervalTime = 200
@@ -42,7 +42,7 @@ export class CandleManager {
     }, this.outTickIntervalTime)
   }
 
-  async getFromDB(symbol: ISymbol, interval: string, count: number): Promise<ICandle[]> {
+  async getFromDB(symbol: ISymbol, interval: INTERVAL, count: number): Promise<ICandle[]> {
     try {
       const result = await this.getRepository(symbol, interval).find({ take: count, order: { time: "DESC" } })
       const candles: ICandle[] = result.map((row) => [row.time, row.open, row.high, row.low, row.close, row.volume])
@@ -54,7 +54,7 @@ export class CandleManager {
     }
   }
 
-  async saveToDB(symbol: ISymbol, interval: string, candles: ICandle[]): Promise<void> {
+  async saveToDB(symbol: ISymbol, interval: INTERVAL, candles: ICandle[]): Promise<void> {
     if (!candles.length) {
       return
     }
@@ -112,18 +112,18 @@ export class CandleManager {
 
     await Promise.all(promises)
 
-    logger.info(`\u2705 Sync candles (${Date.now() - now}ms)`)
+    logger.info(`✅ Sync candles (${Date.now() - now}ms)`)
   }
 
-  private getRepository(symbol: ISymbol, interval: string): Repository<ICandleObject> {
-    const repositoryName = getCandleEntityName(this.system, symbol.name, interval)
+  private getRepository(symbol: ISymbol, interval: INTERVAL): Repository<ICandleObject> {
+    const repositoryName = getCandleEntityName(symbol, interval)
     return this.system.db.connection.getRepository(repositoryName)
   }
 
   /**
    * preload data from broker and store in DB
    */
-  private async syncSymbol(symbol: ISymbol, interval: string, count: number): Promise<void> {
+  private async syncSymbol(symbol: ISymbol, interval: INTERVAL, count: number): Promise<void> {
     const broker = this.system.brokerManager.get()
 
     // get last candle

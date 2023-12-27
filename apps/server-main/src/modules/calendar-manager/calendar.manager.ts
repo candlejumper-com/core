@@ -35,14 +35,15 @@ export class CalendarManager {
   async checkCalendarItems() {
     try {
       // (re)load all calendar items
-      this.items = await this.system.brokerManager.get(BrokerAlphavantage).getCalendarItems()
+      const broker = this.system.brokerManager.get(BrokerAlphavantage)
+      this.items = await broker.getCalendarItems()
 
       this.items.forEach(item => {
         const symbol = this.system.symbolManager.get(item.symbol)
         if (symbol) {
           symbol.calendar = [item]
         } else{
-          this.system.symbolManager.add({ name: item.symbol, calendar: [item] })
+          this.system.symbolManager.add(broker, { name: item.symbol, calendar: [item] })
         }
       })
 

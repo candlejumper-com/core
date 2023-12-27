@@ -107,7 +107,7 @@ export class EditorManager {
             // using 1 worker to compile, is faster then a woker per bot, hmmmkay
             await this.pool.exec('compile', [{ root: PATH_CUSTOM, dir: this.fileTree[0] }])
 
-            logger.info(`\u2705 Compiling bots & indicators done (${Date.now() - now}ms)`)
+            logger.info(`✅ Compiling bots & indicators done (${Date.now() - now}ms)`)
         } catch (error) {
             console.error(error)
         }

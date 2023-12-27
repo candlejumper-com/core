@@ -74,7 +74,7 @@ export class ApiServer extends ApiServerBase {
       const { host, port } = this.system.configManager.config.server.api
 
       this.server.listen(port, host, null, () => {
-        logger.info(`\u2705 Public API listening on ${host}:${port}`)
+        logger.info(`✅ Public API listening on ${host}:${port}`)
         resolve(null)
       })
     })

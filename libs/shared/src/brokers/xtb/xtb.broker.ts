@@ -48,7 +48,7 @@ export class XtbBroker extends Broker {
 
     const now = Date.now()
 
-    logger.info(`\u2705 Sync balance (${Date.now() - now} ms)`)
+    logger.info(`✅ Sync balance (${Date.now() - now} ms)`)
   }
 
   override async syncExchangeFromBroker(): Promise<void> {
@@ -69,12 +69,13 @@ export class XtbBroker extends Broker {
 
   override async placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull> {
     if (order.side === ORDER_SIDE.BUY) {
-        this.instance.trading.buy({symbol: order.symbol, volume: order.quantity})
+      console.log(23223, order)
+      const result = await this.instance.trading.buy({symbol: order.symbol, volume: order.quantity})
+      const result2 = await result.transaction
+      return result2
     } else {
-        this.instance.trading.sell({symbol: order.symbol, volume: order.quantity})
+      return await this.instance.trading.sell({symbol: order.symbol, volume: order.quantity})
     }
-
-    return null
   }
 
   override async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void): Promise<void> {

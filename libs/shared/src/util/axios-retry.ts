@@ -15,7 +15,7 @@ export function createAxiosRetryInstance(name = 'axios-retry', statusCodes = [40
       logger.info(error.response.data)
       logger.info(error.response.status)
     } else if (error.cause) {
-      logger.error(`[${name}] ${error.cause}`)
+      logger.warn(`⚠️ [${name}] ${error.cause.message}`.yellow)
     }
   }
 

@@ -89,7 +89,7 @@ export class BrokerYahoo extends Broker {
 
     const now = Date.now()
 
-    logger.info(`\u2705 Sync balance (${Date.now() - now} ms)`)
+    logger.info(`✅ Sync balance (${Date.now() - now} ms)`)
   }
 
   async getCandlesFromTime(symbol: ISymbol, interval: string, fromTime: number): Promise<ICandle[]> {

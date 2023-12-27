@@ -41,9 +41,7 @@ export abstract class System extends Ticker<null> {
     await this.symbolManager.init()
     await this.onInit?.()
 
-    logger.info(
-      `\u2705 Initialize system (${Date.now() - now}ms)\n-------------------------------------------------------------`
-    )
+    logger.info(`✅ Initialize system (${Date.now() - now}ms) `)
 
     this.isInitialized = true
   }
@@ -60,7 +58,7 @@ export abstract class System extends Ticker<null> {
     this.isRunning = true
 
     logger.info(
-      `\u2705 Started system \n--------------------------------------------------------------`
+      `🦄 Started system \n--------------------------------------------------------------`
     );
   }
 

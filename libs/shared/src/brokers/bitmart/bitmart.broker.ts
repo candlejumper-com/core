@@ -85,7 +85,7 @@ export class BrokerBitmart extends Broker {
     //   throw new Error(`Error Sync account balance`)
     // }
 
-    logger.info(`\u2705 Sync balance (${Date.now() - now} ms)`)
+    logger.info(`✅ Sync balance (${Date.now() - now} ms)`)
   }
 
   /**
@@ -191,7 +191,7 @@ export class BrokerBitmart extends Broker {
       startTime = candles[candles.length - 1]?.[CANDLE_FIELD.TIME] + 1
     }
 
-    // logger.info(`\u2705 Sync from time: ${symbol} ${interval}`)
+    // logger.info(`✅ Sync from time: ${symbol} ${interval}`)
 
     return allCandles.reverse()
   }
@@ -226,7 +226,7 @@ export class BrokerBitmart extends Broker {
 
       allCandles.push(...candles.reverse())
 
-      logger.info(`\u2705 Sync candles: ${symbol} ${interval} (${i + 1}/${loops}) ${new Date(endTime)}`)
+      logger.info(`✅ Sync candles: ${symbol} ${interval} (${i + 1}/${loops}) ${new Date(endTime)}`)
 
       if (candles.length < limit || allCandles.length === count) {
         break

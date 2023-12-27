@@ -7,6 +7,7 @@ import { TICKER_TYPE } from '../../ticker/ticker.util';
 import { logger } from '../../util/log';
 import { ISymbol } from '../symbol/symbol.interfaces';
 import { IOrder, IOrderOptions, IOrderData, ORDER_SIDE } from './order.interfaces';
+import { XtbBroker } from '../../brokers/xtb/xtb.broker';
 
 const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../_data/snapshots/backtest')
 
@@ -53,6 +54,7 @@ export class OrderManager {
 
         // unless forced, check if order is not same side as last order
         if (!options.force && ((this.system.type === TICKER_TYPE.SYSTEM_MAIN && !isProduction) || !this.checkIsNotSameOrderSide(symbol, side))) {
+            console.log(11122323)
             return
         }
 
@@ -61,6 +63,7 @@ export class OrderManager {
 
         // only process when quantity is higher then zero
         if (!quantity) {
+            logger.warn('quantity is zero')
             return
         }
 
@@ -82,7 +85,7 @@ export class OrderManager {
             price,
             commission: 0,
             symbol,
-            time: this.system.time.getTime(),
+            time: (this.system.time || new Date).getTime(),
             state: 'PENDING',
             profit: 0,
             result: {}
@@ -111,17 +114,17 @@ export class OrderManager {
      * execute order on binance
      */
     private async placeOrderReal(order, orderEvent): Promise<void> {
-        const eventLog = `${orderEvent.symbol} ${order.side} ${order.type} ${order.quantity} ${order.price}`
+        const eventLog = `${orderEvent.symbol.name} ${order.side} ${order.type} ${order.quantity} ${order.price}`
 
         try {
-            const orderResult = await this.system.brokerManager.get(BrokerYahoo).placeOrder(order)
+            const orderResult = await this.system.brokerManager.get(XtbBroker).placeOrder(order)
 
             orderEvent.id = orderResult.orderId
             orderEvent.price = orderResult['price']
             console.log('order result', orderResult)
             // orderEvent.commission = parseFloat(orderResult.commission)
 
-            logger.info(`TRADE SUCCCESS: ${eventLog}`)
+            logger.info(`TRADE SUCCCESS:`, eventLog)
 
             orderEvent.state = 'SUCCESS'
 

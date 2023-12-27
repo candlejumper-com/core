@@ -7,6 +7,7 @@ import { createAxiosRetryInstance } from '../../util/axios-retry'
 import { TICKER_TYPE } from '../../ticker/ticker.util'
 import { ISymbol } from '../symbol/symbol.interfaces'
 import { IOrder } from '../order/order.interfaces'
+import { INTERVAL } from '../../index_client'
 
 export abstract class Broker {
   abstract id: string
@@ -16,7 +17,7 @@ export abstract class Broker {
   abstract getOrdersByMarket(market: string): Promise<IOrder[]>
   abstract placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull>
   abstract startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void): Promise<void>
-  abstract startCandleTicker(symbols: ISymbol[], intervals: string[], callback: CandleTickerCallback): void
+  abstract startCandleTicker(symbols: ISymbol[], intervals: INTERVAL[], callback: CandleTickerCallback): void
   abstract getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]>
   abstract getCandlesFromCount(symbol: ISymbol, interval: string, count: number): Promise<ICandle[]>
 
@@ -38,7 +39,7 @@ export abstract class Broker {
       const now = Date.now()
       logger.info(`\u267F [${this.id}] Sync exchange info from broker`)
       await this.syncExchangeFromBroker()
-      logger.info(`\u2705 [${this.id}] Sync exchange info from broker (${Date.now() - now} ms)`)
+      logger.info(`✅ [${this.id}] Sync exchange info from broker (${Date.now() - now} ms)`)
     } else {
       await this.syncExchangeFromCandleServer()
     }
@@ -50,6 +51,8 @@ export abstract class Broker {
 
       process.env.TZ = this.exchangeInfo.timezone
     }
+    
+    this.exchangeInfo.symbols.forEach(symbol => this.system.symbolManager.add(this, symbol))
 
     await this.getOrders()
   }
@@ -84,7 +87,7 @@ export abstract class Broker {
       const { data: { exchangeInfo} } = await this.axios.get(`http://${host}:${port}/api/exchange/${this.id}`)
       this.exchangeInfo = exchangeInfo
 
-      logger.info(`\u2705 [${this.id}] Sync exchange info from candle server (${Date.now() - now} ms)`)
+      logger.info(`✅ [${this.id}] Sync exchange info from candle server (${Date.now() - now} ms)`)
     } catch (error: any) {
       if (error.cause) {
         logger.error(error.cause)

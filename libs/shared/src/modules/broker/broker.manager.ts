@@ -28,6 +28,7 @@ export class BrokerManager {
     const broker = new BrokerClass(this.system)
     this.brokers.set(BrokerClass, broker)
     await broker.init()
+
     return broker
   }
 
