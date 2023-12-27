@@ -50,7 +50,7 @@ export abstract class Broker {
       process.env.TZ = this.exchangeInfo.timezone
     }
 
-    this.exchangeInfo.symbols.forEach(async symbol => this.system.symbolManager.add(this, symbol))
+    this.exchangeInfo.symbols.forEach(symbol => this.system.symbolManager.add(this, structuredClone(symbol)))
 
     await this.getOrders()
   }

@@ -79,7 +79,7 @@ export class SystemMain extends System {
    * only executed on MAIN system (not a backtest)
    */
   private async initAsMain(): Promise<void> {
-    await this.brokerManager.add(XtbBroker, [BROKER_PURPOSE.CANDLES])
+    await this.brokerManager.add(XtbBroker, [BROKER_PURPOSE.CANDLES, BROKER_PURPOSE.ORDERS])
     await this.brokerManager.add(BrokerAlphavantage, [BROKER_PURPOSE.CALENDAR])
     await this.brokerManager.add(BrokerYahoo, [BROKER_PURPOSE.INSIGHT])
 

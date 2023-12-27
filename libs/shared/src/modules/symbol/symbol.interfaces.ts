@@ -12,6 +12,7 @@ export interface ISymbol extends ISymbolInfo {
 
 export interface ISymbolInfo {
   name?: string
+  description?: string
   baseAsset?: string
   baseAssetPrecision?: number
   baseAssetIcon?: string

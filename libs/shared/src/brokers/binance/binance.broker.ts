@@ -13,9 +13,10 @@ import { ISymbol } from '../../modules/symbol/symbol.interfaces'
 import { Symbol } from '../../modules/symbol/symbol'
 import { SimpleQueue } from '../../util/queue'
 import { TICKER_TYPE } from '../../ticker/ticker.util'
-import { IOrder, ORDER_SIDE } from '../../modules/order/order.interfaces'
+import { IOrder } from '../../modules/order/order.interfaces'
 import { ICalendarItem } from '../../modules/calendar/calendar.interfaces'
 import { INTERVAL } from '../../index_client'
+import { ORDER_SIDE, ORDER_TYPE } from '../../modules/order/order.util'
 
 export class BrokerBinance extends Broker {
   id = 'BINANCE'
@@ -203,11 +204,11 @@ export class BrokerBinance extends Broker {
 
       const cleanOrder: IOrder = {
         id: order.id,
-        type: 'MARKET',
+        type: ORDER_TYPE.MARKET,
         time: order.time,
         price: parseFloat(order.price as string),
         side: order.isBuyer ? ORDER_SIDE.BUY : ORDER_SIDE.SELL,
-        symbolName: order.symbol,
+        symbol: symbol,
         quantity: parseFloat(order.qty as string),
         profit: 0,
         commission: parseFloat(order.commission as string),
@@ -226,6 +227,7 @@ export class BrokerBinance extends Broker {
     const result = await this.instance.submitNewOrder(order as any)
     
     return {
+      ...order,
       id: result.orderId
     }
   }

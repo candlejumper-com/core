@@ -7,10 +7,11 @@ import { InsightEntity } from '../insight/insight.entity'
 import { logger } from '../../util/log'
 import { ICalendarItem } from '../calendar/calendar.interfaces'
 import { ICandle } from '../candle'
-import { IOrder, ORDER_SIDE } from '../order/order.interfaces'
+import { IOrder } from '../order/order.interfaces'
 import { Broker } from '../broker/broker'
 import { XtbBroker } from '../../brokers/xtb/xtb.broker'
 import { BROKER_PURPOSE } from '../broker/broker.util'
+import { ORDER_SIDE, ORDER_TYPE } from '../order/order.util'
 
 export class Symbol implements ISymbol {
   name: string
@@ -33,19 +34,25 @@ export class Symbol implements ISymbol {
 
   constructor(
     public system: System,
-    // public broker: Broker,
     params: ISymbol,
   ) {
     Object.assign(this, params)
   }
 
   getBrokerByPurpose(purpose: BROKER_PURPOSE) {
-    return this.brokers.find(broker => broker.instance.hasPurpose(purpose))
+    const broker = this.brokers.find(broker => broker.instance.hasPurpose(purpose))
+
+    if (!broker) {
+      // throw new Error('Broker with purpose ' + purpose + ' not found')
+      return null
+    }
+
+    return broker
   }
 
   addBroker(instance: Broker, symbolName: string) {
-    if (this.brokers.find(broker => broker.instance === instance)) {
-      logger.warn(`Broker(${instance.id}) already added to symbol(${this.name})`)
+    if (this.brokers.some(broker => broker.instance === instance)) {
+      // logger.warn(`Broker(${instance.id}) already added to symbol(${this.name})`)
       // throw new Error(`Broker(${instance.id}) already added to symbol(${symbolName})`)
       return
     }
@@ -63,11 +70,7 @@ export class Symbol implements ISymbol {
       const allowUpdate = this.insights?.updatedAt.getTime() + minUpdatedAtDiff < Date.now()
 
       if (!this.insights || allowUpdate) {
-        // console.log(this.broker instanceof XtbBroker)
-        if (!this.name.includes('.') && this.brokers instanceof XtbBroker) {
-          logger.debug(`Updating ${this.name} symbol`)
-          // this.insights = await this.system.insightManager.loadPredictionsBySymbol(this)
-        }
+        this.insights = await this.system.insightManager.loadPredictionsBySymbol(this)
       }
     }
 
@@ -79,16 +82,22 @@ export class Symbol implements ISymbol {
   }
 
   async runTickers() {
-    if (this.name !== 'AAPL') {
+    const broker = this.getBrokerByPurpose(BROKER_PURPOSE.ORDERS)
+    const oSymbolName = broker.symbolName
+
+    // console.log(2222, oSymbolName)
+
+    if (broker && this.insights) {
+      // console.log(2222, broker.symbolName)
+    } else {
       return
     }
-    const symbols = this.system.symbolManager.symbols.find(symbol => symbol.name === 'AAPL')
+    if (this.name !== 'TAP') {
+      return
+    }
 
     if (this.insights) {
       console.log(this.insights)
-
-      return
-
       if (this.orders.length === 0) {
         // if (this.insights.short === 4) {
 
@@ -98,6 +107,7 @@ export class Symbol implements ISymbol {
             side: ORDER_SIDE.BUY,
             symbol: this,
             quantity: 2500,
+            type: ORDER_TYPE.MARKET
           },
           {},
         )

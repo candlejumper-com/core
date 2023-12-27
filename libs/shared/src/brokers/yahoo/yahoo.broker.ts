@@ -68,7 +68,7 @@ export class BrokerYahoo extends Broker {
   }
 
   override getSymbolInsights(symbol: ISymbol): Promise<InsightsResult> {
-    return this.queue.add(() => yahooFinance.insights(symbol.name))
+    return this.queue.add(() => yahooFinance.insights(symbol.name, null, { validateResult: false }))
   }
 
 

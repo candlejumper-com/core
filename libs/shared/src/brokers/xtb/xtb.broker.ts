@@ -9,11 +9,12 @@ import { ISymbol } from '../../modules/symbol/symbol.interfaces'
 import { Symbol } from '../../modules/symbol/symbol'
 import { ICandle } from '../../modules/candle'
 import { SimpleQueue } from '../../util/queue'
-import { IOrder, ORDER_SIDE } from '../../modules/order/order.interfaces'
+import { IOrder } from '../../modules/order/order.interfaces'
 import { INTERVAL } from '../../util/util'
 import { tradeTransactionResponse } from 'xapi-node/build/v2/interface/Response'
 import { Transaction } from 'xapi-node/build/v2/core/Transaction'
 import { BROKER_PURPOSE } from '../../modules/broker/broker.util'
+import { ORDER_SIDE, ORDER_TYPE } from '../../modules/order/order.util'
 
 // https://xstation5.xtb.com/#/demo/loggedIn
 // http://developers.xstore.pro/documentation/
@@ -21,7 +22,6 @@ import { BROKER_PURPOSE } from '../../modules/broker/broker.util'
 export class XtbBroker extends Broker {
   override id = 'xtb'
   instance: XAPI
-  //   instance: XAPI
   queue = new SimpleQueue(this.system)
 
   override async onInit(): Promise<void> {
@@ -67,25 +67,25 @@ export class XtbBroker extends Broker {
   }
 
   override async placeOrder(order: IOrder): Promise<IOrder> {
-    const originalName = order.symbol.getBrokerByPurpose(BROKER_PURPOSE.CANDLES).symbolName
+    const originalName = order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).symbolName
 
-    let result: {
-      transaction: Transaction<Record<string | number, any>, Record<string | number, any>>
-      data: {
-        returnData: tradeTransactionResponse
-        jsonReceived: Time
-        json: string
-      }
-    }
+    let request
 
     if (order.side === ORDER_SIDE.BUY) {
-      result = await this.instance.trading.buy({ symbol: originalName, volume: order.quantity }).transaction
+      request = this.instance.trading.buy({ symbol: originalName, volume: order.quantity })
     } else {
-      result = await this.instance.trading.sell({ symbol: originalName, volume: order.quantity }).transaction
+      request = this.instance.trading.sell({ symbol: originalName, volume: order.quantity })
     }
 
+    const [status, result] = await Promise.all([
+      request.transactionStatus,
+      request.transaction
+    ])
+
+    // TODO - add more return data
     return {
-      id: result.data.returnData.order,
+      ...order,
+      id: result.data.returnData.order
     }
   }
 
@@ -152,27 +152,28 @@ export class XtbBroker extends Broker {
 
   private async getTrendingSymbols(): Promise<ISymbol[]> {
     const data = (await this.instance.Socket.send.getAllSymbols()).data.returnData
-    // console.log(data)
-    return data.map(
-      symbol =>
-        ({
-          description: symbol.description,
-          name: symbol.symbol,
-          baseAsset: '',
-          quoteAsset: '',
-          price: symbol.ask,
-          priceString: symbol.ask.toString(),
-          direction: 0,
-          change24H: 0,
-          start24HPrice: 0,
-          change24HString: '0',
-          changedSinceLastClientTick: false,
-          totalOrders: 0,
-          candles: {
-            [INTERVAL['1d']]: [],
-          },
-        }) as ISymbol,
-    )
+
+    return data.map(symbol => {
+      const _symbol: ISymbol = {
+        description: symbol.description,
+        name: symbol.symbol,
+        baseAsset: '',
+        quoteAsset: '',
+        price: symbol.ask,
+        priceString: symbol.ask.toString(),
+        direction: 0,
+        change24H: 0,
+        start24HPrice: 0,
+        change24HString: '0',
+        changedSinceLastClientTick: false,
+        totalOrders: 0,
+        candles: {
+          [INTERVAL['1d']]: [],
+        },
+      }
+
+      return _symbol
+    })
   }
 
   private normalizeCandles(candles: RATE_INFO_RECORD[]): ICandle[] {

@@ -21,6 +21,7 @@ export class SymbolManager {
     const oSymbolName = data.name
     data.name = data.name.split('.')[0]
 
+    // console.log(34343, oSymbolName)
     let symbol = this.symbols.find(symbol => symbol.name === data.name)
 
     if (symbol) {

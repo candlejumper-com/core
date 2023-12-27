@@ -6,7 +6,7 @@ import { ConfigManager } from "../modules/config/config-manager"
 import { SymbolManager } from "../modules/symbol/symbol.manager"
 import { BrokerManager } from "../modules/broker/broker.manager"
 import { Ticker } from "../ticker/ticker"
-import { OrderManager } from "../modules/order/order-manager"
+import { OrderManager } from "../modules/order/order.manager"
 
 export abstract class System extends Ticker<null> {
   override system = this
@@ -19,7 +19,7 @@ export abstract class System extends Ticker<null> {
   db: DB
   apiServer: ApiServerBase
   orderManager: OrderManager
-  // insightManager: InsightManager
+  insightManager: InsightManager
 
   readonly brokerManager = new BrokerManager(this)
   readonly configManager = new ConfigManager(this)

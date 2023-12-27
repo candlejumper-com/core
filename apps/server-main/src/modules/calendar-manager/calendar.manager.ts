@@ -47,9 +47,6 @@ export class CalendarManager {
         } else{
           symbol = this.system.symbolManager.add(broker, { name: item.symbol, calendar: [item] })
         }
-
-        // set current price diff and other stuff
-        await this.setItemsMetadata(symbol)
       })
 
       // filter calendar items that are between now and X days
@@ -73,13 +70,5 @@ export class CalendarManager {
     } catch (error) {
       console.error(error)
     }
-  }
-
-  /**
-   * TODO - make batches to not hit request limit
-   */
-  private async setItemsMetadata(symbol: Symbol) {
-    // symbol.insights = await this.system.brokerManager.getByPurpose(BROKER_PURPOSE.INSIGHT).getSymbolInsights(symbol)
-    // console.log(symbol.insights)
   }
 }

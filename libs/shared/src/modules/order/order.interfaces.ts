@@ -1,18 +1,13 @@
 import { ITickerSnapshot } from "../../ticker/ticker.interfaces"
 import { ICandle } from "../candle"
-import { ISymbol } from "../symbol/symbol.interfaces"
 import { Symbol } from "../symbol/symbol"
-
-export const enum ORDER_SIDE {
-    'BUY' = 'BUY',
-    'SELL' = 'SELL'
-}
+import { ORDER_SIDE, ORDER_TYPE } from "./order.util"
 
 export interface IOrder {
     id?: number
-    type?: string
-    side?: ORDER_SIDE
-    symbol?: Symbol
+    type: string
+    side: ORDER_SIDE
+    symbol: Symbol
     symbolName?: string
     quantity?: number
     price?: number
@@ -26,6 +21,7 @@ export interface IOrder {
 }
 
 export interface IOrderOptions {
+    type: ORDER_TYPE
     force?: boolean
     side: ORDER_SIDE
     symbol: Symbol,

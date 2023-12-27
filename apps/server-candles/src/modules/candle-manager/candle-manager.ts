@@ -62,7 +62,7 @@ export class CandleManager {
       const candles: ICandle[] = result.map(row => [row.time, row.open, row.high, row.low, row.close, row.volume])
       return candles.reverse()
     } catch (error) {
-      logger.error(`Symbol not found ${symbol.name} - ${interval}`)
+      logger.error(`Symbol not found (${symbol?.name}) - ${interval}`)
       logger.error(error)
       return undefined
     }

@@ -1,4 +1,4 @@
-import { BrokerYahoo, ISymbol, XtbBroker } from '@candlejumper/shared'
+import { BROKER_PURPOSE, BrokerYahoo, ISymbol, Symbol, XtbBroker, logger } from '@candlejumper/shared'
 import { System } from '../../system/system'
 import { InsightEntity } from './insight.entity'
 import { LessThan, Equal, MoreThan } from 'typeorm'
@@ -6,13 +6,20 @@ import { LessThan, Equal, MoreThan } from 'typeorm'
 export class InsightManager {
   constructor(public system: System) {}
 
-  async loadPredictionsBySymbol(symbol: ISymbol) {
+  async loadPredictionsBySymbol(symbol: Symbol) {
+    const broker = symbol.getBrokerByPurpose(BROKER_PURPOSE.INSIGHT).instance
+
+    if (!broker) {
+      return null
+    }
+
+    logger.info(`Updating ${symbol.name} insight`)
+
     const minLastUpdateTime = new Date()
     minLastUpdateTime.setHours(minLastUpdateTime.getHours() - 4)
 
     const InsightsRepo = this.system.db.connection.getRepository(InsightEntity)
     const lastRecord = await InsightsRepo.findOne({ where: { updatedAt: MoreThan(minLastUpdateTime) } })
-    const broker = this.system.brokerManager.getByClass(BrokerYahoo)
     const insightsData = await broker.getSymbolInsights(symbol)
 
     if (!insightsData?.instrumentInfo) {
