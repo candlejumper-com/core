@@ -18,7 +18,7 @@ export class BrokerManager {
 
   getByPurpose(purpose: BROKER_PURPOSE): Broker {
     const broker = Array.from(this.brokers.values()).find((broker: Broker) => {
-      return broker.purposes.includes(purpose)
+      return broker.hasPurpose(purpose)
     })
 
     if (!broker) {

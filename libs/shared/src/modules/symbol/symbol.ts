@@ -1,4 +1,3 @@
-import ProgressBar from 'progress'
 import { INewsItem } from '../news/news.interfaces'
 import { System } from '../../system/system'
 import { INTERVAL } from '../../util/util'
@@ -8,13 +7,11 @@ import { InsightEntity } from '../insight/insight.entity'
 import { logger } from '../../util/log'
 import { ICalendarItem } from '../calendar/calendar.interfaces'
 import { ICandle } from '../candle'
-import { Ticker } from '../../ticker/ticker'
 import { IOrder, ORDER_SIDE } from '../order/order.interfaces'
 import { Broker } from '../broker/broker'
-import { BrokerYahoo } from '../../brokers/yahoo/yahoo.broker'
 import { XtbBroker } from '../../brokers/xtb/xtb.broker'
+import { BROKER_PURPOSE } from '../broker/broker.util'
 
-let counter = 0
 export class Symbol implements ISymbol {
   name: string
   description: string
@@ -29,12 +26,31 @@ export class Symbol implements ISymbol {
   price: number
   updatedAt: Date
 
+  brokers: {
+    instance: Broker
+    symbolName: string
+  }[] = []
+
   constructor(
     public system: System,
-    public broker: Broker,
+    // public broker: Broker,
     params: ISymbol,
   ) {
     Object.assign(this, params)
+  }
+
+  getBrokerByPurpose(purpose: BROKER_PURPOSE) {
+    return this.brokers.find(broker => broker.instance.hasPurpose(purpose))
+  }
+
+  addBroker(instance: Broker, symbolName: string) {
+    if (this.brokers.find(broker => broker.instance === instance)) {
+      logger.warn(`Broker(${instance.id}) already added to symbol(${this.name})`)
+      // throw new Error(`Broker(${instance.id}) already added to symbol(${symbolName})`)
+      return
+    }
+
+    this.brokers.push({ instance, symbolName })
   }
 
   async update() {
@@ -48,7 +64,7 @@ export class Symbol implements ISymbol {
 
       if (!this.insights || allowUpdate) {
         // console.log(this.broker instanceof XtbBroker)
-        if (!this.name.includes('.') && this.broker instanceof XtbBroker) {
+        if (!this.name.includes('.') && this.brokers instanceof XtbBroker) {
           logger.debug(`Updating ${this.name} symbol`)
           // this.insights = await this.system.insightManager.loadPredictionsBySymbol(this)
         }

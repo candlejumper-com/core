@@ -7,26 +7,39 @@ import { Broker } from '../broker/broker'
 // import { BrokerYahoo } from '../../brokers/yahoo/yahoo.broker'
 
 export class SymbolManager {
+  symbols: Symbol[] = []
+
   private intervalRef: NodeJS.Timeout
   private intervalTimeout = 1000 * 60 * 60
 
-  symbols: Symbol[] = []
-
-  constructor(private system: System) {}
+  constructor(public system: System) {}
 
   async init() {}
 
   add(broker: Broker, data: ISymbol) {
+    // normalize symbol name
+    const oSymbolName = data.name
+    data.name = data.name.split('.')[0]
+
     let symbol = this.symbols.find(symbol => symbol.name === data.name)
 
     if (symbol) {
       logger.debug(`Symbol ${data.name} already exists`)
+      symbol.addBroker(broker, oSymbolName)
       return symbol
     }
     
-    symbol = new Symbol(this.system, broker, data)
+    symbol = new Symbol(this.system, data)
+
+    // add broker + original symbol name
+    symbol.addBroker(broker, oSymbolName)
+
     this.symbols.push(symbol)
     return symbol
+  }
+
+  remove() {
+    // TODO
   }
 
   get(symbolName: string): Symbol {

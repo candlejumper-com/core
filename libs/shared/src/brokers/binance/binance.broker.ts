@@ -127,7 +127,7 @@ export class BrokerBinance extends Broker {
     return allCandles
   }
 
-  override async startCandleTicker(symbols: ISymbol[], intervals: INTERVAL[], callback: CandleTickerCallback) {
+  override async startCandleTicker(symbols: Symbol[], intervals: INTERVAL[], callback: CandleTickerCallback) {
     this.onCandleTickCallback = callback
     // const streamBinance = new WebSocket('wss://stream.binance.com:9443/ws')
 
@@ -222,8 +222,12 @@ export class BrokerBinance extends Broker {
   }
 
   // TODO: check typings
-  override async placeOrder(order: IOrder): Promise<OrderResponseResult | OrderResponseFull> {
-    return this.instance.submitNewOrder(order as any) as Promise<OrderResponseResult>
+  override async placeOrder(order: IOrder): Promise<IOrder> {
+    const result = await this.instance.submitNewOrder(order as any)
+    
+    return {
+      id: result.orderId
+    }
   }
 
   override getCalendarItems(): Promise<ICalendarItem[]> {

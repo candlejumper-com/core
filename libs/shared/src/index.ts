@@ -1,4 +1,4 @@
-export * from './modules/candle/candle.entity'
+export * from '../../../apps/server-candles/src/modules/candle-manager/candle.entity'
 export * from './modules/candle/candle.interfaces'
 export * from './modules/candle/candle.util'
 

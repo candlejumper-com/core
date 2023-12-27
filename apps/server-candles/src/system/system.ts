@@ -15,7 +15,7 @@ export class SystemCandles extends System {
 
     await this.db.init()
 
-    await this.candleManager.sync()
+    await this.candleManager.syncAll()
     await this.apiServer.start()
 
     this.candleManager.startWebsocketListener()

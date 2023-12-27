@@ -1,7 +1,7 @@
 import { OrderResponseACK, OrderResponseResult, OrderResponseFull } from 'binance'
 import { Broker } from '../../modules/broker/broker'
 import { CandleTickerCallback } from '../../modules/broker/broker.interfaces'
-import XAPI, { CHART_RANGE_INFO_RECORD, RATE_INFO_RECORD, SYMBOL_RECORD } from 'xapi-node'
+import XAPI, { CHART_RANGE_INFO_RECORD, RATE_INFO_RECORD, SYMBOL_RECORD, Time } from 'xapi-node'
 import { format } from 'date-fns'
 import { ICalendarItem } from '../../modules/calendar/calendar.interfaces'
 import { logger } from '../../util/log'
@@ -10,14 +10,18 @@ import { Symbol } from '../../modules/symbol/symbol'
 import { ICandle } from '../../modules/candle'
 import { SimpleQueue } from '../../util/queue'
 import { IOrder, ORDER_SIDE } from '../../modules/order/order.interfaces'
+import { INTERVAL } from '../../util/util'
+import { tradeTransactionResponse } from 'xapi-node/build/v2/interface/Response'
+import { Transaction } from 'xapi-node/build/v2/core/Transaction'
+import { BROKER_PURPOSE } from '../../modules/broker/broker.util'
 
 // https://xstation5.xtb.com/#/demo/loggedIn
 // http://developers.xstore.pro/documentation/
 
 export class XtbBroker extends Broker {
   override id = 'xtb'
-  instance: any
-//   instance: XAPI
+  instance: XAPI
+  //   instance: XAPI
   queue = new SimpleQueue(this.system)
 
   override async onInit(): Promise<void> {
@@ -62,14 +66,26 @@ export class XtbBroker extends Broker {
     return []
   }
 
-  override async placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull> {
+  override async placeOrder(order: IOrder): Promise<IOrder> {
+    const originalName = order.symbol.getBrokerByPurpose(BROKER_PURPOSE.CANDLES).symbolName
+
+    let result: {
+      transaction: Transaction<Record<string | number, any>, Record<string | number, any>>
+      data: {
+        returnData: tradeTransactionResponse
+        jsonReceived: Time
+        json: string
+      }
+    }
+
     if (order.side === ORDER_SIDE.BUY) {
-      console.log(33333, order)
-      const result = await this.instance.trading.buy({symbol: order.symbol, volume: order.quantity})
-      const result2 = await result.transaction
-      return result2
+      result = await this.instance.trading.buy({ symbol: originalName, volume: order.quantity }).transaction
     } else {
-      return await this.instance.trading.sell({symbol: order.symbol, volume: order.quantity})
+      result = await this.instance.trading.sell({ symbol: originalName, volume: order.quantity }).transaction
+    }
+
+    return {
+      id: result.data.returnData.order,
     }
   }
 
@@ -77,18 +93,20 @@ export class XtbBroker extends Broker {
     // throw new Error('Method not implemented.');
   }
 
-  override async startCandleTicker(symbols: ISymbol[], intervals: string[], callback: CandleTickerCallback) {
+  override async startCandleTicker(symbols: Symbol[], intervals: string[], callback: CandleTickerCallback) {
     // throw new Error('Method not implemented.');
   }
 
-  override async getCandlesFromTime(symbol: ISymbol, interval: string, fromTime: number): Promise<ICandle[]> {
+  override async getCandlesFromTime(symbol: Symbol, interval: string, fromTime: number): Promise<ICandle[]> {
     const fromTimeDate = new Date(fromTime)
     const startTime = format(fromTimeDate, 'yyyy-MM-dd')
+    const originalName = symbol.getBrokerByPurpose(BROKER_PURPOSE.CANDLES).symbolName
+
     const queryOptions: CHART_RANGE_INFO_RECORD = {
       end: new Date().getTime(),
       period: 1440, // 1 day
       start: fromTime,
-      symbol: symbol.name,
+      symbol: originalName,
       ticks: 1000,
     }
 
@@ -96,21 +114,25 @@ export class XtbBroker extends Broker {
 
     let candles
     try {
-      candles = (await this.instance.Socket.send.getChartRangeRequest(queryOptions.end, queryOptions.period, queryOptions.start, queryOptions.symbol)).data.returnData
-    //   candles = (await this.instance.Socket.send.getChartRangeRequest(...Object.values(queryOptions))).data.returnData
+      candles = (
+        await this.instance.Socket.send.getChartRangeRequest(queryOptions.end, queryOptions.period, queryOptions.start, queryOptions.symbol)
+      ).data.returnData
+      //   candles = (await this.instance.Socket.send.getChartRangeRequest(...Object.values(queryOptions))).data.returnData
     } catch (error) {
       console.log(error, 'error')
     }
     return this.normalizeCandles(candles.rateInfos)
   }
 
-  override async getCandlesFromCount(symbol: ISymbol, interval: string, count: number): Promise<ICandle[]> {
+  override async getCandlesFromCount(symbol: Symbol, interval: string, count: number): Promise<ICandle[]> {
     const now = new Date()
+    const originalName = symbol.getBrokerByPurpose(BROKER_PURPOSE.CANDLES).symbolName
+
     const queryOptions: CHART_RANGE_INFO_RECORD = {
       end: new Date().getTime(),
       period: 1440, // 1 day
       start: now.getTime() - count * 1440 * 1000,
-      symbol: symbol.name,
+      symbol: originalName,
       ticks: 1000,
     }
 
@@ -118,7 +140,9 @@ export class XtbBroker extends Broker {
 
     let candles
     try {
-      candles = (await this.instance.Socket.send.getChartRangeRequest(queryOptions.end, queryOptions.period, queryOptions.start, queryOptions.symbol)).data.returnData
+      candles = (
+        await this.instance.Socket.send.getChartRangeRequest(queryOptions.end, queryOptions.period, queryOptions.start, queryOptions.symbol)
+      ).data.returnData
     } catch (error) {
       console.log(error, 'error')
     }
@@ -128,28 +152,27 @@ export class XtbBroker extends Broker {
 
   private async getTrendingSymbols(): Promise<ISymbol[]> {
     const data = (await this.instance.Socket.send.getAllSymbols()).data.returnData
-    const symbols = data.map((symbol: SYMBOL_RECORD) => {
-      return {
-        name: symbol.symbol,
-        baseAsset: '',
-        quoteAsset: '',
-        price: symbol.ask,
-        priceString: symbol.ask.toString(),
-        direction: 0,
-        change24H: 0,
-        start24HPrice: 0,
-        change24HString: '0',
-        changedSinceLastClientTick: false,
-        totalOrders: 0,
-        candles: {
-          '1d': {
-            candles: [],
-            volume: [],
+    // console.log(data)
+    return data.map(
+      symbol =>
+        ({
+          description: symbol.description,
+          name: symbol.symbol,
+          baseAsset: '',
+          quoteAsset: '',
+          price: symbol.ask,
+          priceString: symbol.ask.toString(),
+          direction: 0,
+          change24H: 0,
+          start24HPrice: 0,
+          change24HString: '0',
+          changedSinceLastClientTick: false,
+          totalOrders: 0,
+          candles: {
+            [INTERVAL['1d']]: [],
           },
-        },
-      }
-    })
-    return symbols
+        }) as ISymbol,
+    )
   }
 
   private normalizeCandles(candles: RATE_INFO_RECORD[]): ICandle[] {

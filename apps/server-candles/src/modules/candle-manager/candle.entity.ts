@@ -1,7 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { System } from '../../system/system'
-import { ISymbol } from '../symbol/symbol.interfaces'
-import { INTERVAL } from '../../util/util'
+import { Symbol, INTERVAL, System } from "@candlejumper/shared"
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+
 
 // create table based on symbol name
 export function createCandleEntity(tableName: string): any {
@@ -30,9 +29,8 @@ export function createCandleEntity(tableName: string): any {
   return CandleEntity
 }
 
-export function getCandleEntityName(symbol: ISymbol, interval: INTERVAL): string {
-  const symbolName = symbol.name.replaceAll('.', '-')
-  return `SYMBOL_${symbolName}_${interval}`.toUpperCase()
+export function getCandleEntityName(symbol: Symbol, interval: INTERVAL): string {
+  return `SYMBOL_${symbol.name}_${interval}`.toUpperCase()
 }
 
 /**

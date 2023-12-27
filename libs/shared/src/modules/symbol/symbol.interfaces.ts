@@ -7,7 +7,6 @@ export interface ISymbol extends ISymbolInfo {
   candles?: {
     [key in INTERVAL]?: ICandle[]
   }
-
   orders?: any[]
 }
 

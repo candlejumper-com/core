@@ -1,6 +1,7 @@
 import { ICandle, INTERVAL } from "@candlejumper/shared"
 import { DailyChangeStatistic, SpotAssetBalance, AccountInformation } from "binance"
 import { ISymbol } from "../symbol/symbol.interfaces"
+import { Symbol } from "../symbol/symbol"
 
 export interface IDailyStatsResult extends Omit<DailyChangeStatistic, 'quoteVolume'> {
     quoteVolume: number
@@ -15,7 +16,7 @@ export interface IAccount extends Omit<AccountInformation, 'balances'> {
     balances: IBalance[]
 }
 
-export type CandleTickerCallback = (symbol: ISymbol, interval: INTERVAL, candle: ICandle, isFinal: boolean) => Promise<void>
+export type CandleTickerCallback = (symbol: Symbol, interval: INTERVAL, candle: ICandle, isFinal: boolean) => Promise<void>
 
 export interface IBrokerInfo {
     timezone: string

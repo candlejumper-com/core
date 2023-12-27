@@ -16,14 +16,17 @@ import { BROKER_PURPOSE } from './broker.util'
 export abstract class Broker {
   abstract id: string
 
-  onCandleTickCallback: (symbol: ISymbol, interval: INTERVAL, candle: ICandle, isFinal: boolean) => Promise<void>
+  onCandleTickCallback: (symbol: Symbol, interval: INTERVAL, candle: ICandle, isFinal: boolean) => Promise<void>
   onInit?(): Promise<void>
 
   account = { balances: [] } as IAccount
   exchangeInfo: IBrokerInfo
   axios = createAxiosRetryInstance()
 
-  constructor(public system: System, public purposes: BROKER_PURPOSE[]) {}
+  constructor(
+    public system: System,
+    private purposes: BROKER_PURPOSE[],
+  ) {}
 
   async init() {
     if (this.system.type !== TICKER_TYPE.SYSTEM_BACKTEST) {
@@ -46,10 +49,14 @@ export abstract class Broker {
 
       process.env.TZ = this.exchangeInfo.timezone
     }
-    
+
     this.exchangeInfo.symbols.forEach(async symbol => this.system.symbolManager.add(this, symbol))
 
     await this.getOrders()
+  }
+
+  hasPurpose(purpose: BROKER_PURPOSE): boolean {
+    return this.purposes.includes(purpose)
   }
 
   getBalance(asset: string): number {
@@ -76,10 +83,12 @@ export abstract class Broker {
     logger.info(`♿ [${this.id}] Sync exchange info from candle server`)
 
     const now = Date.now()
-    const {host, port} = this.system.configManager.config.server.candles
+    const { host, port } = this.system.configManager.config.server.candles
 
     try {
-      const { data: { exchangeInfo} } = await this.axios.get(`http://${host}:${port}/api/exchange/${this.id}`)
+      const {
+        data: { exchangeInfo },
+      } = await this.axios.get(`http://${host}:${port}/api/exchange/${this.id}`)
       this.exchangeInfo = exchangeInfo
 
       logger.info(`✅ [${this.id}] Sync exchange info from candle server (${Date.now() - now} ms)`)
@@ -105,7 +114,7 @@ export abstract class Broker {
   async getSymbolInsights(symbol: ISymbol): Promise<InsightsResult> {
     throw new Error('Method not implemented: ' + 'getSymbolInsights')
   }
-  
+
   async syncAccount(): Promise<void> {
     throw new Error('Method not implemented.')
   }
@@ -116,13 +125,13 @@ export abstract class Broker {
   async getOrdersBySymbol(symbol: Symbol): Promise<IOrder[]> {
     throw new Error('Method not implemented.')
   }
-  async placeOrder(order: IOrder): Promise<OrderResponseACK | OrderResponseResult | OrderResponseFull> {
+  async placeOrder(order: IOrder): Promise<IOrder> {
     throw new Error('Method not implemented.')
   }
   async startWebsocket(errorCallback: (reason: string) => void, eventCallback: (data: any) => void): Promise<void> {
     throw new Error('Method not implemented.')
   }
-  async startCandleTicker(symbols: ISymbol[], intervals: string[], callback: CandleTickerCallback): Promise<void> {
+  async startCandleTicker(symbols: Symbol[], intervals: string[], callback: CandleTickerCallback): Promise<void> {
     throw new Error('Method not implemented.')
   }
   async getCandlesFromTime(symbol: ISymbol, interval: string, startTime: number): Promise<ICandle[]> {

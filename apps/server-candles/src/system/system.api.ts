@@ -5,7 +5,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import * as bodyParser from 'body-parser'
 import { SystemCandles } from './system'
-import { ApiServerBase, INTERVAL, logger } from '@candlejumper/shared'
+import { ApiServerBase, BROKER_PURPOSE, INTERVAL, logger } from '@candlejumper/shared'
 
 export class ApiServer extends ApiServerBase {
 
@@ -82,9 +82,9 @@ export class ApiServer extends ApiServerBase {
                 const params = req.params
                 const query = req.query as any
                 const count = parseInt(query.count, 10) || 1000
-                // const candles = this.system.candleManager.get(params.symbol, params.interval, count)
+                const symbol = this.system.symbolManager.get(params.symbol)
+                const candles = await this.system.candleManager.getFromDB(symbol, params.interval as INTERVAL, count)
 
-                const candles = await this.system.candleManager.getFromDB({name: params.symbol}, params.interval as INTERVAL, count)
                 res.send(candles)
             } catch (error) {
                 console.error(error)

@@ -7,6 +7,7 @@ import { TICKER_TYPE } from '../../ticker/ticker.util';
 import { logger } from '../../util/log';
 import { ISymbol } from '../symbol/symbol.interfaces';
 import { IOrder, IOrderOptions, IOrderData, ORDER_SIDE } from './order.interfaces';
+import { BROKER_PURPOSE } from '../broker/broker.util';
 // import { XtbBroker } from '../../brokers/xtb/xtb.broker';
 
 const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../_data/snapshots/backtest')
@@ -117,9 +118,9 @@ export class OrderManager {
         const eventLog = `${orderEvent.symbol.name} ${order.side} ${order.type} ${order.quantity} ${order.price}`
 
         try {
-            const orderResult = await order.symbol.broker.placeOrder(order)
+            const orderResult = await order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).instance.placeOrder(order)
 
-            orderEvent.id = orderResult.orderId
+            orderEvent.id = orderResult.id
             orderEvent.price = orderResult['price']
             console.log('order result', orderResult)
             // orderEvent.commission = parseFloat(orderResult.commission)
@@ -159,7 +160,7 @@ export class OrderManager {
 
             // find last BUY order
             const prevOrder = this.orders[order.symbol.name]?.findLast(order => order.side === ORDER_SIDE.BUY)
-            console.log(order.symbol)
+
             if (prevOrder) {
                 balances.find(balance => balance.asset === symbol.quoteAsset).free += totalPrice
                 console.log(totalPrice - (order.quantity * prevOrder.price))
