@@ -32,6 +32,8 @@ export abstract class Ticker<T> {
   // is this ticker initialized
   isInitialized = false
 
+  production: boolean
+
   // stats about this ticker
   readonly stats = {
     ticks: 0,
@@ -63,11 +65,9 @@ export abstract class Ticker<T> {
   protected onDestroy?(): Promise<void>
 
   constructor(
-    // public type: TICKER_TYPE,
-    // public system: System,
-    public parent: Ticker<any>,
-    public symbol: ISymbol,
-    public interval: string,
+    public parent?: Ticker<any>,
+    public symbol?: ISymbol,
+    public interval?: string,
     public config: any = {},
   ) {}
 

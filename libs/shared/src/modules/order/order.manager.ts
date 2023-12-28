@@ -106,7 +106,7 @@ export class OrderManager {
     const eventLog = `${orderEvent.symbol.name} ${order.side} ${order.type} ${order.quantity} ${order.price}`
 
     try {
-      const orderResult = await order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).instance.placeOrder(order)
+      const orderResult = await order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS)?.instance.placeOrder(order)
 
       orderEvent.id = orderResult.id
       orderEvent.price = orderResult['price']

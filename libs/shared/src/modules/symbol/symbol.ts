@@ -83,6 +83,11 @@ export class Symbol implements ISymbol {
 
   async runTickers() {
     const broker = this.getBrokerByPurpose(BROKER_PURPOSE.ORDERS)
+
+    if (!broker) {
+      return
+    }
+    
     const oSymbolName = broker.symbolName
 
     // console.log(2222, oSymbolName)
@@ -92,7 +97,7 @@ export class Symbol implements ISymbol {
     } else {
       return
     }
-    if (this.name !== 'TAP') {
+    if (this.name !== 'AAPL') {
       return
     }
 

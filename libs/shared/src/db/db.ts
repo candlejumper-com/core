@@ -1,5 +1,5 @@
 import { join } from 'path'
-import { DataSource, MixedList, EntitySchema, getMetadataArgsStorage } from 'typeorm'
+import { DataSource, MixedList, EntitySchema, getMetadataArgsStorage, Table } from 'typeorm'
 import { System } from '../system/system'
 import { logger } from '@candlejumper/shared'
 
@@ -14,7 +14,7 @@ export class DB {
   ) {}
 
   async init() {
-    logger.info(`♿ Connect DB`)
+    const log = logger.info(`♿ Connect DB`)
     const now = Date.now()
 
     // first time setup, expect all tables to exist
@@ -29,10 +29,7 @@ export class DB {
   }
 
   private async setup(synchronize = false) {
-    // if existing connection, destroy
-    if (this.connection) {
-      await this.connection.destroy()
-    }
+    await this.connection?.destroy()
 
     const myDataSource = new DataSource({
       type: 'better-sqlite3',
@@ -58,21 +55,12 @@ export class DB {
 
     // Fetch all table names from the information schema
     const tables = await queryRunner.query(`
-        SELECT 
-            name
-        FROM 
-            sqlite_schema
-        WHERE 
-            type ='table' AND 
-            name NOT LIKE 'sqlite_%';
-        `)
+        SELECT name
+        FROM sqlite_schema
+        WHERE type ='table' AND name NOT LIKE 'sqlite_%'
+    `) as Table[]
 
     // Extract table names from the result
-    const tableNames = tables.map((table: { name: string }) => table.name)
-
-    // Release the query runner
-    await queryRunner.release()
-
-    return tableNames
+    return tables.map(table => table.name)
   }
 }

@@ -1,4 +1,5 @@
 import { System } from '../system/system'
+import { logger } from './log'
 
 export interface IExitHandlerOptions {
   cleanup?: boolean
@@ -12,7 +13,7 @@ export function setProcessExitHandlers(system: System) {
       system.stop()
     }
     if (exitCode || exitCode === 0) {
-      console.log('exit', exitCode)
+      logger.info(`exit: ${exitCode}`)
     }
     if (options.exit) {
       process.exit()
@@ -20,15 +21,15 @@ export function setProcessExitHandlers(system: System) {
   }
 
   //do something when app is closing
-  process.on('exit', exitHandler.bind(null, { cleanup: true, exit: true }))
+  process.once('exit', exitHandler.bind(null, { cleanup: true, exit: true }))
 
   //catches ctrl+c event
-  process.on('SIGINT', exitHandler.bind(null, { exit: true }))
+  process.once('SIGINT', exitHandler.bind(null, { exit: true }))
 
   // catches "kill pid" (for example: nodemon restart)
-  process.on('SIGUSR1', exitHandler.bind(null, { exit: true }))
-  process.on('SIGUSR2', exitHandler.bind(null, { exit: true }))
+  process.once('SIGUSR1', exitHandler.bind(null, { exit: true }))
+  process.once('SIGUSR2', exitHandler.bind(null, { exit: true }))
 
   //catches uncaught exceptions
-  process.on('uncaughtException', exitHandler.bind(null, { exit: true }))
+  process.once('uncaughtException', exitHandler.bind(null, { exit: true }))
 }

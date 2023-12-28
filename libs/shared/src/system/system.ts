@@ -1,6 +1,6 @@
 import "colors"
 import { logger, setLogSystemEnvironment } from '../util/log'
-import { ApiServerBase, DB, InsightManager, TICKER_TYPE } from "@candlejumper/shared"
+import { ApiServerBase, DB, InsightManager } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
 import { ConfigManager } from "../modules/config/config-manager"
 import { SymbolManager } from "../modules/symbol/symbol.manager"
@@ -12,10 +12,9 @@ export abstract class System extends Ticker<null> {
   override system = this
   override id = "SYSTEM"
 
-  time: Date
   isRunning = false
-  production = process.env['NODE_ENV'] !== 'production'
 
+  time: Date
   db: DB
   apiServer: ApiServerBase
   orderManager: OrderManager
@@ -25,13 +24,9 @@ export abstract class System extends Ticker<null> {
   readonly configManager = new ConfigManager(this)
   readonly symbolManager = new SymbolManager(this)
 
-  constructor() {
-    super(null, null, null, null)
-
-    setProcessExitHandlers(this)
-  }
-
   override async init(): Promise<void> {
+    setProcessExitHandlers(this)
+
     super.init()
 
     this.configManager.init()
@@ -72,5 +67,7 @@ export abstract class System extends Ticker<null> {
     }
 
     this.isRunning = false
+
+    logger.info('🦋 Stopped system')
   }
 }

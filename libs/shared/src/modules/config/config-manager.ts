@@ -33,5 +33,7 @@ export class ConfigManager {
     }
 
     this.config = merge(configDefault, configCustom)
+
+    this.system.production = !!this.config.production.enabled
   }
 }
