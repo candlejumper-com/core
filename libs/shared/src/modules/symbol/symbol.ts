@@ -84,7 +84,7 @@ export class Symbol implements ISymbol {
 
   async runTickers() {
     const broker = this.getBrokerByPurpose(BROKER_PURPOSE.ORDERS)
-    const hasOpenOrders = this.orders.length === 0
+    const hasOpenOrders = this.orders.length > 0
 
     if (!broker || !this.insights) {
       return
