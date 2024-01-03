@@ -84,18 +84,30 @@ export class Symbol implements ISymbol {
 
   async runTickers() {
     const broker = this.getBrokerByPurpose(BROKER_PURPOSE.ORDERS)
+    const hasOpenOrders = this.orders.length === 0
 
     if (!broker || !this.insights) {
       return
     }
 
-    if (this.orders.length === 0) {
-      // BUY
-      if (this.insights.short === 4 && this.insights.mid === 4) {
+    if (hasOpenOrders) {
+      // LONG
+      if (this.insights.short === 4 && this.insights.mid >= 2) {
         await this.system.orderManager.placeOrder(
           {
-            force: true,
             side: ORDER_SIDE.BUY,
+            symbol: this,
+            quantity: 1,
+            type: ORDER_TYPE.MARKET,
+          },
+          {},
+        )
+      }
+      // SHORT
+      if (this.insights.short === -4 && this.insights.mid <= -2) {
+        await this.system.orderManager.placeOrder(
+          {
+            side: ORDER_SIDE.SELL,
             symbol: this,
             quantity: 1,
             type: ORDER_TYPE.MARKET,
@@ -105,7 +117,7 @@ export class Symbol implements ISymbol {
       }
     }
 
-    // sell
+    // close open order
     else if (this.insights.short < 4) {
       await this.system.orderManager.closeOrder(this.orders[0])
     }
