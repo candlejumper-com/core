@@ -33,6 +33,14 @@ export class OrderManager {
 
   async closeOrder(order: IOrder) {
     logger.info('CLOSING ORDER: ' + order.id)
+    const broker = order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS)
+    const marketOpen = await broker.instance.isMarketOpen(broker.symbolName)
+
+    if (!marketOpen) {
+      logger.info(`MARKET CLOSED: ${broker.symbolName}`)
+      return
+    }
+
     return order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).instance.closeOrder(order)
   }
 
@@ -91,8 +99,10 @@ export class OrderManager {
       this.placeOrderBacktest(order)
     }
 
-    symbol.orders.push(order)
-
+    if (order.state === 'SUCCESS') {
+      symbol.orders.push(order)
+    }
+    
     this.orders[symbol.name] = this.orders[symbol.name] || []
     this.orders[symbol.name].push(order)
   }

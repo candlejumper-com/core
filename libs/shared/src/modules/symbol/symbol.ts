@@ -119,7 +119,11 @@ export class Symbol implements ISymbol {
 
     // close open order
     else if (this.insights.short < 4) {
-      await this.system.orderManager.closeOrder(this.orders[0])
+      if (this.orders[0].id) {
+        await this.system.orderManager.closeOrder(this.orders[0])
+      } else {
+        logger.warn(`No open order found for symbol ${this.name}`)
+      }
     }
   }
 
