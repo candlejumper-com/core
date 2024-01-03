@@ -65,7 +65,7 @@ export class BrokerBitmart extends Broker {
   /**
    * load broker data from candleServer (symbols, limits etc)
    */
-  override async syncExchangeFromBroker(): Promise<void> {
+  override async syncExchange(): Promise<void> {
     logger.debug(`♿ ${this.constructor.name} Sync exchange info`)
 
     // TODO - use somewhere?

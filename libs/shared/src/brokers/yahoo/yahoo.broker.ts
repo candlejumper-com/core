@@ -72,7 +72,7 @@ export class BrokerYahoo extends Broker {
   }
 
 
-  override async syncExchangeFromBroker(): Promise<void> {
+  override async syncExchange(): Promise<void> {
     const symbols = await this.getTrendingSymbols()
 
     this.exchangeInfo = {

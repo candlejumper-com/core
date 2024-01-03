@@ -10,8 +10,6 @@ export class SystemCandles extends System {
 
   async onInit() {
     await this.brokerManager.add(XtbBroker, [BROKER_PURPOSE.CANDLES])
-    const exchangeInfo = this.system.brokerManager.getByPurpose(BROKER_PURPOSE.CANDLES).exchangeInfo
-    console.log(exchangeInfo.symbols[0])
 
     this.db = new DB(this, [BrokerEntity, InsightEntity, ...createCandleEntities(this.system)])
 
@@ -22,7 +20,5 @@ export class SystemCandles extends System {
 
     this.candleManager.startWebsocketListener()
     this.candleManager.startOutTickInterval()
-
-
   }
 }

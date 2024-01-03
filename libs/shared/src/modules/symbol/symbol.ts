@@ -17,6 +17,7 @@ export class Symbol implements ISymbol {
   name: string
   description: string
   baseAsset: string
+  quoteAsset: string
   candles: {
     [key in INTERVAL]?: ICandle[]
   } = {}
@@ -29,7 +30,7 @@ export class Symbol implements ISymbol {
 
   brokers: {
     instance: Broker
-    symbolName: string
+    symbolName: string // the original symbol name as known to the broker (BTC.USD_4_1)
   }[] = []
 
   constructor(
@@ -84,41 +85,29 @@ export class Symbol implements ISymbol {
   async runTickers() {
     const broker = this.getBrokerByPurpose(BROKER_PURPOSE.ORDERS)
 
-    if (!broker) {
-      return
-    }
-    
-    const oSymbolName = broker.symbolName
-
-    // console.log(2222, oSymbolName)
-
-    if (broker && this.insights) {
-      // console.log(2222, broker.symbolName)
-    } else {
-      return
-    }
-    if (this.name !== 'AAPL') {
+    if (!broker || !this.insights) {
       return
     }
 
-    if (this.insights) {
-      console.log(this.insights)
-      if (this.orders.length === 0) {
-        // if (this.insights.short === 4) {
-
+    if (this.orders.length === 0) {
+      // BUY
+      if (this.insights.short === 4 && this.insights.mid === 4) {
         await this.system.orderManager.placeOrder(
           {
             force: true,
             side: ORDER_SIDE.BUY,
             symbol: this,
-            quantity: 2500,
-            type: ORDER_TYPE.MARKET
+            quantity: 1,
+            type: ORDER_TYPE.MARKET,
           },
           {},
         )
-        // }
       }
-      // console.log(this.insights.short)
+    }
+
+    // sell
+    else if (this.insights.short < 4) {
+      await this.system.orderManager.closeOrder(this.orders[0])
     }
   }
 

@@ -28,6 +28,18 @@ export class BrokerManager {
     return broker
   }
 
+  getById(id: string): Broker {
+    const broker = Array.from(this.brokers.values()).find((broker: Broker) => {
+      return broker.id === id
+    })
+
+    if (!broker) {
+      throw new Error('Broker with id ' + id + ' not found')
+    }
+
+    return broker
+  }
+
   async add<T extends Broker>(BrokerClass: new (system: System, purposes: BROKER_PURPOSE[]) => T, purposes: BROKER_PURPOSE[]): Promise<T> {
     const broker = new BrokerClass(this.system, purposes)
     this.brokers.set(BrokerClass, broker)

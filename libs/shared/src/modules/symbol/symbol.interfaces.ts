@@ -27,4 +27,11 @@ export interface ISymbolInfo {
   totalOrders?: number
   insights?: IInsight
   calendar?: ICalendarItem[]
+  longOnly?: boolean
+  lotStep?: number,
+  tickSize?: number,
+  lotMin?: number,
+  precision?: number,
+  contractSize?: number,
+  shortSelling?: boolean
 }

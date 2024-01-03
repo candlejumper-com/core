@@ -4,11 +4,11 @@ import { System } from '../../system/system'
 import { BrokerYahoo } from '../../brokers/yahoo/yahoo.broker'
 import { countDecimals } from '../../index_client'
 import { TICKER_TYPE } from '../../ticker/ticker.util'
-import { logger } from '../../util/log'
 import { ISymbol } from '../symbol/symbol.interfaces'
 import { IOrder, IOrderOptions, IOrderData } from './order.interfaces'
 import { BROKER_PURPOSE } from '../broker/broker.util'
 import { ORDER_SIDE } from './order.util'
+import { logger } from '../../util/log'
 
 const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../_data/snapshots/backtest')
 
@@ -31,51 +31,47 @@ export class OrderManager {
   //     await this.placeOrder(symbol, side, orderOptions, data)
   // }
 
+  async closeOrder(order: IOrder) {
+    logger.info('CLOSING ORDER: ' + order.id)
+    return order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).instance.closeOrder(order)
+  }
+
   /**
    * place a new order
    */
   async placeOrder(options: IOrderOptions, data: IOrderData): Promise<void> {
-    const isProduction = !!this.system.configManager.config.production.enabled
-    const price = options.symbol.price
     const symbol = options.symbol
-    const side = options.side
+    const price = symbol.price
 
     if (!symbol) {
       throw 'Unkown symbol to system: ' + symbol.name
     }
 
-    // unless forced, check if order is not same side as last order
-    if (
-      !options.force &&
-      ((this.system.type === TICKER_TYPE.SYSTEM_MAIN && !isProduction) || !this.checkIsNotSameOrderSide(symbol, side))
-    ) {
-      console.log(11122323)
-      return
-    }
-
     // how much can we spend on this order
-    const quantity = options.quantity || this.calculateQuantity(symbol, side)
+    const quantity = options.quantity || this.calculateQuantity(symbol, options.side)
 
     // only process when quantity is higher then zero
     if (!quantity) {
-      logger.warn('quantity is zero')
+      logger.error('quantity is zero')
       return
     }
 
-    // used for binance
-    const order: IOrder = {
-      ...options,
-      quantity,
-      symbol: symbol,
-    }
+    // // used for binance
+    // const order: IOrder = {
+    //   ...options,
+    //   quantity,
+    //   symbol,
+    // }
 
     // stoploss orders need a price field
-    if (options.stopLoss) {
-      order.price = price
-    }
+    // if (options.stopLoss) {
+    //   order.price = price
+    // }
 
     // as stored in orders array
-    const orderEvent = Object.assign({}, order, {
+    const order = Object.assign({}, {
+      ...options,
+      quantity,
       data,
       price,
       commission: 0,
@@ -88,54 +84,65 @@ export class OrderManager {
 
     // REAL ORDER
     if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
-      await this.placeOrderReal(order, orderEvent)
+      await this.placeOrderReal(order)
     }
     // BACKTEST
     else {
-      this.placeOrderBacktest(order, orderEvent, symbol)
+      this.placeOrderBacktest(order)
     }
 
+    symbol.orders.push(order)
+
     this.orders[symbol.name] = this.orders[symbol.name] || []
-    this.orders[symbol.name].push(orderEvent)
+    this.orders[symbol.name].push(order)
   }
 
   /**
    * execute order on binance
    */
-  private async placeOrderReal(order: IOrder, orderEvent): Promise<void> {
-    const eventLog = `${orderEvent.symbol.name} ${order.side} ${order.type} ${order.quantity} ${order.price}`
+  private async placeOrderReal(order: IOrder): Promise<void> {
+    const eventLog = `${order.symbol.name} ${order.side} ${order.type} ${order.quantity} ${order.price}`
+    const broker = order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS)
+    const marketOpen = await broker.instance.isMarketOpen(broker.symbolName)
+
+    if (!marketOpen) {
+      logger.info(`MARKET CLOSED: ${eventLog}`)
+      return
+    }
 
     try {
-      const orderResult = await order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS)?.instance.placeOrder(order)
+      const orderResult = await broker.instance.placeOrder(order)
 
-      orderEvent.id = orderResult.id
-      orderEvent.price = orderResult['price']
+      order.id = orderResult.id
+      order.price = orderResult['price']
       console.log('order result', orderResult)
       // orderEvent.commission = parseFloat(orderResult.commission)
 
       logger.info(`TRADE SUCCCESS:`, eventLog)
 
-      orderEvent.state = 'SUCCESS'
+      order.state = 'SUCCESS'
 
       // await this.system.deviceManager.sendTradeNotification(orderEvent)
     } catch (error: any) {
-      logger.error(`TRADE ERROR: `, eventLog)
+      logger.error(`TRADE ERROR: ${eventLog}`)
+      console.error(error)
 
-      orderEvent.state = 'ERROR'
-      orderEvent.result.stateReason = error?.message || error || 'Uknown'
+      order.state = 'ERROR'
+      order.result.stateReason = error?.message || error || 'Uknown'
 
-      throw error
+      // throw error
     }
   }
 
   /**
    * fake order execute + update balances
    */
-  private placeOrderBacktest(order: IOrder, orderEvent, symbol: ISymbol): void {
+  private placeOrderBacktest(order: IOrder): void {
+    const symbol = order.symbol
     const balances = this.system.brokerManager.getByClass(BrokerYahoo).account.balances
-    const totalPrice = order.quantity * orderEvent.price
+    const totalPrice = order.quantity * order.price
 
-    orderEvent.state = 'SUCCESS'
+    order.state = 'SUCCESS'
 
     // update balances
     if (order.side === ORDER_SIDE.BUY) {
@@ -150,15 +157,15 @@ export class OrderManager {
       if (prevOrder) {
         balances.find(balance => balance.asset === symbol.quoteAsset).free += totalPrice
         console.log(totalPrice - order.quantity * prevOrder.price)
-        orderEvent.profit = totalPrice - order.quantity * prevOrder.price
+        order.profit = totalPrice - order.quantity * prevOrder.price
       }
     }
 
     // save snapshot
-    if (orderEvent.data?.snapshot) {
+    if (order.data?.snapshot) {
       fs.writeFileSync(
-        `${PATH_SNAPSHOT_BACKTEST}/${symbol.name}-${orderEvent.data.interval}-${orderEvent.time}.json`,
-        JSON.stringify(orderEvent.data.snapshot),
+        `${PATH_SNAPSHOT_BACKTEST}/${symbol.name}-${order.data.interval}-${order.time}.json`,
+        JSON.stringify(order.data.snapshot),
       )
     }
   }
@@ -269,8 +276,8 @@ export class OrderManager {
    * calculate order quantity
    */
   private calculateQuantity(symbol: ISymbol, side: ORDER_SIDE): number {
-    const toSpend = this.getToSpendAmount(symbol)
     const broker = this.system.brokerManager.getByClass(BrokerYahoo)
+    const toSpend = this.getToSpendAmount(symbol)
     const baseAssetBalance = broker.getBalance(symbol.baseAsset)
     const price = this.system.symbolManager.symbols[symbol.name].price //  TODO - reuse symbol object, also used above
     const marketData = broker.getExchangeInfoBySymbol(symbol.name)

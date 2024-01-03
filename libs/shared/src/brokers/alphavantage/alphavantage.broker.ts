@@ -33,4 +33,11 @@ export class BrokerAlphavantage extends Broker {
     // writeFileSync(join(__dirname, '../../../mock/calendar.csv'), data)
     return normalizeCalendarData(items)
   }
+
+  override async syncExchange(): Promise<void> {
+    this.exchangeInfo = {
+      symbols: [],
+      timezone: 'Europe/London',
+    }
+  }
 }

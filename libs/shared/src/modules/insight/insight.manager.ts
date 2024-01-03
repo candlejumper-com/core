@@ -23,6 +23,7 @@ export class InsightManager {
     const insightsData = await broker.getSymbolInsights(symbol)
 
     if (!insightsData?.instrumentInfo) {
+      console.log('NO INSIGHT ', symbol.name)
       const insightObject = {
         symbol: symbol.name,
         skip: true,

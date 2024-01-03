@@ -49,6 +49,10 @@ export interface ISystemConfig {
             accountId: string
             username: string
             password: string
+        },
+        tokenMetrics?: {
+            apiKey: string
+            name: string
         }
     }
     server?: {

@@ -12,6 +12,7 @@ import { INTERVAL } from '../../index_client'
 import { ICalendarItem } from '../calendar/calendar.interfaces'
 import { InsightsResult } from 'yahoo-finance2/dist/esm/src/modules/insights'
 import { BROKER_PURPOSE } from './broker.util'
+import { XtbBroker } from '../../brokers/xtb/xtb.broker'
 
 export abstract class Broker {
   abstract id: string
@@ -33,14 +34,10 @@ export abstract class Broker {
       await this.onInit?.()
     }
 
-    if (this.system.type === TICKER_TYPE.SYSTEM_CANDLES) {
-      const now = Date.now()
-      logger.info(`♿ [${this.id}] Sync exchange info from broker`)
-      await this.syncExchangeFromBroker()
-      logger.info(`✅ [${this.id}] Sync exchange info from broker (${Date.now() - now} ms)`)
-    } else {
-      await this.syncExchangeFromCandleServer()
-    }
+    const now = Date.now()
+    logger.info(`♿ [${this.id}] Sync exchange info from broker`)
+    await this.syncExchange()
+    logger.info(`✅ [${this.id}] Sync exchange info from broker (${Date.now() - now} ms)`)
 
     if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
       if (!this.exchangeInfo.timezone) {
@@ -50,9 +47,13 @@ export abstract class Broker {
       process.env.TZ = this.exchangeInfo.timezone
     }
 
+    // if (this.id === 'xtb') {
     this.exchangeInfo.symbols.forEach(symbol => this.system.symbolManager.add(this, structuredClone(symbol)))
+    // }
 
-    await this.getOrders()
+    if (this.system.type === TICKER_TYPE.SYSTEM_MAIN && this.hasPurpose(BROKER_PURPOSE.ORDERS)) {
+      await this.syncOrders()
+    }
   }
 
   hasPurpose(purpose: BROKER_PURPOSE): boolean {
@@ -79,35 +80,8 @@ export abstract class Broker {
     return this.exchangeInfo.symbols.find(_symbol => _symbol.name === symbol)
   }
 
-  async syncExchangeFromCandleServer(): Promise<void> {
-    logger.info(`♿ [${this.id}] Sync exchange info from candle server`)
-
-    const now = Date.now()
-    const { host, port } = this.system.configManager.config.server.candles
-
-    try {
-      const {
-        data: { exchangeInfo },
-      } = await this.axios.get(`http://${host}:${port}/api/exchange/${this.id}`)
-      this.exchangeInfo = exchangeInfo
-
-      logger.info(`✅ [${this.id}] Sync exchange info from candle server (${Date.now() - now} ms)`)
-    } catch (error: any) {
-      if (error.cause) {
-        logger.error(error.cause)
-      } else if (error.status) {
-        console.error(error.status)
-        console.error(error.data)
-      } else {
-        console.error(error)
-      }
-
-      throw new Error(`error fetching broker config from candle server`.red)
-    }
-  }
-
-  async getOrders(): Promise<void> {
-    logger.warn(`⚠️ [${this.id}] Method not implemented: getOrders`)
+  async syncOrders(): Promise<void> {
+    logger.warn(`⚠️ [${this.id}] Method not implemented: syncOrders`)
     return null
   }
 
@@ -116,13 +90,16 @@ export abstract class Broker {
   }
 
   async syncAccount(): Promise<void> {
-    throw new Error('Method not implemented.')
+    logger.warn(`⚠️ [${this.id}] Method not implemented: syncAccount`)
   }
 
-  async syncExchangeFromBroker(): Promise<void> {
+  async syncExchange(): Promise<void> {
     throw new Error('Method not implemented.')
   }
   async getOrdersBySymbol(symbol: Symbol): Promise<IOrder[]> {
+    throw new Error('Method not implemented.')
+  }
+  async closeOrder(order: IOrder): Promise<void> {
     throw new Error('Method not implemented.')
   }
   async placeOrder(order: IOrder): Promise<IOrder> {
@@ -141,6 +118,9 @@ export abstract class Broker {
     throw new Error('Method not implemented.')
   }
   async getCalendarItems(): Promise<ICalendarItem[]> {
+    throw new Error('Method not implemented.')
+  }
+  async isMarketOpen(symbol: string): Promise<boolean> {
     throw new Error('Method not implemented.')
   }
 }

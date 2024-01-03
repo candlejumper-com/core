@@ -2,14 +2,12 @@ import { System } from '../../system/system'
 import { ISymbol, ISymbolInfo } from './symbol.interfaces'
 import { Symbol } from './symbol'
 import { logger } from '../../util/log'
-import { showProgressBar } from '../../util/progress-bar'
 import { Broker } from '../broker/broker'
-// import { BrokerYahoo } from '../../brokers/yahoo/yahoo.broker'
 
 export class SymbolManager {
   symbols: Symbol[] = []
 
-  private intervalRef: NodeJS.Timeout
+  private timeoutRef: NodeJS.Timeout
   private intervalTimeout = 1000 * 60 * 60
 
   constructor(public system: System) {}
@@ -52,27 +50,22 @@ export class SymbolManager {
   }
 
   async update() {
-    const progressBar = showProgressBar(this.symbols.length, 'Updating symbols')
+    logger.info('♿ Looping all symbols and update them...')
+    
     for (let i = 0, len = this.symbols.length; i < len; i++) {
-      const symbol = this.symbols[i]
       try {
-        // if (symbol.name === 'EXAS') {
-        await symbol.update()
-        // }
+        await this.symbols[i].update()
       } catch (error) {
         logger.error(error)
       }
-
-      progressBar.tick()
     }
-  }
 
-  startUpdateInterval(preUpdate = true) {
-    logger.info('⏳ Starting symbol update interval')
-    this.intervalRef = setInterval(() => this.update(), this.intervalTimeout)
+    logger.info('✅ All symbols updated!')
+
+    this.timeoutRef = setTimeout(() => this.update(), 60 * 1000)
   }
 
   stopUpdateInterval() {
-    clearInterval(this.intervalRef)
+    clearInterval(this.timeoutRef)
   }
 }

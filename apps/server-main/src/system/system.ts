@@ -121,10 +121,6 @@ export class SystemMain extends System {
 
     this.symbolManager.update()
 
-    // trigger update one to set symbol details
-    // TODO: should be sooner
-    this.symbolManager.startUpdateInterval()
-
     // start public API server
     await this.apiServer.start()
 

@@ -2,4 +2,4 @@ import { SystemMain } from './system/system';
 
 const system = new SystemMain()
 
-await system.start()
+await system.start().catch(console.error)

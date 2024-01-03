@@ -18,6 +18,10 @@ export interface IOrder {
     commissionUSDT?: number
     stopPrice?: number
     stopLossTriggered?: boolean
+    state?: any
+    result?: any
+    data?: any
+    snapshot?: IOrderSnapshot;
 }
 
 export interface IOrderOptions {

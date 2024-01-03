@@ -45,7 +45,7 @@ export class CalendarManager {
         if (symbol) {
           symbol.calendar = [item]
         } else{
-          symbol = this.system.symbolManager.add(broker, { name: item.symbol, calendar: [item] })
+          // symbol = this.system.symbolManager.add(broker, { name: item.symbol, calendar: [item] })
         }
       })
 

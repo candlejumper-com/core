@@ -48,6 +48,10 @@
       "accountId": "15501788",
       "username": "dennis@dowebdevelopment.nl",
       "password": "Bettie123!!!"
+    },
+    "tokenMetricts": {
+      "apiKey": "tm-a3c2f72d-6260-46d9-8947-381455d82d02",
+      "name": "TradeBot"
     }
   },
   "automize": {

@@ -24,7 +24,7 @@ export class ApiServer extends ApiServerBase {
 
     this.bindRoutes()
 
-    return new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
       const { host, port } = this.system.configManager.config.server?.candles
 
       this.server.listen(port, host, () => {
@@ -88,21 +88,6 @@ export class ApiServer extends ApiServerBase {
       } catch (error) {
         console.error(error)
         res.status(500).send(error)
-      }
-    })
-
-    this.app.get('/api/exchange/:broker', async (req, res) => {
-      try {
-        // TODO - use broker name
-        const brokerName = req.params.broker
-        const exchangeInfo = this.system.brokerManager.getByPurpose(BROKER_PURPOSE.CANDLES).exchangeInfo
-        const intervals = this.system.configManager.config.intervals
-
-        // console.log(this.system.brokerManager.getByClass().exchangeInfo.symbols)
-        res.send({ intervals, exchangeInfo })
-      } catch (error) {
-        console.error(error)
-        res.sendStatus(500)
       }
     })
   }

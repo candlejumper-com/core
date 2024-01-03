@@ -1,7 +1,7 @@
 import { OrderResponseACK, OrderResponseResult, OrderResponseFull } from 'binance'
 import { Broker } from '../../modules/broker/broker'
 import { CandleTickerCallback } from '../../modules/broker/broker.interfaces'
-import XAPI, { CHART_RANGE_INFO_RECORD, RATE_INFO_RECORD, SYMBOL_RECORD, Time } from 'xapi-node'
+import XAPI, { CHART_RANGE_INFO_RECORD, CMD_FIELD, RATE_INFO_RECORD, SYMBOL_RECORD, TRADE_RECORD, Time } from 'xapi-node'
 import { format } from 'date-fns'
 import { ICalendarItem } from '../../modules/calendar/calendar.interfaces'
 import { logger } from '../../util/log'
@@ -47,23 +47,88 @@ export class XtbBroker extends Broker {
 
     const now = Date.now()
 
+    this.instance.Stream.listen.getBalance(balance => {
+      this.account.balances.push({asset: 'USD', free: balance.balance, locked: 0})
+      logger.info('Balance update')
+    })
+
+    await this.instance.Stream.subscribe.getBalance()
+
     logger.info(`✅ Sync balance (${Date.now() - now} ms)`)
   }
 
-  override async syncExchangeFromBroker(): Promise<void> {
-    const symbols = await this.getTrendingSymbols()
+  override async syncExchange(): Promise<void> {
     this.exchangeInfo = {
-      symbols: symbols,
+      symbols: await this.getTrendingSymbols(),
       timezone: 'Europe/London',
     }
+
+    await this.getTradingHours(this.exchangeInfo.symbols[0].name)
   }
 
-  override async getOrders(): Promise<void> {
-    return null
+  override async isMarketOpen(symbol: string) {
+    const tradingHours = await this.getTradingHours(symbol)
+    const now = new Date()
+    const today = tradingHours.trading.find(record => record.day === now.getDay() + 1)
+
+    if (!today) {
+      return false
+    }
+    
+    now.setHours(0,0,0,0)
+
+    const openTime = new Date(now.getTime() + today.fromT)
+    const closeTime = new Date(now.getTime() + today.fromT)
+
+    if (openTime > new Date && closeTime < new Date) {
+      return true
+    }
+    
+    return false
+  }
+
+  async getTradingHours(symbol: string) {
+    const tradingHours = await this.instance.Socket.send.getTradingHours([symbol])
+    return tradingHours.data.returnData[0]
+  }
+
+  override async syncOrders(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      const { stopListen } = this.instance.Socket.listen.getTrades(trades => {
+        stopListen()
+
+        trades.forEach(trade => {
+          // console.log(2323, trade)
+          const symbolName = trade.symbol.split('.')[0]
+          const symbol = this.system.symbolManager.get(symbolName)
+          const normalizedOrder: IOrder = {
+            id: trade.order,
+            type: ORDER_TYPE.MARKET,
+            side: trade.cmd === CMD_FIELD.BUY ? ORDER_SIDE.BUY : ORDER_SIDE.SELL,
+            symbol: symbol
+          }
+
+          symbol.orders.push(normalizedOrder)
+        })
+
+        resolve()
+      })
+  
+      await this.instance.Socket.send.getTrades(false)
+    })
   }
 
   override async getOrdersBySymbol(symbol: Symbol): Promise<IOrder[]> {
     return []
+  }
+
+  override async closeOrder(order: IOrder) {
+    const transaction = this.instance.trading.close({
+      order: order.id
+    })
+
+    // await transaction.transaction
+    await transaction.transactionStatus
   }
 
   override async placeOrder(order: IOrder): Promise<IOrder> {
@@ -114,9 +179,8 @@ export class XtbBroker extends Broker {
 
     let candles
     try {
-      candles = (
-        await this.instance.Socket.send.getChartRangeRequest(queryOptions.end, queryOptions.period, queryOptions.start, queryOptions.symbol)
-      ).data.returnData
+      const result = await this.instance.Socket.send.getChartRangeRequest(queryOptions.end, queryOptions.period, queryOptions.start, queryOptions.symbol)
+      candles = result.data.returnData
       //   candles = (await this.instance.Socket.send.getChartRangeRequest(...Object.values(queryOptions))).data.returnData
     } catch (error) {
       console.log(error, 'error')
@@ -152,7 +216,7 @@ export class XtbBroker extends Broker {
 
   private async getTrendingSymbols(): Promise<ISymbol[]> {
     const data = (await this.instance.Socket.send.getAllSymbols()).data.returnData
-
+    // console.log(2222, data[0])
     return data.map(symbol => {
       const _symbol: ISymbol = {
         description: symbol.description,
@@ -166,6 +230,13 @@ export class XtbBroker extends Broker {
         start24HPrice: 0,
         change24HString: '0',
         changedSinceLastClientTick: false,
+        longOnly: symbol.longOnly,
+        lotStep: symbol.lotStep,
+        tickSize: symbol.tickSize,
+        lotMin: symbol.lotMin,
+        precision: symbol.precision,
+        contractSize: symbol.contractSize,
+        shortSelling: symbol.shortSelling,
         totalOrders: 0,
         candles: {
           [INTERVAL['1d']]: [],
