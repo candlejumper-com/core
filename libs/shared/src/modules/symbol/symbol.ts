@@ -90,7 +90,7 @@ export class Symbol implements ISymbol {
       return
     }
 
-    if (hasOpenOrders) {
+    if (!hasOpenOrders) {
       // LONG
       if (this.insights.short === 4 && this.insights.mid >= 2) {
         await this.system.orderManager.placeOrder(
