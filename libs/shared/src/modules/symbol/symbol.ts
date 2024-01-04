@@ -119,7 +119,8 @@ export class Symbol implements ISymbol {
     }
 
     // close open order
-    else if (this.insights.short < 4) {
+    else if (this.insights.short < 3) {
+      console.log(2323, this.insights)
       if (this.orders[0].id) {
         await this.system.orderManager.closeOrder(this.orders[0])
       } else {

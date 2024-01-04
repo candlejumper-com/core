@@ -28,9 +28,13 @@ export class OrderManager {
     //   return
     // }
 
-    await order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).instance.closeOrder(order)
-    console.log('index', order.symbol.orders.findIndex(_order => _order.id === order.id))
-    order.symbol.orders.splice(order.symbol.orders.findIndex(_order => _order.id === order.id), 1)
+    try {
+      await order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).instance.closeOrder(order)
+      console.log('index', order.symbol.orders.findIndex(_order => _order.id === order.id))
+      order.symbol.orders.splice(order.symbol.orders.findIndex(_order => _order.id === order.id), 1)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   async placeOrder(options: IOrderOptions, data: IOrderData) {

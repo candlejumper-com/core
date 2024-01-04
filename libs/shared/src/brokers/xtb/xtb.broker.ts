@@ -147,6 +147,8 @@ export class XtbBroker extends Broker {
       request.transaction
     ])
 
+    console.log(2323, status)
+
     // TODO - add more return data
     return {
       ...order,
