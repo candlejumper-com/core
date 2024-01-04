@@ -28,12 +28,6 @@ import { ChatGPTManager } from '../modules/chatgpt-manager/chatgpt.manager'
 import { DeviceEntity } from '../modules/device-manager/device.entity'
 import { UserEntity } from '../modules/user-manager/user.entity'
 
-// export class System {
-//   tick(...arg): any {
-
-//   }
-// }
-
 export class SystemMain extends System {
   override system = this
   override type = TICKER_TYPE.SYSTEM_MAIN
@@ -45,11 +39,8 @@ export class SystemMain extends System {
   calendarManager: CalendarManager
   chatGPTManager: ChatGPTManager
 
-  // system = this
-
   db = new DB(this, [UserEntity, DeviceEntity, InsightEntity])
 
-  // readonly broker = new BrokerBinance(this)
   readonly aiManager = new AIManager(this)
   readonly candleManager = new CandleManager(this)
   readonly orderManager = new OrderManager(this)
@@ -59,7 +50,6 @@ export class SystemMain extends System {
   async onInit() {
     this.orderManager.init()
 
-    // BACKTEST instance
     if (this.type === TICKER_TYPE.SYSTEM_MAIN) {
       await this.initAsMain()
     }
@@ -109,8 +99,6 @@ export class SystemMain extends System {
 
       // load editor (compile bots, load file-tree etc)
       // this.editorManager.init(),
-
-      this.loadAsValidUser(),
     ])
 
     // initialize default bots / indicators
@@ -129,19 +117,6 @@ export class SystemMain extends System {
     // console.info(`--------------------------------------------------------------`)
   }
 
-  // TEMP
-  async loadAsValidUser(): Promise<void> {
-    // await this.broker.syncAccount() // get balances
-
-    // only sync orders in production
-    // very heavy!
-    if (this.configManager.config.production.enabled) {
-      await this.orderManager.sync()
-    }
-
-    // open websockets for realtime orders and balance
-    await this.orderManager.startWebSocket()
-  }
 
   /**
    * tick
