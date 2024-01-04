@@ -51,12 +51,12 @@ export class BrokerYahoo extends Broker {
 
   async getTrendingSymbols(count = 500): Promise<ISymbol[]> {
     const result = await this.queue.add(() => yahooFinance.trendingSymbols('US', { count }))
-    const gainers = await this.queue.add(() => yahooFinance.dailyGainers())
-    const gainersFiltered = gainers.quotes.map((gainer: any) => ({symbol: gainer.symbol}))
+    // const gainers = await this.queue.add(() => yahooFinance.dailyGainers())
+    // const gainersFiltered = gainers.quotes.map((gainer: any) => ({symbol: gainer.symbol}))
     // console.log(33434, gainers)
 
 
-    const symbols: ISymbol[] = [...gainersFiltered, ...result.quotes]
+    const symbols: ISymbol[] = [...result.quotes]
 
       // remove strange symbol names
       .filter(symbol => /^[^.=:]+$/.test(symbol.symbol))
