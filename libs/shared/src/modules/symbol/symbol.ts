@@ -27,6 +27,7 @@ export class Symbol implements ISymbol {
   orders: IOrder[] = []
   price: number
   updatedAt: Date
+  lotMin: number
 
   brokers: {
     instance: Broker
@@ -97,7 +98,7 @@ export class Symbol implements ISymbol {
           {
             side: ORDER_SIDE.BUY,
             symbol: this,
-            quantity: 1,
+            quantity: this.lotMin,
             type: ORDER_TYPE.MARKET,
           },
           {},
@@ -109,7 +110,7 @@ export class Symbol implements ISymbol {
           {
             side: ORDER_SIDE.SELL,
             symbol: this,
-            quantity: 1,
+            quantity: this.lotMin,
             type: ORDER_TYPE.MARKET,
           },
           {},
