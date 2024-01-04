@@ -8,3 +8,9 @@ export const enum ORDER_SIDE {
   'BUY' = 'BUY',
   'SELL' = 'SELL'
 }
+
+export const enum ORDER_STATE {
+  'PENDING' = 'PENDING',
+  'SUCCESS' = 'SUCCESS',
+  'ERROR' = 'ERROR'
+}

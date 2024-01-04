@@ -1,7 +1,7 @@
 import { ITickerSnapshot } from "../../ticker/ticker.interfaces"
 import { ICandle } from "../candle"
 import { Symbol } from "../symbol/symbol"
-import { ORDER_SIDE, ORDER_TYPE } from "./order.util"
+import { ORDER_SIDE, ORDER_STATE, ORDER_TYPE } from "./order.util"
 
 export interface IOrder {
     id?: number
@@ -18,7 +18,7 @@ export interface IOrder {
     commissionUSDT?: number
     stopPrice?: number
     stopLossTriggered?: boolean
-    state?: any
+    state?: ORDER_STATE
     result?: any
     data?: any
     snapshot?: IOrderSnapshot;

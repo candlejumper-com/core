@@ -7,7 +7,7 @@ import { TICKER_TYPE } from '../../ticker/ticker.util'
 import { ISymbol } from '../symbol/symbol.interfaces'
 import { IOrder, IOrderOptions, IOrderData } from './order.interfaces'
 import { BROKER_PURPOSE } from '../broker/broker.util'
-import { ORDER_SIDE } from './order.util'
+import { ORDER_SIDE, ORDER_STATE } from './order.util'
 import { logger } from '../../util/log'
 
 const PATH_SNAPSHOT_BACKTEST = join(__dirname, '../../../_data/snapshots/backtest')
@@ -64,28 +64,15 @@ export class OrderManager {
       return
     }
 
-    // // used for binance
-    // const order: IOrder = {
-    //   ...options,
-    //   quantity,
-    //   symbol,
-    // }
-
-    // stoploss orders need a price field
-    // if (options.stopLoss) {
-    //   order.price = price
-    // }
-
     // as stored in orders array
-    const order = Object.assign({}, {
-      ...options,
+    const order: IOrder = Object.assign({}, options, {
       quantity,
       data,
       price,
       commission: 0,
       symbol,
       time: (this.system.time || new Date()).getTime(),
-      state: 'PENDING',
+      state: ORDER_STATE.PENDING,
       profit: 0,
       result: {},
     })
@@ -95,14 +82,14 @@ export class OrderManager {
       await this.placeOrderReal(order)
     }
     // BACKTEST
-    else {
+    else  {
       this.placeOrderBacktest(order)
     }
 
-    if (order.state === 'SUCCESS') {
+    if (order.state === ORDER_STATE.SUCCESS) {
       symbol.orders.push(order)
     }
-    
+
     this.orders[symbol.name] = this.orders[symbol.name] || []
     this.orders[symbol.name].push(order)
   }
@@ -130,14 +117,14 @@ export class OrderManager {
 
       logger.info(`TRADE SUCCCESS:`, eventLog)
 
-      order.state = 'SUCCESS'
+      order.state = ORDER_STATE.SUCCESS
 
       // await this.system.deviceManager.sendTradeNotification(orderEvent)
     } catch (error: any) {
       logger.error(`TRADE ERROR: ${eventLog}`)
       console.error(error)
 
-      order.state = 'ERROR'
+      order.state = ORDER_STATE.ERROR
       order.result.stateReason = error?.message || error || 'Uknown'
 
       // throw error
@@ -152,7 +139,7 @@ export class OrderManager {
     const balances = this.system.brokerManager.getByClass(BrokerYahoo).account.balances
     const totalPrice = order.quantity * order.price
 
-    order.state = 'SUCCESS'
+    order.state = ORDER_STATE.SUCCESS
 
     // update balances
     if (order.side === ORDER_SIDE.BUY) {
