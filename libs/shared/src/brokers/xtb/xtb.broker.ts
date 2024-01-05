@@ -123,18 +123,18 @@ export class XtbBroker extends Broker {
   }
 
   override async closeOrder(order: IOrder) {
-    const transaction = this.instance.trading.close({
+    const transaction = await this.instance.trading.close({
       order: order.id
     })
 
     // await transaction.transaction
-    await transaction.transactionStatus
+    return await transaction.transactionStatus
   }
 
   override async placeOrder(order: IOrder): Promise<IOrder> {
     const originalName = order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).symbolName
 
-    let request
+    let request;
 
     if (order.side === ORDER_SIDE.BUY) {
       request = this.instance.trading.buy({ symbol: originalName, volume: order.quantity })
@@ -142,12 +142,13 @@ export class XtbBroker extends Broker {
       request = this.instance.trading.sell({ symbol: originalName, volume: order.quantity })
     }
 
+    // console.log(result, 'result');
     const [status, result] = await Promise.all([
       request.transactionStatus,
       request.transaction
     ])
 
-    console.log(2323, status)
+    // console.log(2323, status)
 
     // TODO - add more return data
     return {
@@ -218,13 +219,14 @@ export class XtbBroker extends Broker {
 
   private async getTrendingSymbols(): Promise<ISymbol[]> {
     const data = (await this.instance.Socket.send.getAllSymbols()).data.returnData
-    // console.log(2222, data[0])
+    // console.log(2222, data.find(symbol => symbol.symbol.startsWith('VZ.')))
     return data.map(symbol => {
       const _symbol: ISymbol = {
         description: symbol.description,
         name: symbol.symbol,
         baseAsset: '',
         quoteAsset: '',
+        currency: symbol.currency,
         price: symbol.ask,
         priceString: symbol.ask.toString(),
         direction: 0,

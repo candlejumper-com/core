@@ -28,6 +28,8 @@ export class Symbol implements ISymbol {
   price: number
   updatedAt: Date
   lotMin: number
+  currency: string
+  shortSelling?: boolean
 
   brokers: {
     instance: Broker
@@ -94,39 +96,55 @@ export class Symbol implements ISymbol {
     if (!hasOpenOrders) {
       // LONG
       if (this.insights.short === 4 && this.insights.mid >= 2) {
-        await this.system.orderManager.placeOrder(
+        if (this.currency === 'USD') {
+          await this.system.orderManager.placeOrder(
           {
             side: ORDER_SIDE.BUY,
             symbol: this,
-            quantity: this.lotMin,
+            quantity: this.calcQuantity(),
             type: ORDER_TYPE.MARKET,
           },
           {},
         )
+        }
       }
       // SHORT
       if (this.insights.short === -4 && this.insights.mid <= -2) {
-        await this.system.orderManager.placeOrder(
-          {
-            side: ORDER_SIDE.SELL,
-            symbol: this,
-            quantity: this.lotMin,
-            type: ORDER_TYPE.MARKET,
-          },
-          {},
-        )
+        if (this.currency === 'USD') {
+          await this.system.orderManager.placeOrder(
+            {
+              side: ORDER_SIDE.SELL,
+              symbol: this,
+              quantity: this.calcQuantity(),
+              type: ORDER_TYPE.MARKET,
+            },
+            {},
+            )
+          }
       }
     }
 
     // close open order
-    else if (this.insights.short < 3) {
-      console.log(2323, this.insights)
-      if (this.orders[0].id) {
+    else {
+      if (this.orders[0].side === ORDER_SIDE.BUY && this.insights.short < 3) {
         await this.system.orderManager.closeOrder(this.orders[0])
-      } else {
-        logger.warn(`No open order found for symbol ${this.name}`)
+      }
+      if (this.orders[0].side === ORDER_SIDE.SELL && this.insights.short > -3) {
+        await this.system.orderManager.closeOrder(this.orders[0])
       }
     }
+  }
+
+  private calcQuantity() {
+    const minOrderValue = 50
+    const orderValue = this.price * this.lotMin
+    let quantity: number
+    if (orderValue < minOrderValue) {
+      quantity = Math.ceil(minOrderValue / this.price)
+    } else {
+      quantity = this.lotMin
+    }
+    return quantity
   }
 
   getInfo(): ISymbolInfo {

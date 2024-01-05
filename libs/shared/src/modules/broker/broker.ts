@@ -99,7 +99,7 @@ export abstract class Broker {
   async getOrdersBySymbol(symbol: Symbol): Promise<IOrder[]> {
     throw new Error('Method not implemented.')
   }
-  async closeOrder(order: IOrder): Promise<void> {
+  async closeOrder(order: IOrder): Promise<any> {
     throw new Error('Method not implemented.')
   }
   async placeOrder(order: IOrder): Promise<IOrder> {

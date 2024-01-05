@@ -34,4 +34,5 @@ export interface ISymbolInfo {
   precision?: number,
   contractSize?: number,
   shortSelling?: boolean
+  currency?: string;
 }

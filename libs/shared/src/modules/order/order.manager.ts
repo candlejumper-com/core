@@ -29,7 +29,7 @@ export class OrderManager {
     // }
 
     try {
-      await order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).instance.closeOrder(order)
+      const result = await order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).instance.closeOrder(order)
       console.log('index', order.symbol.orders.findIndex(_order => _order.id === order.id))
       order.symbol.orders.splice(order.symbol.orders.findIndex(_order => _order.id === order.id), 1)
     } catch (error) {
@@ -46,6 +46,11 @@ export class OrderManager {
     // only process when quantity is higher then zero
     if (!quantity) {
       logger.error('quantity is zero')
+      return
+    }
+
+    if (options.side === ORDER_SIDE.SELL && !options.symbol?.shortSelling) {
+      logger.error('short selling not allowed')
       return
     }
 

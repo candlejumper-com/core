@@ -33,6 +33,7 @@ export interface IOrderOptions {
     takeProfit?: number
     price?: number
     quantity?: number
+    shortSelling?: boolean
 }
 
 export interface IOrderSnapshot {
