@@ -31,5 +31,16 @@ export function setProcessExitHandlers(system: System) {
   process.once('SIGUSR2', exitHandler.bind(null, { exit: true }))
 
   //catches uncaught exceptions
-  process.once('uncaughtException', exitHandler.bind(null, { exit: true }))
+  process.on('uncaughtException', (error) => {
+    console.error('uncaughtException', error)
+    exitHandler.bind(null, { exit: true })
+  })
+
+  process.on('unhandledRejection', (error) => {
+    logger.error('UnhandledRejection')
+    console.error(error)
+    // exitHandler.bind(null, { exit: true })
+  })
+
+  
 }

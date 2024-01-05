@@ -23,6 +23,26 @@ export abstract class System extends Ticker<null> {
   readonly brokerManager = new BrokerManager(this)
   readonly configManager = new ConfigManager(this)
   readonly symbolManager = new SymbolManager(this)
+  
+  override async init() {
+    setProcessExitHandlers(this)
+
+    super.init()
+
+    this.configManager.init()
+
+    setLogSystemEnvironment(this)
+
+    const now = Date.now()
+    logger.info(`♿ Initialize system \n-------------------------------------------------------------`)
+
+    await this.symbolManager.init()
+    await this.onInit?.()
+
+    logger.info(`✅ Initialize system (${Date.now() - now}ms) `)
+
+    this.isInitialized = true
+  }
 
   async start() {
     if (this.isRunning) {
@@ -49,26 +69,5 @@ export abstract class System extends Ticker<null> {
     this.isRunning = false
 
     logger.info('🦋 Stopped system')
-  }
-
-  
-  override async init(): Promise<void> {
-    setProcessExitHandlers(this)
-
-    super.init()
-
-    this.configManager.init()
-
-    setLogSystemEnvironment(this)
-
-    const now = Date.now()
-    logger.info(`♿ Initialize system \n-------------------------------------------------------------`)
-
-    await this.symbolManager.init()
-    await this.onInit?.()
-
-    logger.info(`✅ Initialize system (${Date.now() - now}ms) `)
-
-    this.isInitialized = true
   }
 }

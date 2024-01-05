@@ -52,6 +52,7 @@ export abstract class Broker {
     // }
 
     if (this.system.type === TICKER_TYPE.SYSTEM_MAIN && this.hasPurpose(BROKER_PURPOSE.ORDERS)) {
+      await this.syncAccount()
       await this.syncOrders()
     }
   }
