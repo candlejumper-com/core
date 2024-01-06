@@ -30,20 +30,6 @@
           "outExtension": {
             ".js": ".js"
           }
-          // "additionalEntryPoints": [
-          //   {
-          //     "entryName": "ai-worker",
-          //     "entryPath": "apps/server-main/src/modules/ai-manager/ai-worker.ts"
-          //   },
-          //   {
-          //     "entryName": "backtest.worker",
-          //     "entryPath": "apps/server-main/src/modules/backtest-manager/backtest.worker.ts"
-          //   },
-          //   {
-          //     "entryName": "editor.worker",
-          //     "entryPath": "apps/server-main/src/modules/editor-manager/editor.worker.ts"
-          //   }
-          // ]
         }
       }
     },

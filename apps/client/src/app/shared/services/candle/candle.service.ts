@@ -62,7 +62,7 @@ export class CandleService {
     // })
 
     // return from(promise) as Observable<any>
-    return this.httpClient.get(`/api-candles/candles/${symbol.replace('/', '_')}/${interval}?count=${count}`)
+    return this.httpClient.get(`/api-candles/candles/${symbol}/${interval}?count=${count}`)
   }
 
 

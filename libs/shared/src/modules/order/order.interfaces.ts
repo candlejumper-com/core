@@ -8,7 +8,6 @@ export interface IOrder {
     type: string
     side: ORDER_SIDE
     symbol: Symbol
-    symbolName?: string
     quantity?: number
     price?: number
     time?: number

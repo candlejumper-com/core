@@ -17,19 +17,18 @@ export class OrderManager {
 
   init(): void {}
 
-  
   async closeOrder(order: IOrder) {
     logger.info('CLOSING ORDER: ' + order.id)
     const broker = order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS)
-    // const marketOpen = await broker.instance.isMarketOpen(broker.symbolName)
+    const marketOpen = await broker.isMarketOpen(order.symbol)
 
-    // if (!marketOpen) {
-    //   logger.info(`MARKET CLOSED: ${broker.symbolName}`)
-    //   return
-    // }
+    if (!marketOpen) {
+      logger.info(`MARKET CLOSED: ${order.symbol.name}`)
+      return
+    }
 
     try {
-      const result = await order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).instance.closeOrder(order)
+      const result = await order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).closeOrder(order)
       console.log('index', order.symbol.orders.findIndex(_order => _order.id === order.id))
       order.symbol.orders.splice(order.symbol.orders.findIndex(_order => _order.id === order.id), 1)
     } catch (error) {
@@ -87,15 +86,14 @@ export class OrderManager {
   private async placeOrderReal(order: IOrder): Promise<void> {
     const eventLog = `${order.symbol.name} ${order.side} ${order.type} ${order.quantity} ${order.price}`
     const broker = order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS)
-    // const marketOpen = await broker.instance.isMarketOpen(broker.symbolName)
+    const marketOpen = await broker.isMarketOpen(order.symbol)
 
-    // if (!marketOpen) {
-    //   logger.info(`MARKET CLOSED: ${eventLog}`)
-    //   return
-    // }
+    if (!marketOpen) {
+      return
+    }
 
     try {
-      const orderResult = await broker.instance.placeOrder(order)
+      const orderResult = await broker.placeOrder(order)
 
       order.id = orderResult.id
       order.price = orderResult['price']

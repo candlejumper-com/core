@@ -1,6 +1,6 @@
 import { System } from '../../system/system'
 import { OrderResponseACK, OrderResponseResult, OrderResponseFull } from 'binance'
-import { CandleTickerCallback, IAccount, IBrokerInfo } from './broker.interfaces'
+import { CandleTickerCallback, IAccount, IBrokerInfo, ITradingTime } from './broker.interfaces'
 import { logger } from '../../util/log'
 import { ICandle } from '../../modules/candle'
 import { createAxiosRetryInstance } from '../../util/axios-retry'
@@ -12,7 +12,6 @@ import { INTERVAL } from '../../index_client'
 import { ICalendarItem } from '../calendar/calendar.interfaces'
 import { InsightsResult } from 'yahoo-finance2/dist/esm/src/modules/insights'
 import { BROKER_PURPOSE } from './broker.util'
-import { XtbBroker } from '../../brokers/xtb/xtb.broker'
 
 export abstract class Broker {
   abstract id: string
@@ -21,7 +20,7 @@ export abstract class Broker {
   onInit?(): Promise<void>
 
   account = { balances: [] } as IAccount
-  exchangeInfo: IBrokerInfo
+  exchangeInfo: IBrokerInfo = {}
   axios = createAxiosRetryInstance()
 
   constructor(
@@ -39,19 +38,22 @@ export abstract class Broker {
     await this.syncExchange()
     logger.info(`✅ [${this.id}] Sync exchange info from broker (${Date.now() - now} ms)`)
 
-    // if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
-      if (!this.exchangeInfo.timezone) {
-        throw new Error('Missing broker timezone')
+    if (!this.exchangeInfo.timezone) {
+      throw new Error('Missing broker timezone')
+    }
+
+    process.env.TZ = this.exchangeInfo.timezone
+
+    if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
+      if (this.hasPurpose(BROKER_PURPOSE.CANDLES)) {
+        await this.syncSymbols()
+        
+        this.exchangeInfo.symbols.forEach(symbol => this.system.symbolManager.add(this, symbol))
       }
-
-      process.env.TZ = this.exchangeInfo.timezone
-    // }
-
-    this.exchangeInfo.symbols.forEach(symbol => this.system.symbolManager.add(this, structuredClone(symbol)))
-
-    if (this.system.type === TICKER_TYPE.SYSTEM_MAIN && this.hasPurpose(BROKER_PURPOSE.ORDERS)) {
-      await this.syncAccount()
-      await this.syncOrders()
+      if (this.hasPurpose(BROKER_PURPOSE.ORDERS)) {
+        await this.syncAccount()
+        await this.syncOrders()
+      }
     }
   }
 
@@ -91,7 +93,9 @@ export abstract class Broker {
   async syncAccount(): Promise<void> {
     logger.warn(`⚠️ [${this.id}] Method not implemented: syncAccount`)
   }
-
+  async syncSymbols(): Promise<void> {
+    logger.warn(`⚠️ [${this.id}] Method not implemented: syncSymbols`)
+  }
   async syncExchange(): Promise<void> {
     throw new Error('Method not implemented.')
   }
@@ -119,7 +123,10 @@ export abstract class Broker {
   async getCalendarItems(): Promise<ICalendarItem[]> {
     throw new Error('Method not implemented.')
   }
-  async isMarketOpen(symbol: string): Promise<boolean> {
+  async isMarketOpen(symbol: Symbol): Promise<boolean> {
+    throw new Error('Method not implemented.')
+  }
+  async getTradingHoursBySymbol(symbol: Symbol): Promise<ITradingTime> {
     throw new Error('Method not implemented.')
   }
 }

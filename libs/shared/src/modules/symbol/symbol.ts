@@ -9,7 +9,6 @@ import { ICalendarItem } from '../calendar/calendar.interfaces'
 import { ICandle } from '../candle'
 import { IOrder } from '../order/order.interfaces'
 import { Broker } from '../broker/broker'
-import { XtbBroker } from '../../brokers/xtb/xtb.broker'
 import { BROKER_PURPOSE } from '../broker/broker.util'
 import { ORDER_SIDE, ORDER_TYPE } from '../order/order.util'
 
@@ -31,37 +30,15 @@ export class Symbol implements ISymbol {
   currency: string
   shortSelling?: boolean
 
-  brokers: {
-    instance: Broker
-    symbolName: string // the original symbol name as known to the broker (BTC.USD_4_1)
-  }[] = []
+  brokers: Broker[] = []
 
   constructor(
     public system: System,
     params: ISymbol,
+    broker: Broker
   ) {
     Object.assign(this, params)
-  }
-
-  getBrokerByPurpose(purpose: BROKER_PURPOSE) {
-    const broker = this.brokers.find(broker => broker.instance.hasPurpose(purpose))
-
-    if (!broker) {
-      // throw new Error('Broker with purpose ' + purpose + ' not found')
-      return null
-    }
-
-    return broker
-  }
-
-  addBroker(instance: Broker, symbolName: string) {
-    if (this.brokers.some(broker => broker.instance === instance)) {
-      // logger.warn(`Broker(${instance.id}) already added to symbol(${this.name})`)
-      // throw new Error(`Broker(${instance.id}) already added to symbol(${symbolName})`)
-      return
-    }
-
-    this.brokers.push({ instance, symbolName })
+    this.brokers = [broker]
   }
 
   async update() {
@@ -134,6 +111,25 @@ export class Symbol implements ISymbol {
       }
     }
   }
+  
+  getBrokerByPurpose(purpose: BROKER_PURPOSE) {
+    return this.brokers.find(broker => broker.hasPurpose(purpose))
+  }
+
+  addBroker(instance: Broker) {
+    if (!this.brokers.includes(instance)) {
+      this.brokers.push(instance)
+    } 
+  }
+
+  getInfo(): ISymbolInfo {
+    return {
+      name: this.name,
+      baseAsset: this.baseAsset,
+      insights: this.insights,
+      calendar: this.calendar,
+    }
+  }
 
   private calcQuantity() {
     const minOrderValue = 50
@@ -145,14 +141,5 @@ export class Symbol implements ISymbol {
       quantity = this.lotMin
     }
     return quantity
-  }
-
-  getInfo(): ISymbolInfo {
-    return {
-      name: this.name,
-      baseAsset: this.baseAsset,
-      insights: this.insights,
-      calendar: this.calendar,
-    }
   }
 }

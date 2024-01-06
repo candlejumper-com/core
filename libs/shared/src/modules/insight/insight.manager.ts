@@ -7,7 +7,7 @@ export class InsightManager {
   constructor(public system: System) {}
 
   async loadPredictionsBySymbol(symbol: Symbol) {
-    const broker = symbol.getBrokerByPurpose(BROKER_PURPOSE.INSIGHT)?.instance
+    const broker = symbol.getBrokerByPurpose(BROKER_PURPOSE.INSIGHT)
 
     if (!broker) {
       return null

@@ -51,9 +51,11 @@ export function setLogSystemEnvironment(system: System) {
   // If we're not in production then log to the `console` with the format:
   // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
   if (process.env['NODE_ENV'] !== 'production') {
+    const logLevel = system.configManager.config.logLevel
+
     logger.add(
       new transports.Console({
-        level: 'info',
+        level: logLevel,
         handleExceptions: true,
         format: combine(
           label({ label: systemEnvironment }),

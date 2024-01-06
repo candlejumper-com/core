@@ -1,7 +1,7 @@
 import { OrderResponseACK, OrderResponseResult, OrderResponseFull } from 'binance'
 import { Broker } from '../../modules/broker/broker'
 import { CandleTickerCallback } from '../../modules/broker/broker.interfaces'
-import XAPI, { CHART_RANGE_INFO_RECORD, CMD_FIELD, RATE_INFO_RECORD, SYMBOL_RECORD, TRADE_RECORD, Time } from 'xapi-node'
+import XAPI, { CHART_RANGE_INFO_RECORD, CMD_FIELD, RATE_INFO_RECORD, SYMBOL_RECORD, TRADE_RECORD, TRADING_HOURS_RECORD, Time } from 'xapi-node'
 import { format } from 'date-fns'
 import { ICalendarItem } from '../../modules/calendar/calendar.interfaces'
 import { logger } from '../../util/log'
@@ -24,6 +24,8 @@ export class XtbBroker extends Broker {
   instance: XAPI
   queue = new SimpleQueue(this.system)
 
+  private symbolMap: Map<string, string> = new Map() // [shortName, originalName]
+
   override async onInit(): Promise<void> {
     const { type, accountId, password } = this.system.configManager.config.brokers.xtb
     this.instance = new XAPI({
@@ -42,13 +44,17 @@ export class XtbBroker extends Broker {
     // return items
   }
 
+  override async syncExchange(): Promise<void> {
+    this.exchangeInfo.timezone = 'Europe/London'
+  }
+
   override async syncAccount(): Promise<void> {
     logger.debug(`♿ Sync balance`)
 
     const now = Date.now()
 
     this.instance.Stream.listen.getBalance(balance => {
-      this.account.balances.push({asset: 'USD', free: balance.balance, locked: 0})
+      this.account.balances.push({ asset: 'USD', free: balance.balance, locked: 0 })
       logger.info('Balance update')
     })
 
@@ -57,39 +63,67 @@ export class XtbBroker extends Broker {
     logger.info(`✅ Sync balance (${Date.now() - now} ms)`)
   }
 
-  override async syncExchange(): Promise<void> {
-    this.exchangeInfo = {
-      symbols: await this.getTrendingSymbols(),
-      timezone: 'Europe/London',
-    }
+  override async syncSymbols(): Promise<void> {
+    const symbols = await this.getSymbols()
 
-    await this.getTradingHours(this.exchangeInfo.symbols[0].name)
+    // normalize symbol name and store original name in map
+    symbols.forEach(symbol => {
+      const cleanName = symbol.name.split('.')[0]
+      this.symbolMap.set(cleanName, symbol.name)
+      symbol.name = cleanName
+    })
+
+    this.exchangeInfo.symbols = symbols
   }
 
-  override async isMarketOpen(symbol: string) {
-    const tradingHours = await this.getTradingHours(symbol)
+  override async isMarketOpen(symbol: Symbol) {
     const now = new Date()
-    const today = tradingHours.trading.find(record => record.day === now.getDay() + 1)
+    const {
+      trading: { from, until },
+    } = await this.getTradingHoursBySymbol(symbol)
 
-    if (!today) {
-      return false
-    }
-    
-    now.setHours(0,0,0,0)
-
-    const openTime = new Date(now.getTime() + today.fromT)
-    const closeTime = new Date(now.getTime() + today.fromT)
-
-    if (openTime > new Date && closeTime < new Date) {
+    if (from > now && until < now) {
       return true
     }
-    
+
+    logger.info(`${symbol.name} market closed until: '${from}`)
+
     return false
   }
 
-  async getTradingHours(symbol: string) {
-    const tradingHours = await this.instance.Socket.send.getTradingHours([symbol])
-    return tradingHours.data.returnData[0]
+  override async getTradingHoursBySymbol(symbol: Symbol) {
+    const originalName = this.symbolMap.get(symbol.name)
+    const result = await this.instance.Socket.send.getTradingHours([originalName])
+    const tradingHours = result.data.returnData[0]
+    const now = new Date()
+    let from: Date, until: Date
+
+    // find next trading window
+    while (true) {
+      const today = tradingHours.trading.find(record => record.day === now.getDay())
+
+      if (today) {
+        now.setHours(0, 0, 0, 0)
+        from = new Date(now.getTime() + today.fromT)
+        until = new Date(now.getTime() + today.toT)
+
+        break
+      }
+
+      now.setDate(now.getDate() + 1)
+    }
+
+    // normlize tradingHours
+    return {
+      trading: {
+        from,
+        until,
+      },
+      quotes: {
+        from,
+        until,
+      },
+    }
   }
 
   override async syncOrders(): Promise<void> {
@@ -105,7 +139,7 @@ export class XtbBroker extends Broker {
             id: trade.order,
             type: ORDER_TYPE.MARKET,
             side: trade.cmd === CMD_FIELD.BUY ? ORDER_SIDE.BUY : ORDER_SIDE.SELL,
-            symbol: symbol
+            symbol: symbol,
           }
 
           symbol.orders.push(normalizedOrder)
@@ -113,7 +147,7 @@ export class XtbBroker extends Broker {
 
         resolve()
       })
-  
+
       await this.instance.Socket.send.getTrades(false)
     })
   }
@@ -124,7 +158,7 @@ export class XtbBroker extends Broker {
 
   override async closeOrder(order: IOrder) {
     const transaction = await this.instance.trading.close({
-      order: order.id
+      order: order.id,
     })
 
     // await transaction.transaction
@@ -132,9 +166,10 @@ export class XtbBroker extends Broker {
   }
 
   override async placeOrder(order: IOrder): Promise<IOrder> {
-    const originalName = order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).symbolName
+    const originalName = this.symbolMap.get(order.symbol.name)
+    // const originalName = order.symbol.getBrokerByPurpose(BROKER_PURPOSE.ORDERS).symbolName
 
-    let request;
+    let request
 
     if (order.side === ORDER_SIDE.BUY) {
       request = this.instance.trading.buy({ symbol: originalName, volume: order.quantity })
@@ -143,17 +178,14 @@ export class XtbBroker extends Broker {
     }
 
     // console.log(result, 'result');
-    const [status, result] = await Promise.all([
-      request.transactionStatus,
-      request.transaction
-    ])
+    const [status, result] = await Promise.all([request.transactionStatus, request.transaction])
 
     // console.log(2323, status)
 
     // TODO - add more return data
     return {
       ...order,
-      id: result.data.returnData.order
+      id: result.data.returnData.order,
     }
   }
 
@@ -168,7 +200,8 @@ export class XtbBroker extends Broker {
   override async getCandlesFromTime(symbol: Symbol, interval: string, fromTime: number): Promise<ICandle[]> {
     const fromTimeDate = new Date(fromTime)
     const startTime = format(fromTimeDate, 'yyyy-MM-dd')
-    const originalName = symbol.getBrokerByPurpose(BROKER_PURPOSE.CANDLES).symbolName
+    const originalName = this.symbolMap.get(symbol.name)
+    // const originalName = symbol.getBrokerByPurpose(BROKER_PURPOSE.CANDLES).symbolName
 
     const queryOptions: CHART_RANGE_INFO_RECORD = {
       end: new Date().getTime(),
@@ -182,7 +215,12 @@ export class XtbBroker extends Broker {
 
     let candles
     try {
-      const result = await this.instance.Socket.send.getChartRangeRequest(queryOptions.end, queryOptions.period, queryOptions.start, queryOptions.symbol)
+      const result = await this.instance.Socket.send.getChartRangeRequest(
+        queryOptions.end,
+        queryOptions.period,
+        queryOptions.start,
+        queryOptions.symbol,
+      )
       candles = result.data.returnData
       //   candles = (await this.instance.Socket.send.getChartRangeRequest(...Object.values(queryOptions))).data.returnData
     } catch (error) {
@@ -193,7 +231,8 @@ export class XtbBroker extends Broker {
 
   override async getCandlesFromCount(symbol: Symbol, interval: string, count: number): Promise<ICandle[]> {
     const now = new Date()
-    const originalName = symbol.getBrokerByPurpose(BROKER_PURPOSE.CANDLES).symbolName
+    const originalName = this.symbolMap.get(symbol.name)
+    // const originalName = symbol.getBrokerByPurpose(BROKER_PURPOSE.CANDLES).symbolName
 
     const queryOptions: CHART_RANGE_INFO_RECORD = {
       end: new Date().getTime(),
@@ -217,7 +256,7 @@ export class XtbBroker extends Broker {
     return this.normalizeCandles(candles.rateInfos)
   }
 
-  private async getTrendingSymbols(): Promise<ISymbol[]> {
+  private async getSymbols(): Promise<ISymbol[]> {
     const data = (await this.instance.Socket.send.getAllSymbols()).data.returnData
     // console.log(2222, data.find(symbol => symbol.symbol.startsWith('VZ.')))
     return data.map(symbol => {

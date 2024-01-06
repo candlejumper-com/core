@@ -15,25 +15,18 @@ export class SymbolManager {
   async init() {}
 
   add(broker: Broker, data: ISymbol) {
-    // normalize symbol name
-    const oSymbolName = data.name
-    data.name = data.name.split('.')[0]
-
-    // console.log(34343, oSymbolName)
     let symbol = this.symbols.find(symbol => symbol.name === data.name)
 
     if (symbol) {
-      logger.debug(`Symbol ${data.name} already exists`)
-      symbol.addBroker(broker, oSymbolName)
+      logger.debug(`Symbol ${symbol.name} already exists`)
+      symbol.addBroker(broker)
       return symbol
     }
     
-    symbol = new Symbol(this.system, data)
-
-    // add broker + original symbol name
-    symbol.addBroker(broker, oSymbolName)
+    symbol = new Symbol(this.system, data, broker)
 
     this.symbols.push(symbol)
+
     return symbol
   }
 
