@@ -5,6 +5,12 @@
   "prefix": "core",
   "sourceRoot": "apps/client/src",
   "tags": [],
+  "cli": {
+    "cache": {
+      "enabled": true,
+      "path": "./_data/.cache/.angular"
+    }
+  },
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",

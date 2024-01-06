@@ -3,17 +3,13 @@
         {
             "name": "core",
             "path": "."
-        },
-        {
-            "name": "public-nginx",
-            "path": "../public-nginx"
-        },
+        }
     ],
     "settings": {
         "jest.disabledWorkspaceFolders": [
             "tradebot",
-            "candle-sync",
-            "public-nginx"
+            "server-candles",
+            "server-main"
         ],
         "typescript.suggest.completeJSDocs": false,
         "javascript.suggest.completeJSDocs": false,

@@ -3,7 +3,7 @@ import { DataSource, MixedList, EntitySchema, getMetadataArgsStorage, Table } fr
 import { System } from '../system/system'
 import { logger } from '@candlejumper/shared'
 
-const PATH_DATA = join(__dirname, '../../../_data/server')
+const PATH_DATA = join(__dirname, '../../../_data/db')
 
 export class DB {
   connection: DataSource

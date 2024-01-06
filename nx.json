@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "cacheDirectory": "./_data/.cache/.nx",
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
