@@ -1,4 +1,4 @@
-import * as express from 'express'
+import express from 'express'
 import { Server as SocketServer, Socket } from 'socket.io'
 import { join } from 'path'
 import { Server as HttpServer, createServer as createServerHttp } from 'http'

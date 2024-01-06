@@ -5,6 +5,6 @@ export class DeviceEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ nullable: false })
+    @Column('text', { nullable: false })
     token: string
 }

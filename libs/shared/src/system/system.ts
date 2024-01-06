@@ -2,7 +2,7 @@ import "colors"
 import { logger, setLogSystemEnvironment } from '../util/log'
 import { ApiServerBase, DB, InsightManager } from "@candlejumper/shared"
 import { setProcessExitHandlers } from "../util/exit-handlers.util"
-import { ConfigManager } from "../modules/config/config-manager"
+import { ConfigManager } from "../modules/config/config.manager"
 import { SymbolManager } from "../modules/symbol/symbol.manager"
 import { BrokerManager } from "../modules/broker/broker.manager"
 import { Ticker } from "../ticker/ticker"

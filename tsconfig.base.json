@@ -14,11 +14,16 @@
     "lib": ["es2023"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
     "allowJs": false,
     "baseUrl": ".",
     "paths": {
+      "/*": [
+        "./*"
+      ],
       "@candlejumper/shared": ["./libs/shared/src/index.ts"]
     }
   },

@@ -12,40 +12,38 @@
       }
     },
     "build": {
-      "executor": "@nx/webpack:webpack",
+      "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "target": "node",
+        "platform": "node",
         "compiler": "tsc",
         "outputPath": "dist/apps/server-main",
         "main": "apps/server-main/src/main.ts",
         "tsConfig": "apps/server-main/tsconfig.app.json",
-        "assets": [
-          "apps/server-main/src/modules/ai-manager/ai-worker.ts",
-          "apps/server-main/src/modules/backtest-manager/backtest.worker.ts",
-          "apps/server-main/src/modules/editor-manager/editor.worker.ts"
-        ],
-        "webpackConfig": "apps/server-main/webpack.config.js",
-        "additionalEntryPoints": [
-          {
-            "entryName": "ai-worker",
-            "entryPath": "apps/server-main/src/modules/ai-manager/ai-worker.ts"
-          },
-          {
-            "entryName": "backtest.worker",
-            "entryPath": "apps/server-main/src/modules/backtest-manager/backtest.worker.ts"
-          },
-          {
-            "entryName": "editor.worker",
-            "entryPath": "apps/server-main/src/modules/editor-manager/editor.worker.ts"
+        "assets": [],
+        "format": ["cjs"],
+        "bundle": true,
+        "generatePackageJson": false,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
           }
-        ]
-      },
-      "configurations": {
-        "development": {},
-        "production": {
-          "generatePackageJson": true
+          // "additionalEntryPoints": [
+          //   {
+          //     "entryName": "ai-worker",
+          //     "entryPath": "apps/server-main/src/modules/ai-manager/ai-worker.ts"
+          //   },
+          //   {
+          //     "entryName": "backtest.worker",
+          //     "entryPath": "apps/server-main/src/modules/backtest-manager/backtest.worker.ts"
+          //   },
+          //   {
+          //     "entryName": "editor.worker",
+          //     "entryPath": "apps/server-main/src/modules/editor-manager/editor.worker.ts"
+          //   }
+          // ]
         }
       }
     },

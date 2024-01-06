@@ -1,6 +1,7 @@
 import { ApiServer } from './system.api'
 import { CandleManager } from '../modules/candle-manager/candle-manager'
-import { BROKER_PURPOSE, BrokerEntity, DB, InsightEntity, System, TICKER_TYPE, XtbBroker, createCandleEntities } from '@candlejumper/shared'
+import { BROKER_PURPOSE, BrokerEntity, DB, InsightEntity, System, TICKER_TYPE, XtbBroker } from '@candlejumper/shared'
+import { createCandleEntities } from '../modules/candle-manager/candle.entity'
 
 export class SystemCandles extends System {
   override type = TICKER_TYPE.SYSTEM_CANDLES

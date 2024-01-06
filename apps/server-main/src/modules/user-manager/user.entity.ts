@@ -5,21 +5,21 @@ export class UserEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ nullable: true })
+    @Column('text', { nullable: true })
     firstName: string
 
-    @Column({ nullable: true })
+    @Column('text', { nullable: true })
     lastName: string
 
-    @Column({ unique: true })
+    @Column('text', { unique: true })
     username: string
 
-    @Column()
+    @Column('text')
     password: string
 
-    @Column({ nullable: true })
+    @Column('boolean', { nullable: true })
     active: boolean
 
-    @Column({ default: false })
+    @Column('boolean', { default: false })
     production: boolean
 }

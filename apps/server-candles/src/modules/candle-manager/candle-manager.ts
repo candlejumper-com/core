@@ -4,15 +4,14 @@ import {
   CANDLE_FIELD,
   isForwardCandleArray,
   ICandle,
-  ISymbol,
   ICandleObject,
-  getCandleEntityName,
   showProgressBar,
   logger,
   INTERVAL,
   BROKER_PURPOSE,
   Symbol,
 } from '@candlejumper/shared'
+import { getCandleEntityName } from './candle.entity'
 
 export class CandleManager {
   private outTickIntervalTime = 200

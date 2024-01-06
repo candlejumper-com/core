@@ -1,7 +1,6 @@
 import * as admin from 'firebase-admin'
 import { SystemMain } from '../../system/system'
 import { logger, ICalendarItem } from '@candlejumper/shared'
-import FIREBASE_CERT from './../../../../../firebase-keys.json'
 import { DeviceEntity } from './device.entity'
 import { TokenMessage } from 'firebase-admin/lib/messaging/messaging-api'
 
@@ -11,8 +10,10 @@ export class DeviceManager {
   constructor(public system: SystemMain) {}
 
   async init() {
+    const firebaseConfig = this.system.configManager.config.thirdParty.firebase
+    
     admin.initializeApp({
-      credential: admin.credential.cert(FIREBASE_CERT as any),
+      credential: admin.credential.cert(firebaseConfig),
     })
   }
 

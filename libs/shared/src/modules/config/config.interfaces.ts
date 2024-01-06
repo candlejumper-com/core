@@ -12,6 +12,15 @@ export interface ISystemConfig {
         },
         openAI: {
             apiKey: string
+        },
+        firebase: {
+            apiKey: string
+            authDomain: string
+            projectId: string
+            storageBucket: string
+            messagingSenderId: string
+            appId: string
+            measurementId: string
         }
     }
     intervals?: INTERVAL[]

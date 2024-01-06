@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { readFileSync, writeFileSync } from "fs"
 import watch from "node-watch"
-import * as dirTreedirTree from "directory-tree"
+import dirTreedirTree from "directory-tree"
 import { SystemMain } from '../../system/system'
 import { logger } from '@candlejumper/shared'
 import { pool, WorkerPool } from 'workerpool'
@@ -18,7 +18,8 @@ export const PATH_CUSTOM_DIST_BOTS = join(PATH_CUSTOM_DIST, 'bots')
 export const PATH_CUSTOM_DIST_INDICATORS = join(PATH_CUSTOM_DIST, 'indicators')
 export const PATH_TSCONFIG = join(PATH_CUSTOM, 'tsconfig.json')
 
-const url = new URL(join(__dirname, 'editor.worker.js'), import.meta.url)
+const url = join(__dirname, 'editor.worker.js')
+// const url = new URL(join(__dirname, 'editor.worker.js'), import.meta.url)
 
 export class EditorManager {
 

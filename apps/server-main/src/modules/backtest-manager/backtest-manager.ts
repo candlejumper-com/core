@@ -4,7 +4,8 @@ import { pool, WorkerPool } from 'workerpool';
 import { logger, ISystemState, BrokerYahoo } from '@candlejumper/shared';
 import { IBacktestResult, IBacktestOptions, IWorkerData } from './backtest.interfaces';
 
-const PATH_WORKER = new URL(join(__dirname, 'backtest.worker.js'), import.meta.url)
+const PATH_WORKER = join(__dirname, 'backtest.worker.js')
+// const PATH_WORKER = new URL(join(__dirname, 'backtest.worker.js'), import.meta.url)
 
 export enum BACKTEST_TYPE {
     'OHLC' = 'OHLC',

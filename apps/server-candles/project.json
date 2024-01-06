@@ -5,17 +5,25 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/webpack:webpack",
+      "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "target": "node",
+        "platform": "node",
         "compiler": "tsc",
         "outputPath": "dist/apps/server-candles",
         "main": "apps/server-candles/src/main.ts",
         "tsConfig": "apps/server-candles/tsconfig.app.json",
+        "generatePackageJson": false,
+        "format": ["cjs"],
+        "bundle": true,
         "assets": [],
-        "webpackConfig": "apps/server-candles/webpack.config.js"
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
       },
       "configurations": {
         "development": {},

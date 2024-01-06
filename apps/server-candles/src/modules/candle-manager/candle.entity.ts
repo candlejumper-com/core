@@ -10,19 +10,19 @@ export function createCandleEntity(tableName: string): any {
     @PrimaryGeneratedColumn()
     time!: number
 
-    @Column({ nullable: false })
+    @Column('int', { nullable: false })
     open: number
 
-    @Column({ nullable: false })
+    @Column('int', { nullable: false })
     high: number
 
-    @Column({ nullable: false })
+    @Column('int', { nullable: false })
     low: number
 
-    @Column({ nullable: false })
+    @Column('int', { nullable: false })
     close: number
 
-    @Column({ nullable: false })
+    @Column('int', { nullable: false })
     volume: number
   }
 

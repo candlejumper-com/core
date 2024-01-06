@@ -5,10 +5,10 @@ export class BrokerEntity {
     @PrimaryGeneratedColumn()
     id!: number
 
-    @Column({ nullable: false })
+    @Column('text', { nullable: false })
     name: string
 
-    @Column({ nullable: false })
+    @Column('text', { nullable: false })
     data: string
 
     @CreateDateColumn()

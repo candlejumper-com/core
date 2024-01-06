@@ -5,19 +5,19 @@ export class InsightEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ nullable: false })
+  @Column('text', { nullable: false })
   symbol: string
 
-  @Column({ nullable: true })
+  @Column('int', { nullable: true })
   short: number
 
-  @Column({ nullable: true })
+  @Column('int', { nullable: true })
   mid: number
 
-  @Column({ nullable: true })
+  @Column('int', { nullable: true })
   long: number
 
-  @Column({ default: false })
+  @Column('boolean',{ default: false })
   skip: boolean
 
   @CreateDateColumn({ nullable: false })

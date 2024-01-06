@@ -39,17 +39,15 @@ export abstract class Broker {
     await this.syncExchange()
     logger.info(`✅ [${this.id}] Sync exchange info from broker (${Date.now() - now} ms)`)
 
-    if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
+    // if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
       if (!this.exchangeInfo.timezone) {
         throw new Error('Missing broker timezone')
       }
 
       process.env.TZ = this.exchangeInfo.timezone
-    }
-
-    // if (this.id === 'xtb') {
-    this.exchangeInfo.symbols.forEach(symbol => this.system.symbolManager.add(this, structuredClone(symbol)))
     // }
+
+    this.exchangeInfo.symbols.forEach(symbol => this.system.symbolManager.add(this, structuredClone(symbol)))
 
     if (this.system.type === TICKER_TYPE.SYSTEM_MAIN && this.hasPurpose(BROKER_PURPOSE.ORDERS)) {
       await this.syncAccount()

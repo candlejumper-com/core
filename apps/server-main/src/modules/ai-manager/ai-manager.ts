@@ -41,7 +41,7 @@ export class AIManager {
       options.maxWorkers = this.maxWorkers;
     }
     // TODO clean up, fucking strange
-    const url = new URL('./ai-worker', import.meta.url);
+    // const url = new URL('./ai-worker', import.meta.url);
     this.workerPool = pool('./dist/apps/server-main/ai-worker.js', { maxWorkers: 1 });
   }
 }
