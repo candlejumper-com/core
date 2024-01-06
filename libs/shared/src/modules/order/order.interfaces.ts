@@ -5,7 +5,7 @@ import { ORDER_SIDE, ORDER_STATE, ORDER_TYPE } from "./order.util"
 
 export interface IOrder {
     id?: number
-    type: string
+    type: ORDER_TYPE
     side: ORDER_SIDE
     symbol: Symbol
     quantity?: number

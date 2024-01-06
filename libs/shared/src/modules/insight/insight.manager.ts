@@ -19,7 +19,6 @@ export class InsightManager {
     minLastUpdateTime.setHours(minLastUpdateTime.getHours() - 4)
 
     const InsightsRepo = this.system.db.connection.getRepository(InsightEntity)
-    const lastRecord = await InsightsRepo.findOne({ where: { updatedAt: MoreThan(minLastUpdateTime) } })
     const insightsData = await broker.getSymbolInsights(symbol)
 
     if (!insightsData?.instrumentInfo) {

@@ -12,6 +12,7 @@ import { Broker } from '../broker/broker'
 import { BROKER_PURPOSE } from '../broker/broker.util'
 import { ORDER_SIDE, ORDER_TYPE } from '../order/order.util'
 
+
 export class Symbol implements ISymbol {
   name: string
   description: string

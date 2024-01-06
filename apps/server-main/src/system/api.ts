@@ -3,7 +3,7 @@ import { Server as SocketServer, Socket } from 'socket.io'
 import { join } from 'path'
 import { Server as HttpServer, createServer as createServerHttp } from 'http'
 import { Server as HttpsServer, createServer as createServerHttps } from 'https'
-import * as cors from 'cors'
+import cors from 'cors'
 import { SystemMain } from './system'
 import { ApiServerBase, logger } from '@candlejumper/shared'
 import systemRoutes from './system.api'
@@ -61,6 +61,7 @@ export class ApiServer extends ApiServerBase {
     //     crossOriginEmbedderPolicy: false
     // }))
     this.app.use(json())
+    this.app.use(cors())
     this.app.use(passport.initialize())
     this.app.use(express.static(PATH_PUBLIC, { maxAge: this.cacheMaxAge }))
 

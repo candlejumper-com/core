@@ -30,4 +30,8 @@ export default function (system: SystemMain, app: Application) {
         const logs = readFileSync(PATH_LOGS_COMBINED)
         res.send({ logs: logs.toString() })
     })
+
+    app.get('/api/c/trending', (req, res) => {
+        res.send(system.symbolManager.getInfo())
+    })
 }
