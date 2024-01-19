@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "permissions": ["scripting", "activeTab", "identity", "webRequest", "sidePanel"],
+  "name": "Hello Extensions",
+  "description": "Base Level Extension",
+  "version": "1.0",
+  "action": {
+    "default_popup": "./index.html"
+  },
+  "web_accessible_resources": [{
+    "matches": ["<all_urls>"],
+    "resources": ["./inject.js"]
+  }],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "js": ["./inject.js"],
+      "css": ["./assets/temp.css"],
+      "matches": [
+        "*://*/*",
+        "file://*/*"
+      ],
+      "world": "MAIN"
+    }
+  ]
+}

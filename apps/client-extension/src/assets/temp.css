@@ -1,0 +1,12 @@
+#TRADE_BANNER {
+  background: red;
+  height: auto;
+  display: flex;
+  padding: 6px 5px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999999999;
+};

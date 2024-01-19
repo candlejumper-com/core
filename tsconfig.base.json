@@ -20,6 +20,7 @@
     "noImplicitAny": false,
     "allowJs": false,
     "baseUrl": ".",
+    "types": ["chrome"],
     "paths": {
       "@candlejumper/shared": ["./libs/shared/src/index.ts"]
     }
