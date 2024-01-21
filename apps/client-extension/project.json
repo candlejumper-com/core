@@ -7,18 +7,32 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:application",
+      "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "main": "apps/client-extension/src/main.ts",
+        "outputHashing": "none",
+        "namedChunks": true,
         "outputPath": "dist/apps/client-extension",
         "index": "apps/client-extension/src/index.html",
-        "browser": "apps/client-extension/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/client-extension/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": ["apps/client-extension/src/favicon.ico", "apps/client-extension/src/assets", "apps/client-extension/src/manifest.json"],
-        "styles": ["apps/client-extension/src/style/styles.scss"]
-
+        "assets": [
+          "apps/client-extension/src/favicon.png", 
+          "apps/client-extension/src/assets", 
+          "apps/client-extension/src/manifest.json",
+          "apps/client-extension/src/sidepanel.html"
+        ],
+        "styles": ["apps/client-extension/src/style/styles.scss"],
+        "scripts": [
+          "apps/client-extension/src/tab/page.ts",
+          {
+            "input": "apps/client-extension/src/tab/page.ts",
+            "bundleName": "page",
+            "inject": false
+          }
+        ]
       },
       "configurations": {
         "production": {
@@ -34,7 +48,7 @@
               "maximumError": "1114kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "none"
         },
         "development": {
           "optimization": false,
@@ -71,7 +85,8 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/client-extension/jest.config.ts"
+        "jestConfig": "apps/client-extension/jest.config.ts",
+        "webWorkerTsConfig": "apps/client-extension/tsconfig.worker.json"
       }
     }
   }

@@ -68,7 +68,7 @@
               <td class="th-insight score-{{abs(symbol.insights?.short)}}">{{ symbol.insights?.short }}</td>
               <td class="th-insight score-{{abs(symbol.insights?.mid)}}">{{ symbol.insights?.mid }}</td>
               <td class="th-insight score-{{abs(symbol.insights?.long)}}">{{ symbol.insights?.long }}</td>
-              <td class="th-agenda">{{ symbol.reportDateString }}</td>
+              <td class="th-agenda">{{ symbol.calendar?.[0]?.reportDate | date:'dd-MM-yyyy' }}</td>
               <!-- <td>{{reportDateString}}</td> -->
             </tr>
           </tbody>

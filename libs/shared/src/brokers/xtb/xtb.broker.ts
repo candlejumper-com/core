@@ -1,7 +1,15 @@
 import { OrderResponseACK, OrderResponseResult, OrderResponseFull } from 'binance'
 import { Broker } from '../../modules/broker/broker'
 import { CandleTickerCallback } from '../../modules/broker/broker.interfaces'
-import XAPI, { CHART_RANGE_INFO_RECORD, CMD_FIELD, RATE_INFO_RECORD, SYMBOL_RECORD, TRADE_RECORD, TRADING_HOURS_RECORD, Time } from 'xapi-node'
+import XAPI, {
+  CHART_RANGE_INFO_RECORD,
+  CMD_FIELD,
+  RATE_INFO_RECORD,
+  SYMBOL_RECORD,
+  TRADE_RECORD,
+  TRADING_HOURS_RECORD,
+  Time,
+} from 'xapi-node'
 import { format } from 'date-fns'
 import { ICalendarItem } from '../../modules/calendar/calendar.interfaces'
 import { logger } from '../../util/log'
@@ -15,6 +23,7 @@ import { tradeTransactionResponse } from 'xapi-node/build/v2/interface/Response'
 import { Transaction } from 'xapi-node/build/v2/core/Transaction'
 import { BROKER_PURPOSE } from '../../modules/broker/broker.util'
 import { ORDER_SIDE, ORDER_TYPE } from '../../modules/order/order.util'
+import { error } from 'console'
 
 // https://xstation5.xtb.com/#/demo/loggedIn
 // http://developers.xstore.pro/documentation/
@@ -78,9 +87,13 @@ export class XtbBroker extends Broker {
 
   override async isMarketOpen(symbol: Symbol) {
     const now = new Date()
-    const {
-      trading: { from, until },
-    } = await this.getTradingHoursBySymbol(symbol)
+    const tradingHoursResult = await this.getTradingHoursBySymbol(symbol)
+
+    if (!tradingHoursResult) {
+      return false
+    }
+    
+    const { trading: { from, until } } = tradingHoursResult
 
     if (from > now && until < now) {
       return true
@@ -92,6 +105,8 @@ export class XtbBroker extends Broker {
   }
 
   override async getTradingHoursBySymbol(symbol: Symbol) {
+    return null
+
     const originalName = this.symbolMap.get(symbol.name)
     const result = await this.instance.Socket.send.getTradingHours([originalName])
     const tradingHours = result.data.returnData[0]

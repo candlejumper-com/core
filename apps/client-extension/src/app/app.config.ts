@@ -1,7 +1,13 @@
-import { ApplicationConfig } from '@angular/core'
+import { ApplicationConfig, CSP_NONCE } from '@angular/core'
 import { provideRouter } from '@angular/router'
 import { appRoutes } from './app.routes'
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(appRoutes)],
+  providers: [
+    // {
+    //   provide: CSP_NONCE,
+    //   useValue: globalThis.myRandomNonceValue
+    // },
+    provideRouter(appRoutes)
+  ],
 }

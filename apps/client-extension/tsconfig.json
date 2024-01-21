@@ -8,9 +8,14 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
-    "types": ["chrome"],
+    "types": ["chrome-types", "./src/global"],
     "noFallthroughCasesInSwitch": true,
     "lib": ["DOM", "ES2023"],	
+    "paths": {
+      "@candlejumper/shared": [
+        "./libs/shared/src/index_client.ts",
+      ]
+    }
   },
   "files": [],
   "include": [],
@@ -20,12 +25,6 @@
     },
     {
       "path": "./tsconfig.spec.json"
-    },
-    {
-      "path": "./tsconfig.editor.json"
-    },
-    {
-      "path": "./tsconfig.inject.json"
     }
   ],
   "extends": "../../tsconfig.base.json",

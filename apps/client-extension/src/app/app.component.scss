@@ -1,24 +1,25 @@
+@import "../style/global/global";
 // @import "bootstrap/scss/bootstrap";
-@import "bootstrap/scss/functions";
-@import "bootstrap/scss/variables";
-@import "bootstrap/scss/variables-dark";
-@import "bootstrap/scss/maps";
-@import "bootstrap/scss/mixins";
-@import "bootstrap/scss/utilities";
-@import "bootstrap/scss/utilities/api";
-@import "bootstrap/scss/root";
-@import "bootstrap/scss/reboot";
-@import "bootstrap/scss/containers";
-@import "bootstrap/scss/grid";
-@import "bootstrap/scss/progress";
-@import "bootstrap/scss/tables";
-@import "bootstrap/scss/forms";
-@import "bootstrap/scss/nav";
-@import "bootstrap/scss/navbar";
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/utilities';
+@import 'bootstrap/scss/utilities/api';
+@import 'bootstrap/scss/root';
+@import 'bootstrap/scss/reboot';
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/grid';
+@import 'bootstrap/scss/progress';
+@import 'bootstrap/scss/tables';
+@import 'bootstrap/scss/forms';
+@import 'bootstrap/scss/nav';
+@import 'bootstrap/scss/navbar';
 // @import "bootstrap/scss/dropdown";
-@import "bootstrap/scss/buttons";
-@import "bootstrap/scss/button-group";
-@import "bootstrap/scss/list-group";
+@import 'bootstrap/scss/buttons';
+@import 'bootstrap/scss/button-group';
+@import 'bootstrap/scss/list-group';
 // @import "bootstrap/scss/close";
 // @import "bootstrap/scss/toasts";
 // @import "bootstrap/scss/modal";
@@ -28,7 +29,6 @@
 // @import "bootstrap/scss/spinners";
 // @import "bootstrap/scss/utilities/api";
 
-
 :host {
   height: 100vh;
   flex-direction: column;
@@ -37,7 +37,7 @@
 
 nav img {
   max-height: 100px;
-  width: 100%; 
+  width: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -96,11 +96,11 @@ main {
 
 .tabs-wrapper {
   position: absolute;
-    top: 60px;
+  top: 60px;
 
-    a {
-      color: white;
-    }
+  a {
+    color: white;
+  }
 }
 
 .search-input {
@@ -135,7 +135,7 @@ main {
     font-size: 16px;
     padding-left: 4px;
   }
-  
+
   input {
     height: 20px;
     width: 20px;

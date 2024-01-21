@@ -4,15 +4,38 @@
   "name": "Hello Extensions",
   "description": "Base Level Extension",
   "version": "1.0",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "externally_connectable": {
+    "matches": ["<all_urls>"]
+  },
   "action": {
-    "default_popup": "./index.html"
+    "default_popup": "./index.html",
+    "default_title": "Click to open panel"
   },
   "web_accessible_resources": [{
     "matches": ["<all_urls>"],
-    "resources": ["./inject.js"]
+    "resources": ["./inject.js", "./content-script.js"]
   }],
+  "content_security_policy":  {
+    "extension_pages": "require-trusted-types-for 'script'; script-src 'self'; style-src 'self' 'unsafe-inline';"	
+  },
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
+    {
+      "js": ["./content-script.js"],
+      "matches": [
+        "*://*/*",
+        "file://*/*"
+      ]
+    },
     {
       "js": ["./inject.js"],
       "css": ["./assets/temp.css"],
