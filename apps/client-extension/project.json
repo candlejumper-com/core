@@ -7,10 +7,10 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/angular:webpack-browser",
+      "executor": "@angular-devkit/build-angular:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "main": "apps/client-extension/src/main.ts",
+        "browser": "apps/client-extension/src/main.ts",
         "outputHashing": "none",
         "namedChunks": true,
         "outputPath": "dist/apps/client-extension",
@@ -26,10 +26,9 @@
         ],
         "styles": ["apps/client-extension/src/style/styles.scss"],
         "scripts": [
-          "apps/client-extension/src/tab/page.ts",
           {
             "input": "apps/client-extension/src/tab/page.ts",
-            "bundleName": "page",
+            "bundleName": "other-scripts.js",
             "inject": false
           }
         ]
