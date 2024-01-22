@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "permissions": ["scripting", "activeTab", "identity", "webRequest", "sidePanel"],
+  "permissions": ["scripting", "activeTab", "identity", "webRequest", "sidePanel", "storage"],
   "name": "Hello Extensions",
   "description": "Base Level Extension",
   "version": "1.0",

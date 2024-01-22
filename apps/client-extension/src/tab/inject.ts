@@ -17,17 +17,23 @@ export class TradeBannerApp {
     this.setContainer()
 
     window.addEventListener('ToPage', (event: any) => {
-      event.detail.symbols.forEach((symbol: ISymbol) => {
-        const existingSymbol = this.symbols.find(symbol2 => symbol2.name === symbol.name)
-        if (existingSymbol) {
-          // Object.assign(existingSymbol, symbol)
-        } else {
-          this.symbols.push(symbol)
-        }
-      })
+      if (event.detail?.symbols?.length) {
+        event.detail.symbols.forEach((symbol: ISymbol) => {
+          const existingSymbol = this.symbols.find(symbol2 => symbol2.name === symbol.name)
+          if (existingSymbol) {
+            // Object.assign(existingSymbol, symbol)
+          } else {
+            this.symbols.push(symbol)
+          }
+        })
+        this.bannerComponent.updateSymbols()
+      }
+      
+      if (typeof event.detail?.showBanner === 'boolean') {
+        this.toggle(event.detail.showBanner)
+      }
 
-      console.log('CLIENT UPDATE', this.symbols)
-      this.bannerComponent.updateSymbols()
+      console.log('CLIENT UPDATE', event)
     })
   }
 
@@ -36,6 +42,10 @@ export class TradeBannerApp {
     this.shadowRoot = this.wrapper$[0].attachShadow({ mode: 'open' })
     this.bannerComponent = new BannerComponent(this)
     this.shadowRoot.appendChild(this.bannerComponent)
+  }
+
+  toggle(visible: boolean) {
+    this.wrapper$.toggle(visible)
   }
 }
 

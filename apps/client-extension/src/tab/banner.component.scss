@@ -30,32 +30,14 @@ trade-banner {
   width: 100%;
 }
 
-// #TRADE_BANNER_NEWS2,
-// #TRADE_BANNER_NEWS {
-//   list-style: none;
-//   display: flex;
-//   overflow: auto;
-//   padding: 0;
-//   margin: 0;
-//   display: flex;
-//   align-items: center;
-//   // animation: marquee 10s linear infinite;
-//   position: absolute;
-
-//   &::-webkit-scrollbar {
-//     display: none;
-//   }
-
-//   li {
-//     white-space: nowrap;
-//     padding: 2px 6px;
-//     border-right: 1px solid white
-//   };
-// }
-
 #latest-news {
   a {
     padding: 0 6px;
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
 
     &::before {
       content: '*';

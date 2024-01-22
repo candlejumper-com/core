@@ -42,7 +42,8 @@ class App {
         }
 
         try {
-          await chrome.tabs.sendMessage(tab.id, { symbols: this.symbols })
+          const result = await chrome.storage.local.get('TRADE_BANNER_SHOW')
+          await chrome.tabs.sendMessage(tab.id, { symbols: this.symbols , showBanner: result['TRADE_BANNER_SHOW'] })
         } catch (error) {
           console.log(tab)
           console.error(error)
