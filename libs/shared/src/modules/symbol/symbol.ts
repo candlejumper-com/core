@@ -126,8 +126,10 @@ export class Symbol implements ISymbol {
   getInfo(): ISymbolInfo {
     return {
       name: this.name,
+      description: this.description,
       baseAsset: this.baseAsset,
       insights: this.insights,
+      price: this.price || 0,
       calendar: this.calendar,
     }
   }

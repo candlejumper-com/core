@@ -1,25 +1,25 @@
 import { ISymbol } from '@candlejumper/shared'
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse: any) => {
-  const user = {
-    username: 'demo-user222',
-  }
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse: any) => {
+//   const user = {
+//     username: 'demo-user222',
+//   }
 
-  console.log(2222222, message)
+//   console.log(2222222, message)
 
-  // 2. A page requested user data, respond with a copy of `user`
-  // if (message === 'get-user-data') {
-  sendResponse(user)
-  // }
+//   // 2. A page requested user data, respond with a copy of `user`
+//   // if (message === 'get-user-data') {
+//   sendResponse(user)
+//   // }
 
-  return true
-})
+//   return true
+// })
 
 class App {
   symbols: ISymbol[] = []
 
   async init() {
-    this.setWebListeners()
+    // this.setWebListeners()
     await this.loadSymbols()
     this.startUpdateInterval()
   }
@@ -32,12 +32,22 @@ class App {
   }
 
   startUpdateInterval() {
-    setInterval(() => {
-      chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        for (var i = 0; i < tabs.length; i++) {
-          chrome.tabs.sendMessage(tabs[i].id, {symbols: this.symbols});  
+    setInterval(async () => {
+      const tabs = await chrome.tabs.query({ active: true})
+
+      for (var i = 0; i < tabs.length; i++) {
+        const tab = tabs[i]
+        if (tab.status !== 'complete') {
+          continue
         }
-    });
+
+        try {
+          await chrome.tabs.sendMessage(tab.id, { symbols: this.symbols })
+        } catch (error) {
+          console.log(tab)
+          console.error(error)
+        }
+      }
     }, 1000)
   }
 
@@ -58,7 +68,4 @@ class App {
   }
 }
 
-;(async () => {
-  const app = new App()
-  await app.init()
-})()
+new App().init()

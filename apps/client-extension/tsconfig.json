@@ -8,7 +8,7 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
-    "types": ["chrome-types", "./src/global"],
+    "types": ["chrome-types", "./src/global", "node"],
     "noFallthroughCasesInSwitch": true,
     "lib": ["DOM", "ES2023"],	
     "paths": {
@@ -25,6 +25,9 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./tsconfig.inject.json"
     }
   ],
   "extends": "../../tsconfig.base.json",

@@ -7,52 +7,11 @@
   body {
     overflow-x: hidden;
     min-width: 450px;
+    margin: 0;
   }
 
   a {
     cursor: pointer;
     color: black;
-  }
-
-  /* eocjsNewsticker v0.7.2 */
-
-  .eocjs-newsticker {
-    padding: 10px 0;
-    background-color: #eee;
-  }
-
-  .eocjs-newsticker .eocjs-newsticker-container {
-    position: relative;
-    height: 24px;
-    overflow: hidden;
-  }
-
-  .eocjs-newsticker .eocjs-newsticker-one,
-  .eocjs-newsticker .eocjs-newsticker-two {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 24px;
-    line-height: 24px;
-    white-space: nowrap;
-  }
-
-  .eocjs-newsticker-loader {
-    position: absolute;
-    left: calc(50% - 10px);
-    top: 2px;
-    width: 20px;
-    height: 20px;
-    display: block;
-    border: 3px solid #555555;
-    border-top: 3px solid transparent;
-    border-radius: 50%;
-    animation: eocjs-newsticker-spin 0.75s linear infinite;
-  }
-
-  @keyframes eocjs-newsticker-spin {
-    to {
-      transform: rotate(360deg);
-    }
   }
 }

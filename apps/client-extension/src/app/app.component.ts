@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { ISymbol } from '@candlejumper/shared'
 
-
 // chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 //     console.log(sender.tab ?
 //                 "from a content script:" + sender.tab.url :
@@ -32,7 +31,7 @@ export class AppComponent {
       const tabs = await chrome.tabs.query({})
       for (var i = 0; i < tabs.length; i++) {
         // chrome.tabs.connect
-        chrome.tabs.connect(tabs[i].id, { name: 'hello' })
+        // chrome.tabs.connect(tabs[i].id, { name: 'hello' })
         // const response = await chrome.tabs.sendMessage(tabs[i].id, { greeting: 'hello' })
         // console.log(response)
         // await chrome.tabs.sendMessage(tabs[i].id, { browserActivityState: 2 });

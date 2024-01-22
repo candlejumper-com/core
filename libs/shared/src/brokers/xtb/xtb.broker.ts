@@ -74,7 +74,7 @@ export class XtbBroker extends Broker {
 
   override async syncSymbols(): Promise<void> {
     const symbols = await this.getSymbols()
-
+    console.log(symbols[0])
     // normalize symbol name and store original name in map
     symbols.forEach(symbol => {
       const cleanName = symbol.name.split('.')[0]
@@ -274,6 +274,7 @@ export class XtbBroker extends Broker {
   private async getSymbols(): Promise<ISymbol[]> {
     const data = (await this.instance.Socket.send.getAllSymbols()).data.returnData
     // console.log(2222, data.find(symbol => symbol.symbol.startsWith('VZ.')))
+    console.log(data[0])
     return data.map(symbol => {
       const _symbol: ISymbol = {
         description: symbol.description,

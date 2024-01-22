@@ -22,7 +22,7 @@
   },
   "web_accessible_resources": [{
     "matches": ["<all_urls>"],
-    "resources": ["./inject.js", "./content-script.js"]
+    "resources": ["./inject.js", "./content-script.js", "banner.component.css"]
   }],
   "content_security_policy":  {
     "extension_pages": "require-trusted-types-for 'script'; script-src 'self'; style-src 'self' 'unsafe-inline';"	
@@ -30,20 +30,19 @@
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
-      "js": ["./content-script.js"],
-      "matches": [
-        "*://*/*",
-        "file://*/*"
-      ]
-    },
-    {
       "js": ["./inject.js"],
-      "css": ["./assets/temp.css"],
       "matches": [
         "*://*/*",
         "file://*/*"
       ],
       "world": "MAIN"
+    },
+    {
+      "js": ["./content-script.js"],
+      "matches": [
+        "*://*/*",
+        "file://*/*"
+      ]
     }
   ]
 }
