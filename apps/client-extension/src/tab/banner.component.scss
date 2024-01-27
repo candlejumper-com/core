@@ -23,11 +23,31 @@
 // @import "bootstrap/scss/spinners";
 // @import "bootstrap/scss/utilities/api";
 
-trade-banner {
-  background: #3d3d3d;
+:host {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 16px;
+  z-index: 88888;
+  background: #000000;
   height: auto;
   display: flex;
   width: 100%;
+}
+
+#TRADE_BANNER_NEWS {
+  white-space: nowrap;
+}
+
+#TRADE_BANNER_CLOSE_BTN {
+  padding: 0 10px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 14px;
+  box-sizing: border-box;
+  border: 0;
 }
 
 #latest-news {
@@ -53,20 +73,20 @@ trade-banner {
   text-align: center;
   margin: 0 auto;
   width: 100%;
-  height: 30px;
+  height: 16px;
+  line-height: 16px;
   display: flex;
   align-items: center;
   white-space: nowrap;
-  font-size: 24px;
+  font-size: 14px;
 }
-
 
 @keyframes marquee {
   0% {
-    left: 0
+    left: 0;
     // transform: translate3d(0, 0, 0);
   }
   100% {
-    left: -100%
+    left: -100%;
   }
 }

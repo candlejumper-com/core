@@ -1,6 +1,7 @@
 import { Broker } from './broker'
 import { System } from '../../system/system'
 import { BROKER_PURPOSE } from './broker.util'
+import { logger } from '../../util/log'
 
 export class BrokerManager {
   // readonly brokers: {[key: string]: Broker} = {}
@@ -43,7 +44,12 @@ export class BrokerManager {
   async add<T extends Broker>(BrokerClass: new (system: System, purposes: BROKER_PURPOSE[]) => T, purposes: BROKER_PURPOSE[]): Promise<T> {
     const broker = new BrokerClass(this.system, purposes)
     this.brokers.set(BrokerClass, broker)
-    await broker.init()
+
+    try {
+      await broker.init()
+    } catch (error: any) {
+      console.error(error)
+    }
 
     return broker
   }

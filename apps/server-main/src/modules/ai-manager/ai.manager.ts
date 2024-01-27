@@ -8,13 +8,13 @@ import {
 import { join } from 'path';
 import { SystemMain } from '../../system/system';
 import { logger } from '@candlejumper/shared';
-import { WorkerPool, pool } from 'workerpool';
+import { Pool, pool } from 'workerpool';
 import { TENSORFLOW_WORKER_ACTION } from './ai.util';
 import { AIContainer } from './ai-container';
 
 export class AIManager {
 
-  private workerPool: WorkerPool;
+  private workerPool: Pool;
   private containers: AIContainer[] = []
 
   constructor(public system: SystemMain, public maxWorkers?: number) {}

@@ -3,6 +3,14 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc"
   },
-  "include": ["./src/**/*.ts"],
-  "exclude": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts", "src/**/test-setup.ts", "*.d.ts"]
+  "files": [
+    "./src/main.ts",
+    "./src/tab/content-script.ts",
+    "./src/tab/inject.ts",
+    "./src/tab/banner.component.ts",
+    "./src/service-worker.ts",
+    "./src/global.d.ts",
+    "./src/html.d.ts"
+  ],
+  "exclude": ["jest.config.ts", "src/tab/*.ts", "src/**/*.test.ts", "src/**/*.spec.ts", "src/**/test-setup.ts"]
 }

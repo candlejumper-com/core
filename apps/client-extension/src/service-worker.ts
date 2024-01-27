@@ -28,7 +28,8 @@ class App {
     const req = await fetch('http://localhost:3000/api/app-init')
     const { state } = await req.json()
 
-    this.symbols = state.symbols.filter((symbol: ISymbol) => !!symbol.insights)
+    this.symbols = state.symbols
+    // this.symbols = state.symbols.filter((symbol: ISymbol) => !!symbol.insights)
   }
 
   startUpdateInterval() {

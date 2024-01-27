@@ -3,27 +3,35 @@ import html from '!raw-loader!./banner.component.html'
 // import { Web3Connect } from './web3.connect'
 import { TradeBannerApp } from './inject'
 
-// const myText = require('!raw-loader!./banner.component.scss').default;
-// console.log(myText)
+interface IMarqueeContainer {
+  el: HTMLElement
+  items: HTMLElement[]
+  animationID?: number
+}
+
 let done = false
 export class BannerComponent extends HTMLElement {
   static tagName = 'trade-banner'
 
-  container$: JQuery
-  connectBtn$: JQuery
-  newsContainer$: JQuery
-  marqueeContainers = []
+  private shadow: ShadowRoot
 
-  observers: IntersectionObserver[] = []
+  private container$: JQuery
+  private newsContainer$: JQuery
+  private connectBtn$: JQuery
+  private visibilityBtn$: JQuery
+  private marqueeContainers: IMarqueeContainer[] = []
 
   constructor(public app: TradeBannerApp) {
     super()
   }
 
-  connectedCallback() {
-    this.container$ = $(html).appendTo(this)
+  protected connectedCallback() {
+    this.shadow = this.attachShadow({ mode: 'open' })
+    this.shadow.innerHTML = html
+    this.container$ = $(this.shadow).find('#latest-news')
+    this.newsContainer$ = $('#TRADE_BANNER_NEWS', this.container$)
     this.connectBtn$ = this.container$.find(`#connectButton`).on('click', () => this.onClickConnect())
-    this.newsContainer$ = $(this).find('#TRADE_BANNER_NEWS')
+    this.visibilityBtn$ = $(this.shadow).find(`#TRADE_BANNER_CLOSE_BTN`).on('click', () => this.toggleVisibility())
   }
 
   onClickConnect() {
@@ -32,61 +40,61 @@ export class BannerComponent extends HTMLElement {
   }
 
   updateSymbols() {
+    if (!this.container$.length) {
+      return
+    }
+
     this.app.symbols.forEach(symbol => {
       if (!symbol.el$) {
-        symbol.el$ = $((`<a>${symbol.name} ${symbol.price}</a>`)).appendTo(this.newsContainer$)
+        symbol.el$ = $(`<a>${symbol.name} ${symbol.price}</a>`).appendTo(this.newsContainer$)
       }
     })
 
-    if (!done) {
+    if (!done && this.container$.is(':visible')) {
       done = true
       this.initializeMarquee()
     }
   }
 
+  toggleVisibility(visible?: boolean) {
+    $(this).toggle(visible)
+  }
+
   initializeMarquee() {
-    requestAnimationFrame(() => {
-      this.createMarqueeContainer('latest-news')
-      this.rotateMarquee(this.marqueeContainers)
-    })
-
+    this.createMarqueeContainer()
+    this.rotateMarquee(this.marqueeContainers)
   }
 
-  getObjectWidth(obj: HTMLElement) {
-    if (obj.offsetWidth) return obj.offsetWidth
-    return 0
-  }
+  createMarqueeContainer() {
+    const newsContainerContent = this.newsContainer$.html()
+    const itemWidth = this.newsContainer$.width() + 5
+    const fullWidth = this.container$.width()
 
-  createMarqueeContainer(id) {
-    const container = $(this).find('#latest-news')[0] as any
-    const itemWidth = this.getObjectWidth(container.getElementsByTagName('span')[0]) + 5
-    const fullWidth = this.getObjectWidth(container)
-    const textContent = container.getElementsByTagName('span')[0].innerHTML
-    container.innerHTML = ''
-    const height = container.style.height
+    this.container$.html('')
 
-    container.onmouseout = () => this.rotateMarquee(this.marqueeContainers)
+    this.container$.on('mouseout', () => this.rotateMarquee(this.marqueeContainers))
+    this.container$.on('mouseover', () => cancelAnimationFrame(this.marqueeContainers[0].animationID))
 
-    container.onmouseover = () => cancelAnimationFrame(this.marqueeContainers[0].animationID)
-
-    container.items = []
+    const items: HTMLElement[] = []
     const maxItems = Math.ceil(fullWidth / itemWidth) + 1
 
     for (let i = 0; i < maxItems; i++) {
-      container.items[i] = document.createElement('div')
-      container.items[i].innerHTML = textContent
-      container.items[i].style.position = 'absolute'
-      container.items[i].style.left = itemWidth * i + 'px'
-      container.items[i].style.width = itemWidth + 'px'
-      container.items[i].style.height = height
-      container.appendChild(container.items[i])
+      items[i] = document.createElement('div')
+      items[i].innerHTML = newsContainerContent
+      items[i].style.position = 'absolute'
+      items[i].style.left = itemWidth * i + 'px'
+      items[i].style.width = itemWidth + 'px'
+      this.container$.append(items[i])
     }
 
-    this.marqueeContainers.push(container)
+    this.marqueeContainers.push({
+      el: this.container$[0],
+      items,
+    })
   }
 
-  rotateMarquee(containers) {
-    if (!containers) return
+  rotateMarquee(containers: IMarqueeContainer[]) {
+    if (!containers?.length) return
 
     for (let j = containers.length - 1; j > -1; j--) {
       const maxItems = containers[j].items.length
@@ -94,6 +102,10 @@ export class BannerComponent extends HTMLElement {
       for (let i = 0; i < maxItems; i++) {
         const itemStyle = containers[j].items[i].style
         itemStyle.left = parseInt(itemStyle.left, 10) - 1 + 'px'
+      }
+
+      if (!containers[j]?.items?.[0]?.style) {
+        break
       }
 
       const firstItemStyle = containers[j].items[0].style

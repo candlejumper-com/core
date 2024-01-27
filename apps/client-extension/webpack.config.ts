@@ -10,6 +10,11 @@ const sharedMappings = new SharedMappings();
 //   [/* mapped paths to share */]);
 
 module.exports = {
+  // devServer: {
+  //   devMiddleware: {
+  //     writeToDisk: true,
+  //   },
+  // },
   entry: {
     inject: "./apps/client-extension/src/tab/inject.ts",
     "content-script": "./apps/client-extension/src/tab/content-script.ts",
@@ -43,21 +48,21 @@ module.exports = {
     }),
     sharedMappings.getPlugin()
   ],
-  // module: {
-  //   rules: [
-  //     {
-  //       test:/banner.component.scss$/, 
-  //       // include: resolve(__dirname, 'src/tab'),
-  //       // include: resolve(__dirname, './../app/src'),
-  //       use: [
-  //         // Creates `style` nodes from JS strings
-  //         "style-loader",
-  //         // Translates CSS into CommonJS
-  //         "css-loader",
-  //         // Compiles Sass to CSS
-  //         "sass-loader",
-  //       ]
-  //     }
-  //   ]
-  // }
+  module: {
+    rules: [
+      {
+        test: /.tsx?$/,
+        include: resolve(__dirname, "src/tab"),
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+              configFile: 'tsconfig.inject.json'
+            }
+          }
+        ]
+      }
+    ]
+  }
 };

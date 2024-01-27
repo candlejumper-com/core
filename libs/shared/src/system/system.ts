@@ -37,7 +37,12 @@ export abstract class System extends Ticker<null> {
     logger.info(`♿ Initialize system \n-------------------------------------------------------------`)
 
     await this.symbolManager.init()
-    await this.onInit?.()
+
+    try {
+      await this.onInit?.()
+    } catch (error) {
+      console.error(error)
+    }
 
     logger.info(`✅ Initialize system (${Date.now() - now}ms) `)
 

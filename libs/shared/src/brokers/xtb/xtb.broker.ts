@@ -42,6 +42,7 @@ export class XtbBroker extends Broker {
       password,
       type,
     })
+    
     await this.instance.connect()
   }
 

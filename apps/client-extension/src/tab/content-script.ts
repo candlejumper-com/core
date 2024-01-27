@@ -9,4 +9,4 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 var link = document.createElement('link')
 link.href = chrome.runtime.getURL('banner.component.css')
 link.rel = 'stylesheet';
-document.documentElement.querySelector('#TRADE_BANNER_WRAPPER').shadowRoot.appendChild(link);
+document.documentElement.querySelector('trade-banner').shadowRoot.appendChild(link);

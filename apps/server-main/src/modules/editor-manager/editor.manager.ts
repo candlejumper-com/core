@@ -4,7 +4,7 @@ import watch from "node-watch"
 import dirTreedirTree from "directory-tree"
 import { SystemMain } from '../../system/system'
 import { logger } from '@candlejumper/shared'
-import { pool, WorkerPool } from 'workerpool'
+import { pool, Pool} from 'workerpool'
 import { IEditorCompileOptions } from './editor.worker'
 import { readFile, writeFile } from 'fs/promises'
 
@@ -27,7 +27,7 @@ export class EditorManager {
     availableBots: Array<{ name: string }> = []
     availableIndicators: Array<{ name: string }> = []
 
-    private pool: WorkerPool
+    private pool: Pool
 
     constructor(public system: SystemMain) { }
 

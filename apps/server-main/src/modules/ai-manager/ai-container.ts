@@ -1,4 +1,4 @@
-import { WorkerPool } from 'workerpool';
+import { Pool } from 'workerpool';
 import { SystemMain } from '../../system/system';
 import { logger } from '@candlejumper/shared';
 import {
@@ -19,7 +19,7 @@ export class AIContainer {
 
   instances:AIInstance[] = [];
 
-  constructor(public system: SystemMain, public workerPool: WorkerPool, public options: ITensorflowOptions) {
+  constructor(public system: SystemMain, public workerPool: Pool, public options: ITensorflowOptions) {
     this.init();
   }
 

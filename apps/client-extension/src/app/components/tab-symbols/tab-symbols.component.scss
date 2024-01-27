@@ -1,22 +1,22 @@
-// @import "../../style/global/global";
-// @import "bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/variables-dark';
-@import 'bootstrap/scss/maps';
 @import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/maps';
+
 @import 'bootstrap/scss/utilities';
 @import 'bootstrap/scss/utilities/api';
 @import 'bootstrap/scss/root';
 @import 'bootstrap/scss/reboot';
 @import 'bootstrap/scss/containers';
 @import 'bootstrap/scss/grid';
-@import 'bootstrap/scss/progress';
+// @import 'bootstrap/scss/progress';
 @import 'bootstrap/scss/tables';
 @import 'bootstrap/scss/forms';
-@import 'bootstrap/scss/nav';
-@import 'bootstrap/scss/navbar';
-// @import "bootstrap/scss/dropdown";
+// @import 'bootstrap/scss/nav';
+// @import 'bootstrap/scss/navbar';
+// // @import "bootstrap/scss/dropdown";    
 @import 'bootstrap/scss/buttons';
 @import 'bootstrap/scss/button-group';
 @import 'bootstrap/scss/list-group';
@@ -103,8 +103,8 @@ main {
   }
 }
 
-.search-input {
-  background-color: #e8e8ff;
+#searchInput {
+  background-color: #ffffff !important;
   border-radius: 0;
 }
 
@@ -113,7 +113,7 @@ main {
 }
 
 .score-1 {
-  color: rgb(252, 255, 251) !important;
+  color: rgb(207, 255, 191) !important;
 }
 
 .score-2 {

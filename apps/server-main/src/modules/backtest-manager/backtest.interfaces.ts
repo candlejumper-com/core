@@ -1,5 +1,5 @@
 import { ExchangeInfo } from "binance"
-import { BACKTEST_TYPE } from "./backtest-manager"
+import { BACKTEST_TYPE } from "./backtest.manager"
 import { ISymbol, ISystemState } from "@candlejumper/shared"
 
 export interface IBacktestOptions {

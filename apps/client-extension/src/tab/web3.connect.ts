@@ -17,7 +17,7 @@ export class Web3Connect {
     const chains: Chain[] = [
       {
         id: 1,
-        network: 'homestead',
+        // network: 'homestead',
         name: 'Ethereum',
         nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
         rpcUrls: {

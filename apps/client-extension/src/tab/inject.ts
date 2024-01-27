@@ -28,8 +28,9 @@ export class TradeBannerApp {
         })
         this.bannerComponent.updateSymbols()
       }
-      
+
       if (typeof event.detail?.showBanner === 'boolean') {
+        console.log('toggle')
         this.toggle(event.detail.showBanner)
       }
 
@@ -38,14 +39,23 @@ export class TradeBannerApp {
   }
 
   setContainer() {
-    this.wrapper$ = $('<div id="TRADE_BANNER_WRAPPER" style="width: 100%; position: fixed; top: 0; left: 0; right: 0; height: 40px; z-index: 88888;"></div>').prependTo(document.body)
-    this.shadowRoot = this.wrapper$[0].attachShadow({ mode: 'open' })
+    // const iframe = document.createElement('iframe')
+    // console.log( window.location)
+    // iframe.src = window.location.href
+    // iframe.style.width = '100%'
+    // iframe.style.height = '100%'
+    // document.body.innerHTML = ''
+    // document.body.appendChild(iframe)
+    // Array.from(document.head.children).forEach(child => document.head.removeChild(child))
+
+    // this.wrapper$ = $('<div id="TRADE_BANNER_WRAPPER" style="width: 100%; position: fixed; top: 0; left: 0; right: 0; height: 16px; z-index: 88888;"></div>').prependTo(document.body)
     this.bannerComponent = new BannerComponent(this)
-    this.shadowRoot.appendChild(this.bannerComponent)
+    $(document.body).prepend(this.bannerComponent)
+    // this.wrapper$.append(this.bannerComponent)
   }
 
   toggle(visible: boolean) {
-    this.wrapper$.toggle(visible)
+    this.bannerComponent.toggleVisibility(visible)
   }
 }
 
