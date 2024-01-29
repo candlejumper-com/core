@@ -11,27 +11,31 @@ import { IOrder } from '../order/order.interfaces'
 import { Broker } from '../broker/broker'
 import { BROKER_PURPOSE } from '../broker/broker.util'
 import { ORDER_SIDE, ORDER_TYPE } from '../order/order.util'
-
+import { SYMBOL_CATEGORY } from './symbol.util'
 
 export class Symbol implements ISymbol {
+  updatedAt: Date
+  category: SYMBOL_CATEGORY
   name: string
   description: string
+
   baseAsset: string
   quoteAsset: string
-  candles: {
-    [key in INTERVAL]?: ICandle[]
-  } = {}
-  insights: IInsight = null
-  calendar: ICalendarItem[] = []
-  news: INewsItem[] = []
-  orders: IOrder[] = []
-  price: number
-  updatedAt: Date
   lotMin: number
   currency: string
   shortSelling?: boolean
 
   brokers: Broker[] = []
+  orders: IOrder[] = []
+
+  insights: IInsight = null
+  calendar: ICalendarItem[] = []
+  news: INewsItem[] = []
+
+  price: number
+  candles: {
+    [key in INTERVAL]?: ICandle[]
+  } = {}
 
   constructor(
     public system: System,
@@ -43,6 +47,9 @@ export class Symbol implements ISymbol {
   }
 
   async update() {
+    // if (this.name === 'BTC-CAD') {
+    //   console.log(this)
+    // }
     const minUpdatedAtDiff = 1000 * 60 * 60 // 1 hour
     const insightRepo = this.system.db.connection.getRepository(InsightEntity)
 
@@ -131,6 +138,7 @@ export class Symbol implements ISymbol {
       insights: this.insights,
       price: this.price || 0,
       calendar: this.calendar,
+      category: this.category
     }
   }
 

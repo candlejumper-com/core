@@ -8,6 +8,7 @@ import XAPI, {
   SYMBOL_RECORD,
   TRADE_RECORD,
   TRADING_HOURS_RECORD,
+  TYPE_FIELD,
   Time,
 } from 'xapi-node'
 import { format } from 'date-fns'
@@ -24,6 +25,7 @@ import { Transaction } from 'xapi-node/build/v2/core/Transaction'
 import { BROKER_PURPOSE } from '../../modules/broker/broker.util'
 import { ORDER_SIDE, ORDER_TYPE } from '../../modules/order/order.util'
 import { error } from 'console'
+import { SYMBOL_CATEGORY } from '../../modules/symbol/symbol.util'
 
 // https://xstation5.xtb.com/#/demo/loggedIn
 // http://developers.xstore.pro/documentation/
@@ -42,7 +44,7 @@ export class XtbBroker extends Broker {
       password,
       type,
     })
-    
+
     await this.instance.connect()
   }
 
@@ -75,7 +77,7 @@ export class XtbBroker extends Broker {
 
   override async syncSymbols(): Promise<void> {
     const symbols = await this.getSymbols()
-    console.log(symbols[0])
+
     // normalize symbol name and store original name in map
     symbols.forEach(symbol => {
       const cleanName = symbol.name.split('.')[0]
@@ -93,8 +95,10 @@ export class XtbBroker extends Broker {
     if (!tradingHoursResult) {
       return false
     }
-    
-    const { trading: { from, until } } = tradingHoursResult
+
+    const {
+      trading: { from, until },
+    } = tradingHoursResult
 
     if (from > now && until < now) {
       return true
@@ -210,7 +214,16 @@ export class XtbBroker extends Broker {
   }
 
   override async startCandleTicker(symbols: Symbol[], intervals: string[], callback: CandleTickerCallback) {
-    // throw new Error('Method not implemented.');
+    // console.log('CANDLE TICKER!')
+    this.instance.Stream.listen.getTickPrices(data => {
+      const symbol = this.system.symbolManager.get(data.symbol)
+      symbol.price = data.bid
+      // console.log('PRICE UPDATE', data)
+    })
+
+    for (let i = 0; i < symbols.length; i++) {
+      await this.instance.Stream.subscribe.getTickPrices(symbols[i].name)
+    }
   }
 
   override async getCandlesFromTime(symbol: Symbol, interval: string, fromTime: number): Promise<ICandle[]> {
@@ -275,21 +288,20 @@ export class XtbBroker extends Broker {
   private async getSymbols(): Promise<ISymbol[]> {
     const data = (await this.instance.Socket.send.getAllSymbols()).data.returnData
     // console.log(2222, data.find(symbol => symbol.symbol.startsWith('VZ.')))
-    console.log(data[0])
+    // console.log(data[0])
     return data.map(symbol => {
+
+      // if (symbol.categoryName === SYMBOL_CATEGORY.CRYPTO) {
+      //   console.log(symbol)
+      // }
+
       const _symbol: ISymbol = {
-        description: symbol.description,
         name: symbol.symbol,
+        description: symbol.description,
         baseAsset: '',
         quoteAsset: '',
         currency: symbol.currency,
         price: symbol.ask,
-        priceString: symbol.ask.toString(),
-        direction: 0,
-        change24H: 0,
-        start24HPrice: 0,
-        change24HString: '0',
-        changedSinceLastClientTick: false,
         longOnly: symbol.longOnly,
         lotStep: symbol.lotStep,
         tickSize: symbol.tickSize,
@@ -297,10 +309,7 @@ export class XtbBroker extends Broker {
         precision: symbol.precision,
         contractSize: symbol.contractSize,
         shortSelling: symbol.shortSelling,
-        totalOrders: 0,
-        candles: {
-          [INTERVAL['1d']]: [],
-        },
+        category: symbol.categoryName as SYMBOL_CATEGORY
       }
 
       return _symbol

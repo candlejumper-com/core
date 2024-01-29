@@ -17,10 +17,10 @@ export const appConfig: ApplicationConfig = {
       StoreModule.forRoot({symbol: addSymbolReducer}),
     ),
 
-    // {
-    //   provide: CSP_NONCE,
-    //   useValue: globalThis.myRandomNonceValue
-    // },
+    {
+      provide: CSP_NONCE,
+      useValue: 232323
+    },
     provideRouter(appRoutes)
   ],
 }

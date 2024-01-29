@@ -40,18 +40,21 @@ export class CandleManager {
       const candles = {}
 
       this.system.symbolManager.symbols.forEach(symbol => {
-        for (const interval in symbol) {
-          if (!candles[symbol.name]) {
-            candles[symbol.name] = {}
-          }
-          if (symbol.candles[interval]?.[0]) {
-            console.log(232, symbol.candles[interval][0])
-            candles[symbol.name][interval] = symbol.candles[interval][0]
-          }
+        candles[symbol.name] = {
+          price: symbol.price,
         }
+        // for (const interval in symbol) {
+        //   if (!candles[symbol.name]) {
+        //     candles[symbol.name] = {}
+        //   }
+        //   if (symbol.candles[interval]?.[0]) {
+        //     console.log(232, symbol.candles[interval][0])
+        //     candles[symbol.name][interval] = symbol.candles[interval][0]
+        //   }
+        // }
       })
-
-      this.system.apiServer.io.emit('candles', candles)
+      // console.log(5656, candles)
+      this.system.apiServer.io.emit('candles:price', candles)
     }, this.outTickIntervalTime)
   }
 

@@ -22,10 +22,10 @@
   },
   "web_accessible_resources": [{
     "matches": ["<all_urls>"],
-    "resources": ["./inject.js", "./content-script.js", "banner.component.css"]
+    "resources": ["./inject.js", "./content-script.js", "banner.component.css", "bootstrap.custom.css"]
   }],
   "content_security_policy":  {
-    "extension_pages": "require-trusted-types-for 'script'; script-src 'self'; style-src 'self' 'unsafe-inline';"	
+    "extension_pages": "require-trusted-types-for 'script'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-elem 'unsafe-inline'; "	
   },
   "host_permissions": ["<all_urls>"],
   "content_scripts": [

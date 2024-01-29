@@ -1,5 +1,5 @@
 import { ICandle } from "@candlejumper/shared"
-import { CANDLE_FIELD } from "../candle-manager/candle-manager"
+import { CANDLE_FIELD } from "../candle-manager/candle.manager"
 import { DataSMAvec } from "./ai.interfaces"
 
 export enum TENSORFLOW_WORKER_ACTION {

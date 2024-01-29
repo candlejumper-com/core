@@ -1,5 +1,5 @@
 import { HistoricalHistoryResult } from 'yahoo-finance2/dist/esm/src/modules/historical'
-import { logger, ICandle, ICalendarItem } from '@candlejumper/shared'
+import { logger, ICandle, ICalendarItem, SYMBOL_CATEGORY } from '@candlejumper/shared'
 import { Broker } from '../../modules/broker/broker'
 import yahooFinance from 'yahoo-finance2'
 import { format } from 'date-fns'
@@ -8,6 +8,8 @@ import { ISymbol } from '../../modules/symbol/symbol.interfaces'
 // import nock from 'nock'
 import { join } from 'path'
 import { SimpleQueue } from '../../util/queue'
+import { TrendingSymbolsResult } from 'yahoo-finance2/dist/esm/src/modules/trendingSymbols'
+import { QuoteSummaryResult } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface'
 
 const PATH_MOCK_SYMBOL_INSIGHTS = join(__dirname, '../../../mock/symbols-insights.json')
 const PATH_MOCK_TRENDING_SYMBOLS = join(__dirname, '../../../mock/symbols-trending.json')
@@ -24,10 +26,13 @@ const PATH_MOCK_TRENDING_SYMBOLS = join(__dirname, '../../../mock/symbols-trendi
 //   .query(true)
 //   .reply(200, JSON.parse(readFileSync(PATH_MOCK_TRENDING_SYMBOLS, { encoding: 'utf-8' })))
 
-
+enum YAHOO_SYMBOL_CATEGORY_LIST {
+  'CRYPTOCURRENCY' = SYMBOL_CATEGORY.CRYPTO,
+  'EQUITY' = SYMBOL_CATEGORY.STOCK,
+  'ETF' = SYMBOL_CATEGORY.ETF,
+}
 
 export class BrokerYahoo extends Broker {
-
   id = 'yahoo'
   instance: any
   websocket = null
@@ -50,27 +55,46 @@ export class BrokerYahoo extends Broker {
   }
 
   async getTrendingSymbols(count = 500): Promise<ISymbol[]> {
-    const result = await this.queue.add(() => yahooFinance.trendingSymbols('US', { count }))
+    const { quotes } = await this.queue.add(() => yahooFinance.trendingSymbols('US', { count })) as TrendingSymbolsResult
+    const filteredQuotes = quotes.filter(symbol => /^[^/^.=:]+$/.test(symbol.symbol))
+
+    const symbols: ISymbol[] = []
+
+    for (const symbol of filteredQuotes) {
+      const details = await this.queue.add(() => yahooFinance.quoteSummary(symbol.symbol)) as QuoteSummaryResult
+      logger.info('Updating symbol : ' + symbol.symbol)
+
+      symbols.push({
+        name: symbol.symbol,
+        description: details.price.shortName,
+        baseAsset: details.summaryDetail.fromCurrency,
+        quoteAsset: details.summaryDetail.currency,
+        category: YAHOO_SYMBOL_CATEGORY_LIST[details.price.quoteType],
+        price: details.price.regularMarketPrice,
+        start24HPrice: details.price.regularMarketPreviousClose,
+      })
+    }
+
     // const gainers = await this.queue.add(() => yahooFinance.dailyGainers())
     // const gainersFiltered = gainers.quotes.map((gainer: any) => ({symbol: gainer.symbol}))
     // console.log(33434, gainers)
 
+    // const symbols: ISymbol[] = [...result.quotes]
 
-    const symbols: ISymbol[] = [...result.quotes]
+    //   // remove strange symbol names
+    //   .filter(symbol => /^[^.=:]+$/.test(symbol.symbol))
 
-      // remove strange symbol names
-      .filter(symbol => /^[^.=:]+$/.test(symbol.symbol))
-
-      // create normal symbol objects
-      .map(symbol => ({ name: symbol.symbol, baseAsset: '' }))
+    //   // create normal symbol objects
+    //   .map(symbol => ({ name: symbol.symbol, baseAsset: '', category: SYMBOL_CATEGORY.CMD}))
 
     return symbols
   }
 
-  override getSymbolInsights(symbol: ISymbol): Promise<InsightsResult> {
-    return this.queue.add(() => yahooFinance.insights(symbol.name, null, { validateResult: false }))
-  }
+  private normalizeSymbolType() {}
 
+  override getSymbolInsights(symbol: ISymbol) {
+    return this.queue.add<InsightsResult>(() => yahooFinance.insights(symbol.name, null, { validateResult: false }))
+  }
 
   override async syncExchange(): Promise<void> {
     const symbols = await this.getTrendingSymbols()

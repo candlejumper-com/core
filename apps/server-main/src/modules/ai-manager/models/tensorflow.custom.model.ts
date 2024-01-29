@@ -1,6 +1,6 @@
 import * as tf from "@tensorflow/tfjs"
 import "@tensorflow/tfjs-backend-wasm"
-import { CANDLE_FIELD } from "../../candle-manager/candle-manager"
+import { CANDLE_FIELD } from "../../candle-manager/candle.manager"
 import {
   DataSMAvec,
   TrainedModel,
@@ -12,7 +12,7 @@ import {
 } from "../ai.interfaces"
 import { computeSMA, TENSORFLOW_WORKER_ACTION } from "../ai.util"
 import { ICandle, isForwardCandleArray } from "@candlejumper/shared"
-import { worker, workerEmit, WorkerPool } from "workerpool"
+import { workerEmit } from "workerpool"
 
 export class TensorflowCustomModel {
   dataSmaVec: DataSMAvec[] = []

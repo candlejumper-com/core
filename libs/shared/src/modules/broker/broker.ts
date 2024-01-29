@@ -44,7 +44,7 @@ export abstract class Broker {
 
     process.env.TZ = this.exchangeInfo.timezone
 
-    if (this.system.type === TICKER_TYPE.SYSTEM_MAIN) {
+    if (this.system.type === TICKER_TYPE.SYSTEM_MAIN || this.system.type === TICKER_TYPE.SYSTEM_CANDLES) {
       if (this.hasPurpose(BROKER_PURPOSE.CANDLES) || this.hasPurpose(BROKER_PURPOSE.INSIGHT)) {
         await this.syncSymbols()
         

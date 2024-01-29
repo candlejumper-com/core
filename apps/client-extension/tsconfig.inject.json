@@ -3,6 +3,6 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc"
   },
-  "files": ["./src/tab/inject.ts"],
+  "files": ["src/injected/inject.ts"],
   "exclude": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts", "src/**/test-setup.ts", "*.d.ts"]
 }

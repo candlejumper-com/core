@@ -96,7 +96,7 @@ export class BrokerBitmart extends Broker {
     for (let i = 0; i < maxLoops; i++) {
       // logger.debug(`♿ Sync from time: ${symbol} ${interval} ${startTime}`)
 
-      const data = await this.queue.add(async () => {
+      const data = await this.queue.add<Kline[]>(async () => {
         const candlesRaw = (
           await this.instance.getV3HistoryKline(symbol, {
             // before: before,

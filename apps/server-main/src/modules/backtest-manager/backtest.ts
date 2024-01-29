@@ -1,13 +1,13 @@
 import { SystemMain } from '../../system/system';
 import { BACKTEST_TYPE } from './backtest.manager';
 import { Bot } from '../../tickers/bot/bot';
-import { CANDLE_FIELD } from '../candle-manager/candle-manager';
+import { CANDLE_FIELD } from '../candle-manager/candle.manager';
 import { IWorkerData } from './backtest.interfaces';
 import { ICandle, ISymbol, ORDER_SIDE, IBalance, BrokerYahoo, TICKER_TYPE, Symbol, ORDER_TYPE } from '@candlejumper/shared';
 
 export class Backtest {
 
-    system = new SystemMain(TICKER_TYPE.SYSTEM_BACKTEST)
+    system = new SystemMain()
 
     private options: IWorkerData['options']
     private candles: ICandle[]
@@ -16,7 +16,8 @@ export class Backtest {
         this.options = workerOptions.options
 
         this.validateOptions()
-        this.system.brokerManager.get(BrokerYahoo).exchangeInfo = this.workerOptions.exchangeInfo
+        this.system.type = TICKER_TYPE.SYSTEM_BACKTEST
+        this.system.brokerManager.getByClass(BrokerYahoo).exchangeInfo = this.workerOptions.exchangeInfo
     }
 
     /**

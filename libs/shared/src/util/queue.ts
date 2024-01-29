@@ -19,24 +19,21 @@ export class SimpleQueue extends Queue {
     this.startInterval()
   }
 
-  add(method: () => Promise<any>): Promise<any> {
-    const returnPromise = new Promise((resolve, reject) => {
+  add<T>(method: () => Promise<any>): Promise<T> {
+    return new Promise((resolve, reject) => {
       this.list.push({
-        method: () => {
-          return method()
-            .then(result => {
-              this.active--
-              resolve(result)
-            })
-            .catch(error => {
-                this.active--
-                reject(error)
-            })
+        method: async () => {
+          try {
+            const result_1 = await method()
+            this.active--
+            resolve(result_1)
+          } catch (error) {
+            this.active--
+            reject(error)
+          }
         },
       })
     })
-
-    return returnPromise
   }
 
   async tick() {

@@ -5,12 +5,13 @@
   },
   "files": [
     "./src/main.ts",
-    "./src/tab/content-script.ts",
-    "./src/tab/inject.ts",
-    "./src/tab/banner.component.ts",
-    "./src/service-worker.ts",
+    "src/injected/web3/web3.connect.ts",
+    "src/injected/content-script.ts",
+    "src/injected/inject.ts",
+    "src/injected/banner/banner.component.ts",
+    "src/service-worker/service-worker.ts",
     "./src/global.d.ts",
     "./src/html.d.ts"
   ],
-  "exclude": ["jest.config.ts", "src/tab/*.ts", "src/**/*.test.ts", "src/**/*.spec.ts", "src/**/test-setup.ts"]
+  "exclude": ["jest.config.ts", "src/injected/*.ts", "src/**/*.test.ts", "src/**/*.spec.ts", "src/**/test-setup.ts"]
 }

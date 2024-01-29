@@ -1,7 +1,6 @@
-import axios, { AxiosError } from 'axios'
 import { io, Socket } from 'socket.io-client'
 import { SystemMain } from '../../system/system'
-import { logger, ICandle, ISymbol, ICandleServerEvent, sleep } from '@candlejumper/shared'
+import { logger, ICandle, ISymbol, ICandleServerSocketEvent, sleep, createAxiosRetryInstance } from '@candlejumper/shared'
 
 export const INTERVAL_MILLISECONDS = {
   '1m': 60000,
@@ -22,7 +21,7 @@ export enum CANDLE_FIELD {
 }
 
 export class CandleManager {
-  private candleWebsocket: Socket
+  private candleServerSocket: Socket
 
   constructor(public system: SystemMain) {}
 
@@ -69,14 +68,10 @@ export class CandleManager {
     params: { symbol: string; interval: string }[],
     count: number,
   ): Promise<{ [symbol: string]: { [interval: string]: ICandle[] } }> {
-    try {
-      const { host, port } = this.system.configManager.config.server.candles
-      const { data } = await axios.post(`http://${host}:${port}/api/candles/?count=${count}`, params)
-      return data
-    } catch (error) {
-      logger.error(error)
-      throw new Error('Error fetching candles from candle server')
-    }
+    const { host, port } = this.system.configManager.config.server.candles
+    const { data } = await createAxiosRetryInstance().post(`http://${host}:${port}/api/candles/?count=${count}`, params)
+    
+    return data
   }
 
   /**
@@ -127,46 +122,49 @@ export class CandleManager {
   /**
    * start listening for candle updates from candle server
    */
-  async openCandleServerSocket(): Promise<void> {
-    const promise = new Promise((resolve, reject) => {
+  async openCandleServerSocket(){
+    return new Promise((resolve, reject) => {
       let isResolved = false
       const { host, port } = this.system.configManager.config.server.candles
 
-      this.candleWebsocket = io(`http://${host}:${port}`)
+      this.candleServerSocket = io(`http://${host}:${port}`)
 
-      this.candleWebsocket.on('connect', () => {
+      this.candleServerSocket.on('connect', () => {
         if (!isResolved) {
           isResolved = true
           resolve(null)
         }
       })
-      this.candleWebsocket.on('error', error => {
+      this.candleServerSocket.on('error', error => {
         if (!isResolved) {
           isResolved = true
           reject(error)
         }
       })
 
-      this.candleWebsocket.on('candles', (event: ICandleServerEvent) => this.onCandleServerTick(event))
+      this.candleServerSocket.on('candles:price', (event: ICandleServerSocketEvent) => this.onSymbolPriceUpdate(event))
     })
   }
 
   /**
    * handle tick from candle server
    */
-  private async onCandleServerTick(event: ICandleServerEvent): Promise<void> {
+  private async onSymbolPriceUpdate(event: ICandleServerSocketEvent) {
+
     // loop over every symbol
     for (let symbolName in event) {
       const symbol = this.system.symbolManager.get(symbolName)
 
       // bot server does not recognize this symbol
       if (!symbol) {
-        logger.warn('Got central candle, but system does not have symbol stored in candle-manager.candles')
+        logger.warn('Got symbol price update, but system does not have symbol stored')
         return
       }
 
+      symbol.price = event[symbolName].price
+      
       // loop over each interval
-      for (let interval in event[symbolName]) {
+      for (let interval in event[symbolName].candles) {
         const candle = event[symbolName][interval]
         const symbolIntervalRef = this.system.symbolManager.get(symbolName).candles[interval]
 

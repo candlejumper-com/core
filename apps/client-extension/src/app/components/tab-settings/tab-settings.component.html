@@ -1,3 +1,17 @@
 <form [formGroup]="form">
-  <mat-checkbox formControlName="showAlways">Show banner</mat-checkbox>
+  <section class="example-section">
+    <mat-checkbox formControlName="showAlways">Show banner</mat-checkbox>
+  </section>
+
+  <section class="example-section">
+    <div formGroupName="bannerSymbolType">
+      <mat-checkbox formControlName="crypto" >crypto</mat-checkbox>
+      <mat-checkbox formControlName="forex" >forex</mat-checkbox>
+      <mat-checkbox formControlName="stock" >stock</mat-checkbox>
+      
+      <!-- <div *ngFor="let chanel of form.controls.bannerSymbolTypes.controls; let i = index">
+        <mat-checkbox [formControlName]="i" >i</mat-checkbox>
+      </div> -->
+    </div>
+  </section>
 </form>

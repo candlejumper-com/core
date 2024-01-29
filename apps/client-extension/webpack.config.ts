@@ -16,9 +16,9 @@ module.exports = {
   //   },
   // },
   entry: {
-    inject: "./apps/client-extension/src/tab/inject.ts",
-    "content-script": "./apps/client-extension/src/tab/content-script.ts",
-    "service-worker": "./apps/client-extension/src/service-worker.ts",
+    inject: "./apps/client-extension/src/injected/inject.ts",
+    "content-script": "./apps/client-extension/src/injected/content-script.ts",
+    "service-worker": "./apps/client-extension/src/service-worker/service-worker.ts",
   },
   output: {
     uniqueName: "angularMf",

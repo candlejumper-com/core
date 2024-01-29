@@ -9,7 +9,7 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
-    "types": ["chrome-types", "./src/global", "node"],
+    "types": ["chrome-types", "./src/global"],
     "noFallthroughCasesInSwitch": true,
     "lib": ["DOM", "ES2023"],	
     "paths": {

@@ -21,13 +21,17 @@
         "assets": [
           "apps/client-extension/src/favicon.png",
           "apps/client-extension/src/assets",
-          "apps/client-extension/src/manifest.json",
-          "apps/client-extension/src/sidepanel.html"
+          "apps/client-extension/src/manifest.json"
         ],
         "styles": [
           "apps/client-extension/src/style/styles.scss",
+          // {
+          //   "input": "node_modules/bootstrap/scss/bootstrap.scss",
+          //   "inject": true,
+          //   "bundleName": "bootstrap.custom"
+          // },
           {
-            "input": "apps/client-extension/src/tab/banner.component.scss",
+            "input": "apps/client-extension/src/injected/banner/banner.component.scss",
             "inject": false,
             "bundleName": "banner.component"
           }

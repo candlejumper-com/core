@@ -14,7 +14,7 @@ import {
   BROKER_PURPOSE
 } from '@candlejumper/shared'
 import { ApiServer } from './api'
-import { CANDLE_FIELD, CandleManager } from '../modules/candle-manager/candle-manager'
+import { CANDLE_FIELD, CandleManager } from '../modules/candle-manager/candle.manager'
 import { DeviceManager } from '../modules/device-manager/device-manager'
 import { BacktestManager } from '../modules/backtest-manager/backtest.manager'
 import { EditorManager, PATH_CUSTOM_DIST_BOTS, PATH_CUSTOM_DIST_INDICATORS } from '../modules/editor-manager/editor.manager'
@@ -237,7 +237,7 @@ export class SystemMain extends System {
 
     for (let i = 0, len = configBots.length; i < len; i++) {
       const ticker = configBots[i] as any
-      console.log(ticker)
+      // console.log(ticker)
       const botName = ticker.class.name.toLowerCase()
       const botPath = join(PATH_CUSTOM_DIST_BOTS, `${botName}/bot_${botName}`)
       // const symbol = this.candleManager.getSymbolByPair(ticker.symbol)

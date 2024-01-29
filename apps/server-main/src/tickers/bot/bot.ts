@@ -1,6 +1,6 @@
 import { DiffPercentageWatcher } from './bot-helpers';
 import { IBotConfig, IWatcherOptions } from './bot.interfaces';
-import { CANDLE_FIELD } from '../../modules/candle-manager/candle-manager';
+import { CANDLE_FIELD } from '../../modules/candle-manager/candle.manager';
 import { Indicator } from '../indicator/indicator';
 import { ITickerSnapshot, TICKER_EVENT_TYPE, TICKER_TYPE, IOrderSnapshot, Ticker } from '@candlejumper/shared';
 

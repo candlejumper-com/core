@@ -23,7 +23,7 @@ import { StoreModule } from '@ngrx/store';
   ],
   selector: 'trade-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrls: ['./app.component.scss', '../../../../node_modules/bootstrap/scss/bootstrap.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class AppComponent {}

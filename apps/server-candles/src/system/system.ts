@@ -1,5 +1,5 @@
 import { ApiServer } from './system.api'
-import { CandleManager } from '../modules/candle-manager/candle-manager'
+import { CandleManager } from '../modules/candle-manager/candle.manager'
 import { BROKER_PURPOSE, BrokerEntity, DB, InsightEntity, System, TICKER_TYPE, XtbBroker } from '@candlejumper/shared'
 import { createCandleEntities } from '../modules/candle-manager/candle.entity'
 

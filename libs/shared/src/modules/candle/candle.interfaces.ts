@@ -1,3 +1,5 @@
+import { INTERVAL } from '../../index_client'
+
 export interface ICandle {
   [0]: number
   [1]: number
@@ -12,16 +14,23 @@ export interface ICandleObject {
   high: number
   low: number
   close: number
-  volume: number,
-  closeTime?: number,
-  quoteVolume?: number,
-  trades?: number,
-  baseAssetVolume?: number,
+  volume: number
+  closeTime?: number
+  quoteVolume?: number
+  trades?: number
+  baseAssetVolume?: number
   quoteAssetVolume?: number
 }
 
-export interface ICandleServerEvent {
+export interface ICandleServerSocketEvent {
+  // symbol
   [key: string]: {
-      [key: string]: ICandle
+    candles: {
+      // candle interval
+      [key in INTERVAL]: ICandle
+    }
+
+    // current price
+    price: number
   }
 }

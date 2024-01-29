@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import html from '!raw-loader!./banner.component.html'
 // import { Web3Connect } from './web3.connect'
-import { TradeBannerApp } from './inject'
+import { TradeBannerApp } from '../inject'
 
 interface IMarqueeContainer {
   el: HTMLElement
