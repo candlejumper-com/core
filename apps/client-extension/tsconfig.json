@@ -9,7 +9,8 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
-    "types": ["chrome-types", "./src/global"],
+    "types": ["chrome-types"],
+    // "types": ["chrome-types", "./src/global"],
     "noFallthroughCasesInSwitch": true,
     "lib": ["DOM", "ES2023"],	
     "paths": {
@@ -20,6 +21,7 @@
   },
   "files": [],
   "include": [],
+  "exclude": ["**/webpack.config.ts"],
   "references": [
     {
       "path": "./tsconfig.app.json"
@@ -29,6 +31,12 @@
     },
     {
       "path": "./tsconfig.inject.json"
+    },
+    {
+      "path": "./tsconfig.content-script.json"
+    },
+    {
+      "path": "./tsconfig.service-worker.json"
     }
   ],
   "angularCompilerOptions": {

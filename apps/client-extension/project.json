@@ -7,30 +7,74 @@
   "tags": [],
   "targets": {
     "build": {
+      "executor": "nx:run-commands",
       "dependsOn": [
         {
-          "params": "forward",
-          "projects": "self"
+          "target": "build-app"
+        },
+        {
+          "target": "build-inject"
+        },
+        {
+          "target": "build-content-script"
+        },
+        {
+          "target": "build-service-worker"
         }
       ],
-      "executor": "nx:run-commands",
+
       "options": {
-        "command": "echo '123'",
-        // "command": "ts-node ./scripts/generate-environment-files.ts",
-        "cwd": "./",
-        "forwardAllArgs": true,
+        "command": "ls",
+        "forwardAllArgs": false,
         "parallel": false
       }
     },
-    "sadf": {
+    "build-inject": {
+      "executor": "@nx/js:tsc",
+      "dependsOn": ["build-app"],
+      "options": {
+        "clean": false,
+        "outputs": ["{workspaceRoot}/{projectRoot}"],
+        "rootDir": ".",
+        "outputPath": "dist/apps/client-extension",
+        "main": "{projectRoot}/src/injected/inject.ts",
+        "tsConfig": "{projectRoot}/tsconfig.inject.json"
+      }
+    },
+    "build-content-script": {
+      "executor": "@nx/js:tsc",
+      "dependsOn": ["build-app"],
+      "options": {
+        "clean": false,
+        "outputs": ["{workspaceRoot}/{projectRoot}"],
+        "rootDir": ".",
+        "outputPath": "dist/apps/client-extension",
+        "main": "{projectRoot}/src/injected/content-script.ts",
+        "tsConfig": "{projectRoot}/tsconfig.content-script.json"
+      }
+    },
+    "build-service-worker": {
+      "executor": "@nx/js:tsc",
+      "dependsOn": ["build-app"],
+      "options": {
+        "clean": false,
+        "outputs": ["{workspaceRoot}/{projectRoot}"],
+        "rootDir": ".",
+        "outputPath": "dist/apps/client-extension",
+        "main": "{projectRoot}/src/service-worker/service-worker.ts",
+        "tsConfig": "{projectRoot}/tsconfig.service-worker.json"
+      }
+    },
+    "build-app": {
       "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
-      "dependsOn": ["^sadf"],
+      // "dependsOn": ["^sadf"],
       "options": {
+        "watch": true,
         "main": "apps/client-extension/src/main.ts",
         "outputHashing": "none",
         "namedChunks": true,
-        "outputPath": "dist/apps/client-extension/app",
+        "outputPath": "dist/apps/client-extension",
         "index": "apps/client-extension/src/index.html",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/client-extension/tsconfig.app.json",
@@ -55,7 +99,7 @@
           }
         ],
         "customWebpackConfig": {
-          "path": "apps/client-extension/webpack.config.ts"
+          // "path": "apps/client-extension/webpack.config.ts"
         }
       },
       "configurations": {

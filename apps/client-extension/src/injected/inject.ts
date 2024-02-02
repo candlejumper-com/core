@@ -1,5 +1,4 @@
 import { ISymbol } from '@candlejumper/shared'
-import './banner/banner.component'
 import { BannerComponent } from './banner/banner.component'
 import { IClientExtensionMessage } from '../service-worker/service-worker.interfaces'
 import { CLIENT_EXTENSION_MESSAGE_TYPE } from '../service-worker/service-worker.util'

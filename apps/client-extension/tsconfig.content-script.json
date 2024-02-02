@@ -2,13 +2,13 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "outFile": "../../dist/apps/client-extension/inject.js",
+    "outFile": "../../dist/apps/client-extension/content-script.js",
     "skipLibCheck": true,
     "esModuleInterop":true,
     "moduleResolution": "Node",
     "module": "AMD",
     "importHelpers": false,
   },
-  "files": ["./src/injected/inject.ts"],
+  "files": ["./src/injected/content-script.ts"],
   "exclude": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts", "src/**/test-setup.ts", "*.d.ts"]
 }
