@@ -31,7 +31,7 @@ export class TradeBannerApp {
   }
 
   toggle(visible: boolean) {
-    this.bannerComponent.toggleVisibility(visible)
+    this.bannerComponent?.toggleVisibility(visible)
   }
 
   onMessage(message: IClientExtensionMessage) {
@@ -61,7 +61,7 @@ export class TradeBannerApp {
       }
     })
 
-    this.bannerComponent.updateSymbols()
+    this.bannerComponent?.updateSymbols()
   }
 
   private onSettingsUpdate(settings: any) {

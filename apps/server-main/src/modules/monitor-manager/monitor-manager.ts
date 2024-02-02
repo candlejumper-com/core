@@ -1,4 +1,4 @@
-import { System } from "../../system/system"
+import { System } from "../../system/server-main.system"
 
 export class MonitorManager {
 

@@ -33,6 +33,7 @@ export class Symbol implements ISymbol {
   news: INewsItem[] = []
 
   price: number
+  start24HPrice: number
   candles: {
     [key in INTERVAL]?: ICandle[]
   } = {}
@@ -138,7 +139,8 @@ export class Symbol implements ISymbol {
       insights: this.insights,
       price: this.price || 0,
       calendar: this.calendar,
-      category: this.category
+      category: this.category,
+      start24HPrice: this.start24HPrice
     }
   }
 

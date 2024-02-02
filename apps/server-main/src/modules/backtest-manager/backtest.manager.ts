@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { SystemMain } from "../../system/system";
+import { SystemMain } from "../../system/server-main.system";
 import { pool, Pool } from 'workerpool';
 import { logger, ISystemState, BrokerYahoo } from '@candlejumper/shared';
 import { IBacktestResult, IBacktestOptions, IWorkerData } from './backtest.interfaces';

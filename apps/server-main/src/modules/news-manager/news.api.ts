@@ -1,5 +1,5 @@
 import { Application } from 'express'
-import { System } from "../../system/system"
+import { System } from "../../system/server-main.system"
 
 export default function (system: System, app: Application) {
 

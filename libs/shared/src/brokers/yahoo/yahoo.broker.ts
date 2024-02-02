@@ -55,6 +55,7 @@ export class BrokerYahoo extends Broker {
   }
 
   async getTrendingSymbols(count = 500): Promise<ISymbol[]> {
+    logger.info(`Broker (${this.id}) - Trending symbols`)
     const { quotes } = await this.queue.add(() => yahooFinance.trendingSymbols('US', { count })) as TrendingSymbolsResult
     const filteredQuotes = quotes.filter(symbol => /^[^/^.=:]+$/.test(symbol.symbol))
 
@@ -62,8 +63,9 @@ export class BrokerYahoo extends Broker {
 
     for (const symbol of filteredQuotes) {
       const details = await this.queue.add(() => yahooFinance.quoteSummary(symbol.symbol)) as QuoteSummaryResult
-      logger.info('Updating symbol : ' + symbol.symbol)
+      logger.info(`Broker (${this.id}) - Updating symbol : ` + symbol.symbol)
 
+      console.log( details.price.regularMarketPreviousClose,)
       symbols.push({
         name: symbol.symbol,
         description: details.price.shortName,
@@ -71,7 +73,7 @@ export class BrokerYahoo extends Broker {
         quoteAsset: details.summaryDetail.currency,
         category: YAHOO_SYMBOL_CATEGORY_LIST[details.price.quoteType],
         price: details.price.regularMarketPrice,
-        start24HPrice: details.price.regularMarketPreviousClose,
+        start24HPrice: details.price.regularMarketPreviousClose || details.summaryDetail.regularMarketPreviousClose,
       })
     }
 

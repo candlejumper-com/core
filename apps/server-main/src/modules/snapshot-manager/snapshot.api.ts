@@ -1,5 +1,5 @@
 import { Application } from 'express';
-import { SystemMain } from '../../system/system';
+import { SystemMain } from '../../system/server-main.system';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Socket } from 'socket.io';

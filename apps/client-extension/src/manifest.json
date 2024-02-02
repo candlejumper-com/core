@@ -24,8 +24,9 @@
     "matches": ["<all_urls>"],
     "resources": ["./inject.js", "./content-script.js", "banner.component.css", "bootstrap.custom.css"]
   }],
-  "content_security_policy":  {
-    "extension_pages": "require-trusted-types-for 'script'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-elem 'unsafe-inline'; "	
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'nonce-randomNonceGoesHere' https://fonts.googleapis.com; font-src https://fonts.gstatic.com;",
+    "sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';"
   },
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
@@ -42,7 +43,8 @@
       "matches": [
         "*://*/*",
         "file://*/*"
-      ]
+      ],
+      "all_frames": false
     }
   ]
 }

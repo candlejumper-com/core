@@ -58,8 +58,11 @@ module.exports = {
             loader: 'ts-loader',
             options: {
               transpileOnly: true,
-              configFile: 'tsconfig.inject.json'
-            }
+              configFile: 'tsconfig.inject.json',
+              attributes: {
+                nonce: "randomNonceGoesHere",
+              },
+            },
           }
         ]
       }

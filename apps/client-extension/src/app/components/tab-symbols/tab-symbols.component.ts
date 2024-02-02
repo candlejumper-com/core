@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ISymbol } from '@candlejumper/shared';
 import { SymbolService } from '../../services/symbol/symbol.service';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'trade-tab-symbols',
@@ -11,7 +12,7 @@ import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
   // styleUrls: ['./tab-symbols.component.scss'],
   styleUrls: ['./tab-symbols.component.scss', '../../../../../../node_modules/bootstrap/scss/bootstrap.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatTabsModule],
   // encapsulation: ViewEncapsulation.None
 })
 export class TabSymbolsComponent implements OnInit {
@@ -24,7 +25,7 @@ export class TabSymbolsComponent implements OnInit {
     category: this.formBuilder.group({
       CRT: new FormControl(true),
       FX: new FormControl(true),
-      Stock: new FormControl(true),
+      STC: new FormControl(true),
     }),
   });
 

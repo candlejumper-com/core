@@ -2,7 +2,7 @@ import * as passport from 'passport'
 import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt'
 import { Strategy as LocalStrategy } from 'passport-local'
 import * as jwt from 'jsonwebtoken'
-import { SystemMain } from "../../system/system"
+import { SystemMain } from "../../system/server-main.system"
 import { logger } from "@candlejumper/shared"
 import { UserEntity } from "./user.entity"
 

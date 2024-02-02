@@ -7,24 +7,42 @@
   "tags": [],
   "targets": {
     "build": {
+      "dependsOn": [
+        {
+          "params": "forward",
+          "projects": "self"
+        }
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo '123'",
+        // "command": "ts-node ./scripts/generate-environment-files.ts",
+        "cwd": "./",
+        "forwardAllArgs": true,
+        "parallel": false
+      }
+    },
+    "sadf": {
       "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
+      "dependsOn": ["^sadf"],
       "options": {
         "main": "apps/client-extension/src/main.ts",
         "outputHashing": "none",
         "namedChunks": true,
-        "outputPath": "dist/apps/client-extension",
+        "outputPath": "dist/apps/client-extension/app",
         "index": "apps/client-extension/src/index.html",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/client-extension/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": [
-          "apps/client-extension/src/favicon.png",
-          "apps/client-extension/src/assets",
-          "apps/client-extension/src/manifest.json"
-        ],
+        "assets": ["apps/client-extension/src/favicon.png", "apps/client-extension/src/assets", "apps/client-extension/src/manifest.json"],
         "styles": [
-          "apps/client-extension/src/style/styles.scss",
+          // "apps/client-extension/src/style/styles.scss",
+          {
+            "input": "apps/client-extension/src/style/styles.scss",
+            "inject": true,
+            "bundleName": "styles"
+          },
           // {
           //   "input": "node_modules/bootstrap/scss/bootstrap.scss",
           //   "inject": true,
@@ -65,6 +83,7 @@
       "defaultConfiguration": "production"
     },
     "serve": {
+      "dependsOn": ["^buil222d"],
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {

@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
 
     {
       provide: CSP_NONCE,
-      useValue: 232323
+      useValue: 'randomNonceGoesHere'
     },
     provideRouter(appRoutes)
   ],

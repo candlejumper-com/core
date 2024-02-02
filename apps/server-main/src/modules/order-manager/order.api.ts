@@ -1,5 +1,5 @@
 import { Application } from 'express'
-import { SystemMain } from "../../system/system"
+import { SystemMain } from "../../system/server-main.system"
 import { logger, ORDER_SIDE, ORDER_TYPE } from '@candlejumper/shared'
 
 interface IOrderPostBody {

@@ -11,7 +11,7 @@
             <label class="form-check-label" for="filterForex">Forex</label>
           </div>
           <div class="form-check mb-0">
-            <input formControlName="Stock" class="form-check-input" type="checkbox" value="" id="filterStock" checked />
+            <input formControlName="STC" class="form-check-input" type="checkbox" value="" id="filterStock" checked />
             <label class="form-check-label" for="filterStock">Stock</label>
           </div>
       </div>
@@ -29,6 +29,7 @@
       <thead>
         <tr>
           <th class="th-symbol">Symbol</th>
+          <th class="th-price">Price</th>
           <th class="th-insight">S</th>
           <th class="th-insight">M</th>
           <th class="th-insight">L</th>
@@ -47,6 +48,7 @@
         <tbody>
           <tr *ngFor="let symbol of symbols">
             <td class="th-symbol">{{ symbol.name }}</td>
+            <td class="th-price" [ngStyle]="{'color': (symbol.price > symbol.start24HPrice) ? 'green' : 'red'}">{{ symbol.price }}</td>
             <td class="th-insight score-{{(symbol.insights?.short)}}">{{ symbol.insights?.short }}</td>
             <td class="th-insight score-{{(symbol.insights?.mid)}}">{{ symbol.insights?.mid }}</td>
             <td class="th-insight score-{{(symbol.insights?.long)}}">{{ symbol.insights?.long }}</td>

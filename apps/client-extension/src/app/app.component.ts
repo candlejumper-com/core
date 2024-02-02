@@ -9,6 +9,7 @@ import { TabCalendarComponent } from './components/tab-calendar/tab-calendar.com
 import { BrowserModule } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
 import { StoreModule } from '@ngrx/store';
+import { Web3Connect } from '../injected/web3/web3.connect'
 
 @Component({
   standalone: true,
@@ -23,7 +24,20 @@ import { StoreModule } from '@ngrx/store';
   ],
   selector: 'trade-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss', '../../../../node_modules/bootstrap/scss/bootstrap.scss'],
+  styleUrls: [
+    './app.component.scss', 
+  '../../../../node_modules/bootstrap/scss/bootstrap.scss'
+],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class AppComponent {}
+export class AppComponent {
+
+  allowWeb3 = false
+
+  ngOnInit() {
+    if (this.allowWeb3) {
+      Web3Connect.connect()
+    }
+
+  }
+}

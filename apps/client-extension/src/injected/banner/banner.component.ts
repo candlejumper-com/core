@@ -46,7 +46,7 @@ export class BannerComponent extends HTMLElement {
 
     this.app.symbols.forEach(symbol => {
       if (!symbol.el$) {
-        symbol.el$ = $(`<a>${symbol.name} ${symbol.price}</a>`).appendTo(this.newsContainer$)
+        symbol.el$ = $(`<a>${symbol.name} <span style="color: red">${symbol.price}</span></a>`).appendTo(this.newsContainer$)
       }
     })
 
@@ -66,7 +66,7 @@ export class BannerComponent extends HTMLElement {
   }
 
   createMarqueeContainer() {
-    const newsContainerContent = this.newsContainer$.html()
+    const newsContainerContent = this.newsContainer$
     const itemWidth = this.newsContainer$.width() + 5
     const fullWidth = this.container$.width()
 
@@ -80,7 +80,8 @@ export class BannerComponent extends HTMLElement {
 
     for (let i = 0; i < maxItems; i++) {
       items[i] = document.createElement('div')
-      items[i].innerHTML = newsContainerContent
+      items[i].innerHTML = this.newsContainer$.html()
+      // items[i].appendChild(newsContainerContent[0])
       items[i].style.position = 'absolute'
       items[i].style.left = itemWidth * i + 'px'
       items[i].style.width = itemWidth + 'px'

@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin'
-import { SystemMain } from '../../system/system'
+import { SystemMain } from '../../system/server-main.system'
 import { logger, ICalendarItem } from '@candlejumper/shared'
 import { DeviceEntity } from './device.entity'
 import { TokenMessage } from 'firebase-admin/lib/messaging/messaging-api'

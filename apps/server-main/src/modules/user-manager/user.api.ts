@@ -1,6 +1,6 @@
 import { Application } from 'express'
 import { authenticate } from 'passport'
-import { SystemMain } from "../../system/system"
+import { SystemMain } from "../../system/server-main.system"
 import * as jwt from 'jsonwebtoken'
 import { IUser } from './user-manager'
 

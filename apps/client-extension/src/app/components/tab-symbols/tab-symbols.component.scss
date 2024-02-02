@@ -29,6 +29,8 @@
 // // @import "bootstrap/scss/spinners";
 // // @import "bootstrap/scss/utilities/api";
 
+
+
 :host {
   // height: 100vh;
   flex-direction: column;
@@ -44,8 +46,15 @@ nav img {
 }
 
 .th-symbol {
-  width: 100%;
+  max-width: 100px;
+  min-width: 100px;
 }
+
+.th-price {
+  max-width: 100px;
+  min-width: 100px;
+}
+
 
 .th-insight {
   width: 40px;
