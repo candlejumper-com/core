@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm'
-import { SystemCandles } from '../../system/system'
+import { SystemCandles } from '../../system/system.candles'
 import {
   CANDLE_FIELD,
   isForwardCandleArray,
@@ -116,6 +116,9 @@ export class CandleManager {
 
     for (let i = 0, len = symbols.length; i < len; ++i) {
       const symbol = symbols[i]
+      const symbolDetails =  await symbol.getBrokerByPurpose(BROKER_PURPOSE.CANDLES).getSymbolDetails(symbol.name)
+      Object.assign(symbol, symbolDetails)
+      // console.log(symbol)
       if (!symbol.name.startsWith('HALO')) {
         continue
       }

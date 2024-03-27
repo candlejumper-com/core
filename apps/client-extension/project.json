@@ -70,7 +70,7 @@
       "outputs": ["{options.outputPath}"],
       // "dependsOn": ["^sadf"],
       "options": {
-        "watch": true,
+        "watch": false,
         "main": "apps/client-extension/src/main.ts",
         "outputHashing": "none",
         "namedChunks": true,
@@ -79,7 +79,12 @@
         "polyfills": ["zone.js"],
         "tsConfig": "apps/client-extension/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": ["apps/client-extension/src/favicon.png", "apps/client-extension/src/assets", "apps/client-extension/src/manifest.json"],
+        "assets": [
+          "apps/client-extension/src/favicon.png",
+          "apps/client-extension/src/assets",
+          // "apps/client-extension/src/",
+          "apps/client-extension/src/manifest.json"
+        ],
         "styles": [
           // "apps/client-extension/src/style/styles.scss",
           {
@@ -127,7 +132,7 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "dependsOn": ["^buil222d"],
+      "dependsOn": ["build"],
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {

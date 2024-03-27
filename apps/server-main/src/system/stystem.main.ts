@@ -11,7 +11,9 @@ import {
   BrokerAlphavantage,
   XtbBroker,
   OrderManager,
-  BROKER_PURPOSE
+  BROKER_PURPOSE,
+  SymbolEntity,
+  BrokerEntity,
 } from '@candlejumper/shared'
 import { ApiServer } from './api'
 import { CANDLE_FIELD, CandleManager } from '../modules/candle-manager/candle.manager'
@@ -39,7 +41,7 @@ export class SystemMain extends System {
   calendarManager: CalendarManager
   chatGPTManager: ChatGPTManager
 
-  db = new DB(this, [UserEntity, DeviceEntity, InsightEntity])
+  db: DB = new DB(this, [BrokerEntity, SymbolEntity, InsightEntity, UserEntity, DeviceEntity])
 
   readonly aiManager = new AIManager(this)
   readonly candleManager = new CandleManager(this)
@@ -69,6 +71,9 @@ export class SystemMain extends System {
    * only executed on MAIN system (not a backtest)
    */
   private async initAsMain(): Promise<void> {
+    // connect database
+    await this.db.init()
+
     await this.brokerManager.add(XtbBroker, [BROKER_PURPOSE.CANDLES, BROKER_PURPOSE.ORDERS])
     await this.brokerManager.add(BrokerAlphavantage, [BROKER_PURPOSE.CALENDAR])
     await this.brokerManager.add(BrokerYahoo, [BROKER_PURPOSE.INSIGHT])
@@ -96,7 +101,6 @@ export class SystemMain extends System {
     await Promise.all([
       // load broker (symbols, timezone, details etc)
       // this.candleManager.sync(),
-
       // load editor (compile bots, load file-tree etc)
       // this.editorManager.init(),
     ])
@@ -116,7 +120,6 @@ export class SystemMain extends System {
 
     // console.info(`--------------------------------------------------------------`)
   }
-
 
   /**
    * tick

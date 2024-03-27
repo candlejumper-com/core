@@ -4,6 +4,7 @@
     "outDir": "../../dist/out-tsc"
   },
   "files": [
+    "../../libs/client-extension/service-worker/src/index.ts",
     "./src/main.ts",
     "src/injected/web3/web3.connect.ts",
     "./src/global.d.ts",

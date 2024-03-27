@@ -1,4 +1,5 @@
-import { SystemCandles } from './system/system';
+import 'reflect-metadata'
+import { SystemCandles } from './system/system.candles';
 
 const system = new SystemCandles()
 

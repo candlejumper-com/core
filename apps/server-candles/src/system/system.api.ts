@@ -4,7 +4,7 @@ import { createServer, Server } from 'http'
 import cors from 'cors'
 import helmet from 'helmet'
 import * as bodyParser from 'body-parser'
-import { SystemCandles } from './system'
+import { SystemCandles } from './system.candles'
 import { ApiServerBase, BROKER_PURPOSE, INTERVAL, logger } from '@candlejumper/shared'
 
 export class ApiServer extends ApiServerBase {

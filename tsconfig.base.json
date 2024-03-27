@@ -21,7 +21,8 @@
     "baseUrl": ".",
     "types": [],
     "paths": {
-      "@candlejumper/shared": ["./libs/shared/src/index.ts"]
+      "@candlejumper/client-extension-service-worker": ["libs/client-extension/service-worker/src/index.ts"],
+      "@candlejumper/shared": ["./libs/shared/src/index.ts"],
     }
   },
   "exclude": ["node_modules", "dist", "**/webpack.config.ts"]

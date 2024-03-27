@@ -1,6 +1,6 @@
 import { ApiServer } from './system.api'
 import { CandleManager } from '../modules/candle-manager/candle.manager'
-import { BROKER_PURPOSE, BrokerEntity, DB, InsightEntity, System, TICKER_TYPE, XtbBroker } from '@candlejumper/shared'
+import { BROKER_PURPOSE, BrokerEntity, DB, InsightEntity, SymbolEntity, System, TICKER_TYPE, XtbBroker } from '@candlejumper/shared'
 import { createCandleEntities } from '../modules/candle-manager/candle.entity'
 
 export class SystemCandles extends System {
@@ -10,9 +10,13 @@ export class SystemCandles extends System {
   readonly candleManager = new CandleManager(this)
 
   async onInit() {
-    await this.brokerManager.add(XtbBroker, [BROKER_PURPOSE.CANDLES])
+    this.db = new DB(this, [BrokerEntity, SymbolEntity, InsightEntity])
+    await this.db.init()
 
-    this.db = new DB(this, [BrokerEntity, InsightEntity, ...createCandleEntities(this.system)])
+    await this.brokerManager.add(XtbBroker, [BROKER_PURPOSE.CANDLES])
+    // console.log(this.brokerManager['brokers'])
+
+    this.db = new DB(this, [BrokerEntity, SymbolEntity, InsightEntity, ...createCandleEntities(this.system)])
 
     await this.db.init()
 

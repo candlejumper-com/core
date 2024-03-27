@@ -9,6 +9,12 @@ export class BrokerManager {
 
   constructor(private system: System) {}
 
+  async init() {
+    for (const broker of this.brokers.values()) {
+      await broker.init()
+    }
+  }
+
   getByClass<T extends typeof Broker>(constructor?: T): InstanceType<T> {
     if (!constructor) {
       return this.brokers.values().next().value

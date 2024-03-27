@@ -2,14 +2,11 @@ import { Column, CreateDateColumn, Entity, EntitySchema, EntitySchemaOptions, Jo
 
 @Entity({ name: 'brokers' })
 export class BrokerEntity {
-    @PrimaryGeneratedColumn()
-    id!: number
+    @PrimaryGeneratedColumn('increment')
+    id: number
 
-    @Column('text', { nullable: false })
+    @Column('text', { unique: true, nullable: false })
     name: string
-
-    @Column('text', { nullable: false })
-    data: string
 
     @CreateDateColumn()
     createdAt: Date;

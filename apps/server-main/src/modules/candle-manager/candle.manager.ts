@@ -1,5 +1,5 @@
 import { io, Socket } from 'socket.io-client'
-import { SystemMain } from '../../system/server-main.system'
+import { SystemMain } from '../../system/stystem.main'
 import { logger, ICandle, ISymbol, ICandleServerSocketEvent, sleep, createAxiosRetryInstance } from '@candlejumper/shared'
 
 export const INTERVAL_MILLISECONDS = {

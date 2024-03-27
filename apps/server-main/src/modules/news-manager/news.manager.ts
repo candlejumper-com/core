@@ -1,5 +1,5 @@
 import { INewsItem } from '@candlejumper/shared'
-import { SystemMain } from '../../system/server-main.system'
+import { SystemMain } from '../../system/stystem.main'
 import axios from 'axios'
 import { parse } from 'csv-parse'
 

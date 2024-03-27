@@ -1,4 +1,4 @@
-import { SystemMain } from '../../system/server-main.system'
+import { SystemMain } from '../../system/stystem.main'
 import OpenAI from 'openai'
 import puppeteer from 'puppeteer'
 import axios from 'axios'

@@ -34,9 +34,8 @@ export class BrokerAlphavantage extends Broker {
     return normalizeCalendarData(items)
   }
 
-  override async syncExchange(): Promise<void> {
-    this.exchangeInfo = {
-      symbols: [],
+  override async getExchangeInfo() {
+    return {
       timezone: 'Europe/London',
     }
   }

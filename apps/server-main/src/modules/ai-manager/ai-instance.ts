@@ -1,5 +1,5 @@
 import { Pool } from 'workerpool';
-import { SystemMain } from '../../system/server-main.system';
+import { SystemMain } from '../../system/stystem.main';
 import { BrokerYahoo, logger } from '@candlejumper/shared';
 import {
     ITensorflowOptions,

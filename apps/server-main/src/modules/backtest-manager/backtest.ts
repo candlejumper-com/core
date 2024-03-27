@@ -1,4 +1,4 @@
-import { SystemMain } from '../../system/server-main.system';
+import { SystemMain } from '../../system/stystem.main';
 import { BACKTEST_TYPE } from './backtest.manager';
 import { Bot } from '../../tickers/bot/bot';
 import { CANDLE_FIELD } from '../candle-manager/candle.manager';

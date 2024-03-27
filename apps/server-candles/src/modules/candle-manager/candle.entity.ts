@@ -30,9 +30,9 @@ export function createCandleEntity(tableName: string): any {
 }
 
 export function getCandleEntityName(symbol: Symbol, interval: INTERVAL): string {
-  return `SYMBOL_${symbol.name}_${interval}`.toUpperCase()
+  return `${symbol.brokers[0].id}_${symbol.name}_${interval}`.toUpperCase()
 }
-
+ 
 /**
  *
  * create candle entities for each symbol and interval
@@ -41,5 +41,6 @@ export function createCandleEntities(system: System) {
   const symbols = system.symbolManager.symbols
   const intervals = system.configManager.config.intervals
   const tableNames = symbols.map(symbol => intervals.map(interval => getCandleEntityName(symbol, interval))).flat()
+  console.log('tableNames', tableNames.length)
   return tableNames.map(tableName => createCandleEntity(tableName))
 }

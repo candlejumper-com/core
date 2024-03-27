@@ -1,5 +1,5 @@
 import { HistoricalHistoryResult } from 'yahoo-finance2/dist/esm/src/modules/historical'
-import { logger, ICandle, ICalendarItem, SYMBOL_CATEGORY } from '@candlejumper/shared'
+import { logger, ICandle, ICalendarItem, SYMBOL_CATEGORY, IBrokerInfo } from '@candlejumper/shared'
 import { Broker } from '../../modules/broker/broker'
 import yahooFinance from 'yahoo-finance2'
 import { format } from 'date-fns'
@@ -15,7 +15,7 @@ const PATH_MOCK_SYMBOL_INSIGHTS = join(__dirname, '../../../mock/symbols-insight
 const PATH_MOCK_TRENDING_SYMBOLS = join(__dirname, '../../../mock/symbols-trending.json')
 
 // nock(
-//   'https://query2.finance.yahoo.com/ws/insights/v2/finance/insights?lang=en-US&region=US&getAllResearchReports=true&reportsCount=2&symbol=COST',
+//   'https://query2.finance.yahoo.com/ws/insightimezone: 'Europe/London',ts/v2/finance/insights?lang=en-US&region=US&getAllResearchReports=true&reportsCount=2&symbol=COST',
 // )
 //   .get('')
 //   .query(true)
@@ -54,28 +54,34 @@ export class BrokerYahoo extends Broker {
     }
   }
 
-  async getTrendingSymbols(count = 500): Promise<ISymbol[]> {
+  async getTrendingSymbols(count = 500): Promise<string[]> {
     logger.info(`Broker (${this.id}) - Trending symbols`)
-    const { quotes } = await this.queue.add(() => yahooFinance.trendingSymbols('US', { count })) as TrendingSymbolsResult
+    const { quotes } = (await this.queue.add(() => yahooFinance.trendingSymbols('US', { count }))) as TrendingSymbolsResult
     const filteredQuotes = quotes.filter(symbol => /^[^/^.=:]+$/.test(symbol.symbol))
-
     const symbols: ISymbol[] = []
 
-    for (const symbol of filteredQuotes) {
-      const details = await this.queue.add(() => yahooFinance.quoteSummary(symbol.symbol)) as QuoteSummaryResult
-      logger.info(`Broker (${this.id}) - Updating symbol : ` + symbol.symbol)
+    return filteredQuotes.map(symbol => symbol.symbol)
+    // for (const symbol of filteredQuotes) {
+    //   logger.info(`Broker (${this.id}) - Updating symbol : ` + symbol.symbol)
 
-      console.log( details.price.regularMarketPreviousClose,)
-      symbols.push({
-        name: symbol.symbol,
-        description: details.price.shortName,
-        baseAsset: details.summaryDetail.fromCurrency,
-        quoteAsset: details.summaryDetail.currency,
-        category: YAHOO_SYMBOL_CATEGORY_LIST[details.price.quoteType],
-        price: details.price.regularMarketPrice,
-        start24HPrice: details.price.regularMarketPreviousClose || details.summaryDetail.regularMarketPreviousClose,
-      })
-    }
+    //   const details = await this.getSymbolDetails(symbol.symbol);
+
+    //   if (details) {
+    //     symbols.push(details)
+    //   } else {
+    //     // console.log( details.price.regularMarketPreviousClose,)
+    //     // symbols.push({
+    //     //   name: symbol.symbol,
+    //     //   description: details.price.shortName,
+    //     //   baseAsset: details.summaryDetail.fromCurrency,
+    //     //   quoteAsset: details.summaryDetail.currency,
+    //     //   category: YAHOO_SYMBOL_CATEGORY_LIST[details.price.quoteType],
+    //     //   price: details.price.regularMarketPrice,
+    //     //   start24HPrice: details.price.regularMarketPreviousClose || details.summaryDetail.regularMarketPreviousClose,
+    //     // })
+    //   }
+
+    // }
 
     // const gainers = await this.queue.add(() => yahooFinance.dailyGainers())
     // const gainersFiltered = gainers.quotes.map((gainer: any) => ({symbol: gainer.symbol}))
@@ -89,7 +95,21 @@ export class BrokerYahoo extends Broker {
     //   // create normal symbol objects
     //   .map(symbol => ({ name: symbol.symbol, baseAsset: '', category: SYMBOL_CATEGORY.CMD}))
 
-    return symbols
+    // return symbols
+  }
+
+  override async onGetSymbolDetails(symbolName: string) {
+    const details = (await this.queue.add(() => yahooFinance.quoteSummary(symbolName))) as QuoteSummaryResult
+
+    return {
+      name: symbolName,
+      description: details.price.shortName,
+      baseAsset: details.summaryDetail.fromCurrency,
+      quoteAsset: details.summaryDetail.currency,
+      category: YAHOO_SYMBOL_CATEGORY_LIST[details.price.quoteType],
+      price: details.price.regularMarketPrice,
+      start24HPrice: details.price.regularMarketPreviousClose || details.summaryDetail.regularMarketPreviousClose,
+    }
   }
 
   private normalizeSymbolType() {}
@@ -98,11 +118,11 @@ export class BrokerYahoo extends Broker {
     return this.queue.add<InsightsResult>(() => yahooFinance.insights(symbol.name, null, { validateResult: false }))
   }
 
-  override async syncExchange(): Promise<void> {
+  override async getExchangeInfo(): Promise<IBrokerInfo> {
     const symbols = await this.getTrendingSymbols()
 
-    this.exchangeInfo = {
-      symbols: symbols,
+    return {
+      symbols: symbols.map(symbol => ({ name: symbol })),
       timezone: 'Europe/London',
     }
   }

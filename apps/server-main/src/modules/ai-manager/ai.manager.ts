@@ -6,7 +6,7 @@ import {
   ITensorflowRunResult,
 } from './ai.interfaces';
 import { join } from 'path';
-import { SystemMain } from '../../system/server-main.system';
+import { SystemMain } from '../../system/stystem.main';
 import { logger } from '@candlejumper/shared';
 import { Pool, pool } from 'workerpool';
 import { TENSORFLOW_WORKER_ACTION } from './ai.util';

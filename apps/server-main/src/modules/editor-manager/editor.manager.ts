@@ -2,7 +2,7 @@ import { join } from 'path'
 import { readFileSync, writeFileSync } from "fs"
 import watch from "node-watch"
 import dirTreedirTree from "directory-tree"
-import { SystemMain } from '../../system/server-main.system'
+import { SystemMain } from '../../system/stystem.main'
 import { logger } from '@candlejumper/shared'
 import { pool, Pool} from 'workerpool'
 import { IEditorCompileOptions } from './editor.worker'

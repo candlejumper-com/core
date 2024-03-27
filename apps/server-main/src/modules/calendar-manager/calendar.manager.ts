@@ -1,4 +1,4 @@
-import { SystemMain } from '../../system/server-main.system'
+import { SystemMain } from '../../system/stystem.main'
 import {
   ICalendarItem,
   filterCalendarItemsBySymbols,

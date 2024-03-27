@@ -1,6 +1,6 @@
 import { Application } from 'express'
 import { readFileSync } from 'fs'
-import { SystemMain } from "./server-main.system"
+import { SystemMain } from "./stystem.main"
 import * as jwt from 'jsonwebtoken'
 import { logger, PATH_LOGS_COMBINED } from '@candlejumper/shared'
 

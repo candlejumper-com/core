@@ -1,6 +1,6 @@
 import { OrderResponseACK, OrderResponseResult, OrderResponseFull } from 'binance'
 import { Broker } from '../../modules/broker/broker'
-import { CandleTickerCallback } from '../../modules/broker/broker.interfaces'
+import { CandleTickerCallback, IBrokerInfo } from '../../modules/broker/broker.interfaces'
 import XAPI, {
   CHART_RANGE_INFO_RECORD,
   CMD_FIELD,
@@ -48,6 +48,12 @@ export class XtbBroker extends Broker {
     await this.instance.connect()
   }
 
+  override async onGetSymbolDetails(symbolName: string) {
+    // super.ge
+    return null
+  }
+
+
   override async getCalendarItems(mock = true): Promise<ICalendarItem[]> {
     // console.log(' GET T ITEMS')
     return []
@@ -56,8 +62,11 @@ export class XtbBroker extends Broker {
     // return items
   }
 
-  override async syncExchange(): Promise<void> {
-    this.exchangeInfo.timezone = 'Europe/London'
+  override async getExchangeInfo() {
+    return  {
+      symbols: await this.getSymbols(),
+      timezone: 'Europe/London'
+    }
   }
 
   override async syncAccount(): Promise<void> {

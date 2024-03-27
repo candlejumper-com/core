@@ -1,6 +1,6 @@
 import { Application } from 'express'
 import { Socket } from 'socket.io'
-import { SystemMain } from "../../system/server-main.system"
+import { SystemMain } from "../../system/stystem.main"
 import { IBacktestOptions } from './backtest.interfaces'
 
 export default function (system: SystemMain, app?: Application, socket?: Socket) {
